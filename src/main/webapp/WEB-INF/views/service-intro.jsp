@@ -34,40 +34,40 @@
 	name="naver-site-verification" />
 <title>위시켓(Wishket) · 서비스 소개</title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
-<link href="/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
+<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
 	type="text/css" />
-<link href="/static/CACHE/css/aa41eeaffc60.css" rel="stylesheet"
+<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/aa41eeaffc60.css" rel="stylesheet"
 	type="text/css" />
-<link href="/static/CACHE/css/35066c295d92.css" rel="stylesheet"
+<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/35066c295d92.css" rel="stylesheet"
 	type="text/css" />
-<!--[if IE 7]><link rel="stylesheet" href="/static/CACHE/css/cc2b8202dedf.css" type="text/css" /><![endif]-->
-<!--[if IE 8]><link rel="stylesheet" href="/static/CACHE/css/0873b963b20a.css" type="text/css" /><![endif]-->
-<link href="/static/django_facebook/css/facebook.css" media="all"
+<!--[if IE 7]><link rel="stylesheet" href="${pageContext.request.contextPath}/resources/static/CACHE/css/cc2b8202dedf.css" type="text/css" /><![endif]-->
+<!--[if IE 8]><link rel="stylesheet" href="${pageContext.request.contextPath}/resources/static/CACHE/css/0873b963b20a.css" type="text/css" /><![endif]-->
+<link href="${pageContext.request.contextPath}/resources/static/django_facebook/css/facebook.css" media="all"
 	rel="stylesheet" />
 <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-<script src="/static/CACHE/js/a52a868564de.js" type="text/javascript"></script>
-<link href="/static/css/p5.css" rel="stylesheet" />
-<link href="/static/css/layout_nav.css" rel="stylesheet" />
+<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/a52a868564de.js" type="text/javascript"></script>
+<link href="${pageContext.request.contextPath}/resources/static/css/p5.css" rel="stylesheet" />
+<link href="${pageContext.request.contextPath}/resources/static/css/layout_nav.css" rel="stylesheet" />
 <script src="http://wcs.naver.net/wcslog.js" type="text/javascript"></script>
-<link href="/static/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-<link href="/static/favicon.ico" rel="icon" type="image/x-icon" />
-<link href="/static/touch-icon-ipad.png" rel="apple-touch-icon"
+<link href="${pageContext.request.contextPath}/resources/static/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+<link href="${pageContext.request.contextPath}/resources/static/favicon.ico" rel="icon" type="image/x-icon" />
+<link href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad.png" rel="apple-touch-icon"
 	sizes="76x76" />
-<link href="/static/touch-icon-iphone-retina.png" rel="apple-touch-icon"
+<link href="${pageContext.request.contextPath}/resources/static/touch-icon-iphone-retina.png" rel="apple-touch-icon"
 	sizes="120x120" />
-<link href="/static/touch-icon-ipad-retina.png" rel="apple-touch-icon"
+<link href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad-retina.png" rel="apple-touch-icon"
 	sizes="152x152" />
-<script src="/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
-<script src="/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
 </head>
 <body class=" partners-setting">
 	<div id="fb-root"></div>
-	<script src="/static/django_facebook/js/facebook.js"
+	<script src="${pageContext.request.contextPath}/resources/static/django_facebook/js/facebook.js"
 		type="text/javascript"></script>
 	<script>
     facebookAppId = '593258114025512';
     facebookDefaultScope = ["email", "user_about_me", "user_birthday", "user_website"];
-    staticUrl = '/static/';
+    staticUrl = '${pageContext.request.contextPath}/resources/static/';
     function facebookJSLoaded(){
         FB.init({appId: facebookAppId, status: false, cookie: true, xfbml: true, oauth: true});
     }
@@ -87,17 +87,17 @@
 				</div>
 				<nav>
 				<ul class="nav navbar-nav nav-primary">
-					<li><a href="/project/add/">프로젝트 등록</a></li>
-					<li class=""><a href="/project/">프로젝트 찾기</a></li>
-					<li class=""><a href="/partners/">파트너스 목록</a></li>
-					<li><a href="/service-intro/">이용방법</a></li>
+					<li><a href="/main/project/add/">프로젝트 등록</a></li>
+					<li class=""><a href="/main/project/">프로젝트 찾기</a></li>
+					<li class=""><a href="/main/partners/">파트너스 목록</a></li>
+					<li><a href="/main/service-intro/">이용방법</a></li>
 				</ul>
 				<span class="navbar-nav navbar-right"><span class="w-help"><a
-						href="/service-intro/"><i class="fa fa-question-circle fa-lg"
+						href="/main/service-intro/"><i class="fa fa-question-circle fa-lg"
 							style="color: #fff"></i></a></span> <span class="w-login"><a
-						class="btn btn-login" href="/accounts/login/" style="color: #fff">로그인</a></span>
+						class="btn btn-login" href="/main/accounts/login/" style="color: #fff">로그인</a></span>
 					<span class="w-signup"><a class="btn btn-signup"
-						href="/accounts/signup/" style="color: #fff">회원가입</a></span></span></nav>
+						href="/main/accounts/signup/" style="color: #fff">회원가입</a></span></span></nav>
 			</div>
 		</div>
 		</section></header>
@@ -134,11 +134,11 @@
 						</div>
 						<h5 class="p5-serviceIntroduction-title">
 							<img class="p5-serviceIntroduction-title-img"
-								src="/static/img/intro/bookmark.png" />위시켓이란?
+								src="${pageContext.request.contextPath}/resources/static/img/intro/bookmark.png" />위시켓이란?
 						</h5>
 						<div class="p5-serviceIntroduction-breif-info">
 							<div class="p5-serviceIntroduction-breif-img">
-								<img src="/static/img/intro/intro_service_two.png" />
+								<img src="${pageContext.request.contextPath}/resources/static/img/intro/intro_service_two.png" />
 							</div>
 							<div class="p5-serviceIntroduction-breif-text">
 								<p>
@@ -151,14 +151,14 @@
 						<section class="p5-serviceIntroduction-partition">
 						<h5 class="p5-serviceIntroduction-title">
 							<img class="p5-serviceIntroduction-title-img"
-								src="/static/img/intro/bookmark.png" />왜 위시켓인가?
+								src="${pageContext.request.contextPath}/resources/static/img/intro/bookmark.png" />왜 위시켓인가?
 						</h5>
 						<div class="p5-serviceIntroduction-list">
 							<div class="p5-serviceIntroduction-list-component">
 								<div class="p5-serviceIntroduction-list-text">
 									<h5 class="p5-serviceIntroduction-list-title">
 										빠르다<img class="p5-slash"
-											src="/static/img/intro/slash_blue.png" />
+											src="${pageContext.request.contextPath}/resources/static/img/intro/slash_blue.png" />
 									</h5>
 									<p>
 										크라우딩 방식의 비공개 지원 시스템을 통해 빠른 지원자 모집이 가능합니다.<br /> 2시간내에 첫 지원자를
@@ -166,14 +166,14 @@
 									</p>
 								</div>
 								<div class="p5-serviceIntroduction-list-img">
-									<img src="/static/img/intro/intro_good_one.png" />
+									<img src="${pageContext.request.contextPath}/resources/static/img/intro/intro_good_one.png" />
 								</div>
 							</div>
 							<div class="p5-serviceIntroduction-list-component">
 								<div class="p5-serviceIntroduction-list-text">
 									<h5 class="p5-serviceIntroduction-list-title">
 										믿을 수 있다<img class="p5-slash"
-											src="/static/img/intro/slash_blue.png" />
+											src="${pageContext.request.contextPath}/resources/static/img/intro/slash_blue.png" />
 									</h5>
 									<p>
 										지원자들의 견적, 프로필과 포트폴리오를 한 눈에 비교할 수 있습니다.<br /> 지원자들이 실제로 진행했던
@@ -181,14 +181,14 @@
 									</p>
 								</div>
 								<div class="p5-serviceIntroduction-list-img">
-									<img src="/static/img/intro/intro_good_two.png" />
+									<img src="${pageContext.request.contextPath}/resources/static/img/intro/intro_good_two.png" />
 								</div>
 							</div>
 							<div class="p5-serviceIntroduction-list-component">
 								<div class="p5-serviceIntroduction-list-text">
 									<h5 class="p5-serviceIntroduction-list-title">
 										안전하다<img class="p5-slash"
-											src="/static/img/intro/slash_blue.png" />
+											src="${pageContext.request.contextPath}/resources/static/img/intro/slash_blue.png" />
 									</h5>
 									<p>
 										에스크로 형태의 대금보호 시스템을 통해 프로젝트 대금을 안전하게<br /> 보호합니다. 프로젝트 진행 중
@@ -196,7 +196,7 @@
 									</p>
 								</div>
 								<div class="p5-serviceIntroduction-list-img">
-									<img src="/static/img/intro/intro_good_three.png" />
+									<img src="${pageContext.request.contextPath}/resources/static/img/intro/intro_good_three.png" />
 								</div>
 							</div>
 						</div>
@@ -204,12 +204,12 @@
 						<section class="p5-serviceIntroduction-partition">
 						<h5 class="p5-serviceIntroduction-title">
 							<img class="p5-serviceIntroduction-title-img"
-								src="/static/img/intro/bookmark.png" />위시켓 이용사례
+								src="${pageContext.request.contextPath}/resources/static/img/intro/bookmark.png" />위시켓 이용사례
 						</h5>
 						<div class="p5-serviceIntroduction-list">
 							<div class="p5-serviceIntroduction-list-component-right">
 								<div class="p5-serviceIntroduction-list-img">
-									<img src="/static/img/intro/intro_usecase_one.png" />
+									<img src="${pageContext.request.contextPath}/resources/static/img/intro/intro_usecase_one.png" />
 								</div>
 								<div class="p5-serviceIntroduction-list-text">
 									<div class="p5-serviceIntroduction-list-text-wrapper">
@@ -223,7 +223,7 @@
 							</div>
 							<div class="p5-serviceIntroduction-list-component-right">
 								<div class="p5-serviceIntroduction-list-img">
-									<img src="/static/img/intro/intro_usecase_two.png" />
+									<img src="${pageContext.request.contextPath}/resources/static/img/intro/intro_usecase_two.png" />
 								</div>
 								<div class="p5-serviceIntroduction-list-text">
 									<div class="p5-serviceIntroduction-list-text-wrapper">
@@ -238,7 +238,7 @@
 							</div>
 							<div class="p5-serviceIntroduction-list-component-right">
 								<div class="p5-serviceIntroduction-list-img">
-									<img src="/static/img/intro/intro_usecase_three.png" />
+									<img src="${pageContext.request.contextPath}/resources/static/img/intro/intro_usecase_three.png" />
 								</div>
 								<div class="p5-serviceIntroduction-list-text">
 									<div class="p5-serviceIntroduction-list-text-wrapper">
@@ -257,10 +257,10 @@
 						<section>
 						<h5 class="p5-serviceIntroduction-title">
 							<img class="p5-serviceIntroduction-title-img"
-								src="/static/img/intro/bookmark.png" />고객사
+								src="${pageContext.request.contextPath}/resources/static/img/intro/bookmark.png" />고객사
 						</h5>
 						<img class="p5-serviceIntroduction-clientCompany-img"
-							src="/static/img/intro/intro_partner_company.png" /></section>
+							src="${pageContext.request.contextPath}/resources/static/img/intro/intro_partner_company.png" /></section>
 					</div>
 				</div>
 			</div>
@@ -272,12 +272,12 @@
 		<div class="info">
 			<div class="footer-logo">
 				<img class="footer-logo-img"
-					src="/static/img/wishket_footer_logo.svg" />
+					src="${pageContext.request.contextPath}/resources/static/img/wishket_footer_logo.svg" />
 			</div>
 			<div class="contact">
 				<i class="fa fa-phone"></i> <a href="tel:82269254849">02-6925-4849</a><br />
 				<i class="fa fa-envelope"></i> <a href="mailto:help@wishket.com">help@wishket.com</a><br />
-				<img src="/static/img/yellow_id.png" style="margin-right: 4px;" /><a
+				<img src="${pageContext.request.contextPath}/resources/static/img/yellow_id.png" style="margin-right: 4px;" /><a
 					href="http://goto.kakao.com/@wishket">Kakao ID 친구추가: @wishket</a><br />
 				고객센터 운영시간: 오전 10시부터 오후 6시까지<small>(공휴일 제외)</small>
 			</div>

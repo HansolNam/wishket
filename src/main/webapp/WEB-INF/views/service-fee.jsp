@@ -34,40 +34,40 @@
 	name="naver-site-verification" />
 <title>위시켓(Wishket) · 요금 안내</title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
-<link href="/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
+<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
 	type="text/css" />
-<link href="/static/CACHE/css/aa41eeaffc60.css" rel="stylesheet"
+<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/aa41eeaffc60.css" rel="stylesheet"
 	type="text/css" />
-<link href="/static/CACHE/css/35066c295d92.css" rel="stylesheet"
+<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/35066c295d92.css" rel="stylesheet"
 	type="text/css" />
-<!--[if IE 7]><link rel="stylesheet" href="/static/CACHE/css/cc2b8202dedf.css" type="text/css" /><![endif]-->
-<!--[if IE 8]><link rel="stylesheet" href="/static/CACHE/css/0873b963b20a.css" type="text/css" /><![endif]-->
-<link href="/static/django_facebook/css/facebook.css" media="all"
+<!--[if IE 7]><link rel="stylesheet" href="${pageContext.request.contextPath}/resources/static/CACHE/css/cc2b8202dedf.css" type="text/css" /><![endif]-->
+<!--[if IE 8]><link rel="stylesheet" href="${pageContext.request.contextPath}/resources/static/CACHE/css/0873b963b20a.css" type="text/css" /><![endif]-->
+<link href="${pageContext.request.contextPath}/resources/static/django_facebook/css/facebook.css" media="all"
 	rel="stylesheet" />
 <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-<script src="/static/CACHE/js/a52a868564de.js" type="text/javascript"></script>
-<link href="/static/css/p5.css" rel="stylesheet" />
-<link href="/static/css/layout_nav.css" rel="stylesheet" />
+<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/a52a868564de.js" type="text/javascript"></script>
+<link href="${pageContext.request.contextPath}/resources/static/css/p5.css" rel="stylesheet" />
+<link href="${pageContext.request.contextPath}/resources/static/css/layout_nav.css" rel="stylesheet" />
 <script src="http://wcs.naver.net/wcslog.js" type="text/javascript"></script>
-<link href="/static/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-<link href="/static/favicon.ico" rel="icon" type="image/x-icon" />
-<link href="/static/touch-icon-ipad.png" rel="apple-touch-icon"
+<link href="${pageContext.request.contextPath}/resources/static/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+<link href="${pageContext.request.contextPath}/resources/static/favicon.ico" rel="icon" type="image/x-icon" />
+<link href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad.png" rel="apple-touch-icon"
 	sizes="76x76" />
-<link href="/static/touch-icon-iphone-retina.png" rel="apple-touch-icon"
+<link href="${pageContext.request.contextPath}/resources/static/touch-icon-iphone-retina.png" rel="apple-touch-icon"
 	sizes="120x120" />
-<link href="/static/touch-icon-ipad-retina.png" rel="apple-touch-icon"
+<link href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad-retina.png" rel="apple-touch-icon"
 	sizes="152x152" />
-<script src="/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
-<script src="/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
 </head>
 <body class=" partners-setting">
 	<div id="fb-root"></div>
-	<script src="/static/django_facebook/js/facebook.js"
+	<script src="${pageContext.request.contextPath}/resources/static/django_facebook/js/facebook.js"
 		type="text/javascript"></script>
 	<script>
     facebookAppId = '593258114025512';
     facebookDefaultScope = ["email", "user_about_me", "user_birthday", "user_website"];
-    staticUrl = '/static/';
+    staticUrl = '${pageContext.request.contextPath}/resources/static/';
     function facebookJSLoaded(){
         FB.init({appId: facebookAppId, status: false, cookie: true, xfbml: true, oauth: true});
     }
@@ -128,7 +128,7 @@
 						<section class="p5-chargeIntroduction-partition p5-faq-partition">
 							<h4 class="p5-chargeIntroduction-title">
 								<img class="p5-serviceIntroduction-title-img"
-									src="/static/img/intro/bookmark.png" />이용요금 안내
+									src="${pageContext.request.contextPath}/resources/static/img/intro/bookmark.png" />이용요금 안내
 							</h4>
 							<table class="p5-chargeIntroduction-table">
 								<tbody>
@@ -159,7 +159,7 @@
 									변경될 수 있습니다.</div>
 							</div>
 							<h5 class="p5-chargeIntroduction-example-title">
-								<img src="/static/img/intro/intro_plus_sm.png"
+								<img src="${pageContext.request.contextPath}/resources/static/img/intro/intro_plus_sm.png"
 									style="margin-right: 5px" />[예시] 프로젝트 금액이 100만원일 때
 							</h5>
 							<table class="p5-chargeIntroduction-table">
@@ -184,7 +184,7 @@
 						<section>
 							<h4 class="p5-chargeIntroduction-title">
 								<img class="p5-serviceIntroduction-title-img"
-									src="/static/img/intro/bookmark.png" />대금지급 관련 안내
+									src="${pageContext.request.contextPath}/resources/static/img/intro/bookmark.png" />대금지급 관련 안내
 							</h4>
 							<h4 class="p5-chargeIntroduction-subinfo"
 								style="margin-left: 22px">프로젝트가 완료되면 등록하신 은행계좌로 위시켓 이용료를
@@ -220,12 +220,12 @@
 			<div class="info">
 				<div class="footer-logo">
 					<img class="footer-logo-img"
-						src="/static/img/wishket_footer_logo.svg" />
+						src="${pageContext.request.contextPath}/resources/static/img/wishket_footer_logo.svg" />
 				</div>
 				<div class="contact">
 					<i class="fa fa-phone"></i> <a href="tel:82269254849">02-6925-4849</a><br />
 					<i class="fa fa-envelope"></i> <a href="mailto:help@wishket.com">help@wishket.com</a><br />
-					<img src="/static/img/yellow_id.png" style="margin-right: 4px;" /><a
+					<img src="${pageContext.request.contextPath}/resources/static/img/yellow_id.png" style="margin-right: 4px;" /><a
 						href="http://goto.kakao.com/@wishket">Kakao ID 친구추가: @wishket</a><br />
 					고객센터 운영시간: 오전 10시부터 오후 6시까지<small>(공휴일 제외)</small>
 				</div>

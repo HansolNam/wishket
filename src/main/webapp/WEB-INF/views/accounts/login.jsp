@@ -34,34 +34,34 @@
 	name="naver-site-verification" />
 <title>위시켓(Wishket) · 로그인</title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
-<link href="./resources/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
+<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
 	type="text/css" />
-<link href="./resources/static/CACHE/css/aa41eeaffc60.css" rel="stylesheet"
+<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/aa41eeaffc60.css" rel="stylesheet"
 	type="text/css" />
-<link href="./resources/static/CACHE/css/35066c295d92.css" rel="stylesheet"
+<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/35066c295d92.css" rel="stylesheet"
 	type="text/css" />
 <!--[if IE 7]><link rel="stylesheet" href="./resources/static/CACHE/css/cc2b8202dedf.css" type="text/css" /><![endif]-->
 <!--[if IE 8]><link rel="stylesheet" href="./resources/static/CACHE/css/0873b963b20a.css" type="text/css" /><![endif]-->
-<link href="./resources/static/django_facebook/css/facebook.css" media="all"
+<link href="${pageContext.request.contextPath}/resources/static/django_facebook/css/facebook.css" media="all"
 	rel="stylesheet" />
 <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-<script src="./resources/static/CACHE/js/a52a868564de.js" type="text/javascript"></script>
-<link href="./resources/static/css/floating.css" rel="stylesheet" />
+<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/a52a868564de.js" type="text/javascript"></script>
+<link href="${pageContext.request.contextPath}/resources/static/css/floating.css" rel="stylesheet" />
 <script src="http://wcs.naver.net/wcslog.js" type="text/javascript"></script>
-<link href="./resources/static/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-<link href="./resources/static/favicon.ico" rel="icon" type="image/x-icon" />
-<link href="./resources/static/touch-icon-ipad.png" rel="apple-touch-icon"
+<link href="${pageContext.request.contextPath}/resources/static/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+<link href="${pageContext.request.contextPath}/resources/static/favicon.ico" rel="icon" type="image/x-icon" />
+<link href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad.png" rel="apple-touch-icon"
 	sizes="76x76" />
-<link href="./resources/static/touch-icon-iphone-retina.png" rel="apple-touch-icon"
+<link href="${pageContext.request.contextPath}/resources/static/touch-icon-iphone-retina.png" rel="apple-touch-icon"
 	sizes="120x120" />
-<link href="./resources/static/touch-icon-ipad-retina.png" rel="apple-touch-icon"
+<link href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad-retina.png" rel="apple-touch-icon"
 	sizes="152x152" />
-<script src="./resources/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
-<script src="./resources/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
 </head>
 <body class=" account login">
 	<div id="fb-root"></div>
-	<script src="./resources/static/django_facebook/js/facebook.js"
+	<script src="${pageContext.request.contextPath}/resources/static/django_facebook/js/facebook.js"
 		type="text/javascript"></script>
 	<script>
     facebookAppId = '593258114025512';
@@ -86,17 +86,17 @@
 				</div>
 				<nav>
 				<ul class="nav navbar-nav nav-primary">
-					<li><a href="/project/add/">프로젝트 등록</a></li>
-					<li class=""><a href="/project/">프로젝트 찾기</a></li>
-					<li class=""><a href="/partners/">파트너스 목록</a></li>
-					<li><a href="/service-intro/">이용방법</a></li>
+					<li><a href="/main/project/add/">프로젝트 등록</a></li>
+					<li class=""><a href="/main/project/">프로젝트 찾기</a></li>
+					<li class=""><a href="/main/partners/">파트너스 목록</a></li>
+					<li><a href="/main/service-intro/">이용방법</a></li>
 				</ul>
 				<span class="navbar-nav navbar-right"><span class="w-help"><a
-						href="/service-intro/"><i class="fa fa-question-circle fa-lg"
+						href="/main/service-intro/"><i class="fa fa-question-circle fa-lg"
 							style="color: #fff"></i></a></span> <span class="w-login"><a
-						class="btn btn-login" href="/accounts/login/" style="color: #fff">로그인</a></span>
+						class="btn btn-login" href="/main/accounts/login/" style="color: #fff">로그인</a></span>
 					<span class="w-signup"><a class="btn btn-signup"
-						href="/accounts/signup/" style="color: #fff">회원가입</a></span></span></nav>
+						href="/main/accounts/signup/" style="color: #fff">회원가입</a></span></span></nav>
 			</div>
 		</div>
 		</section></header>

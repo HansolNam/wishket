@@ -8,12 +8,6 @@
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
     
-<<<<<<< HEAD
-   <!--
-		- Location of the XML file that defines the root application context.
-		- Applied by ContextLoaderListener.
-	-->
-=======
     <!-- encoding -->
     <filter>
 	    <filter-name>encodingFilter</filter-name>
@@ -31,12 +25,11 @@
 	</filter-mapping>
 	
 	<!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
->>>>>>> c914cf36ddca1f14ba63f3a6ba06ea684c3db748
+
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath:spring/application-config.xml</param-value>
     </context-param>
-<<<<<<< HEAD
 
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -46,7 +39,6 @@
     <!--
 		- Servlet that dispatches request to registered handlers (Controller implementations).
 	-->
-=======
 	
 	<!-- Creates the Spring Container shared by all Servlets and Filters -->
 	<listener>
@@ -54,7 +46,6 @@
 	</listener>
 
 	<!-- Processes application requests -->
->>>>>>> c914cf36ddca1f14ba63f3a6ba06ea684c3db748
     <servlet>
         <servlet-name>dispatcherServlet</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -64,18 +55,8 @@
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
-<<<<<<< HEAD
-
-=======
-		
->>>>>>> c914cf36ddca1f14ba63f3a6ba06ea684c3db748
     <servlet-mapping>
         <servlet-name>dispatcherServlet</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
-
-<<<<<<< HEAD
-=======
-
->>>>>>> c914cf36ddca1f14ba63f3a6ba06ea684c3db748
 </web-app>

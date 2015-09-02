@@ -32,34 +32,34 @@
 	name="naver-site-verification" />
 <title>위시켓(Wishket) · 파트너스 목록</title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
-<link href="/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
+<link href="../resources/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
 	type="text/css" />
-<link href="/static/CACHE/css/aa41eeaffc60.css" rel="stylesheet"
+<link href="../resources/static/CACHE/css/aa41eeaffc60.css" rel="stylesheet"
 	type="text/css" />
-<link href="/static/CACHE/css/35066c295d92.css" rel="stylesheet"
+<link href="../resources/static/CACHE/css/35066c295d92.css" rel="stylesheet"
 	type="text/css" />
 <!--[if IE 7]><link rel="stylesheet" href="/static/CACHE/css/cc2b8202dedf.css" type="text/css" /><![endif]-->
 <!--[if IE 8]><link rel="stylesheet" href="/static/CACHE/css/0873b963b20a.css" type="text/css" /><![endif]-->
-<link href="/static/django_facebook/css/facebook.css" media="all"
+<link href="/resources/static/django_facebook/css/facebook.css" media="all"
 	rel="stylesheet" />
 <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-<script src="/static/CACHE/js/a52a868564de.js" type="text/javascript"></script>
-<link href="/static/css/floating.css" rel="stylesheet" />
+<script src="../resources/static/CACHE/js/a52a868564de.js" type="text/javascript"></script>
+<link href="../resources/static/css/floating.css" rel="stylesheet" />
 <script src="http://wcs.naver.net/wcslog.js" type="text/javascript"></script>
-<link href="/static/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-<link href="/static/favicon.ico" rel="icon" type="image/x-icon" />
-<link href="/static/touch-icon-ipad.png" rel="apple-touch-icon"
+<link href="../resources/static/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+<link href="../resources/static/favicon.ico" rel="icon" type="image/x-icon" />
+<link href="../resources/static/touch-icon-ipad.png" rel="apple-touch-icon"
 	sizes="76x76" />
-<link href="/static/touch-icon-iphone-retina.png" rel="apple-touch-icon"
+<link href="../static/touch-icon-iphone-retina.png" rel="apple-touch-icon"
 	sizes="120x120" />
-<link href="/static/touch-icon-ipad-retina.png" rel="apple-touch-icon"
+<link href="../static/touch-icon-ipad-retina.png" rel="apple-touch-icon"
 	sizes="152x152" />
-<script src="/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
-<script src="/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
+<script src="../resources/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
+<script src="../resources/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
 </head>
 <body class=" partners-list">
 	<div id="fb-root"></div>
-	<script src="/static/django_facebook/js/facebook.js"
+	<script src="../resources/static/django_facebook/js/facebook.js"
 		type="text/javascript"></script>
 	<script>
     facebookAppId = '593258114025512';

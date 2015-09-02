@@ -33,40 +33,40 @@
 	name="naver-site-verification" />
 <title>위시켓(Wishket) · 파트너스 이용방법</title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
-<link href="/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
+<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
 	type="text/css" />
-<link href="/static/CACHE/css/aa41eeaffc60.css" rel="stylesheet"
+<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/aa41eeaffc60.css" rel="stylesheet"
 	type="text/css" />
-<link href="/static/CACHE/css/35066c295d92.css" rel="stylesheet"
+<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/35066c295d92.css" rel="stylesheet"
 	type="text/css" />
-<!--[if IE 7]><link rel="stylesheet" href="/static/CACHE/css/cc2b8202dedf.css" type="text/css" /><![endif]-->
-<!--[if IE 8]><link rel="stylesheet" href="/static/CACHE/css/0873b963b20a.css" type="text/css" /><![endif]-->
-<link href="/static/django_facebook/css/facebook.css" media="all"
+<!--[if IE 7]><link rel="stylesheet" href="${pageContext.request.contextPath}/resources/static/CACHE/css/cc2b8202dedf.css" type="text/css" /><![endif]-->
+<!--[if IE 8]><link rel="stylesheet" href="${pageContext.request.contextPath}/resources/static/CACHE/css/0873b963b20a.css" type="text/css" /><![endif]-->
+<link href="${pageContext.request.contextPath}/resources/static/django_facebook/css/facebook.css" media="all"
 	rel="stylesheet" />
 <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-<script src="/static/CACHE/js/a52a868564de.js" type="text/javascript"></script>
-<link href="/static/css/p5.css" rel="stylesheet" />
-<link href="/static/css/layout_nav.css" rel="stylesheet" />
+<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/a52a868564de.js" type="text/javascript"></script>
+<link href="${pageContext.request.contextPath}/resources/static/css/p5.css" rel="stylesheet" />
+<link href="${pageContext.request.contextPath}/resources/static/css/layout_nav.css" rel="stylesheet" />
 <script src="http://wcs.naver.net/wcslog.js" type="text/javascript"></script>
-<link href="/static/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-<link href="/static/favicon.ico" rel="icon" type="image/x-icon" />
-<link href="/static/touch-icon-ipad.png" rel="apple-touch-icon"
+<link href="${pageContext.request.contextPath}/resources/static/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+<link href="${pageContext.request.contextPath}/resources/static/favicon.ico" rel="icon" type="image/x-icon" />
+<link href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad.png" rel="apple-touch-icon"
 	sizes="76x76" />
-<link href="/static/touch-icon-iphone-retina.png" rel="apple-touch-icon"
+<link href="${pageContext.request.contextPath}/resources/static/touch-icon-iphone-retina.png" rel="apple-touch-icon"
 	sizes="120x120" />
-<link href="/static/touch-icon-ipad-retina.png" rel="apple-touch-icon"
+<link href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad-retina.png" rel="apple-touch-icon"
 	sizes="152x152" />
-<script src="/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
-<script src="/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
 </head>
 <body class=" partners-setting">
 	<div id="fb-root"></div>
-	<script src="/static/django_facebook/js/facebook.js"
+	<script src="${pageContext.request.contextPath}/resources/static/django_facebook/js/facebook.js"
 		type="text/javascript"></script>
 	<script>
     facebookAppId = '593258114025512';
     facebookDefaultScope = ["email", "user_about_me", "user_birthday", "user_website"];
-    staticUrl = '/static/';
+    staticUrl = '${pageContext.request.contextPath}/resources/static/';
     function facebookJSLoaded(){
         FB.init({appId: facebookAppId, status: false, cookie: true, xfbml: true, oauth: true});
     }
@@ -126,29 +126,29 @@
 						</section>
 						<section>
 							<img class="p5-clientUsage-title-img"
-								src="/static/img/intro/intro_partners_title.png" />
+								src="${pageContext.request.contextPath}/resources/static/img/intro/intro_partners_title.png" />
 						</section>
 						<section style="background-color: #f7f7f7">
 							<div class="p5-clientUsage-nav">
 								<a href="#p5-clientUsage-step-1"><div
 										class="p5-partnersUsage-hover-one"></div></a>
 								<div>
-									<img src="/static/img/intro/partners_intro_arrow.png" />
+									<img src="${pageContext.request.contextPath}/resources/static/img/intro/partners_intro_arrow.png" />
 								</div>
 								<a href="#p5-clientUsage-step-2"><div
 										class="p5-partnersUsage-hover-two"></div></a>
 								<div>
-									<img src="/static/img/intro/partners_intro_arrow.png" />
+									<img src="${pageContext.request.contextPath}/resources/static/img/intro/partners_intro_arrow.png" />
 								</div>
 								<a href="#p5-clientUsage-step-3"><div
 										class="p5-partnersUsage-hover-three"></div></a>
 								<div>
-									<img src="/static/img/intro/partners_intro_arrow.png" />
+									<img src="${pageContext.request.contextPath}/resources/static/img/intro/partners_intro_arrow.png" />
 								</div>
 								<a href="#p5-clientUsage-step-4"><div
 										class="p5-partnersUsage-hover-four"></div></a>
 								<div>
-									<img src="/static/img/intro/partners_intro_arrow.png" />
+									<img src="${pageContext.request.contextPath}/resources/static/img/intro/partners_intro_arrow.png" />
 								</div>
 								<a href="#p5-clientUsage-step-5"><div
 										class="p5-partnersUsage-hover-five"></div></a>
@@ -157,10 +157,10 @@
 						<section class="p5-clientUsage-partition">
 							<div class="p5-clientUsage-step" id="p5-clientUsage-step-1">
 								<h5 class="p5-clientUsage-step-title">
-									<img src="/static/img/intro/intro_one.png" /><span
+									<img src="${pageContext.request.contextPath}/resources/static/img/intro/intro_one.png" /><span
 										class="p5-clientUsage-step-title-text"
 										style="margin-left: 23px;">프로필 작성</span><img
-										src="/static/img/intro/slash_blue.png" />
+										src="${pageContext.request.contextPath}/resources/static/img/intro/slash_blue.png" />
 								</h5>
 								<div class="p5-clientUsage-step-content">
 									<div class="p5-clientUsage-step-mainText">
@@ -172,7 +172,7 @@
 										등록 등을 통해 프로필 완성도를 높일 수 있습니다.
 									</div>
 									<div class="p5-clientUsage-step-img">
-										<img src="/static/img/intro/intro_partners_screenshot_one.png" />
+										<img src="${pageContext.request.contextPath}/resources/static/img/intro/intro_partners_screenshot_one.png" />
 									</div>
 									<div class="p5-clientUsage-step-info">
 										<div class="p5-clientUsage-step-info-line">- [파트너스 정보]
@@ -188,10 +188,10 @@
 						<section class="p5-clientUsage-partition">
 							<div class="p5-clientUsage-step" id="p5-clientUsage-step-2">
 								<h5 class="p5-clientUsage-step-title">
-									<img src="/static/img/intro/intro_two.png" /><span
+									<img src="${pageContext.request.contextPath}/resources/static/img/intro/intro_two.png" /><span
 										class="p5-clientUsage-step-title-text"
 										style="margin-left: 10px;">프로젝트 비공개 지원</span><img
-										src="/static/img/intro/slash_blue.png" />
+										src="${pageContext.request.contextPath}/resources/static/img/intro/slash_blue.png" />
 								</h5>
 								<div class="p5-clientUsage-step-content">
 									<div class="p5-clientUsage-step-mainText">간단한 지원서 작성을
@@ -201,7 +201,7 @@
 										없습니다.
 									</div>
 									<div class="p5-clientUsage-step-img">
-										<img src="/static/img/intro/intro_partners_screenshot_two.png" />
+										<img src="${pageContext.request.contextPath}/resources/static/img/intro/intro_partners_screenshot_two.png" />
 									</div>
 									<div class="p5-clientUsage-step-info">
 										<div class="p5-clientUsage-step-info-line">- 프로젝트의 상세페이지
@@ -217,10 +217,10 @@
 						<section class="p5-clientUsage-partition">
 							<div class="p5-clientUsage-step" id="p5-clientUsage-step-3">
 								<h5 class="p5-clientUsage-step-title">
-									<img src="/static/img/intro/intro_three.png" /><span
+									<img src="${pageContext.request.contextPath}/resources/static/img/intro/intro_three.png" /><span
 										class="p5-clientUsage-step-title-text"
 										style="margin-left: 10px;">미팅 및 계약</span><img
-										src="/static/img/intro/slash_blue.png" />
+										src="${pageContext.request.contextPath}/resources/static/img/intro/slash_blue.png" />
 								</h5>
 								<div class="p5-clientUsage-step-content">
 									<div class="p5-clientUsage-step-mainText">
@@ -245,10 +245,10 @@
 						<section class="p5-clientUsage-partition">
 							<div class="p5-clientUsage-step" id="p5-clientUsage-step-4">
 								<h5 class="p5-clientUsage-step-title">
-									<img src="/static/img/intro/intro_four.png" /><span
+									<img src="${pageContext.request.contextPath}/resources/static/img/intro/intro_four.png" /><span
 										class="p5-clientUsage-step-title-text"
 										style="margin-left: 10px;">프로젝트 진행</span><img
-										src="/static/img/intro/slash_blue.png" />
+										src="${pageContext.request.contextPath}/resources/static/img/intro/slash_blue.png" />
 								</h5>
 								<div class="p5-clientUsage-step-content">
 									<div class="p5-clientUsage-step-mainText">프로젝트 진행 중에도
@@ -260,7 +260,7 @@
 									</div>
 									<div class="p5-clientUsage-step-img">
 										<img
-											src="/static/img/intro/intro_partners_screenshot_four.png" />
+											src="${pageContext.request.contextPath}/resources/static/img/intro/intro_partners_screenshot_four.png" />
 									</div>
 									<div class="p5-clientUsage-step-info">
 										<div class="p5-clientUsage-step-info-line">- 클라이언트의 선입금이
@@ -278,10 +278,10 @@
 						<section>
 							<div class="p5-clientUsage-step" id="p5-clientUsage-step-5">
 								<h5 class="p5-clientUsage-step-title">
-									<img src="/static/img/intro/intro_five.png" /><span
+									<img src="${pageContext.request.contextPath}/resources/static/img/intro/intro_five.png" /><span
 										class="p5-clientUsage-step-title-text"
 										style="margin-left: 11px;">프로젝트 완료</span><img
-										src="/static/img/intro/slash_blue.png" />
+										src="${pageContext.request.contextPath}/resources/static/img/intro/slash_blue.png" />
 								</h5>
 								<div class="p5-clientUsage-step-content">
 									<div class="p5-clientUsage-step-mainText">클라이언트와 파트너의 승인
@@ -292,7 +292,7 @@
 									</div>
 									<div class="p5-clientUsage-step-img">
 										<img
-											src="/static/img/intro/intro_partners_screenshot_five.png" />
+											src="${pageContext.request.contextPath}/resources/static/img/intro/intro_partners_screenshot_five.png" />
 									</div>
 									<div class="p5-clientUsage-step-info">
 										<div class="p5-clientUsage-step-info-line">- 프로젝트 완료 후에,
@@ -319,12 +319,12 @@
 			<div class="info">
 				<div class="footer-logo">
 					<img class="footer-logo-img"
-						src="/static/img/wishket_footer_logo.svg" />
+						src="${pageContext.request.contextPath}/resources/static/img/wishket_footer_logo.svg" />
 				</div>
 				<div class="contact">
 					<i class="fa fa-phone"></i> <a href="tel:82269254849">02-6925-4849</a><br />
 					<i class="fa fa-envelope"></i> <a href="mailto:help@wishket.com">help@wishket.com</a><br />
-					<img src="/static/img/yellow_id.png" style="margin-right: 4px;" /><a
+					<img src="${pageContext.request.contextPath}/resources/static/img/yellow_id.png" style="margin-right: 4px;" /><a
 						href="http://goto.kakao.com/@wishket">Kakao ID 친구추가: @wishket</a><br />
 					고객센터 운영시간: 오전 10시부터 오후 6시까지<small>(공휴일 제외)</small>
 				</div>
