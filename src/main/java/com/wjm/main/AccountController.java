@@ -1,4 +1,4 @@
-package com.wishket.main;
+package com.wjm.main;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.wishket.dao.ActivityDao;
+import com.wjm.dao.ActivityDao;
 
 /**
  * Handles requests for the application home page.

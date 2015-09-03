@@ -1,4 +1,4 @@
-package com.wishket.dao;
+package com.wjm.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,8 +12,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.wishket.idao.ActivityIDao;
-import com.wishket.models.ActivityInfo;
+import com.wjm.idao.ActivityIDao;
+import com.wjm.models.ActivityInfo;
 
 @Repository
 public class ActivityDao implements ActivityIDao {

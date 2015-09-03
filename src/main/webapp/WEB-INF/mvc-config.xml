@@ -13,7 +13,7 @@
             base-package="org.springframework.samples.web"/>  -->
 
 
-	<context:component-scan base-package="com.wishket.main"></context:component-scan>
+	<context:component-scan base-package="com.wjm.main"></context:component-scan>
 
     <annotation-driven />
 
@@ -40,7 +40,7 @@
 	<beans:bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
 		<beans:property name="dataSource" ref="dataSource"></beans:property>
 	</beans:bean>
-	<beans:bean id="ActivityDao" class="com.wishket.dao.ActivityDao">
+	<beans:bean id="ActivityDao" class="com.wjm.dao.ActivityDao">
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>
 	<!-- 

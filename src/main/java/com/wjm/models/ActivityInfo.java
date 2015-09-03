@@ -1,4 +1,4 @@
-package com.wishket.models;
+package com.wjm.models;
 
 import java.sql.Timestamp;
 

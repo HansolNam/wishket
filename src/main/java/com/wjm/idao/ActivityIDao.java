@@ -1,10 +1,10 @@
-package com.wishket.idao;
+package com.wjm.idao;
 
 import java.util.List;
 
 import javax.sql.DataSource;
 
-import com.wishket.models.ActivityInfo;
+import com.wjm.models.ActivityInfo;
 
 public interface ActivityIDao {
 	void setDataSource(DataSource ds);

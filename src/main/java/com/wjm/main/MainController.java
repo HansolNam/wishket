@@ -1,4 +1,4 @@
-package com.wishket.main;
+package com.wjm.main;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.wishket.dao.ActivityDao;
+import com.wjm.dao.ActivityDao;
 
 /**
  * Handles requests for the application home page.
@@ -100,22 +100,23 @@ public class MainController {
 		
 		return "faq";
 	}
+	
 	/**
-	 * 로그인 화면
+	 * 이용약관
 	 */
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String MainController_login(HttpServletRequest request) {
-		logger.info("login Page");
+	@RequestMapping(value = "/terms-of-service", method = RequestMethod.GET)
+	public String MainController_termsofservice(HttpServletRequest request) {
+		logger.info("terms-of-service Page");
 		
-		return "login";
+		return "terms-of-service";
 	}
 	/**
-	 * 회원가입 화면
+	 * 개인정보보호
 	 */
-	@RequestMapping(value = "/signup", method = RequestMethod.GET)
-	public String MainController_signup(HttpServletRequest request) {
-		logger.info("signup Page");
+	@RequestMapping(value = "/privacy", method = RequestMethod.GET)
+	public String MainController_privacy(HttpServletRequest request) {
+		logger.info("privacy Page");
 		
-		return "signup";
+		return "privacy";
 	}
 }
