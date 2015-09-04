@@ -1,5 +1,7 @@
 package com.wjm.main;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -9,7 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.wjm.dao.ActivityDao;
+import com.wjm.dao.AccountDao;
+import com.wjm.models.AccountInfo;
 
 /**
  * Handles requests for the application home page.
@@ -20,7 +23,8 @@ public class MainController {
 	private static final Logger logger = LoggerFactory.getLogger(MainController.class);
 	   
 	@Autowired
-	private ActivityDao activityDao;
+	private AccountDao accountDao;
+	
 	/**
 	 * È¨È­¸é
 	 */

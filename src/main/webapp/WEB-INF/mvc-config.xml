@@ -28,7 +28,7 @@
 
 	<beans:bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<beans:property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-		<beans:property name="url" value="jdbc:mysql://localhost:3306/rap?useUnicode=true&amp;characterEncoding=utf-8"/>
+		<beans:property name="url" value="jdbc:mysql://localhost:3306/wjm?useUnicode=true&amp;characterEncoding=utf-8"/>
 		<beans:property name="username" value="root"/>
 		<beans:property name="password" value="Wjsdlfwn8520!"/>
 	</beans:bean>
@@ -40,53 +40,33 @@
 	<beans:bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
 		<beans:property name="dataSource" ref="dataSource"></beans:property>
 	</beans:bean>
-	<beans:bean id="ActivityDao" class="com.wjm.dao.ActivityDao">
+	<beans:bean id="AccountDao" class="com.wjm.dao.AccountDao">
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>
-	<!-- 
-	<beans:bean id="PromotionDao" class="com.rap.dao.PromotionDao">
+	<beans:bean id="AssessmentDao" class="com.wjm.dao.AssessmentDao">
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>
-	<beans:bean id="ActivityDao" class="com.rap.dao.ActivityDao">
+	<beans:bean id="ApplicantDao" class="com.wjm.dao.ApplicantDao">
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>
-	<beans:bean id="CategoryLDao" class="com.rap.dao.CategoryLDao">
+	<beans:bean id="LicenseDao" class="com.wjm.dao.LicenseDao">
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>
-	<beans:bean id="CategoryMDao" class="com.rap.dao.CategoryMDao">
+	<beans:bean id="EducationDao" class="com.wjm.dao.EducationDao">
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>
-	<beans:bean id="CategorySDao" class="com.rap.dao.CategorySDao">
+	<beans:bean id="CareerDao" class="com.wjm.dao.CareerDao">
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>
-	<beans:bean id="IAPDao" class="com.rap.dao.IAPDao">
+	<beans:bean id="PortfolioDao" class="com.wjm.dao.PortfolioDao">
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>
-	<beans:bean id="MemberDao" class="com.rap.dao.MemberDao">
+	<beans:bean id="ProjectDao" class="com.wjm.dao.ProjectDao">
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>
-	<beans:bean id="PayDao" class="com.rap.dao.PayDao">
+	<beans:bean id="TechniqueDao" class="com.wjm.dao.TechniqueDao">
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>
-	<beans:bean id="ProjectDao" class="com.rap.dao.ProjectDao">
-		<beans:property name="dataSource" ref="dataSource" />
-	</beans:bean>
-	<beans:bean id="SettingDao" class="com.rap.dao.SettingDao">
-		<beans:property name="dataSource" ref="dataSource" />
-	</beans:bean>
-	<beans:bean id="TimeDao" class="com.rap.dao.TimeDao">
-		<beans:property name="dataSource" ref="dataSource" />
-	</beans:bean>
-	<beans:bean id="UserDao" class="com.rap.dao.UserDao">
-		<beans:property name="dataSource" ref="dataSource" />
-	</beans:bean>
-	<beans:bean id="Virtual_MainDao" class="com.rap.dao.Virtual_MainDao">
-		<beans:property name="dataSource" ref="dataSource" />
-	</beans:bean>
-	<beans:bean id="Virtual_SubDao" class="com.rap.dao.Virtual_SubDao">
-		<beans:property name="dataSource" ref="dataSource" />
-	</beans:bean>
-	 -->
 	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
 
 </beans:beans>
