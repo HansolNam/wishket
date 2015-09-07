@@ -9,6 +9,7 @@ public class AccountInfo {
 	private String password;
 	private String account_type;
 	private int authorized;
+	private String authorization_key;
 	private Timestamp reg_date;
 	private String profile_img;
 	private String form;
@@ -28,18 +29,20 @@ public class AccountInfo {
 	private String account_holder;
 	private String account_number;
 	private String introduction;
-	
+
 	public AccountInfo(int pk, String email, String id, String password, String account_type, int authorized,
-			Timestamp reg_date, String profile_img, String form, String name, String sex, Timestamp birth_date,
-			String regionL, String regionM, String regionR, String cellphone_num, String telephone_num, String fax_num,
-			int subscription, String identity_authentication, String identity_doc, String bank_name,
-			String account_holder, String account_number, String introduction) {
+			String authorization_key, Timestamp reg_date, String profile_img, String form, String name, String sex,
+			Timestamp birth_date, String regionL, String regionM, String regionR, String cellphone_num,
+			String telephone_num, String fax_num, int subscription, String identity_authentication, String identity_doc,
+			String bank_name, String account_holder, String account_number, String introduction) {
+		super();
 		this.pk = pk;
 		this.email = email;
 		this.id = id;
 		this.password = password;
 		this.account_type = account_type;
 		this.authorized = authorized;
+		this.authorization_key = authorization_key;
 		this.reg_date = reg_date;
 		this.profile_img = profile_img;
 		this.form = form;
@@ -109,6 +112,14 @@ public class AccountInfo {
 		this.authorized = authorized;
 	}
 
+	public String getAuthorization_key() {
+		return authorization_key;
+	}
+
+	public void setAuthorization_key(String authorization_key) {
+		this.authorization_key = authorization_key;
+	}
+	
 	public Timestamp getReg_date() {
 		return reg_date;
 	}

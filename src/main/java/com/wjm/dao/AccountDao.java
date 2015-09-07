@@ -1,5 +1,7 @@
 package com.wjm.dao;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -46,6 +48,7 @@ public class AccountDao implements AccountIDao {
 		    				, resultSet.getString("password")
 		    				, resultSet.getString("account_type")
 		    				, resultSet.getInt("authorized")
+		    				, resultSet.getString("authorized_key")
 		    				, resultSet.getTimestamp("reg_date")
 		    				, resultSet.getString("profile_img")
 		    				, resultSet.getString("form")
@@ -81,6 +84,43 @@ public class AccountDao implements AccountIDao {
 		    				, resultSet.getString("password")
 		    				, resultSet.getString("account_type")
 		    				, resultSet.getInt("authorized")
+		    				, resultSet.getString("authorization_key")
+		    				, resultSet.getTimestamp("reg_date")
+		    				, resultSet.getString("profile_img")
+		    				, resultSet.getString("form")
+		    				, resultSet.getString("name")
+		    				, resultSet.getString("sex")
+		    				, resultSet.getTimestamp("birth_date")
+		    				, resultSet.getString("regionL")
+		    				, resultSet.getString("regionM")
+		    				, resultSet.getString("regionR")
+		    				, resultSet.getString("cellphone_num")
+		    				, resultSet.getString("telephone_num")
+		    				, resultSet.getString("fax_num")
+		    				, resultSet.getInt("subscription")
+		    				, resultSet.getString("identity_authentication")
+		    				, resultSet.getString("identity_doc")
+		    				, resultSet.getString("bank_name")
+		    				, resultSet.getString("account_holder")
+		    				, resultSet.getString("account_number")
+		    				, resultSet.getString("introduction"));
+		    	}
+		    });
+	}	
+	public List<AccountInfo> select_email(String email)
+	{
+		return jdbcTemplate.query("select * from account where email = ?",
+		    	new Object[] { email }, new RowMapper<AccountInfo>() {
+		    	public AccountInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new AccountInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getString("email")
+		    				, resultSet.getString("id")
+		    				, resultSet.getString("password")
+		    				, resultSet.getString("account_type")
+		    				, resultSet.getInt("authorized")
+		    				, resultSet.getString("authorization_key")
 		    				, resultSet.getTimestamp("reg_date")
 		    				, resultSet.getString("profile_img")
 		    				, resultSet.getString("form")
@@ -112,4 +152,54 @@ public class AccountDao implements AccountIDao {
 	{
 		jdbcTemplate.update("delete from account where id = ?", new Object[] { id });
 	}
+	public void signup(String id, String email, String password, String account_type)
+	{
+		create(email, id, SHA256(password), account_type);
+	}
+	/*
+	 * 로그인 체크
+	 */
+	public AccountInfo login(String id, String password)
+	{
+		//해당 아이디 검색
+		List<AccountInfo> accountlist = select(id);
+		
+		//존재하지 않는 아이디인 경우
+		if(accountlist.size() == 0)
+			return null;
+		
+		//패스워드 해시 후, 비교
+		if(!accountlist.get(0).getPassword().equals(SHA256(password)))
+			return null;
+		
+		return accountlist.get(0);
+	}
+	
+	/*
+	 * SHA-256 �ؽ� �Լ�
+	 */
+	public String SHA256(String str)
+	{
+		String SHA = "";
+		
+		try{
+			MessageDigest sha = MessageDigest.getInstance("SHA-256"); 
+			sha.update(str.getBytes()); 
+			byte byteData[] = sha.digest();
+			StringBuffer sb = new StringBuffer(); 
+			for(int i = 0 ; i < byteData.length ; i++){
+				sb.append(Integer.toString((byteData[i]&0xff) + 0x100, 16).substring(1));
+			}
+			SHA = sb.toString();
+			
+		}catch(NoSuchAlgorithmException e){
+			e.printStackTrace(); 
+			SHA = null; 
+		}
+		logger.info("SHA = "+SHA);
+		logger.info("SHA leng = "+SHA.length());
+
+		return SHA;
+	}
+	
 }

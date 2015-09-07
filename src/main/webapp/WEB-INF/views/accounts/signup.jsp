@@ -1,39 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%   
+request.setCharacterEncoding("UTF-8");
+response.setContentType("text/html; charset=UTF-8");
+%>
 
 <!DOCTYPE html>
-<!--[if IE 6]><html lang="ko" class="no-js old ie6"><![endif]-->
-<!--[if IE 7]><html lang="ko" class="no-js old ie7"><![endif]-->
-<!--[if IE 8]><html lang="ko" class="no-js old ie8"><![endif]-->
 <html class="no-js modern" lang="ko">
 <head>
-<!-- 
+
 <meta charset="utf-8" />
-<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
-<meta content="WJM Inc,." name="author" />
-<meta
-	content="위시켓은 기업의 프로젝트와 개발자 &amp; 디자이너를 연결해주는 온라인 아웃소싱 서비스 입니다.
-더 이상 지인을 수소문하지 마세요, 위시켓에서 3시간이면 충분합니다."
-	name="description" />
-<meta content="593258114025512" property="fb:app_id" />
-<meta content="website" property="og:type" />
-<meta content="http://www.wishket.com" property="og:url" />
-<meta content="Wishket" property="og:title" />
-<meta content="http://www.wishket.com/static/img/wishket_logo_256.png"
-	property="og:image" />
-<meta
-	content="위시켓은 기업의 프로젝트와 개발자 &amp; 디자이너를 연결해주는 온라인 아웃소싱 서비스 입니다.
-더 이상 지인을 수소문하지 마세요, 위시켓에서 3시간이면 충분합니다."
-	property="og:description" />
-<meta content="k6UITCIVaYG0YtRsN8g4GF2T4qg7Z3M6JD2mLJte_n4"
-	name="google-site-verification" />
-<meta content="d2c8672ef81fcd9ceb62f51232d13aada8512a64"
-	name="naver-site-verification" />
-<title>위시켓(Wishket) · 회원가입</title>
-
- -->
-
+<meta http-equiv="Content-Language" content="ko" />
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
 <link
 	href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css"
@@ -44,57 +22,25 @@
 <link
 	href="${pageContext.request.contextPath}/resources/static/CACHE/css/35066c295d92.css"
 	rel="stylesheet" type="text/css" />
-<!--[if IE 7]><link rel="stylesheet" href="${pageContext.request.contextPath}/resources/static/CACHE/css/cc2b8202dedf.css" type="text/css" /><![endif]-->
-<!--[if IE 8]><link rel="stylesheet" href="${pageContext.request.contextPath}/resources/static/CACHE/css/0873b963b20a.css" type="text/css" /><![endif]-->
 <link
 	href="${pageContext.request.contextPath}/resources/static/django_facebook/css/facebook.css"
 	media="all" rel="stylesheet" />
-<!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 <script
 	src="${pageContext.request.contextPath}/resources/static/CACHE/js/a52a868564de.js"
 	type="text/javascript"></script>
 <link
 	href="${pageContext.request.contextPath}/resources/static/css/floating.css"
 	rel="stylesheet" />
-<script src="http://wcs.naver.net/wcslog.js" type="text/javascript"></script>
-<link
-	href="${pageContext.request.contextPath}/resources/static/favicon.ico"
-	rel="shortcut icon" type="image/x-icon" />
-<link
-	href="${pageContext.request.contextPath}/resources/static/favicon.ico"
-	rel="icon" type="image/x-icon" />
-<link
-	href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad.png"
-	rel="apple-touch-icon" sizes="76x76" />
-<link
-	href="${pageContext.request.contextPath}/resources/static/touch-icon-iphone-retina.png"
-	rel="apple-touch-icon" sizes="120x120" />
-<link
-	href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad-retina.png"
-	rel="apple-touch-icon" sizes="152x152" />
 <script
 	src="${pageContext.request.contextPath}/resources/static/CACHE/js/cb793deb7347.js"
 	type="text/javascript"></script>
 <script
 	src="${pageContext.request.contextPath}/resources/static/CACHE/js/c3617c8217d0.js"
 	type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/resources/js/jquery-1.11.3.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.validate.min.js"></script>
 </head>
 <body class=" account signup">
-	<div id="fb-root"></div>
-	<script
-		src="${pageContext.request.contextPath}/resources/static/django_facebook/js/facebook.js"
-		type="text/javascript"></script>
-	<script>
-    facebookAppId = '593258114025512';
-    facebookDefaultScope = ["email", "user_about_me", "user_birthday", "user_website"];
-    staticUrl = '${pageContext.request.contextPath}/resources/static/';
-    function facebookJSLoaded(){
-        FB.init({appId: facebookAppId, status: false, cookie: true, xfbml: true, oauth: true});
-    }
-    window.fbAsyncInit = facebookJSLoaded;
-    F = new facebookClass(facebookAppId);
-    F.load();
-</script>
 	<div id="wrap">
 		<header class="header">
 			<section class="nav-main nav-main-mini navbar" role="navigation"
@@ -133,82 +79,87 @@
 				</div>
 				<div class="content-inner">
 					<section class="signup-body">
-						<form autocomplete="off" class="form-horizontal" id="signup-form"
+						<form action="/wjm/accounts/signup/" autocomplete="off" class="form-horizontal" id="signup-form"
 							method="post">
 							<input name="csrfmiddlewaretoken" type="hidden"
 								value="6uNyCofkYxLTSsxGWtCuwuZEL7X1bTPR" />
-							<div class="form-group signup-usage ">
+							<div class="form-group signup-usage " id="account_type_div">
 								<label class="control-label required" for="id_usage"><span>*</span>이용목적</label>
 								<div class="control-wrapper">
 									<ul>
-										<li><label for="id_usage_1"><div
-													class="radio-no-selected one" id="radio-one"
-													onclick="check_usage();">
-													<input id="id_usage_1" name="usage" type="radio"
+										<li><label for="client"><div
+													class="radio-no-selected one">
+													<input id="client" name="usage" type="radio"
 														value="client" /><label class="radio-inline"
-														for="id_usage_1"><strong>클라이언트</strong><br />프로젝트를
+														for="client"><strong>클라이언트</strong><br />프로젝트를
 														의뢰하고 싶습니다.</label>
 												</div></label></li>
-										<li><label for="id_usage_2"><div
-													class="radio-no-selected two" id="radio-two"
-													onclick="check_usage();">
-													<input id="id_usage_2" name="usage" type="radio"
+										<li><label for="partners"><div
+													class="radio-no-selected two">
+													<input id="partners" name="usage" type="radio"
 														value="partners" /><label class="radio-inline"
-														for="id_usage_2"><strong>파트너스</strong><br />일거리를
+														for="partners"><strong>파트너스</strong><br />일거리를
 														찾고 있습니다.</label>
 												</div></label></li>
 									</ul>
+									<span class="help-block">${account_type_msg}</span>
+									
 								</div>
 							</div>
-							<div class="form-group ">
-								<label class="control-label required" for="id_email"><span>*</span>이메일</label>
+							<div class="form-group " id="email_div">
+								<label class="control-label required" for="email"><span>*</span>이메일</label>
 								<div class="email-control-wrapper">
 									<input autocomplete="off" class="required form-control"
-										id="id_email" maxlength="75" name="email" required="required"
+										id="email" maxlength="75" name="email" required="required"
 										type="text" />
+									<span class="help-block">${email_msg}</span>
+										
 								</div>
 							</div>
-							<div class="form-group ">
-								<label class="control-label required" for="id_username"><span>*</span>아이디</label>
+							<div class="form-group " id="id_div">
+								<label class="control-label required" for="id"><span>*</span>아이디</label>
 								<div class="control-wrapper">
 									<input autocomplete="off" class="required form-control"
-										id="id_username" name="username" required="required"
+										id="id" name="id" required="required"
 										type="text" />
+									<span class="help-block">${id_msg}</span>
 								</div>
 							</div>
-							<div class="form-group ">
-								<label class="control-label required" for="id_password1"><span>*</span>비밀번호</label>
+							<div class="form-group " id="password_div">
+								<label class="control-label required" for="password"><span>*</span>비밀번호</label>
 								<div class="control-wrapper">
 									<input autocomplete="off" class="required form-control"
-										id="id_password1" name="password1" required="required"
-										type="password" /><span class="help-block">비밀번호는 8자 이상
-										32자 이하로 입력해 주세요.</span>
+										id="password" name="password" required="required"
+										type="password" />
+									<span class="help-block">${password_msg}</span>
 								</div>
 							</div>
 							<div class="form-group ">
-								<label class="control-label required" for="id_password2"><span>*</span>비밀번호
+								<label class="control-label required" for="password_confirm"><span>*</span>비밀번호
 									재입력</label>
 								<div class="control-wrapper">
 									<input autocomplete="off" class="required form-control"
-										id="id_password2" name="password2" required="required"
+										id="password_confirm" name="password_confirm" required="required"
 										type="password" /><span class="help-block">동일한 비밀번호를
 										입력해 주세요.</span>
 								</div>
 							</div>
-							<div class="tos form-group ">
+							<div class="tos form-group " id="tos_div">
 								<div class="checkbox-wrapper">
 									<div class="checkbox" style="padding-top: 0 !important;">
-										<label for="id_tos"><input class="required"
-											id="id_tos" name="tos" type="checkbox" /><span><a
+										<label for="tos"><input class="required"
+											id="tos" name="tos" type="checkbox" /><span><a
 												href="/wjm/terms-of-service/">이용 약관</a> 및 <a
 												href="/wjm/privacy/">개인 정보 보호 방침</a>에 동의합니다.</span></label>
 									</div>
+									<span class="help-block">${tos_msg}</span>
 								</div>
 							</div>
 							<div class="form-group">
 								<div class="btn-wrapper">
 									<input class="btn btn-block btn-wishket btn-lg account-btn"
-										onclick="signup_clicked();" type="submit" value="회원가입" />
+										type="submit" value="회원가입" />
+										<!-- onclick="signup_clicked();"  -->
 								</div>
 							</div>
 						</form>
@@ -228,68 +179,70 @@
 		</div>
 		<div id="push"></div>
 	</div>
-	<footer class="footer">
-		<div class="footer-inner">
-			<div class="info">
-				<div class="footer-logo">
-					<img class="footer-logo-img"
-						src="${pageContext.request.contextPath}/resources/static/img/wishket_footer_logo.svg" />
-				</div>
-				<div class="contact">
-					<i class="fa fa-phone"></i> <a href="tel:82269254849">000-0000-0000</a><br />
-					<i class="fa fa-envelope"></i> <a href="mailto:help@wishket.com">test@test.com</a><br />
-					<img
-						src="${pageContext.request.contextPath}/resources/static/img/yellow_id.png"
-						style="margin-right: 4px;" /><a
-						href="http://goto.kakao.com/@wishket">Kakao ID 친구추가: @test</a><br />
-					고객센터 운영시간: 오전 10시부터 오후 6시까지<small>(공휴일 제외)</small>
-				</div>
-				<address class="address">
-					서울특별시 강남구 테헤란로77길 11-18 창애빌딩 4층<br /> 사업자등록번호: 209-81-57303 /
-					대표이사: 박우범<br />
-				</address>
-				<span class="copyright">© 2014 Wishket, inc.</span>
-			</div>
-			<div class="category">
-				<h5 class="category-heading">위시켓</h5>
-				<ul class="category-list">
-					<li class="category-item"><a href="/wjm/service-intro/">서비스
-							소개</a></li>
-					<li class="category-item"><a href="/wjm/client-use/">클라이언트
-							이용방법</a></li>
-					<li class="category-item"><a href="/wjm/partners-use/">파트너스
-							이용방법</a></li>
-					<li class="category-item"><a href="/wjm/service-fee/">이용요금</a></li>
-					<li class="category-item"><a href="/wjm/faq">자주 묻는 질문</a></li>
-				</ul>
-			</div>
-			<div class="category">
-				<h5 class="category-heading">관련 정보</h5>
-				<ul class="category-list">
-					<li class="category-item"><a href="/wjm/company-intro/">회사소개</a></li>
-					<li class="category-item"><a href="/wjm/terms-of-service/">이용약관</a></li>
-					<li class="category-item"><a
-						href="http://blog.wishket.com/category/media/">보도자료</a></li>
-				</ul>
-			</div>
-			<div class="category">
-				<h5 class="category-heading">관련 링크</h5>
-				<ul class="category-list">
-					<li class="category-item"><a
-						href="http://www.facebook.com/wishket">페이스북</a></li>
-					<li class="category-item"><a href="http://blog.wishket.com">블로그</a></li>
-					<li class="category-item"><a href="http://twitter.com/wishket">트위터</a></li>
-				</ul>
-				<div class="mixpanel-banner">
-					<a href="https://mixpanel.com/f/partner" target="_blank"><img
-						alt="Mobile Analytics"
-						src="//cdn.mxpnl.com/site_media/images/partner/badge_blue.png" /></a>
-				</div>
-			</div>
-		</div>
-	</footer>
+	
+	<jsp:include page="../footer.jsp" flush="false" />
+		
+	<script type="text/javascript">
+	$(document).ready(function(){
+		var tos_msg = "${tos_msg}";
+		var account_type_msg = "${account_type_msg}";
+		var id_msg = "${id_msg}";
+		var email_msg = "${email_msg}";
+		var password_msg = "${password_msg}";
+
+		var tos_val = "${tos_val}";
+		var account_type_val = "${account_type_val}";
+		var id_val = "${id_val}";
+		var email_val = "${email_val}";
+		
+		
+		if(tos_msg != null && tos_msg != "")
+		{
+			document.getElementById("tos").value = "${tos_val}";
+		}
+		
+		if(tos_val != null && tos_val != "")
+		{
+			document.getElementById("tos").checked = true;
+		}
+		
+		if(account_type_msg != null && account_type_msg != "")
+		{
+			$("#account_type_div").addClass('has-error');
+		}
+
+		if(account_type_val != null && account_type_val != "")
+		{
+			document.getElementById(account_type_val).checked = true;
+		}
+
+		if(id_msg != null && id_msg != "")
+		{
+			$("#id_div").addClass('has-error');
+		}
+		
+		if(id_val != null && id_val != "")
+		{
+			document.getElementById("id").value = "${id_val}";
+		}
+
+		if(email_msg != null && email_msg != "")
+		{
+			$("#email_div").addClass('has-error');
+		}
+		if(email_val != null && email_val != "")
+		{
+			document.getElementById("email").value = "${email_val}";
+		}
+		if(password_msg != null && password_msg != "")
+			$("#password_div").addClass('has-error');
+	});
+	</script>
+<!-- 
+
 	<script type="text/javascript">
     $(function () {
+    	
         var wjmLanguage = {
     errorTitle : 'Form submission failed!',
     requiredFields : '필수 입력 항목입니다.',
@@ -318,13 +271,38 @@
     wrongFileSize : 'The file you are trying to upload is too large',
     wrongFileType : 'The file you are trying to upload is of wrong type'
 };
-
         $.validate({
             language: wjmLanguage,
             form: '#signup-form'
         })
+        */
+        $("#signup-form").validate({
+        	rules: {
+        	    // simple rule, converted to {required:true}
+        	    username: "required",
+        	    // compound rule
+        	    email: {
+        	      required: true,
+        	      email: true
+        	    }
+        	  },
+
+        	  invalidHandler: function(event, validator) {
+        	    // 'this' refers to the form
+        	    var errors = validator.numberOfInvalids();
+        	    if (errors) {
+        	      var message = errors == 1
+        	        ? 'You missed 1 field. It has been highlighted'
+        	        : 'You missed ' + errors + ' fields. They have been highlighted';
+        	      $("div.error span").html(message);
+        	      $("div.error").show();
+        	    } else {
+        	      $("div.error").hide();
+        	    }
+        	  }
+        });
         
-    })
+    });
 </script>
 	<script>
     function check_usage(){
@@ -347,13 +325,7 @@
         }
     }
 </script>
-<script type="text/javascript">
-  $(function() {
-    wishket.init();
-    
-    svgeezy.init(false, 'png');
-  });
-</script>
+ -->
 <script>
 
 $( document ).ready(function($) {
@@ -399,49 +371,3 @@ $( document ).ready(function($) {
 });
 
 </script>
-
-<script>
-function signup_clicked()
-{
-	
-}
-</script>
-<!--
-	<script type="text/javascript">
-        var TRS_AIDX = 9287;
-        var TRS_PROTOCOL = document.location.protocol;
-        document.writeln();
-        var TRS_URL = TRS_PROTOCOL + '//' + ((TRS_PROTOCOL=='https:')?'analysis.adinsight.co.kr':'adlog.adinsight.co.kr') +  '/emnet/trs_esc.js';
-        document.writeln("<scr"+"ipt language='javascript' src='" + TRS_URL + "'></scr"+"ipt>");
-        </script>
-	<script type="text/javascript">
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-        ga('create', 'UA-31427125-2', 'wishket.com');
-        var ga_now = new Date();
-        var dimension4Value = "Y" + ga_now.getFullYear()
-                              + "M" + (ga_now.getMonth()+1)
-                              + "D" + (ga_now.getDate())
-                              + "H" + (ga_now.getHours())
-                              + "I" + (ga_now.getMinutes())
-                              + "W" + (ga_now.getDay());
-        ga('require', 'displayfeatures');
-        ga('set', '&uid', 'None');
-        ga('send', 'pageview', {
-          'dimension1': 'anonymous',
-          'dimension2': 'unknown',
-          'dimension3': 'None',
-          'dimension4': dimension4Value
-        });
-      </script>
-        -->
-	<script type="text/javascript">(function(e,b){if(!b.__SV){var a,f,i,g;window.mixpanel=b;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===e.location.protocol?"https:":"http:")+'//cdn.mxpnl.com/libs/mixpanel-2.2.min.js';f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f);b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==
-typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.set_once people.increment people.append people.track_charge people.clear_charges people.delete_user".split(" ");for(g=0;g<i.length;g++)f(c,i[g]);
-b._i.push([a,e,d])};b.__SV=1.2}})(document,window.mixpanel||[]);
-mixpanel.init("c7b742deb9d00b4f1c0e1e9e8c5c3115");</script>
-	<script type="text/javascript"> if (!wcs_add) var wcs_add={}; wcs_add["wa"] = "s_3225afd5bb50";if (!_nasa) var _nasa={};wcs.inflow();wcs_do(_nasa);</script>
-</body>
-</html>

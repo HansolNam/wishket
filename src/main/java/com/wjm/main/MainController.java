@@ -34,7 +34,16 @@ public class MainController {
 		
 		return "index";
 	}
-
+	
+	/**
+	 * footer 화면
+	 */
+	@RequestMapping(value = "/footer", method = RequestMethod.GET)
+	public String MainController_footer(HttpServletRequest request) {
+		logger.info("footer Page");
+		
+		return "footer";
+	}
 	/**
 	 * 프로젝트 화면
 	 */
@@ -122,5 +131,15 @@ public class MainController {
 		logger.info("privacy Page");
 		
 		return "privacy";
+	}
+
+	/**
+	 * test
+	 */
+	@RequestMapping(value = "/test", method = RequestMethod.GET)
+	public String MainController_test(HttpServletRequest request) {
+		logger.info("test Page");
+		
+		return "test";
 	}
 }
