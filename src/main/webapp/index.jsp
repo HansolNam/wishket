@@ -68,28 +68,33 @@
 </script>
 	<div id="wrap">
 		<header class="header">
-		<section class="nav-main nav-main-mini navbar" role="navigation">
-		<div class="container">
-			<div class="nav-inner">
-				<div class="navbar-header navbar-not-login">
-					<a class="navbar-brand" href="/">Wishket</a>
+			<section class="nav-main nav-main-mini navbar" role="navigation"
+				style="background-color: #2d3a45">
+				<div class="container" style="background-color: #2d3a45">
+					<div class="nav-inner" style="background-color: #2d3a45">
+						<div class="navbar-header navbar-not-login"
+							style="background-color: #2d3a45">
+							<a class="navbar-brand" href="/">WJM</a>
+						</div>
+						<nav>
+							<ul class="nav navbar-nav nav-primary">
+								<li><a href="/wjm/project/add/">프로젝트 등록</a></li>
+								<li class=""><a href="/wjm/project/">프로젝트 찾기</a></li>
+								<li class=""><a href="/wjm/partners/">파트너스 목록</a></li>
+								<li><a href="/wjm/service-intro/">이용방법</a></li>
+							</ul>
+							<span class="navbar-nav navbar-right"><span class="w-help"><a
+									href="/wjm/service-intro/"><i
+										class="fa fa-question-circle fa-lg" style="color: #fff"></i></a></span> <span
+								class="w-login"><a class="btn btn-login"
+									href="/wjm/accounts/login/" style="color: #fff">로그인</a></span> <span
+								class="w-signup"><a class="btn btn-signup"
+									href="/wjm/accounts/signup/" style="color: #fff">회원가입</a></span></span>
+						</nav>
+					</div>
 				</div>
-				<nav>
-				<ul class="nav navbar-nav nav-primary">
-					<li><a href="/wjm/project/add/">프로젝트 등록</a></li>
-					<li class=""><a href="/wjm/project/">프로젝트 찾기</a></li>
-					<li class=""><a href="/wjm/partners/">파트너스 목록</a></li>
-					<li><a href="/wjm/service-intro/">이용방법</a></li>
-				</ul>
-				<span class="navbar-nav navbar-right"><span class="w-help"><a
-						href="/wjm/service-intro/"><i class="fa fa-question-circle fa-lg"></i></a></span>
-					<span class="w-login"><a class="btn btn-login"
-						href="/wjm/accounts/login/" style="color: #fff">로그인</a></span> <span
-					class="w-signup"><a class="btn btn-signup"
-						href="/wjm/accounts/signup/" style="color: #fff">회원가입</a></span></span></nav>
-			</div>
-		</div>
-		</section></header>
+			</section>
+		</header>
 		<div class="jumbotron">
 			<div class="jumbotron-inner">
 				<div class="invitation">

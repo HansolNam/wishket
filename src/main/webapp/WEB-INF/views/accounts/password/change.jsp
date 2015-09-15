@@ -20,7 +20,7 @@
 <meta content="website" property="og:type" />
 <meta content="http://www.wishket.com" property="og:url" />
 <meta content="Wishket" property="og:title" />
-<meta content="http://www.wishket.com/static/img/wishket_logo_256.png"
+<meta content="http://www.wishket.com${pageContext.request.contextPath}/resources/static/img/wishket_logo_256.png"
 	property="og:image" />
 <meta
 	content="위시켓은 기업의 프로젝트와 개발자 &amp; 디자이너를 연결해주는 온라인 아웃소싱 서비스 입니다.
@@ -32,39 +32,39 @@
 	name="naver-site-verification" />
 <title>위시켓(Wishket) · 비밀번호 변경</title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
-<link href="/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
+<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
 	type="text/css" />
-<link href="/static/CACHE/css/aa41eeaffc60.css" rel="stylesheet"
+<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/aa41eeaffc60.css" rel="stylesheet"
 	type="text/css" />
-<link href="/static/CACHE/css/35066c295d92.css" rel="stylesheet"
+<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/35066c295d92.css" rel="stylesheet"
 	type="text/css" />
-<!--[if IE 7]><link rel="stylesheet" href="/static/CACHE/css/cc2b8202dedf.css" type="text/css" /><![endif]-->
-<!--[if IE 8]><link rel="stylesheet" href="/static/CACHE/css/0873b963b20a.css" type="text/css" /><![endif]-->
-<link href="/static/django_facebook/css/facebook.css" media="all"
+<!--[if IE 7]><link rel="stylesheet" href="${pageContext.request.contextPath}/resources/static/CACHE/css/cc2b8202dedf.css" type="text/css" /><![endif]-->
+<!--[if IE 8]><link rel="stylesheet" href="${pageContext.request.contextPath}/resources/static/CACHE/css/0873b963b20a.css" type="text/css" /><![endif]-->
+<link href="${pageContext.request.contextPath}/resources/static/django_facebook/css/facebook.css" media="all"
 	rel="stylesheet" />
 <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-<script src="/static/CACHE/js/a52a868564de.js" type="text/javascript"></script>
-<link href="/static/css/floating.css" rel="stylesheet" />
+<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/a52a868564de.js" type="text/javascript"></script>
+<link href="${pageContext.request.contextPath}/resources/static/css/floating.css" rel="stylesheet" />
 <script src="http://wcs.naver.net/wcslog.js" type="text/javascript"></script>
-<link href="/static/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-<link href="/static/favicon.ico" rel="icon" type="image/x-icon" />
-<link href="/static/touch-icon-ipad.png" rel="apple-touch-icon"
+<link href="${pageContext.request.contextPath}/resources/static/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+<link href="${pageContext.request.contextPath}/resources/static/favicon.ico" rel="icon" type="image/x-icon" />
+<link href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad.png" rel="apple-touch-icon"
 	sizes="76x76" />
-<link href="/static/touch-icon-iphone-retina.png" rel="apple-touch-icon"
+<link href="${pageContext.request.contextPath}/resources/static/touch-icon-iphone-retina.png" rel="apple-touch-icon"
 	sizes="120x120" />
-<link href="/static/touch-icon-ipad-retina.png" rel="apple-touch-icon"
+<link href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad-retina.png" rel="apple-touch-icon"
 	sizes="152x152" />
-<script src="/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
-<script src="/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
 </head>
 <body class="logged-in client account-setting">
 	<div id="fb-root"></div>
-	<script src="/static/django_facebook/js/facebook.js"
+	<script src="${pageContext.request.contextPath}/resources/static/django_facebook/js/facebook.js"
 		type="text/javascript"></script>
 	<script>
     facebookAppId = '593258114025512';
     facebookDefaultScope = ["email", "user_about_me", "user_birthday", "user_website"];
-    staticUrl = '/static/';
+    staticUrl = '${pageContext.request.contextPath}/resources/static/';
     function facebookJSLoaded(){
         FB.init({appId: facebookAppId, status: false, cookie: true, xfbml: true, oauth: true});
     }
@@ -143,7 +143,7 @@
 						<h3 class="user-name-tag-heading">클라이언트</h3>
 						<div class="user-name-tag-body">
 							<img alt="gksthf16111 사진" class="img-circle user-img"
-								src="/static/img/default_avatar.jpg" />
+								src="${pageContext.request.contextPath}/resources/static/img/default_avatar.jpg" />
 							<h4 class="username">gksthf16111</h4>
 							<a class="profile-setting" href="/accounts/settings/profile/">기본
 								정보 수정</a>
@@ -171,7 +171,7 @@
 					</div>
 					<div class="content-inner">
 						<div class="process-guide-box">
-							<img src="/static/img/process-guide-warning.png" />
+							<img src="${pageContext.request.contextPath}/resources/static/img/process-guide-warning.png" />
 							<p class="process-guide-title-text">
 								<strong>[ 비밀번호 변경 가이드 ]</strong><br /> 다른 사이트에서 사용하지 않는 <strong>고유한
 									비밀번호</strong>를 사용하시고, 주기적으로 변경해주세요.
@@ -220,12 +220,12 @@
 		<div class="info">
 			<div class="footer-logo">
 				<img class="footer-logo-img"
-					src="/static/img/wishket_footer_logo.svg" />
+					src="${pageContext.request.contextPath}/resources/static/img/wishket_footer_logo.svg" />
 			</div>
 			<div class="contact">
 				<i class="fa fa-phone"></i> <a href="tel:82269254849">02-6925-4849</a><br />
 				<i class="fa fa-envelope"></i> <a href="mailto:help@wishket.com">help@wishket.com</a><br />
-				<img src="/static/img/yellow_id.png" style="margin-right: 4px;" /><a
+				<img src="${pageContext.request.contextPath}/resources/static/img/yellow_id.png" style="margin-right: 4px;" /><a
 					href="http://goto.kakao.com/@wishket">Kakao ID 친구추가: @wishket</a><br />
 				고객센터 운영시간: 오전 10시부터 오후 6시까지<small>(공휴일 제외)</small>
 			</div>

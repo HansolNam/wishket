@@ -38,31 +38,7 @@
 </head>
 <body class=" account login">
 	<div id="wrap">
-		<header class="header">
-		<section class="nav-main nav-main-mini navbar" role="navigation"
-			style="background-color:#2d3a45">
-		<div class="container" style="background-color: #2d3a45">
-			<div class="nav-inner" style="background-color: #2d3a45">
-				<div class="navbar-header navbar-not-login"
-					style="background-color: #2d3a45">
-					<a class="navbar-brand" href="/">Wishket</a>
-				</div>
-				<nav>
-				<ul class="nav navbar-nav nav-primary">
-					<li><a href="/main/project/add/">프로젝트 등록</a></li>
-					<li class=""><a href="/main/project/">프로젝트 찾기</a></li>
-					<li class=""><a href="/main/partners/">파트너스 목록</a></li>
-					<li><a href="/main/service-intro/">이용방법</a></li>
-				</ul>
-				<span class="navbar-nav navbar-right"><span class="w-help"><a
-						href="/main/service-intro/"><i class="fa fa-question-circle fa-lg"
-							style="color: #fff"></i></a></span> <span class="w-login"><a
-						class="btn btn-login" href="/main/accounts/login/" style="color: #fff">로그인</a></span>
-					<span class="w-signup"><a class="btn btn-signup"
-						href="/main/accounts/signup/" style="color: #fff">회원가입</a></span></span></nav>
-			</div>
-		</div>
-		</section></header>
+	<jsp:include page="../header.jsp" flush="false" />
 		<div class="container">
 			<div id="messages">
 			</div>

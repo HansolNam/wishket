@@ -42,34 +42,12 @@ response.setContentType("text/html; charset=UTF-8");
 </head>
 <body class=" account signup">
 	<div id="wrap">
-		<header class="header">
-			<section class="nav-main nav-main-mini navbar" role="navigation"
-				style="background-color: #2d3a45">
-				<div class="container" style="background-color: #2d3a45">
-					<div class="nav-inner" style="background-color: #2d3a45">
-						<div class="navbar-header navbar-not-login"
-							style="background-color: #2d3a45">
-							<a class="navbar-brand" href="/">WJM</a>
-						</div>
-						<nav>
-							<ul class="nav navbar-nav nav-primary">
-								<li><a href="/wjm/project/add/">프로젝트 등록</a></li>
-								<li class=""><a href="/wjm/project/">프로젝트 찾기</a></li>
-								<li class=""><a href="/wjm/partners/">파트너스 목록</a></li>
-								<li><a href="/wjm/service-intro/">이용방법</a></li>
-							</ul>
-							<span class="navbar-nav navbar-right"><span class="w-help"><a
-									href="/wjm/service-intro/"><i
-										class="fa fa-question-circle fa-lg" style="color: #fff"></i></a></span> <span
-								class="w-login"><a class="btn btn-login"
-									href="/wjm/accounts/login/" style="color: #fff">로그인</a></span> <span
-								class="w-signup"><a class="btn btn-signup"
-									href="/wjm/accounts/signup/" style="color: #fff">회원가입</a></span></span>
-						</nav>
-					</div>
-				</div>
-			</section>
-		</header>
+	
+	<jsp:include page="../header.jsp" flush="false" />
+		<div class="container">
+			<div id="messages">
+			</div>
+		</div>
 		<div class="page">
 			<div class="content">
 				<div class="content-header">
@@ -195,10 +173,9 @@ response.setContentType("text/html; charset=UTF-8");
 		var id_val = "${id_val}";
 		var email_val = "${email_val}";
 		
-		
 		if(tos_msg != null && tos_msg != "")
 		{
-			document.getElementById("tos").value = "${tos_val}";
+			$("#tos_div").addClass('has-error');
 		}
 		
 		if(tos_val != null && tos_val != "")
@@ -236,96 +213,10 @@ response.setContentType("text/html; charset=UTF-8");
 		}
 		if(password_msg != null && password_msg != "")
 			$("#password_div").addClass('has-error');
+		
 	});
 	</script>
-<!-- 
 
-	<script type="text/javascript">
-    $(function () {
-    	
-        var wjmLanguage = {
-    errorTitle : 'Form submission failed!',
-    requiredFields : '필수 입력 항목입니다.',
-    badTime : 'You have not given a correct time',
-    badEmail : 'You have not given a correct e-mail address',
-    badTelephone : 'You have not given a correct phone number',
-    badSecurityAnswer : 'You have not given a correct answer to the security question',
-    badDate : 'You have not given a correct date',
-    tooLongStart : 'You have given an answer longer than ',
-    tooLongEnd : ' characters',
-    tooShortStart : 'You have given an answer shorter than ',
-    tooShortEnd : ' characters',
-    badLength : 'You have to give an answer between ',
-    notConfirmed : 'Values could not be confirmed',
-    badDomain : 'Incorrect domain value',
-    badUrl : 'The answer you gave was not a correct URL',
-    badCustomVal : 'You gave an incorrect answer',
-    badInt : 'The answer you gave was not a correct number',
-    badSecurityNumber : 'Your social security number was incorrect',
-    badUKVatAnswer : 'Incorrect UK VAT Number',
-    badStrength : 'The password isn\'t strong enough',
-    badNumberOfSelectedOptionsStart : 'You have to choose at least ',
-    badNumberOfSelectedOptionsEnd : ' answers',
-    badAlphaNumeric : 'The answer you gave must contain only alphanumeric characters ',
-    badAlphaNumericExtra: ' and ',
-    wrongFileSize : 'The file you are trying to upload is too large',
-    wrongFileType : 'The file you are trying to upload is of wrong type'
-};
-        $.validate({
-            language: wjmLanguage,
-            form: '#signup-form'
-        })
-        */
-        $("#signup-form").validate({
-        	rules: {
-        	    // simple rule, converted to {required:true}
-        	    username: "required",
-        	    // compound rule
-        	    email: {
-        	      required: true,
-        	      email: true
-        	    }
-        	  },
-
-        	  invalidHandler: function(event, validator) {
-        	    // 'this' refers to the form
-        	    var errors = validator.numberOfInvalids();
-        	    if (errors) {
-        	      var message = errors == 1
-        	        ? 'You missed 1 field. It has been highlighted'
-        	        : 'You missed ' + errors + ' fields. They have been highlighted';
-        	      $("div.error span").html(message);
-        	      $("div.error").show();
-        	    } else {
-        	      $("div.error").hide();
-        	    }
-        	  }
-        });
-        
-    });
-</script>
-	<script>
-    function check_usage(){
-        var one_check = document.getElementById('id_usage_1');
-        var one = document.getElementById('radio-one');
-        var two_check = document.getElementById('id_usage_2');
-        var two = document.getElementById('radio-two');
-
-        if (one_check.checked === true){
-            one.className = "radio-selected one";
-        }
-        else {
-            one.className = "radio-no-selected one";
-        }
-        if (two_check.checked === true){
-            two.className = "radio-selected two";
-        }
-        else {
-            two.className = "radio-no-selected two";
-        }
-    }
-</script>
- -->
 <script>
 
 $( document ).ready(function($) {

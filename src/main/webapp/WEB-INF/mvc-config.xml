@@ -14,7 +14,7 @@
 
 
 	<context:component-scan base-package="com.wjm.main"></context:component-scan>
-
+	
     <annotation-driven />
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
@@ -43,6 +43,9 @@
 	<beans:bean id="AccountDao" class="com.wjm.dao.AccountDao">
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>
+	<beans:bean id="AccountInformationDao" class="com.wjm.dao.AccountInformationDao">
+		<beans:property name="dataSource" ref="dataSource" />
+	</beans:bean>
 	<beans:bean id="AssessmentDao" class="com.wjm.dao.AssessmentDao">
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>
@@ -68,5 +71,20 @@
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>
 	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
-
+	<interceptors>
+        <interceptor> 
+        	<!-- 로그인체크 인터셉터 클래스 -->
+           <mapping path="/accounts/password/*"/>
+           <mapping path="/accounts/settings/*"/>
+           <mapping path="/accounts/notification"/>
+           <mapping path="/client/*"/>
+           <mapping path="/mywjm/*"/>
+           <mapping path="/partners/*"/>
+           <mapping path="/project/*"/>
+           <mapping path="/project/add/*"/>
+                <beans:bean class="com.wjm.interceptor.Interceptor"/>
+        </interceptor>
+        
+        
+    </interceptors>
 </beans:beans>

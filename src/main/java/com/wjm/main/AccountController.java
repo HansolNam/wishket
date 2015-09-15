@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.wjm.dao.AccountDao;
+import com.wjm.dao.AccountInformationDao;
 import com.wjm.models.AccountInfo;
 
 /**
@@ -28,7 +29,19 @@ public class AccountController {
 	   
 	@Autowired
 	private AccountDao accountDao;
-
+	
+	@Autowired
+	private AccountInformationDao accountInformationDao;
+	/**
+	 * 로그인 페이지
+	 */
+	@RequestMapping(value = "/accounts/notifications", method = RequestMethod.GET)
+	public String MainController_notifications_get(HttpServletRequest request) {
+		logger.info("notifications Get Page");
+		
+		return "/accounts/notifications";
+	}
+	
 	/**
 	 * 로그인 페이지
 	 */
@@ -50,7 +63,7 @@ public class AccountController {
 		logger.info("login Post Page");
 
 		ModelAndView mv = new ModelAndView();
-		String return_val = "/accounts/login";
+		String return_val = "redirect:/accounts/login";
 		
 		mv.setViewName(return_val);
 		
@@ -83,17 +96,17 @@ public class AccountController {
 		//클라이언트의 경우
 		if(account.getAccount_type().equals("client"))
 		{
-			return_val = "/mywjm/client";
+			return_val = "redirect:/mywjm/client";
 		}
 		//파트너스의 경우
 		else if(account.getAccount_type().equals("partners"))
 		{
-			return_val = "/mywjm/partners";
+			return_val = "redirect:/mywjm/partners";
 		}
 		//둘다 아닌 경우, 오류..
 		else
 		{
-			return_val = "/index";
+			return_val = "redirect:/index";
 		}
 		
 		mv.setViewName(return_val);
@@ -130,7 +143,7 @@ public class AccountController {
 				
 		logger.info("id = "+id);
 		//반환 뷰 값
-		String return_val = "/accounts/signup";
+		String return_val = "redirect:/accounts/signup";
 		//등록 가능 여부
 		boolean isAvailable = true;
 		
@@ -224,11 +237,67 @@ public class AccountController {
 
 		if(isAvailable)
 		{
-			accountDao.signup(id, email, password, account_type);		
-			mv.setViewName("/index");
+			accountDao.signup(id, email, password, account_type);
+			mv.setViewName("redirect:/accounts/login");
 		}
 		
 		return mv;
+	}
+	
+	/**
+	 * 회원가입 페이지
+	 */
+	@RequestMapping(value = "/accounts/password/change", method = RequestMethod.GET)
+	public String AccountController_password_change_get(HttpServletRequest request) {
+		logger.info("/accounts/password/change Get Page");
+		
+		return "/accounts/password/change";
+	}
+	/**
+	 * 회원가입 페이지
+	 */
+	@RequestMapping(value = "/accounts/settings/bank_account", method = RequestMethod.GET)
+	public String AccountController_bank_account_get(HttpServletRequest request) {
+		logger.info("bank_account Get Page");
+		
+		return "/accounts/settings/bank_account";
+	}
+	/**
+	 * 회원가입 페이지
+	 */
+	@RequestMapping(value = "/accounts/settings/profile", method = RequestMethod.GET)
+	public String AccountController_profile_get(HttpServletRequest request) {
+		logger.info("profile Get Page");
+		
+		return "/accounts/settings/profile";
+	}
+	/**
+	 * 회원가입 페이지
+	 */
+	@RequestMapping(value = "/accounts/settings/relogin", method = RequestMethod.GET)
+	public String AccountController_relogin_get(HttpServletRequest request) {
+		logger.info("relogin Get Page");
+		
+		return "/accounts/settings/relogin";
+	}
+	/**
+	 * 회원가입 페이지
+	 */
+	@RequestMapping(value = "/accounts/settings/verify_identity", method = RequestMethod.GET)
+	public String AccountController_verify_identity_get(HttpServletRequest request) {
+		logger.info("verify_identity Get Page");
+		
+		return "/accounts/settings/change";
+	}
+	
+	/** 로그아웃 */
+	@RequestMapping(value = "/accounts/logout", method = RequestMethod.GET)
+	public String AccountController_logout(HttpServletRequest request) {
+		logger.info("logout Page");
+		
+		request.getSession().invalidate();
+		
+		return "redirect:/index";
 	}
 	
 	public boolean isEmail(String email)

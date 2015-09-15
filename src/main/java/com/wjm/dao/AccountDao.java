@@ -48,26 +48,8 @@ public class AccountDao implements AccountIDao {
 		    				, resultSet.getString("password")
 		    				, resultSet.getString("account_type")
 		    				, resultSet.getInt("authorized")
-		    				, resultSet.getString("authorized_key")
-		    				, resultSet.getTimestamp("reg_date")
-		    				, resultSet.getString("profile_img")
-		    				, resultSet.getString("form")
-		    				, resultSet.getString("name")
-		    				, resultSet.getString("sex")
-		    				, resultSet.getTimestamp("birth_date")
-		    				, resultSet.getString("regionL")
-		    				, resultSet.getString("regionM")
-		    				, resultSet.getString("regionR")
-		    				, resultSet.getString("cellphone_num")
-		    				, resultSet.getString("telephone_num")
-		    				, resultSet.getString("fax_num")
-		    				, resultSet.getInt("subscription")
-		    				, resultSet.getString("identity_authentication")
-		    				, resultSet.getString("identity_doc")
-		    				, resultSet.getString("bank_name")
-		    				, resultSet.getString("account_holder")
-		    				, resultSet.getString("account_number")
-		    				, resultSet.getString("introduction"));
+		    				, resultSet.getString("authorization_key")
+		    				, resultSet.getTimestamp("reg_date"));
 		    	}
 		    });
 	}
@@ -85,25 +67,7 @@ public class AccountDao implements AccountIDao {
 		    				, resultSet.getString("account_type")
 		    				, resultSet.getInt("authorized")
 		    				, resultSet.getString("authorization_key")
-		    				, resultSet.getTimestamp("reg_date")
-		    				, resultSet.getString("profile_img")
-		    				, resultSet.getString("form")
-		    				, resultSet.getString("name")
-		    				, resultSet.getString("sex")
-		    				, resultSet.getTimestamp("birth_date")
-		    				, resultSet.getString("regionL")
-		    				, resultSet.getString("regionM")
-		    				, resultSet.getString("regionR")
-		    				, resultSet.getString("cellphone_num")
-		    				, resultSet.getString("telephone_num")
-		    				, resultSet.getString("fax_num")
-		    				, resultSet.getInt("subscription")
-		    				, resultSet.getString("identity_authentication")
-		    				, resultSet.getString("identity_doc")
-		    				, resultSet.getString("bank_name")
-		    				, resultSet.getString("account_holder")
-		    				, resultSet.getString("account_number")
-		    				, resultSet.getString("introduction"));
+		    				, resultSet.getTimestamp("reg_date"));
 		    	}
 		    });
 	}	
@@ -121,25 +85,7 @@ public class AccountDao implements AccountIDao {
 		    				, resultSet.getString("account_type")
 		    				, resultSet.getInt("authorized")
 		    				, resultSet.getString("authorization_key")
-		    				, resultSet.getTimestamp("reg_date")
-		    				, resultSet.getString("profile_img")
-		    				, resultSet.getString("form")
-		    				, resultSet.getString("name")
-		    				, resultSet.getString("sex")
-		    				, resultSet.getTimestamp("birth_date")
-		    				, resultSet.getString("regionL")
-		    				, resultSet.getString("regionM")
-		    				, resultSet.getString("regionR")
-		    				, resultSet.getString("cellphone_num")
-		    				, resultSet.getString("telephone_num")
-		    				, resultSet.getString("fax_num")
-		    				, resultSet.getInt("subscription")
-		    				, resultSet.getString("identity_authentication")
-		    				, resultSet.getString("identity_doc")
-		    				, resultSet.getString("bank_name")
-		    				, resultSet.getString("account_holder")
-		    				, resultSet.getString("account_number")
-		    				, resultSet.getString("introduction"));
+		    				, resultSet.getTimestamp("reg_date"));
 		    	}
 		    });
 	}

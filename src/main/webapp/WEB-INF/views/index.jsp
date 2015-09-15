@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page import="com.wjm.models.AccountInfo"%>
+
 <html class="no-js modern" lang="ko">
 <head
 	prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#">
@@ -67,29 +69,7 @@
     F.load();
 </script>
 	<div id="wrap">
-		<header class="header">
-		<section class="nav-main nav-main-mini navbar" role="navigation">
-		<div class="container">
-			<div class="nav-inner">
-				<div class="navbar-header navbar-not-login">
-					<a class="navbar-brand" href="/">Wishket</a>
-				</div>
-				<nav>
-				<ul class="nav navbar-nav nav-primary">
-					<li><a href="/wjm/project/add/">프로젝트 등록</a></li>
-					<li class=""><a href="/wjm/project/">프로젝트 찾기</a></li>
-					<li class=""><a href="/wjm/partners/">파트너스 목록</a></li>
-					<li><a href="/wjm/service-intro/">이용방법</a></li>
-				</ul>
-				<span class="navbar-nav navbar-right"><span class="w-help"><a
-						href="/wjm/service-intro/"><i class="fa fa-question-circle fa-lg"></i></a></span>
-					<span class="w-login"><a class="btn btn-login"
-						href="/wjm/accounts/login/" style="color: #fff">로그인</a></span> <span
-					class="w-signup"><a class="btn btn-signup"
-						href="/wjm/accounts/signup/" style="color: #fff">회원가입</a></span></span></nav>
-			</div>
-		</div>
-		</section></header>
+		<jsp:include page="header.jsp" flush="false" />
 		<div class="jumbotron">
 			<div class="jumbotron-inner">
 				<div class="invitation">

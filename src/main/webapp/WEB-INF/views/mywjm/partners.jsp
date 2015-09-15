@@ -73,69 +73,7 @@
     F.load();
 </script>
 	<div id="wrap">
-		<header class="header">
-		<section class="nav-main navbar" role="navigation"
-			style="background-color: #2d3a45;">
-		<div class="container" style="background-color: #2d3a45; color: #fff;">
-			<div class="nav-inner"
-				style="background-color: #2d3a45; color: #fff;">
-				<div class="navbar-header active" style="color: #fff">
-					<a class="navbar-brand" href="/mywishket/">Wishket</a>
-				</div>
-				<nav>
-				<ul class="nav navbar-nav nav-primary">
-					<li class="" style="color: #fff"><a href="/project/"
-						style="color: #fff">프로젝트 찾기</a></li>
-					<li class="" style="color: #fff"><a href="/partners/"
-						style="color: #fff">파트너스 목록</a></li>
-				</ul>
-				<ul class="nav navbar-nav navbar-right nav-secondary">
-					<li class="help"><a
-						class="nav-help pull-left how_to_use_button" href="/partners-use/"><i
-							class="fa fa-question-circle fa-lg "></i></a></li>
-					<li class="notification"><a
-						class="nav-notification how_to_use_button"
-						href="/accounts/notifications/"><i class="fa fa-bell fa-lg "></i></a></li>
-					<li class="dropdown"><a
-						class="dropdown-toggle how_to_use_button" data-toggle="dropdown"
-						href="#">gksthf16112님 <b class="fa fa-caret-down"></b></a>
-					<ul class="dropdown-menu">
-							<li><a href="/partners/p/gksthf16112/" tabindex="-1">내
-									프로필 보기</a></li>
-							<li><a href="/partners/p/gksthf16112/info/update/"
-								tabindex="-1">프로필 정보 관리</a></li>
-							<li><a href="/accounts/settings/profile/" tabindex="-1">계정
-									설정</a></li>
-							<li class="divider"></li>
-							<li class="dropdown_li"><a class="dropdown_li"
-								href="/accounts/logout/" tabindex="-1">로그아웃</a></li>
-						</ul></li>
-				</ul>
-				</nav>
-			</div>
-		</div>
-		</section>
-		<section class="nav-sub"
-			style="box-shadow: 1px 1px #bdc4cc; background-color: #dadee2;">
-		<div class="container">
-			<div class="nav-inner">
-				<nav>
-				<ul class="nav navbar-nav">
-					<li class=""><a href="/partners/p/gksthf16112/"
-						style="color: #333; font-weight: 500 !important;">내 프로필</a></li>
-					<li class=""><a href="/partners/manage/interest/"
-						style="color: #333; font-weight: 500 !important;">관심 프로젝트</a></li>
-					<li class=""><a href="/partners/manage/proposal/"
-						style="color: #333; font-weight: 500 !important;">지원 내역</a></li>
-					<li class=""><a href="/partners/manage/contract-in-progress/"
-						style="color: #333; font-weight: 500 !important;">진행 중인 프로젝트</a></li>
-					<li class=""><a href="/partners/manage/past/review-contract/"
-						style="color: #333; font-weight: 500 !important;">완료한 프로젝트</a></li>
-				</ul>
-				</nav>
-			</div>
-		</div>
-		</section></header>
+	<jsp:include page="../header.jsp" flush="false" />
 		<div class="container">
 			<div id="messages"></div>
 		</div>
