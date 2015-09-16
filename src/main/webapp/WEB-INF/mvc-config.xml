@@ -46,6 +46,9 @@
 	<beans:bean id="AccountInformationDao" class="com.wjm.dao.AccountInformationDao">
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>
+	<beans:bean id="AreaDetailDao" class="com.wjm.dao.AreaDetailDao">
+		<beans:property name="dataSource" ref="dataSource" />
+	</beans:bean>
 	<beans:bean id="AssessmentDao" class="com.wjm.dao.AssessmentDao">
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>

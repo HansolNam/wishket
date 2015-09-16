@@ -1,8 +1,8 @@
 package com.wjm.main;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +19,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.wjm.dao.AccountDao;
 import com.wjm.dao.AccountInformationDao;
+import com.wjm.dao.AreaDetailDao;
 import com.wjm.dao.ProjectDao;
+import com.wjm.main.function.Time;
+import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
 
 import net.sf.json.JSONObject;
@@ -31,6 +34,8 @@ import net.sf.json.JSONObject;
 public class ProjectController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ProjectController.class);
+
+	private static final boolean Available = false;
 	   
 	@Autowired
 	private ProjectDao projectDao;
@@ -39,6 +44,9 @@ public class ProjectController {
 
 	@Autowired
 	private AccountInformationDao accountInformationDao;
+	
+	@Autowired
+	private AreaDetailDao areaDetailDao;
 	/**
 	 * 프로젝트 추가
 	 */
@@ -111,7 +119,7 @@ public class ProjectController {
 		}
 		
 		//핸드폰번호
-		if(!isPhoneCode(cellphone_num_code)||!isDigit(cellphone_num_middle)||!isDigit(cellphone_num_end))
+		if(!Validator.isPhoneCode(cellphone_num_code)||!Validator.isDigit(cellphone_num_middle)||!Validator.isDigit(cellphone_num_end))
 		{
 			mv.addObject("cellphone_num_msg","핸드폰번호를 올바르게 선택해주세요.");
 		}
@@ -121,7 +129,7 @@ public class ProjectController {
 		}
 		
 		//회사 형태
-		if(!isCompanyForm(form))
+		if(!Validator.isCompanyForm(form))
 		{
 			mv.addObject("form_msg","회사형태를 올바르게 선택해주세요");
 			return mv;
@@ -182,6 +190,324 @@ public class ProjectController {
 		
 		return "/project/add/detail";
 	}
+	
+	/**
+	 * 프로젝트 추가 페이지
+	 * @throws ParseException 
+	 * @throws NumberFormatException 
+	 */
+	@RequestMapping(value = "/project/add/detail", method = RequestMethod.POST, produces = "text/plain; charset=utf8")
+	public ModelAndView ProjectController_add_detail_post(HttpServletRequest request,
+ 			HttpServletResponse response,
+			 @RequestParam(value = "category", required = false, defaultValue = "") String category,
+			 @RequestParam(value = "sub_category", required = false, defaultValue = "") String sub_category,
+			 @RequestParam(value = "is_turnkey", required = false, defaultValue = "") String is_turnkey,
+			 @RequestParam(value = "title", required = false, defaultValue = "") String title,
+			 @RequestParam(value = "project_term", required = false, defaultValue = "") String project_term,
+			 @RequestParam(value = "budget_maximum", required = false, defaultValue = "") String budget_maximum,
+			 @RequestParam(value = "planning_status", required = false, defaultValue = "") String planning_status,
+			 @RequestParam(value = "description", required = false, defaultValue = "") String description,
+			 @RequestParam(value = "skill_required", required = false, defaultValue = "") String skill_required,
+			 @RequestParam(value = "deadline", required = false, defaultValue = "") String deadline,
+			 @RequestParam(value = "method_pre_interview", required = false, defaultValue = "") String method_pre_interview,
+			 @RequestParam(value = "address_sido", required = false, defaultValue = "") String address_sido,
+			 @RequestParam(value = "sigungu", required = false, defaultValue = "") String sigungu,
+			 @RequestParam(value = "date_expected_kick_off", required = false, defaultValue = "") String date_expected_kick_off,
+			 @RequestParam(value = "has_manage_experience", required = false, defaultValue = "") String has_manage_experience,
+			 @RequestParam(value = "prefer_partner", required = false, defaultValue = "") String prefer_partner,
+			 @RequestParam(value = "submit_purpose", required = false, defaultValue = "") String submit_purpose,
+			 @RequestParam(value = "post_a_job", required = false, defaultValue = "") String post_a_job,
+			 @RequestParam(value ="save_for_later", required = false, defaultValue = "") String save_for_later
+			 ) throws NumberFormatException, ParseException {
+		logger.info("프로젝트 추가 처리");
+		
+		boolean isAvailable = true;
+		
+		//모델앤뷰 생성
+		ModelAndView mv = new ModelAndView();
+		String return_val = "/project/add/detail";
+		mv.setViewName(return_val);
+		
+		//title 체크
+		if(title.isEmpty())
+		{
+			isAvailable = false;
+			mv.addObject("title_msg","이 항목은 필수입니다.");
+			logger.info("title > 이 항목은 필수입니다.");
+		}
+		else if(!Validator.isValidLength(title, 1, 30))
+		{
+			isAvailable = false;
+			mv.addObject("title_msg","프로젝트 제목을 올바르게 입력해주세요");
+			logger.info("title > 프로젝트 제목을 올바르게 입력해주세요.");
+		}
+		else
+		{
+			mv.addObject("title_val",title);
+		}
+		
+		
+		//category 체크
+
+		if(category.isEmpty())
+		{
+			isAvailable = false;
+			mv.addObject("category_msg","이 항목은 필수입니다.");
+			logger.info("category > 이 항목은 필수입니다.");
+		}
+		else if(!category.equals("develop")&&!category.equals("design"))
+		{
+			isAvailable = false;
+			mv.addObject("category_msg","카테고리를 올바르게 선택해주세요");
+		}
+		else
+		{
+			mv.addObject("category_val",category);
+		}
+
+		//sub category 체크
+		if(sub_category.isEmpty())
+		{
+			isAvailable = false;
+			mv.addObject("category_msg","이 항목은 필수입니다.");
+			logger.info("sub_category > 이 항목은 필수입니다.");
+		}
+		else if(!Validator.isProjectCategory(category, sub_category))
+		{
+			isAvailable = false;
+			mv.addObject("category_msg","카테고리를 올바르게 선택해주세요");
+		}
+		else
+		{
+			mv.addObject("sub_category_val",sub_category);
+		}
+		
+		//is_turnkey 체크
+		if(is_turnkey.isEmpty())
+		{
+			isAvailable = false;
+			mv.addObject("is_turnkey_msg","이 항목은 필수입니다.");
+			logger.info("is_turnkey > 이 항목은 필수입니다.");
+		}
+		else
+		{
+			mv.addObject("is_turnkey_val",is_turnkey);
+		}
+		
+		//project_term 체크
+		if(project_term.isEmpty())
+		{
+			isAvailable = false;
+			mv.addObject("project_term_msg","이 항목은 필수입니다.");
+			logger.info("project_term > 이 항목은 필수입니다.");
+		}
+		else if(!Validator.isDigit(project_term)||!Validator.isValidLength(project_term, 1, 3))
+		{
+			isAvailable = false;
+			mv.addObject("project_term_msg","프로젝트 진행기간을 올바르게 입력해주세요");
+		}
+		else
+		{
+			mv.addObject("project_term_val",project_term);
+		}
+		
+		//budget_maximum 체크
+		if(budget_maximum.isEmpty())
+		{
+			isAvailable = false;
+			mv.addObject("budget_maximum_msg","이 항목은 필수입니다.");
+			logger.info("budget_maximum > 이 항목은 필수입니다.");
+		}
+		else if(!Validator.isDigit(budget_maximum)||!Validator.isValidLength(budget_maximum, 1, 10))
+		{
+			isAvailable = false;
+			mv.addObject("budget_maximum_msg","프로젝트 지출가능예산을 올바르게 입력해주세요");
+		}
+		else
+		{
+			mv.addObject("budget_maximum_val",budget_maximum);
+		}	
+		
+		//planning_status 체크
+		if(planning_status.isEmpty())
+		{
+			isAvailable = false;
+			mv.addObject("planning_status_msg","이 항목은 필수입니다.");
+			logger.info("planning_status > 이 항목은 필수입니다.");
+		}
+		else if(!Validator.isPlanStatus(planning_status))
+		{
+			isAvailable = false;
+			mv.addObject("planning_status_msg","프로젝트 기획상태를 올바르게 입력해주세요");
+		}
+		else
+		{
+			mv.addObject("planning_status_val",planning_status);
+		}	
+		
+		//description 체크
+		if(description.isEmpty())
+		{
+			isAvailable = false;
+			mv.addObject("description_msg","이 항목은 필수입니다.");
+			logger.info("description > 이 항목은 필수입니다.");
+		}
+		else if(!Validator.isValidLength(description, 1, 5000))
+		{
+			isAvailable = false;
+			mv.addObject("description_msg","프로젝트 내용이 너무 깁니다.");
+		}
+		else
+		{
+			mv.addObject("description_val",description);
+		}	
+		
+		//skill_required 체크
+		if(skill_required.isEmpty())
+		{
+			isAvailable = false;
+			mv.addObject("skill_required_msg","이 항목은 필수입니다.");
+			logger.info("skill_required > 이 항목은 필수입니다.");
+		}
+		else if(!Validator.isValidLength(skill_required, 1, 100))
+		{
+			isAvailable = false;
+			mv.addObject("skill_required_msg","관련 기술이 너무 깁니다");
+		}
+		else
+		{
+			mv.addObject("skill_required_val",skill_required);
+		}	
+		
+		//deadline 체크
+		if(deadline.isEmpty())
+		{
+			isAvailable = false;
+			mv.addObject("deadline_msg","이 항목은 필수입니다.");
+			logger.info("deadline > 이 항목은 필수입니다.");
+		}
+		else
+		{
+			mv.addObject("deadline_val",deadline);
+		}
+		
+		//method_pre_interview 체크
+		if(method_pre_interview.isEmpty())
+		{
+			isAvailable = false;
+			mv.addObject("method_pre_interview_msg","이 항목은 필수입니다.");
+			logger.info("method_pre_interview > 이 항목은 필수입니다.");
+		}
+		else if(!method_pre_interview.equals("OFFLINE")&&!method_pre_interview.equals("ONLINE"))
+		{
+			isAvailable = false;
+			mv.addObject("method_pre_interview_msg","사전 미팅을 올바르게 선택해주세요.");
+		}
+		else
+		{
+			mv.addObject("method_pre_interview_val",method_pre_interview);
+		}
+		
+		//시,도 군 체크
+		if(address_sido.isEmpty() ||sigungu.isEmpty() )
+		{
+			isAvailable = false;
+			mv.addObject("address_msg","이 항목은 필수입니다.");
+			logger.info("address_sido > 이 항목은 필수입니다.");
+		}
+		else
+		{
+			mv.addObject("address_sido_val",address_sido);
+			mv.addObject("sigungu_val",sigungu);
+		}
+		
+		
+		//date_expected_kick_off
+		if(date_expected_kick_off.isEmpty() )
+		{
+			isAvailable = false;
+			mv.addObject("date_expected_kick_off_msg","이 항목은 필수입니다.");
+			logger.info("date_expected_kick_off > 이 항목은 필수입니다.");
+		}
+		else
+		{
+			mv.addObject("date_expected_kick_off_val",date_expected_kick_off);
+		}
+		
+		//has_manage_experience
+		if(has_manage_experience.isEmpty())
+		{
+			isAvailable = false;
+			mv.addObject("has_manage_experience_msg","이 항목은 필수입니다.");
+			logger.info("has_manage_experience > 이 항목은 필수입니다.");
+		}
+		else
+		{
+			mv.addObject("has_manage_experience_val",has_manage_experience);
+		}
+		
+		//prefer_partner
+		if(prefer_partner.isEmpty())
+		{
+			isAvailable = false;
+			mv.addObject("prefer_partner_msg","이 항목은 필수입니다.");
+			logger.info("prefer_partner > 이 항목은 필수입니다.");
+		}
+		else if(!prefer_partner.equals("whatever")&&!prefer_partner.equals("corporate_business")
+				&&!prefer_partner.equals("individual_business")&&!prefer_partner.equals("team")
+				&&!prefer_partner.equals("individual"))
+		{
+			isAvailable = false;
+			mv.addObject("prefer_partner_msg","선호하는 파트너를 올바르게 선택해주세요.");
+		}
+		else
+		{
+			mv.addObject("prefer_partner_val",prefer_partner);
+		}
+		//submit_purpose
+		if(submit_purpose.isEmpty())
+		{
+			isAvailable = false;
+			mv.addObject("submit_purpose_msg","이 항목은 필수입니다.");
+			logger.info("submit_purpose > 이 항목은 필수입니다.");
+		}
+		else if(!submit_purpose.equals("request")&&!submit_purpose.equals("inquire"))
+		{
+			isAvailable = false;
+			mv.addObject("submit_purpose_msg","프로젝트 의뢰 목적를 올바르게 선택해주세요.");
+		}
+		else
+		{
+			mv.addObject("submit_purpose_val",submit_purpose);
+		}
+
+		String status = "";
+		if(!post_a_job.isEmpty())
+			status = "검수중";
+		else if(!save_for_later.isEmpty())
+			status = "임시저장";
+		
+		
+		if(isAvailable)
+		{
+			logger.info("추가 가능");
+			AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+
+			if(account!=null)
+			{
+				projectDao.Save(account.getPk(),category,sub_category,is_turnkey,title,Integer.parseInt(project_term),
+						budget_maximum,planning_status,description,skill_required,Time.dateToTimestamp(deadline),
+						method_pre_interview, address_sido, sigungu, Time.dateToTimestamp(date_expected_kick_off), has_manage_experience,
+						prefer_partner, submit_purpose, status);
+				if(status.equals("임시저장"))
+					return_val = "redirect:/mywjm/client";
+				else if(status.equals("검수중"))
+					return_val = "redirect:/project/add/thank-you";
+				mv.setViewName(return_val);
+			}
+		}
+		return mv;
+	}
 	/**
 	 * 프로젝트 추가 안내
 	 */
@@ -216,54 +542,8 @@ public class ProjectController {
 		return "redirect:/project/preview";
 	}
 	
-	public boolean isPhoneCode(String code)
-	{
-		if(code.equals("010"))
-			return true;
-		else if(code.equals("011"))
-			return true;
-		else if(code.equals("016"))
-			return true;
-		else if(code.equals("017"))
-			return true;
-		else if(code.equals("019"))
-			return true;
-		else
-			return false;
-		
-	}
-	/*
-	1. individual
-	2. team
-	3. individual_business
-	4. corporate_business
-	*/
-	public boolean isCompanyForm(String form)
-	{
-		if(form.equals("individual"))
-			return true;
-		else if(form.equals("team"))
-			return true;
-		else if(form.equals("individual_business"))
-			return true;
-		else if(form.equals("corporate_business"))
-			return true;
-		else
-			return false;
-		
-	}
-	public boolean isDigit(String digit)
-	{
-		if(digit == null) return false;
-
-		boolean result = Pattern.matches("^[0-9]+$",digit.trim());
-		
-		return result;
-
-	}
-	
 	//중분류 리스트
-	@RequestMapping(value = "/getCategoryM", method = RequestMethod.POST, produces="applicateion/json;charset=UTF-8")
+	@RequestMapping(value = "/getCategoryM", method = RequestMethod.POST, produces="application/json;charset=UTF-8")
 	@ResponseBody
 	public String ProjectController_getCategoryM(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam("categoryL") String categoryL) {
@@ -300,6 +580,22 @@ public class ProjectController {
 		}
 		
 		jObject.put("categoryMlist", categoryMlist);
+		logger.info(jObject.toString());
+
+		return jObject.toString();
+	}
+	
+	//지역 리스트
+	@RequestMapping(value = "/getAddress", method = RequestMethod.POST, produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public String ProjectController_getAddress(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("area") String area) {
+		logger.info("getAddress AJAX");
+
+		JSONObject jObject = new JSONObject();
+		List<String> arealist = areaDetailDao.select(area);
+
+		jObject.put("arealist", arealist);
 		logger.info(jObject.toString());
 
 		return jObject.toString();

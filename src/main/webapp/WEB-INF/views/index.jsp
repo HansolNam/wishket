@@ -27,7 +27,7 @@
 	name="google-site-verification" />
 <meta content="d2c8672ef81fcd9ceb62f51232d13aada8512a64"
 	name="naver-site-verification" />
-<title>위시켓(Wishket) · 가능성을 가치로!</title>
+<title>외주몬(WJM) · 가능성을 가치로!</title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
 <link href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
 	type="text/css" />

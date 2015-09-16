@@ -14,7 +14,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.wjm.idao.ProjectIDao;
-import com.wjm.models.AccountInfo;
 import com.wjm.models.ProjectInfo;
 
 @Repository
@@ -32,12 +31,16 @@ public class ProjectDao implements ProjectIDao {
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
 	}
 
-	public void create(int account_pk, String categoryL, String categoryM, String name, int period, int budget,
+	public void create(int account_pk, String categoryL, String categoryM, int another , String name, int period, String budget,
 			String plan_status, String description, String technique, Timestamp deadline, String meeting_type,
 			String meeting_area, String meeting_area_detail, Timestamp start_date, int managing, String partner_type,
 			String purpose, String status)
 	{		
-		jdbcTemplate.update("insert into project (account_pk, categoryL, categoryM, name, period, budget, plan_status, description, technique, deadline, meeting_type,meeting_area, meeting_area_detail, start_date, managing, partner_type,purpose, status) values (?, ?, ?,?,?, ?, ?,?,?, ?, ?,?,?, ?, ?)", new Object[] { account_pk, categoryL, categoryM, name, period, budget,
+		jdbcTemplate.update("insert into project (account_pk, categoryL, categoryM, "
+				+"another, name, period, budget, plan_status, description, technique, deadline, "
+				+"meeting_type, meeting_area, meeting_area_detail, start_date, managing, partner_type, purpose, status) "
+				+"values (?, ?, ?, ?,?,?, ?, ?,?,?, ?, ?,?,?, ?, ?,?,?,?)", 
+				new Object[] { account_pk, categoryL, categoryM, another, name, period, budget,
 				plan_status, description, technique, deadline, meeting_type,
 				meeting_area, meeting_area_detail, start_date, managing, partner_type,
 				purpose, status });
@@ -52,9 +55,10 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getInt("account_pk")
 	    				, resultSet.getString("categoryL")
 	    				, resultSet.getString("categoryM")
+	    				, resultSet.getInt("another")
 	    				, resultSet.getString("name")
 	    				, resultSet.getInt("period")
-	    				, resultSet.getInt("budget")
+	    				, resultSet.getString("budget")
 	    				, resultSet.getString("plan_status")
 	    				, resultSet.getString("description")
 	    				, resultSet.getString("technique")
@@ -82,9 +86,10 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getInt("account_pk")
 	    				, resultSet.getString("categoryL")
 	    				, resultSet.getString("categoryM")
+	    				, resultSet.getInt("another")
 	    				, resultSet.getString("name")
 	    				, resultSet.getInt("period")
-	    				, resultSet.getInt("budget")
+	    				, resultSet.getString("budget")
 	    				, resultSet.getString("plan_status")
 	    				, resultSet.getString("description")
 	    				, resultSet.getString("technique")
@@ -100,6 +105,30 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getTimestamp("reg_date"));
 	    	}
 	    });
+	}
+	
+	public void Save(int account_pk, String categoryL,String categoryM,String is_turnkey, String name,
+			int period, String budget, String plan_status, String description, String technique,
+			Timestamp deadline, String meeting_type, String meeting_area, String meeting_area_detail,
+			Timestamp start_date, String managing,String partner_type, String purpose, String status)
+	{
+		int managing_int = 0;
+		if(managing.equals("true"))
+			managing_int = 1;
+		else
+			managing_int = 0;
+		
+		int another = 0;
+		if(is_turnkey.equals("true"))
+			another = 1;
+		else
+			another = 0;
+		
+		create(account_pk, categoryL, categoryM, another, name, period, budget,
+				plan_status, description, technique, deadline, meeting_type,
+				meeting_area, meeting_area_detail, start_date, managing_int, partner_type,
+				purpose, status);
+		
 	}
 	
 	public void deleteAll()

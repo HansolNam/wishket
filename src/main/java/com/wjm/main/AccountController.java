@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.wjm.dao.AccountDao;
 import com.wjm.dao.AccountInformationDao;
+import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
 
 /**
@@ -63,12 +64,12 @@ public class AccountController {
 		logger.info("login Post Page");
 
 		ModelAndView mv = new ModelAndView();
-		String return_val = "redirect:/accounts/login";
+		String return_val = "/accounts/login";
 		
 		mv.setViewName(return_val);
 		
 		//아이디 체크
-		if(!isId(id))
+		if(!Validator.isId(id))
 		{			
 			mv.addObject("id_msg", "6글자 이상 입력해 주세요.");
 			return mv;
@@ -143,7 +144,7 @@ public class AccountController {
 				
 		logger.info("id = "+id);
 		//반환 뷰 값
-		String return_val = "redirect:/accounts/signup";
+		String return_val = "/accounts/signup";
 		//등록 가능 여부
 		boolean isAvailable = true;
 		
@@ -176,7 +177,7 @@ public class AccountController {
 		}
 		
 		//아이디 탐색
-		if(!isId(id))
+		if(!Validator.isId(id))
 		{			
 			logger.info("6글자 이상 입력해 주세요.");
 			mv.addObject("id_msg", "6글자 이상 입력해 주세요.");
@@ -198,7 +199,7 @@ public class AccountController {
 		mv.addObject("id_val", id);
 				
 		//이메일 형식 체크
-		if(!isEmail(email))
+		if(!Validator.isEmail(email))
 		{				
 			logger.info("올바른 이메일 형식을 사용해주세요.");
 			mv.addObject("email_msg", "올바른 이메일 형식을 사용해주세요.");
@@ -300,31 +301,4 @@ public class AccountController {
 		return "redirect:/index";
 	}
 	
-	public boolean isEmail(String email)
-	{
-		if(email == null) return false;
-		
-		boolean result = Pattern.matches("^[_a-zA-Z0-9-\\.]+@[\\.a-zA-Z0-9-]+\\.[a-zA-Z]+$",email.trim());
-		
-		return result;
-	}
-	
-	public boolean isDigit(String digit)
-	{
-		if(digit == null) return false;
-
-		boolean result = Pattern.matches("^[0-9]+$",digit.trim());
-		
-		return result;
-
-	}
-	
-	public boolean isId(String id)
-	{
-		if(id == null) return false;
-		
-		boolean result = Pattern.matches("^[a-zA-Z]{1}[a-zA-Z0-9_]{5,11}$",id.trim());
-		
-		return result;
-	}
 }

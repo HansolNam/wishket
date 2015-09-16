@@ -7,9 +7,10 @@ public class ProjectInfo {
 	private int account_pk;
 	private String categoryL;
 	private String categoryM;
+	private int another;
 	private String name;
 	private int period;
-	private int budget;
+	private String budget;
 	private String plan_status;
 	private String description;
 	private String technique;
@@ -23,15 +24,16 @@ public class ProjectInfo {
 	private String purpose;
 	private String status;
 	private Timestamp reg_date;
-	public ProjectInfo(int pk, int account_pk, String categoryL, String categoryM, String name, int period, int budget,
-			String plan_status, String description, String technique, Timestamp deadline, String meeting_type,
-			String meeting_area, String meeting_area_detail, Timestamp start_date, int managing, String partner_type,
-			String purpose, String status, Timestamp reg_date) {
+	public ProjectInfo(int pk, int account_pk, String categoryL, String categoryM, int another, String name, int period,
+			String budget, String plan_status, String description, String technique, Timestamp deadline,
+			String meeting_type, String meeting_area, String meeting_area_detail, Timestamp start_date, int managing,
+			String partner_type, String purpose, String status, Timestamp reg_date) {
 		super();
 		this.pk = pk;
 		this.account_pk = account_pk;
 		this.categoryL = categoryL;
 		this.categoryM = categoryM;
+		this.another = another;
 		this.name = name;
 		this.period = period;
 		this.budget = budget;
@@ -73,6 +75,12 @@ public class ProjectInfo {
 	public void setCategoryM(String categoryM) {
 		this.categoryM = categoryM;
 	}
+	public int getAnother() {
+		return another;
+	}
+	public void setAnother(int another) {
+		this.another = another;
+	}
 	public String getName() {
 		return name;
 	}
@@ -85,10 +93,10 @@ public class ProjectInfo {
 	public void setPeriod(int period) {
 		this.period = period;
 	}
-	public int getBudget() {
+	public String getBudget() {
 		return budget;
 	}
-	public void setBudget(int budget) {
+	public void setBudget(String budget) {
 		this.budget = budget;
 	}
 	public String getPlan_status() {
@@ -169,6 +177,7 @@ public class ProjectInfo {
 	public void setReg_date(Timestamp reg_date) {
 		this.reg_date = reg_date;
 	}
+	
 	
 
 }
