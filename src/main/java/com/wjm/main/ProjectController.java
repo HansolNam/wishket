@@ -24,6 +24,7 @@ import com.wjm.dao.ProjectDao;
 import com.wjm.main.function.Time;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
+import com.wjm.models.ProjectInfo;
 
 import net.sf.json.JSONObject;
 
@@ -599,5 +600,51 @@ public class ProjectController {
 		logger.info(jObject.toString());
 
 		return jObject.toString();
+	}
+
+	/**
+	 * 프로젝트 찾기
+	 */
+	@RequestMapping(value = "/project_ajax", method = RequestMethod.GET, produces="application/html;charset=UTF-8")
+	public ModelAndView ProjectController_project_ajax(HttpServletRequest request
+			,@RequestParam("page") String page
+			,@RequestParam("q") String q
+			,@RequestParam("sort") String sort
+			,@RequestParam("cat_dev") String cat_dev
+			,@RequestParam("cat_design") String cat_design
+			,@RequestParam("addr") String addr) {
+		logger.info("project_ajax Page");
+
+		/*
+			page = "1"
+			q = "None"
+			sort = "2" 1: 급액 높은 순, 2: 금액 낮은 순, 3: 최신 등록 순, 4. 마감 임박순
+			cat_dev = "2222222222" 10개
+			cate_design = "1111111111" 11개
+			1:
+			
+			addr = "";17개
+			1:서울특별시, 2:경기도, 3:인천광역시, 4:부산광역시, 5:대구광역시, 
+			6:광주광역시, 7:대전광역시, 8:울산광역시, 9:세종특별자치시
+			10:강원도, 11:충청북도, 12:충청남도, 13:전라북도
+			14:전라남도, 15:경상북도, 16: 경상남도, 17:제주특별자치도
+		*/
+		logger.info("page = "+page);
+		logger.info("q = "+q);
+		logger.info("sort = "+sort);
+		logger.info("cat_dev = "+cat_dev);
+		logger.info("cat_design = "+cat_design);
+		logger.info("addr = "+addr);
+
+		//모델앤뷰 생성
+		ModelAndView mv = new ModelAndView();
+		String return_val = "/project_ajax";
+		mv.setViewName(return_val);
+		
+		List<ProjectInfo> projectlist = projectDao.selectCondition(cat_dev,cat_design,addr);
+		
+		mv.addObject("projectlist",projectlist);
+		
+		return mv;
 	}
 }

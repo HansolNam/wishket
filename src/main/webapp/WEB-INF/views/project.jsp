@@ -3,105 +3,43 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 6]><html lang="ko" class="no-js old ie6"><![endif]-->
-<!--[if IE 7]><html lang="ko" class="no-js old ie7"><![endif]-->
-<!--[if IE 8]><html lang="ko" class="no-js old ie8"><![endif]-->
 <html class="no-js modern" lang="ko">
-<head
-	prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#">
 <meta charset="utf-8" />
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
 <meta content="Wishket Inc,." name="author" />
-<meta
-	content="위시켓은 기업의 프로젝트와 개발자 &amp; 디자이너를 연결해주는 온라인 아웃소싱 서비스 입니다.
-더 이상 지인을 수소문하지 마세요, 위시켓에서 3시간이면 충분합니다."
-	name="description" />
-<meta content="593258114025512" property="fb:app_id" />
-<meta content="website" property="og:type" />
-<meta content="http://www.wishket.com" property="og:url" />
-<meta content="Wishket" property="og:title" />
-<meta content="http://www.wishket.com/static/img/wishket_logo_256.png"
-	property="og:image" />
-<meta
-	content="위시켓은 기업의 프로젝트와 개발자 &amp; 디자이너를 연결해주는 온라인 아웃소싱 서비스 입니다.
-더 이상 지인을 수소문하지 마세요, 위시켓에서 3시간이면 충분합니다."
-	property="og:description" />
-<meta content="k6UITCIVaYG0YtRsN8g4GF2T4qg7Z3M6JD2mLJte_n4"
-	name="google-site-verification" />
-<meta content="d2c8672ef81fcd9ceb62f51232d13aada8512a64"
-	name="naver-site-verification" />
-<title>위시켓(Wishket) · 프로젝트 찾기</title>
+
+<title>외주몬(WJM) · 프로젝트 찾기</title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
-<link href="../resources/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
+<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
 	type="text/css" />
-<link href="../resources/static/CACHE/css/aa41eeaffc60.css" rel="stylesheet"
+<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/aa41eeaffc60.css" rel="stylesheet"
 	type="text/css" />
-<link href="../resources/static/CACHE/css/35066c295d92.css" rel="stylesheet"
+<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/35066c295d92.css" rel="stylesheet"
 	type="text/css" />
-<!--[if IE 7]><link rel="stylesheet" href="./resources/static/CACHE/css/cc2b8202dedf.css" type="text/css" /><![endif]-->
-<!--[if IE 8]><link rel="stylesheet" href="./resources/static/CACHE/css/0873b963b20a.css" type="text/css" /><![endif]-->
-<link href="./resources/static/django_facebook/css/facebook.css" media="all"
+<link href="${pageContext.request.contextPath}/resources/static/django_facebook/css/facebook.css" media="all"
 	rel="stylesheet" />
-<!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-<script src="../resources/static/CACHE/js/a52a868564de.js" type="text/javascript"></script>
-<link href="../resources/static/css/floating.css" rel="stylesheet" />
+<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/a52a868564de.js" type="text/javascript"></script>
+<link href="${pageContext.request.contextPath}/resources/static/css/floating.css" rel="stylesheet" />
 <script src="http://wcs.naver.net/wcslog.js" type="text/javascript"></script>
-<link href="../resources/static/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-<link href="../resources/static/favicon.ico" rel="icon" type="image/x-icon" />
-<link href="../resources/static/touch-icon-ipad.png" rel="apple-touch-icon"
+<link href="${pageContext.request.contextPath}/resources/static/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+<link href="${pageContext.request.contextPath}/resources/static/favicon.ico" rel="icon" type="image/x-icon" />
+<link href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad.png" rel="apple-touch-icon"
 	sizes="76x76" />
-<link href="../resources/static/touch-icon-iphone-retina.png" rel="apple-touch-icon"
+<link href="${pageContext.request.contextPath}/resources/static/touch-icon-iphone-retina.png" rel="apple-touch-icon"
 	sizes="120x120" />
-<link href="./resources/static/touch-icon-ipad-retina.png" rel="apple-touch-icon"
+<link href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad-retina.png" rel="apple-touch-icon"
 	sizes="152x152" />
-<script src="../resources/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
-<script src="../resources/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
+	
+	<link
+		href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css"
+		rel="stylesheet" />
+<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
 </head>
 <body class=" project-list">
-	<div id="fb-root"></div>
-	<script src="../resources/static/django_facebook/js/facebook.js"
-		type="text/javascript"></script>
-	<script>
-    facebookAppId = '593258114025512';
-    facebookDefaultScope = ["email", "user_about_me", "user_birthday", "user_website"];
-    staticUrl = '/static/';
-    function facebookJSLoaded(){
-        FB.init({appId: facebookAppId, status: false, cookie: true, xfbml: true, oauth: true});
-    }
-    window.fbAsyncInit = facebookJSLoaded;
-    F = new facebookClass(facebookAppId);
-    F.load();
-</script>
 	<div id="wrap">
-		<header class="header">
-			<section class="nav-main nav-main-mini navbar" role="navigation"
-				style="background-color: #2d3a45">
-				<div class="container" style="background-color: #2d3a45">
-					<div class="nav-inner" style="background-color: #2d3a45">
-						<div class="navbar-header navbar-not-login"
-							style="background-color: #2d3a45">
-							<a class="navbar-brand" href="/">Wishket</a>
-						</div>
-						<nav>
-							<ul class="nav navbar-nav nav-primary">
-								<li><a href="/main/project/add/">프로젝트 등록</a></li>
-								<li class=""><a href="/main/project/">프로젝트 찾기</a></li>
-								<li class=""><a href="/main/partners/">파트너스 목록</a></li>
-								<li><a href="/main/service-intro/">이용방법</a></li>
-							</ul>
-							<span class="navbar-nav navbar-right"><span class="w-help"><a
-									href="/main/service-intro/"><i
-										class="fa fa-question-circle fa-lg" style="color: #fff"></i></a></span> <span
-								class="w-login"><a class="btn btn-login"
-									href="/main/accounts/login/" style="color: #fff">로그인</a></span> <span
-								class="w-signup"><a class="btn btn-signup"
-									href="/main/accounts/signup/" style="color: #fff">회원가입</a></span></span>
-						</nav>
-					</div>
-				</div>
-			</section>
-		</header>
+	<jsp:include page="header.jsp" flush="false" />
 		<div class="container">
 			<div id="messages"></div>
 		</div>
@@ -110,7 +48,7 @@
 				<div class="content-header">
 					<h3 class="header-text">
 						프로젝트 찾기 <small class="small-text"><span
-							id="total_list_num">2,457개의 프로젝트가 있습니다.</span></small>
+							id="total_list_num">${project_num}개의 프로젝트가 있습니다.</span></small>
 					</h3>
 					<div class="search search-right">
 						<form action="." class="form-inline" id="form_id"
@@ -276,14 +214,7 @@
 					</div>
 					<div class="project-list-box" id="project-list-box"
 						style="float: left; width: 852px;">
-						<input id="project_total_number" type="hidden" value="2,457" /><input
-							id="page_size" type="hidden" value="246" />
-						<section class="no-result">
-							<div class="no-result-img">
-								<img alt="검색" src="./resources/static/img/icon_loading.png" />
-							</div>
-							<p>로딩 중입니다.</p>
-						</section>
+						 
 					</div>
 					<div class="pagination-wrapper" style="clear: both">
 						<ul class="pagination" id="pagination_box">
@@ -306,69 +237,10 @@
 		</div>
 		<div id="push"></div>
 	</div>
-	<footer class="footer">
-		<div class="footer-inner">
-			<div class="info">
-				<div class="footer-logo">
-					<img class="footer-logo-img"
-						src="./resources/static/img/wishket_footer_logo.svg" />
-				</div>
-				<div class="contact">
-					<i class="fa fa-phone"></i> <a href="tel:82269254849">02-6925-4849</a><br />
-					<i class="fa fa-envelope"></i> <a href="mailto:help@wishket.com">help@wishket.com</a><br />
-					<img src="./resources/static/img/yellow_id.png" style="margin-right: 4px;" /><a
-						href="http://goto.kakao.com/@wishket">Kakao ID 친구추가: @wishket</a><br />
-					고객센터 운영시간: 오전 10시부터 오후 6시까지<small>(공휴일 제외)</small>
-				</div>
-				<address class="address">
-					서울특별시 강남구 테헤란로77길 11-18 창애빌딩 4층<br /> 사업자등록번호: 209-81-57303 / 대표이사:
-					박우범<br />
-				</address>
-				<span class="copyright">© 2014 Wishket, inc.</span>
-			</div>
-			<div class="category">
-				<h5 class="category-heading">위시켓</h5>
-				<ul class="category-list">
-					<li class="category-item"><a href="/service-intro/">서비스 소개</a></li>
-					<li class="category-item"><a href="/client-use/">클라이언트
-							이용방법</a></li>
-					<li class="category-item"><a href="/partners-use/">파트너스
-							이용방법</a></li>
-					<li class="category-item"><a href="/service-fee/">이용요금</a></li>
-					<li class="category-item"><a href="/faq">자주 묻는 질문</a></li>
-				</ul>
-			</div>
-			<div class="category">
-				<h5 class="category-heading">관련 정보</h5>
-				<ul class="category-list">
-					<li class="category-item"><a href="/company-intro/">회사소개</a></li>
-					<li class="category-item"><a href="/terms-of-service/">이용약관</a></li>
-					<li class="category-item"><a
-						href="http://blog.wishket.com/category/media/">보도자료</a></li>
-				</ul>
-			</div>
-			<div class="category">
-				<h5 class="category-heading">관련 링크</h5>
-				<ul class="category-list">
-					<li class="category-item"><a
-						href="http://www.facebook.com/wishket">페이스북</a></li>
-					<li class="category-item"><a href="http://blog.wishket.com">블로그</a></li>
-					<li class="category-item"><a href="http://twitter.com/wishket">트위터</a></li>
-				</ul>
-				<div class="mixpanel-banner">
-					<a href="https://mixpanel.com/f/partner" target="_blank"><img
-						alt="Mobile Analytics"
-						src="//cdn.mxpnl.com/site_media/images/partner/badge_blue.png" /></a>
-				</div>
-			</div>
-		</div>
-	</footer>
-	<link
-		href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css"
-		rel="stylesheet" />
+	<jsp:include page="footer.jsp" flush="false" />
 	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
 	<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
-	<script src="../resources/static/js/jStorage.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/static/js/jStorage.js"></script>
 	<script>
 
     $(function(){
@@ -385,49 +257,7 @@
             $(document).ready(submitList());
         }
     });
-    /*
-    function onloadList(){
-
-        var page = document.location.href.split("/")[4],
-                q = $("input[name='q']").val().replace(/\//g, "__slash__"),
-                sort = $('#id_sort').val(),
-                cat_dev = $('#id_cat_dev').val(),
-                cat_design = $('#id_cat_design').val(),
-                addr = $('#id_addr').val();
-        if(page==''){
-            page = 1;
-        }
-        try {
-            if(page.indexOf("status") > -1){
-                page = 1;
-            }
-        }
-        catch(err){
-
-        }
-
-        $.jStorage.set('value', page + '/' + q  + '/' + sort + '/' + cat_dev + '/' + cat_design + '/' + addr);
-        if(q === ''){
-            q="None"
-        }
-        var loading = "<section class='no-result'><div class='no-result-img'><img src='./resources/static/img/icon_loading.png' alt='검색'/></div><p>로딩 중입니다.</p></section>";
-        $("#project-list-box").html(loading);
-        $.ajax({
-            url: '/project/pl/' + page + '/' + q + '/' + sort + '/' + cat_dev + '/' + cat_design + '/' + addr + '/',
-            success: function(data){
-                $("#project-list-box").html(data);
-                var t = $('#project_total_number').val();
-                if(parseInt(t)>0){
-                    $('#total_list_num').text(t+'개의 프로젝트가 있습니다.');
-                }
-                else{
-                    $('#total_list_num').text('검색 결과가 없습니다.');
-                }
-                setPagination(page, $('#page_size').val());
-            }
-        })
-    }
-    */
+ 
 
     function clear_page(){
         $('#id_page').val(1);
@@ -685,6 +515,7 @@
         filterset.val(filtervalue.join(""));
     }
 
+
     function submitList(){
 
         var page = $('#id_page').val(),
@@ -697,10 +528,20 @@
         if(q === ''){
             q="None"
         }
-        var loading = "<section class='no-result'><div class='no-result-img'><img src='./resources/static/img/icon_loading.png' alt='검색'/></div><p>로딩 중입니다.</p></section>";
+        var loading = "<section class='no-result'><div class='no-result-img'><img src='${pageContext.request.contextPath}/resources/static/img/icon_loading.png' alt='검색'/></div><p>로딩 중입니다.</p></section>";
         $("#project-list-box").html(loading);
         $.ajax({
-            url: '/project/pl/' + page + '/' + q + '/' + sort + '/' + cat_dev + '/' + cat_design + '/' + addr + '/',
+            url: '/wjm/project_ajax',
+	        type: "get",
+			data : 
+			{
+				page : page,
+				q : q,
+				sort : sort,
+				cat_dev : cat_dev,
+				cat_design : cat_design,
+				addr : addr
+			},
             success: function(data){
                 $("#project-list-box").html(data);
                 var t = $('#project_total_number').val();
@@ -947,41 +788,6 @@ $( document ).ready(function($) {
 	});
 });
 
-</script>
-	<script type="text/javascript">
-        var TRS_AIDX = 9287;
-        var TRS_PROTOCOL = document.location.protocol;
-        document.writeln();
-        var TRS_URL = TRS_PROTOCOL + '//' + ((TRS_PROTOCOL=='https:')?'analysis.adinsight.co.kr':'adlog.adinsight.co.kr') +  '/emnet/trs_esc.js';
-        document.writeln("<scr"+"ipt language='javascript' src='" + TRS_URL + "'></scr"+"ipt>");
-        </script>
-	<script type="text/javascript">
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-        ga('create', 'UA-31427125-2', 'wishket.com');
-        var ga_now = new Date();
-        var dimension4Value = "Y" + ga_now.getFullYear()
-                              + "M" + (ga_now.getMonth()+1)
-                              + "D" + (ga_now.getDate())
-                              + "H" + (ga_now.getHours())
-                              + "I" + (ga_now.getMinutes())
-                              + "W" + (ga_now.getDay());
-        ga('require', 'displayfeatures');
-        ga('set', '&uid', 'None');
-        ga('send', 'pageview', {
-          'dimension1': 'anonymous',
-          'dimension2': 'unknown',
-          'dimension3': 'None',
-          'dimension4': dimension4Value
-        });
-      </script>
-	<script type="text/javascript">(function(e,b){if(!b.__SV){var a,f,i,g;window.mixpanel=b;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===e.location.protocol?"https:":"http:")+'//cdn.mxpnl.com/libs/mixpanel-2.2.min.js';f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f);b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==
-typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.set_once people.increment people.append people.track_charge people.clear_charges people.delete_user".split(" ");for(g=0;g<i.length;g++)f(c,i[g]);
-b._i.push([a,e,d])};b.__SV=1.2}})(document,window.mixpanel||[]);
-mixpanel.init("c7b742deb9d00b4f1c0e1e9e8c5c3115");</script>
-	<script type="text/javascript"> if (!wcs_add) var wcs_add={}; wcs_add["wa"] = "s_3225afd5bb50";if (!_nasa) var _nasa={};wcs.inflow();wcs_do(_nasa);</script>
+</script> 
 </body>
 </html>
