@@ -1,10 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="com.wjm.models.ProjectInfo, java.util.*"%>
+<%@ page import="com.wjm.models.ProjectInfo, java.util.*, com.wjm.main.function.Time, java.sql.Timestamp"%>
 
-<%
+<%	
 	List<ProjectInfo> projectlist = (List<ProjectInfo>)request.getAttribute("projectlist");
-
+	long now_time = System.currentTimeMillis();
+	Timestamp now = new Timestamp(now_time);
+	
 	if(projectlist != null)
 	{
 		int pagenum;
@@ -21,11 +23,12 @@
 		{
 	
 %>
+
 <section class="become-close project-unit" >
  	<div class="project_unit-heading" style="">
  		<h4 class="project-title">
-	 		<a href="">
-	 			<%=projectlist.get(i).getName() %>
+	 		<a href="/wjm/project/about/<%=projectlist.get(i).getName()%>/<%=projectlist.get(i).getPk() %>">
+	 			<%=projectlist.get(i).getName() + "(" + projectlist.get(i).getStatus() + ")" %>
 	 		</a>
  		</h4>
  	</div>
@@ -41,7 +44,7 @@
  					"예상기간 <%=projectlist.get(i).getPeriod() %>일"
  				</i>
  			</span>
- 			<span class="date-recruitment">등록일자 <%=projectlist.get(i).getReg_date() %></span>
+ 			<span class="date-recruitment">등록일자 <%=Time.TimestampToString(projectlist.get(i).getReg_date()) %></span>
  		</div>
  		<div class="project-unit-desc">
  			<p>
@@ -52,29 +55,50 @@
  			<div class="outer-info-upper-data">
 	 			<!-- <img class="project-outer-info-img" src="aaa"> -->
  				<span>
- 					"마감 "
- 					<strong>5일 전</strong>
+ 					<strong>
+ 					
+ 					<% 
+ 					int remain = Time.remainDate(projectlist.get(i).getDeadline(), now);
+ 					if(remain>=0) out.println("마감 "+Time.remainWeekDate(remain)+" 전");
+ 					else out.println("모집 마감");
+ 					%>
+ 					</strong>
  				</span>
  			</div>
 	 		<div class="outer-info-under-data">
 	 			<!-- <img class="project-outer-info-img" src="aaa"> -->
 	 			<span class="applied">
-	 				"총 "
+	 				총 
 	 				<strong>11명</strong>
-	 				" 지원"
+	 				 지원
 	 			</span>
 	 		</div>
 	 	</div>
  		<div style="clear: both;"></div>
  	</div>
  	<div class="project-unit-additional-info">
- 		<span class="project-category">개발</span>
- 		<span class="project-subcategory">웹</span>
- 		<div class="project-skill-required"><span class="info-title">요구기술</span> 
- 			<span class="project-skill label-skill">photoshop</span> 
- 			<span class="project-skill label-skill">android</span> 
- 			<span class="project-skill label-skill">html</span> 
- 			<span class="project-skill label-skill">ios</span>
+ 		<span class="project-category">
+ 		<%if(projectlist.get(i).getCategoryL().equals("design"))
+ 			{
+ 				out.println("디자인");
+ 			}
+ 		else
+ 		{
+ 			out.println("개발");
+ 		}
+ 		
+ 		%>
+ 		</span>
+ 		<span class="project-subcategory"><%=projectlist.get(i).getCategoryM() %></span>
+ 		<div class="project-skill-required"><span class="info-title">요구기술</span>
+ 		
+ 		<%
+ 			String[] array = projectlist.get(i).getTechnique().split(",");
+ 			
+ 			for(int j=0;j<array.length;j++)
+ 				out.println("<span class='project-skill label-skill'>"+array[j].trim()+"</span>");
+ 				
+ 		%> 
  		</div>
  	</div>
  </section>

@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -360,6 +361,7 @@ public class ProjectController {
 		}
 		else
 		{
+			description.replace("\n", "<br/>");
 			mv.addObject("description_val",description);
 		}	
 		
@@ -540,7 +542,7 @@ public class ProjectController {
 		
 		
 		
-		return "redirect:/project/preview";
+		return "/project/preview";
 	}
 	
 	//중분류 리스트
@@ -641,9 +643,44 @@ public class ProjectController {
 		String return_val = "/project_ajax";
 		mv.setViewName(return_val);
 		
-		List<ProjectInfo> projectlist = projectDao.selectCondition(cat_dev,cat_design,addr);
-		
+		List<ProjectInfo> projectlist = projectDao.selectCondition(q,cat_dev,cat_design,addr,sort);
 		mv.addObject("projectlist",projectlist);
+		
+		return mv;
+	}
+	
+	/**
+	 * 프로젝트 찾기에서 클릭
+	 */
+
+	@RequestMapping(value = "/project/about/{name}/{pk}", method = RequestMethod.GET)
+	public ModelAndView ProjectController_project_about(HttpServletRequest request, @PathVariable("pk") int pk, @PathVariable("name") String name, ModelAndView mv) {
+		logger.info("project about get Page");
+		
+		mv.addObject("pk",pk);
+		mv.addObject("name",name);
+		
+		mv.setViewName("redirect:/project/about");
+		return mv;
+	}
+
+	/**
+	 * 프로젝트 추가
+	 */
+	@RequestMapping(value = "/project/about", method = RequestMethod.GET)
+	public ModelAndView ProjectController_about(HttpServletRequest request
+			,@RequestParam("pk") int pk
+			,@RequestParam("name") String name
+			, ModelAndView mv
+			) {
+		logger.info("project about Page");
+		
+		ProjectInfo project = projectDao.select(pk, name);
+		
+		if(project!=null)
+			mv.addObject("project",project);
+		else
+			logger.info("project 없음 에러!");
 		
 		return mv;
 	}

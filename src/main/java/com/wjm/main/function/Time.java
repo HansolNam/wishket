@@ -16,6 +16,13 @@ public class Time {
 		return sd2.format(date);
 	}
 	
+	static public String toString3(Timestamp timestamp){
+		
+		SimpleDateFormat sd2 = new SimpleDateFormat ( "yyyy년 MM월 dd일");
+		Date date = new Date(timestamp.getTime());
+		return sd2.format(date);
+	}
+	
 	static public Date nextDate(int iDay)
 	{
 		Date next = new Date();
@@ -31,6 +38,33 @@ public class Time {
 		Timestamp timestamp = new java.sql.Timestamp(date.getTime());
 		
 		return timestamp;
+	}
+	
+	static public int remainDate(Timestamp deadline, Timestamp now)
+	{
+		long remain_long = (deadline.getTime() - now.getTime())/((long)1000*60*60*24);
+		
+		return (int)remain_long;
+	}
+	
+	static public String remainWeekDate(int remainDate)
+	{	
+		int week = remainDate / 7;
+		int day = remainDate % 7;
+		
+		if(week == 0)
+			return day+"일";
+		else
+			return week+"주 "+day+"일";
+	}
+	
+	static public String TimestampToString(Timestamp timestamp)
+	{
+		SimpleDateFormat sd1 = new SimpleDateFormat ( "yyyy-MM-dd");
+		Date date = new Date(timestamp.getTime());
+		
+		return sd1.format(date);
+		
 	}
 	
 }

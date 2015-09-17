@@ -53,6 +53,24 @@ public class ApplicantDao implements ApplicantIDao {
 	    	}
 	    });
 	}
+	public List<ApplicantInfo> select(int project_pk)
+	{
+		return jdbcTemplate.query("select * from applicant where project_pk = ?",
+		    	new Object[] { project_pk },new RowMapper<ApplicantInfo>() {
+	    	public ApplicantInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+	    	{
+	    		return new ApplicantInfo(
+	    				resultSet.getInt("pk")
+	    				, resultSet.getInt("project_pk")
+	    				, resultSet.getInt("account_pk")
+	    				, resultSet.getInt("application_cost")
+	    				, resultSet.getInt("application_period")
+	    				, resultSet.getString("application_content")
+	    				, resultSet.getInt("portfolio_pk")
+	    				, resultSet.getString("portfolio_description"));
+	    	}
+	    });
+	}
 	public List<ApplicantInfo> select(int project_pk, int account_pk)
 	{
 		return jdbcTemplate.query("select * from applicant where project_pk = ? and account_pk = ?",

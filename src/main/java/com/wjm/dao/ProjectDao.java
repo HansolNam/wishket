@@ -9,17 +9,25 @@ import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.wjm.idao.ProjectIDao;
+import com.wjm.models.ApplicantInfo;
 import com.wjm.models.ProjectInfo;
 
 @Repository
 public class ProjectDao implements ProjectIDao {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProjectDao.class);
+	
+	@Autowired
+	private AreaDao areaDao;
+
+	@Autowired
+	private ApplicantDao applicantDao;
 	
 	private DataSource dataSource;
 	private JdbcTemplate jdbcTemplate;
@@ -77,7 +85,7 @@ public class ProjectDao implements ProjectIDao {
 	}
 	public List<ProjectInfo> select(int account_pk)
 	{
-		return jdbcTemplate.query("select * from project where = ?",
+		return jdbcTemplate.query("select * from project where account_pk = ?",
 		    	new Object[] { account_pk }, new RowMapper<ProjectInfo>() {
 	    	public ProjectInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{
@@ -106,10 +114,54 @@ public class ProjectDao implements ProjectIDao {
 	    	}
 	    });
 	}
-	public List<ProjectInfo> selectCondition(String dev, String design, String addr)
+	
+
+	public ProjectInfo select(int pk,String name)
 	{
+		List<ProjectInfo> projectlist = jdbcTemplate.query("select * from project where pk = ? and name = ?",
+		    	new Object[] { pk,name }, new RowMapper<ProjectInfo>() {
+	    	public ProjectInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+	    	{
+	    		return new ProjectInfo(
+	    				resultSet.getInt("pk")
+	    				, resultSet.getInt("account_pk")
+	    				, resultSet.getString("categoryL")
+	    				, resultSet.getString("categoryM")
+	    				, resultSet.getInt("another")
+	    				, resultSet.getString("name")
+	    				, resultSet.getInt("period")
+	    				, resultSet.getString("budget")
+	    				, resultSet.getString("plan_status")
+	    				, resultSet.getString("description")
+	    				, resultSet.getString("technique")
+	    				, resultSet.getTimestamp("deadline")
+	    				, resultSet.getString("meeting_type")
+	    				, resultSet.getString("meeting_area")
+	    				, resultSet.getString("meeting_area_detail")
+	    				, resultSet.getTimestamp("start_date")
+	    				, resultSet.getInt("managing")
+	    				, resultSet.getString("partner_type")
+	    				, resultSet.getString("purpose")
+	    				, resultSet.getString("status")
+	    				, resultSet.getTimestamp("reg_date"));
+	    	}
+	    });
+		
+		if(projectlist.size() > 1 || projectlist.size() ==0)
+		{
+			logger.info("프로젝트 pk와 이름에 해당하는 프로젝트가 0개,혹은 그이상 에러");
+			return null;
+		}
+		else
+			return projectlist.get(0);
+		
+	}
+	public List<ProjectInfo> selectCondition(String q, String dev, String design, String addr,String sort)
+	{
+		///////////////////////////////////////////////////////
+		///dev filtering
+		////////////////////////////////////////////////////////
 		String dev_sql = "";
-		//dev
 		
 		//아무것도 선택 안한 경우
 		if(dev.equals("1111111111"))
@@ -165,7 +217,10 @@ public class ProjectDao implements ProjectIDao {
 		}
 
 		logger.info("dev_sql > "+dev_sql);
-		
+
+		///////////////////////////////////////////////////////
+		///design filtering
+		////////////////////////////////////////////////////////
 		String design_sql = "";
 		//design
 		
@@ -254,40 +309,7 @@ public class ProjectDao implements ProjectIDao {
 					
 					//전체 선택 아닌 경우
 					addr_sql+="meeting_area = ";
-					if(i == 1)
-						addr_sql+="'서울특별시'";
-					else if(i == 2)
-						addr_sql+="'경기도'";
-					else if(i == 3)
-						addr_sql+="'인천광역시'";
-					else if(i == 4)
-						addr_sql+="'부산광역시'";
-					else if(i == 5)
-						addr_sql+="'대구광역시'";
-					else if(i == 6)
-						addr_sql+="'광주광역시'";
-					else if(i == 7)
-						addr_sql+="'대전광역시'";
-					else if(i == 8)
-						addr_sql+="'울산광역시'";
-					else if(i == 9)
-						addr_sql+="'세종특별자치시'";
-					else if(i == 10)
-						addr_sql+="'강원도'";
-					else if(i == 11)
-						addr_sql+="'충청북도'";
-					else if(i == 12)
-						addr_sql+="'충청남도'";
-					else if(i == 13)
-						addr_sql+="'전라북도'";
-					else if(i == 14)
-						addr_sql+="'전라남도'";
-					else if(i == 15)
-						addr_sql+="'경상북도'";
-					else if(i == 16)
-						addr_sql+="'경상남도'";
-					else if(i == 17)
-						addr_sql+="'제주특별자치도'";
+					addr_sql+="'"+areaDao.select(i)+"'";
 					
 					addr_sql += " or ";
 				}
@@ -302,34 +324,41 @@ public class ProjectDao implements ProjectIDao {
 
 		logger.info("addr_sql > "+addr_sql);
 		
-		String sql = "select * from project";
-		
-		if(!dev_sql.isEmpty() || !design_sql.isEmpty() || !addr_sql.isEmpty())
+		String sort_sql = "";
+		if(sort.isEmpty() || sort.equals("0"))
 		{
-			sql += " where ";
-			if(!dev_sql.isEmpty())
-				sql += dev_sql;
-			if(!design_sql.isEmpty())
-			{
-				if(sql.length()>4 && sql.substring(sql.length()-7, sql.length()).equals(" where "))
-					sql += design_sql;
-				else
-					sql += " or "+design_sql;
-			}
-			if(!addr_sql.isEmpty())
-			{
-				if(sql.length()>4 && sql.substring(sql.length()-7, sql.length()).equals(" where "))
-					sql += addr_sql;
-				else
-					sql += " and "+addr_sql;
-			}
+			sort_sql += "";
+		}
+		else if(sort.equals("1"))
+		{
+			sort_sql += " order by budget";
+		}
+		else if(sort.equals("2"))
+		{
+			sort_sql += " order by budget desc";
+		}
+		else if(sort.equals("3"))
+		{
+			sort_sql += " order by reg_date";
+		}
+		else if(sort.equals("4"))
+		{
 			
 		}
+		//status : 
 		
-		logger.info("sql > "+sql);
+		logger.info("sort_sql > "+sort_sql);
+		
+		String q_sql = "";
+		if(!q.equals("None"))
+			q_sql = " name LIKE '%"+q+"%'";
 
+		String status_sql = "(status = '지원자모집중')";
+		String sql = getSQL(dev_sql, design_sql, addr_sql, status_sql, sort_sql, q_sql);
+		logger.info("sql1 > "+sql);
 		
-		return jdbcTemplate.query(sql,new RowMapper<ProjectInfo>() {
+		//진행중인 프로젝트
+		List<ProjectInfo> projectlist1 = jdbcTemplate.query(sql,new RowMapper<ProjectInfo>() {
 	    	public ProjectInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{
 	    		return new ProjectInfo(
@@ -356,6 +385,40 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getTimestamp("reg_date"));
 	    	}
 	    });
+		
+		status_sql = "(status = '진행중' or status = '평가대기중' or status = '완료한프로젝트')";
+		sql = getSQL(dev_sql, design_sql, addr_sql, status_sql, sort_sql, q_sql);
+		logger.info("sql2 > "+sql);
+		
+		projectlist1.addAll(jdbcTemplate.query(sql,new RowMapper<ProjectInfo>() {
+	    	public ProjectInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+	    	{
+	    		return new ProjectInfo(
+	    				resultSet.getInt("pk")
+	    				, resultSet.getInt("account_pk")
+	    				, resultSet.getString("categoryL")
+	    				, resultSet.getString("categoryM")
+	    				, resultSet.getInt("another")
+	    				, resultSet.getString("name")
+	    				, resultSet.getInt("period")
+	    				, resultSet.getString("budget")
+	    				, resultSet.getString("plan_status")
+	    				, resultSet.getString("description")
+	    				, resultSet.getString("technique")
+	    				, resultSet.getTimestamp("deadline")
+	    				, resultSet.getString("meeting_type")
+	    				, resultSet.getString("meeting_area")
+	    				, resultSet.getString("meeting_area_detail")
+	    				, resultSet.getTimestamp("start_date")
+	    				, resultSet.getInt("managing")
+	    				, resultSet.getString("partner_type")
+	    				, resultSet.getString("purpose")
+	    				, resultSet.getString("status")
+	    				, resultSet.getTimestamp("reg_date"));
+	    	}
+	    }));
+		
+		return projectlist1;
 	}
 	public void Save(int account_pk, String categoryL,String categoryM,String is_turnkey, String name,
 			int period, String budget, String plan_status, String description, String technique,
@@ -379,6 +442,58 @@ public class ProjectDao implements ProjectIDao {
 				meeting_area, meeting_area_detail, start_date, managing_int, partner_type,
 				purpose, status);
 		
+	}
+	
+	public String getSQL(String dev_sql, String design_sql, String addr_sql, String status_sql, String sort_sql, String q_sql)
+	{
+		String sql = "select * from project";
+		
+		if(!dev_sql.isEmpty() || !design_sql.isEmpty() || !addr_sql.isEmpty() || !status_sql.isEmpty())
+		{
+			sql += " where ";
+			if(!dev_sql.isEmpty() && !design_sql.isEmpty())
+			{
+				sql += "(" + dev_sql +" or "+design_sql+")";
+			}
+			else if(!dev_sql.isEmpty())
+				sql += dev_sql;
+			else if(!design_sql.isEmpty())
+				sql += design_sql;
+			
+			
+			if(!addr_sql.isEmpty())
+			{
+				if(sql.length()>4 && sql.substring(sql.length()-7, sql.length()).equals(" where "))
+					sql += addr_sql;
+				else
+					sql += " and "+addr_sql;
+			}
+			if(!status_sql.isEmpty())
+			{
+				if(sql.length()>4 && sql.substring(sql.length()-7, sql.length()).equals(" where "))
+					sql += status_sql;
+				else
+					sql += " and "+status_sql;
+			}
+
+			if(!q_sql.isEmpty())
+			{
+				if(sql.length()>4 && sql.substring(sql.length()-7, sql.length()).equals(" where "))
+					sql += q_sql;
+				else
+					sql += " and "+q_sql;
+			}
+			sql += sort_sql;
+		}
+		
+		return sql;
+	}
+	
+	public int getApplicantNum(int project_pk)
+	{
+		List<ApplicantInfo> applicantlist =  applicantDao.select(project_pk);
+		
+		return applicantlist.size();
 	}
 	
 	public void deleteAll()

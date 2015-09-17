@@ -1,13 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
-
 <!DOCTYPE html>
 <html class="no-js modern" lang="ko">
 <meta charset="utf-8" />
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
-<meta content="Wishket Inc,." name="author" />
 
 <title>외주몬(WJM) · 프로젝트 찾기</title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
@@ -258,7 +256,6 @@
         }
     });
  
-
     function clear_page(){
         $('#id_page').val(1);
     }
