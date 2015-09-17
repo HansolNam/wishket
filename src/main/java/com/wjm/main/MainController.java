@@ -1,7 +1,5 @@
 package com.wjm.main;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -10,9 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.wjm.dao.AccountDao;
-import com.wjm.models.AccountInfo;
+import com.wjm.dao.ProjectDao;
 
 /**
  * Handles requests for the application home page.
@@ -24,19 +23,26 @@ public class MainController {
 	   
 	@Autowired
 	private AccountDao accountDao;
+
+	@Autowired
+	private ProjectDao projectDao;
 	
 	/**
-	 * È¨È­¸é
+	 * È¨È­ï¿½ï¿½
 	 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
-	public String MainController_index(HttpServletRequest request) {
+	public ModelAndView MainController_index(HttpServletRequest request, ModelAndView mv) {
 		logger.info("index Page");
 		
-		return "index";
+		//int projectnum = projectDao.countAll();
+		//long projectbudget = projectDao.countAllBudget();
+		//int accountnum = accountDao.countAll()
+		
+		return mv;
 	}
 	
 	/**
-	 * footer È­¸é
+	 * footer È­ï¿½ï¿½
 	 */
 	@RequestMapping(value = "/footer", method = RequestMethod.GET)
 	public String MainController_footer(HttpServletRequest request) {
@@ -45,7 +51,7 @@ public class MainController {
 		return "footer";
 	}
 	/**
-	 * ÇÁ·ÎÁ§Æ® È­¸é
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® È­ï¿½ï¿½
 	 */
 	@RequestMapping(value = "/project", method = RequestMethod.GET)
 	public String MainController_project(HttpServletRequest request) {
@@ -55,7 +61,7 @@ public class MainController {
 	}
 	
 	/**
-	 * ÆÄÆ®³Ê½º È­¸é
+	 * ï¿½ï¿½Æ®ï¿½Ê½ï¿½ È­ï¿½ï¿½
 	 */
 	@RequestMapping(value = "/partners", method = RequestMethod.GET)
 	public String MainController_partners(HttpServletRequest request) {
@@ -65,7 +71,7 @@ public class MainController {
 	}
 
 	/**
-	 * ¼­ºñ½º ¼Ò°³ È­¸é
+	 * ï¿½ï¿½ï¿½ï¿½ ï¿½Ò°ï¿½ È­ï¿½ï¿½
 	 */
 	@RequestMapping(value = "/service-intro", method = RequestMethod.GET)
 	public String MainController_serviceintro(HttpServletRequest request) {
@@ -75,7 +81,7 @@ public class MainController {
 	}
 
 	/**
-	 * Å¬¶óÀÌ¾ðÆ® ÀÌ¿ë¹æ¹ý È­¸é
+	 * Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ® ï¿½Ì¿ï¿½ï¿½ï¿½ È­ï¿½ï¿½
 	 */
 	@RequestMapping(value = "/client-use", method = RequestMethod.GET)
 	public String MainController_clientuse(HttpServletRequest request) {
@@ -85,7 +91,7 @@ public class MainController {
 	}
 
 	/**
-	 * ÆÄÆ®³Ê½º ÀÌ¿ë¹æ¹ý È­¸é
+	 * ï¿½ï¿½Æ®ï¿½Ê½ï¿½ ï¿½Ì¿ï¿½ï¿½ï¿½ È­ï¿½ï¿½
 	 */
 	@RequestMapping(value = "/partners-use", method = RequestMethod.GET)
 	public String MainController_partnersuse(HttpServletRequest request) {
@@ -95,7 +101,7 @@ public class MainController {
 	}
 
 	/**
-	 * ÀÌ¿ë¿ä±Ý È­¸é
+	 * ï¿½Ì¿ï¿½ï¿½ï¿½ È­ï¿½ï¿½
 	 */
 	@RequestMapping(value = "/service-fee", method = RequestMethod.GET)
 	public String MainController_servicefee(HttpServletRequest request) {
@@ -105,7 +111,7 @@ public class MainController {
 	}
 
 	/**
-	 * ÀÚÁÖ ¹¯´Â Áú¹® È­¸é
+	 * ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½
 	 */
 	@RequestMapping(value = "/faq", method = RequestMethod.GET)
 	public String MainController_faq(HttpServletRequest request) {
@@ -115,7 +121,7 @@ public class MainController {
 	}
 	
 	/**
-	 * ÀÌ¿ë¾à°ü
+	 * ï¿½Ì¿ï¿½ï¿½ï¿½
 	 */
 	@RequestMapping(value = "/terms-of-service", method = RequestMethod.GET)
 	public String MainController_termsofservice(HttpServletRequest request) {
@@ -124,7 +130,7 @@ public class MainController {
 		return "terms-of-service";
 	}
 	/**
-	 * °³ÀÎÁ¤º¸º¸È£
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È£
 	 */
 	@RequestMapping(value = "/privacy", method = RequestMethod.GET)
 	public String MainController_privacy(HttpServletRequest request) {

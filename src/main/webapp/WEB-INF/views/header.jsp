@@ -90,14 +90,14 @@
 			<div class="nav-inner">
 				<nav>
 					<ul class="nav navbar-nav">
-						<li class=""><a href="/client/manage/project/submitted/"
+						<li class=""><a href="/wjm/client/manage/project/submitted/"
 							style="color: #333; font-weight: 500 !important;">검수 중</a></li>
-						<li class=""><a href="/client/manage/recruiting/"
+						<li class=""><a href="/wjm/client/manage/recruiting/"
 							style="color: #333; font-weight: 500 !important;">지원자 모집 중</a></li>
-						<li class=""><a href="/client/manage/contract-in-progress/"
+						<li class=""><a href="/wjm/client/manage/contract-in-progress/"
 							style="color: #333; font-weight: 500 !important;">진행 중인
 								프로젝트</a></li>
-						<li class=""><a href="/client/manage/past/review-contract/"
+						<li class=""><a href="/wjm/client/manage/past/review-contract/"
 							style="color: #333; font-weight: 500 !important;">종료된 프로젝트</a></li>
 					</ul>
 				</nav>

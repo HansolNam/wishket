@@ -1,10 +1,38 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="com.wjm.models.AccountInfo"%>
+<%@ page import="com.wjm.models.AccountInfo, com.wjm.models.ProjectInfo, java.util.*, com.wjm.main.function.Time"%>
 <%
 	AccountInfo account = (AccountInfo)session.getAttribute("account");
-
-%>
+	List<ProjectInfo> projectlist = (List<ProjectInfo>)request.getAttribute("projectlist");
+	int check_cnt = 0;
+	int recruit_cnt = 0;
+	int ing_cnt = 0;
+	int finish_cnt = 0;
+	
+	if(projectlist != null)
+	{
+		for(int i=0;i<projectlist.size();i++)
+		{
+			if(projectlist.get(i).getStatus().equals("검수중"))
+			{
+				check_cnt++;
+			}
+			else if(projectlist.get(i).getStatus().equals("지원자모집중"))
+			{
+				recruit_cnt++;
+			}
+			else if(projectlist.get(i).getStatus().equals("진행중"))
+			{
+				ing_cnt++;
+			}
+			else if(projectlist.get(i).getStatus().equals("완료한프로젝트"))
+			{
+				finish_cnt++;
+			}
+		}
+	}
+	
+	%>
 <!DOCTYPE html>
 <html class="no-js modern" lang="ko">
 <head
@@ -84,14 +112,23 @@
 										<th>도구</th>
 									</tr>
 								</thead>
-								<!-- 
-								<tbody><tr><td>ㅁㅁㅁ</td><td>2015년 9월 15일</td><td><a class="btn btn-sm btn-client" href="/project/preview/%E1%84%86%E1%84%86%E1%84%86_4871/">미리보기</a></td></tr></tbody>
-								 -->
-								<tbody>
-									<tr>
-										<td class="text-muted" colspan="3">검수 중인 프로젝트가 없습니다.</td>
-									</tr>
-								</tbody>
+								<%
+									if(check_cnt != 0)
+									{
+										for(int i=0;i<projectlist.size();i++)
+										{
+											if(projectlist.get(i).getStatus().equals("검수중"))
+											{
+												out.print("<tbody><tr><td>"+projectlist.get(i).getName()+"</td>");
+												out.print("<td>"+Time.toString3(projectlist.get(i).getReg_date())+"</td>");
+												out.println("<td><a class='btn btn-sm btn-client' href='/wjm/project/preview/"+projectlist.get(i).getName()+"/"+projectlist.get(i).getPk()+"/'>미리보기</a></td></tr></tbody>");
+											}
+										}
+									}
+									else
+										out.println("<tbody><tr><td class='text-muted' colspan='4'>진행 중인 프로젝트가 없습니다.</td></tr></tbody>");
+									
+								%>
 							</table>
 							<p class="text-right">
 								<a class="more" href="/wjm/client/manage/project/submitted/">더
@@ -112,11 +149,25 @@
 										<th>도구</th>
 									</tr>
 								</thead>
-								<tbody>
-									<tr>
-										<td class="text-muted" colspan="4">모집 중인 프로젝트가 없습니다.</td>
-									</tr>
-								</tbody>
+								<%
+									if(recruit_cnt != 0)
+									{
+										for(int i=0;i<projectlist.size();i++)
+										{
+											if(projectlist.get(i).getStatus().equals("지원자모집중"))
+											{
+												out.print("<tbody><tr><td>"+projectlist.get(i).getName()+"</td>");
+												out.print("<td>"+Time.toString3(projectlist.get(i).getDeadline())+"</td>");
+												out.print("<td>  </td>");
+												out.println("<td><a class='btn btn-sm btn-client' href='/wjm/project/preview/"+projectlist.get(i).getName()+"/"+projectlist.get(i).getPk()+"/'>미리보기</a></td></tr></tbody>");
+											}
+										}
+									}
+									else
+									{
+										out.println("<tbody><tr><td class='text-muted' colspan='4'>모집 중인 프로젝트가 없습니다.</td></tr></tbody>");
+									}
+								%>
 							</table>
 							<p class="text-right">
 								<a class="more" href="/wjm/client/manage/recruiting/">더 자세히 보기 <i
@@ -137,11 +188,25 @@
 										<th>상태</th>
 									</tr>
 								</thead>
-								<tbody>
-									<tr>
-										<td class="text-muted" colspan="6">진행 중인 프로젝트가 없습니다.</td>
-									</tr>
-								</tbody>
+								<%
+									if(ing_cnt != 0)
+									{
+										for(int i=0;i<projectlist.size();i++)
+										{
+											if(projectlist.get(i).getStatus().equals("진행중"))
+											{
+												out.print("<tbody><tr><td>"+projectlist.get(i).getName()+"</td>");
+												out.print("<td>"+"파트너스"+"</td>");
+												out.print("<td>"+projectlist.get(i).getBudget()+"</td>");
+												out.print("<td>"+"남은 기간"+"</td>");
+												out.println("<td><a class='btn btn-sm btn-client' href='/wjm/project/preview/"+projectlist.get(i).getName()+"/"+projectlist.get(i).getPk()+"/'>미리보기</a></td></tr></tbody>");
+											}
+										}
+									}
+									else
+										out.println("<tbody><tr><td class='text-muted' colspan='4'>모집 중인 프로젝트가 없습니다.</td></tr></tbody>");
+									
+								%>
 							</table>
 							<p class="text-right">
 								<a class="more" href="/wjm/client/manage/contract-in-progress/">더
@@ -176,12 +241,12 @@
 						<div class="client-history-body">
 							<div class="project">
 								<div class="history-body-title">프로젝트 등록</div>
-								<div class="pull-right history-body-data">0 건</div>
+								<div class="pull-right history-body-data"><%=check_cnt+recruit_cnt+ing_cnt+finish_cnt %> 건</div>
 							</div>
 							<div class="contract">
 								<div class="contract-title">
 									<div class="history-body-title">계약한 프로젝트</div>
-									<div class="pull-right history-body-data">0 건</div>
+									<div class="pull-right history-body-data"><%=ing_cnt+finish_cnt %> 건</div>
 								</div>
 								<div class="contract-data">
 									<div class="contract-data-box">
@@ -190,11 +255,11 @@
 									</div>
 									<div class="contract-data-box">
 										<div class="history-body-title">진행중인 프로젝트</div>
-										<div class="pull-right history-body-data">0 건</div>
+										<div class="pull-right history-body-data"><%=ing_cnt %> 건</div>
 									</div>
 									<div class="contract-data-box">
 										<div class="history-body-title">완료한 프로젝트</div>
-										<div class="pull-right history-body-data">0 건</div>
+										<div class="pull-right history-body-data"><%=finish_cnt %> 건</div>
 									</div>
 								</div>
 							</div>

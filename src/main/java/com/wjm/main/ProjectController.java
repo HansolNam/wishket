@@ -534,17 +534,40 @@ public class ProjectController {
 		return "redirect:/project/faq";
 	}
 	/**
-	 * 프로젝트 추가
+	 * 프로젝트 미리보기
 	 */
-	@RequestMapping(value = "/project/preview", method = RequestMethod.GET)
-	public String ProjectController_preview(HttpServletRequest request) {
+	@RequestMapping(value = "/project/preview/{name}/{pk}", method = RequestMethod.GET)
+	public ModelAndView ProjectController_preview_name_pk(HttpServletRequest request,
+			@PathVariable("pk") int pk, @PathVariable("name") String name, ModelAndView mv) {
 		logger.info("project preview Page");
 		
+		mv.addObject("pk",pk);
+		mv.addObject("name",name);
 		
-		
-		return "/project/preview";
+		mv.setViewName("redirect:/project/preview");
+		return mv;
 	}
-	
+	/**
+	 * 프로젝트 미리보기
+	 */
+	@RequestMapping(value = "/project/preview", method = RequestMethod.GET)
+	public ModelAndView ProjectController_preview(HttpServletRequest request
+			,@RequestParam("pk") int pk
+			,@RequestParam("name") String name
+			, ModelAndView mv
+			) {
+		logger.info("project preview Page");
+
+		ProjectInfo project = projectDao.select(pk, name);
+		
+		if(project!=null)
+			mv.addObject("project",project);
+		else
+			logger.info("project 없음 에러!");
+		
+		return mv;
+	}
+
 	//중분류 리스트
 	@RequestMapping(value = "/getCategoryM", method = RequestMethod.POST, produces="application/json;charset=UTF-8")
 	@ResponseBody
