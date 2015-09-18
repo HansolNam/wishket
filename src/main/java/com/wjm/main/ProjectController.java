@@ -59,7 +59,7 @@ public class ProjectController {
 		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
 		
 		//기본 정보가 있는 경우, 프로젝트 등록 페이지로
-		if(accountInformationDao.hasBasicInfo(account.getPk()))
+		if(accountInformationDao.hasContactInfo(account.getPk()))
 			return "redirect:/project/add/detail";
 		//기본 정보가 없는 경우, 기본정보 등록 페이지로
 		else
@@ -233,15 +233,15 @@ public class ProjectController {
 		//title 체크
 		if(title.isEmpty())
 		{
+			logger.info("title!!!!");
 			isAvailable = false;
 			mv.addObject("title_msg","이 항목은 필수입니다.");
-			logger.info("title > 이 항목은 필수입니다.");
 		}
 		else if(!Validator.isValidLength(title, 1, 30))
 		{
+			logger.info("title!!!!");
 			isAvailable = false;
 			mv.addObject("title_msg","프로젝트 제목을 올바르게 입력해주세요");
-			logger.info("title > 프로젝트 제목을 올바르게 입력해주세요.");
 		}
 		else
 		{
@@ -253,12 +253,13 @@ public class ProjectController {
 
 		if(category.isEmpty())
 		{
+			logger.info("category!!!!");
 			isAvailable = false;
 			mv.addObject("category_msg","이 항목은 필수입니다.");
-			logger.info("category > 이 항목은 필수입니다.");
 		}
 		else if(!category.equals("develop")&&!category.equals("design"))
 		{
+			logger.info("category!!!!");
 			isAvailable = false;
 			mv.addObject("category_msg","카테고리를 올바르게 선택해주세요");
 		}
@@ -270,12 +271,13 @@ public class ProjectController {
 		//sub category 체크
 		if(sub_category.isEmpty())
 		{
+			logger.info("sub_category!!!!");
 			isAvailable = false;
 			mv.addObject("category_msg","이 항목은 필수입니다.");
-			logger.info("sub_category > 이 항목은 필수입니다.");
 		}
 		else if(!Validator.isProjectCategory(category, sub_category))
 		{
+			logger.info("sub_category!!!!");
 			isAvailable = false;
 			mv.addObject("category_msg","카테고리를 올바르게 선택해주세요");
 		}
@@ -287,9 +289,9 @@ public class ProjectController {
 		//is_turnkey 체크
 		if(is_turnkey.isEmpty())
 		{
+			logger.info("is_turnkey!!!!");
 			isAvailable = false;
 			mv.addObject("is_turnkey_msg","이 항목은 필수입니다.");
-			logger.info("is_turnkey > 이 항목은 필수입니다.");
 		}
 		else
 		{
@@ -299,12 +301,13 @@ public class ProjectController {
 		//project_term 체크
 		if(project_term.isEmpty())
 		{
+			logger.info("project_term!!!!");
 			isAvailable = false;
 			mv.addObject("project_term_msg","이 항목은 필수입니다.");
-			logger.info("project_term > 이 항목은 필수입니다.");
 		}
 		else if(!Validator.isDigit(project_term)||!Validator.isValidLength(project_term, 1, 3))
 		{
+			logger.info("project_term!!!!");
 			isAvailable = false;
 			mv.addObject("project_term_msg","프로젝트 진행기간을 올바르게 입력해주세요");
 		}
@@ -316,14 +319,9 @@ public class ProjectController {
 		//budget_maximum 체크
 		if(budget_maximum.isEmpty())
 		{
+			logger.info("budget_maximum!!!!");
 			isAvailable = false;
 			mv.addObject("budget_maximum_msg","이 항목은 필수입니다.");
-			logger.info("budget_maximum > 이 항목은 필수입니다.");
-		}
-		else if(!Validator.isDigit(budget_maximum)||!Validator.isValidLength(budget_maximum, 1, 10))
-		{
-			isAvailable = false;
-			mv.addObject("budget_maximum_msg","프로젝트 지출가능예산을 올바르게 입력해주세요");
 		}
 		else
 		{
@@ -333,12 +331,13 @@ public class ProjectController {
 		//planning_status 체크
 		if(planning_status.isEmpty())
 		{
+			logger.info("planning_status!!!!");
 			isAvailable = false;
 			mv.addObject("planning_status_msg","이 항목은 필수입니다.");
-			logger.info("planning_status > 이 항목은 필수입니다.");
 		}
 		else if(!Validator.isPlanStatus(planning_status))
 		{
+			logger.info("planning_status!!!!");
 			isAvailable = false;
 			mv.addObject("planning_status_msg","프로젝트 기획상태를 올바르게 입력해주세요");
 		}
@@ -350,12 +349,13 @@ public class ProjectController {
 		//description 체크
 		if(description.isEmpty())
 		{
+			logger.info("description!!!!");
 			isAvailable = false;
 			mv.addObject("description_msg","이 항목은 필수입니다.");
-			logger.info("description > 이 항목은 필수입니다.");
 		}
 		else if(!Validator.isValidLength(description, 1, 5000))
 		{
+			logger.info("description!!!!");
 			isAvailable = false;
 			mv.addObject("description_msg","프로젝트 내용이 너무 깁니다.");
 		}
@@ -368,12 +368,13 @@ public class ProjectController {
 		//skill_required 체크
 		if(skill_required.isEmpty())
 		{
+			logger.info("skill_required!!!!");
 			isAvailable = false;
 			mv.addObject("skill_required_msg","이 항목은 필수입니다.");
-			logger.info("skill_required > 이 항목은 필수입니다.");
 		}
 		else if(!Validator.isValidLength(skill_required, 1, 100))
 		{
+			logger.info("skill_required!!!!");
 			isAvailable = false;
 			mv.addObject("skill_required_msg","관련 기술이 너무 깁니다");
 		}
@@ -385,9 +386,9 @@ public class ProjectController {
 		//deadline 체크
 		if(deadline.isEmpty())
 		{
+			logger.info("deadline!!!!");
 			isAvailable = false;
 			mv.addObject("deadline_msg","이 항목은 필수입니다.");
-			logger.info("deadline > 이 항목은 필수입니다.");
 		}
 		else
 		{
@@ -397,12 +398,13 @@ public class ProjectController {
 		//method_pre_interview 체크
 		if(method_pre_interview.isEmpty())
 		{
+			logger.info("method_pre_interview!!!!");
 			isAvailable = false;
 			mv.addObject("method_pre_interview_msg","이 항목은 필수입니다.");
-			logger.info("method_pre_interview > 이 항목은 필수입니다.");
 		}
 		else if(!method_pre_interview.equals("OFFLINE")&&!method_pre_interview.equals("ONLINE"))
 		{
+			logger.info("method_pre_interview!!!!");
 			isAvailable = false;
 			mv.addObject("method_pre_interview_msg","사전 미팅을 올바르게 선택해주세요.");
 		}
@@ -414,9 +416,9 @@ public class ProjectController {
 		//시,도 군 체크
 		if(address_sido.isEmpty() ||sigungu.isEmpty() )
 		{
+			logger.info("address_sido||sigungu!!!!");
 			isAvailable = false;
 			mv.addObject("address_msg","이 항목은 필수입니다.");
-			logger.info("address_sido > 이 항목은 필수입니다.");
 		}
 		else
 		{
@@ -428,9 +430,9 @@ public class ProjectController {
 		//date_expected_kick_off
 		if(date_expected_kick_off.isEmpty() )
 		{
+			logger.info("date_expected_kick_off!!!!");
 			isAvailable = false;
 			mv.addObject("date_expected_kick_off_msg","이 항목은 필수입니다.");
-			logger.info("date_expected_kick_off > 이 항목은 필수입니다.");
 		}
 		else
 		{
@@ -440,9 +442,9 @@ public class ProjectController {
 		//has_manage_experience
 		if(has_manage_experience.isEmpty())
 		{
+			logger.info("has_manage_experience!!!!");
 			isAvailable = false;
 			mv.addObject("has_manage_experience_msg","이 항목은 필수입니다.");
-			logger.info("has_manage_experience > 이 항목은 필수입니다.");
 		}
 		else
 		{
@@ -452,15 +454,16 @@ public class ProjectController {
 		//prefer_partner
 		if(prefer_partner.isEmpty())
 		{
+			logger.info("prefer_partner!!!!");
 			isAvailable = false;
 			mv.addObject("prefer_partner_msg","이 항목은 필수입니다.");
-			logger.info("prefer_partner > 이 항목은 필수입니다.");
 		}
 		else if(!prefer_partner.equals("whatever")&&!prefer_partner.equals("corporate_business")
 				&&!prefer_partner.equals("individual_business")&&!prefer_partner.equals("team")
 				&&!prefer_partner.equals("individual"))
 		{
 			isAvailable = false;
+			logger.info("prefer_partner!!!!");
 			mv.addObject("prefer_partner_msg","선호하는 파트너를 올바르게 선택해주세요.");
 		}
 		else
@@ -470,12 +473,13 @@ public class ProjectController {
 		//submit_purpose
 		if(submit_purpose.isEmpty())
 		{
+			logger.info("submit_purpose!!!!");
 			isAvailable = false;
 			mv.addObject("submit_purpose_msg","이 항목은 필수입니다.");
-			logger.info("submit_purpose > 이 항목은 필수입니다.");
 		}
 		else if(!submit_purpose.equals("request")&&!submit_purpose.equals("inquire"))
 		{
+			logger.info("submit_purpose!!!!");
 			isAvailable = false;
 			mv.addObject("submit_purpose_msg","프로젝트 의뢰 목적를 올바르게 선택해주세요.");
 		}
@@ -520,7 +524,7 @@ public class ProjectController {
 		
 		
 		
-		return "redirect:/project/add/thank-you";
+		return "/project/add/thank-you";
 	}
 	/**
 	 * 프로젝트 질문답변
@@ -611,20 +615,57 @@ public class ProjectController {
 		return jObject.toString();
 	}
 	
-	//지역 리스트
+	//지역 리스트(area_name)
 	@RequestMapping(value = "/getAddress", method = RequestMethod.POST, produces="application/json;charset=UTF-8")
 	@ResponseBody
 	public String ProjectController_getAddress(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam("area") String area) {
 		logger.info("getAddress AJAX");
 
+		logger.info("area = "+area);
 		JSONObject jObject = new JSONObject();
-		List<String> arealist = areaDetailDao.select(area);
+		
+		if(area.equals(""))
+		{
+			logger.info(jObject.toString());
+			return jObject.toString();
+		}
+		else
+		{
+			List<String> arealist = areaDetailDao.select(area.trim());
+	
+			jObject.put("arealist", arealist);
+			logger.info(jObject.toString());
+			return jObject.toString();
+		}
 
-		jObject.put("arealist", arealist);
-		logger.info(jObject.toString());
+	}
+	
+	//지역 리스트(area_pk_
+	@RequestMapping(value = "/getAddress2", method = RequestMethod.POST, produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public String ProjectController_getAddress2(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("area") String area) {
+		logger.info("getAddress2 AJAX");
 
-		return jObject.toString();
+
+		logger.info("area = "+area);
+		JSONObject jObject = new JSONObject();
+		area = area.trim();
+		
+		if(area.equals(""))
+		{
+			logger.info(jObject.toString());
+			return jObject.toString();
+		}
+		else
+		{
+			List<String> arealist = areaDetailDao.select(Integer.parseInt(area));
+			jObject.put("arealist", arealist);
+			logger.info(jObject.toString());
+			return jObject.toString();
+		}
+
 	}
 
 	/**

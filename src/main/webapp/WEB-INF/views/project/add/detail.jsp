@@ -618,10 +618,10 @@ response.setContentType("text/html; charset=UTF-8");
 	});
 	window.onload = function(){
 
-        var value = "<프로젝트 진행 방식><br/>예시) 시작시점에 미팅, 주 1회 미팅 등<br/><br/>"
-                +"<프로젝트의 현재 상황><br/>예시) 기획 여부, 타겟 고객, 진행 계획 등"
-                +"<br/><br/><상세한 업무 내용><br/>예시) 페이지 수, 레이아웃(비슷한 페이지) 수, 필요한 조건 등"
-                +"<br><br><참고자료 / 유의사항>";
+        var value = "<프로젝트 진행 방식>\n예시) 시작시점에 미팅, 주 1회 미팅 등\n\n"
+                +"<프로젝트의 현재 상황>\n예시) 기획 여부, 타겟 고객, 진행 계획 등"
+                +"\n\n<상세한 업무 내용>\n예시) 페이지 수, 레이아웃(비슷한 페이지) 수, 필요한 조건 등"
+                +"\n\n<참고자료 / 유의사항>";
         var $description = $('#description');
         if($description.val() =="")
         	$description.val(value);

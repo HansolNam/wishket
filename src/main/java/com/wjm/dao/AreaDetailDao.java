@@ -57,4 +57,32 @@ public class AreaDetailDao implements AreaDetailIDao {
 	    	}
 	    });
 	}
+
+	public List<String> select(int area_pk)
+	{
+		return jdbcTemplate.query("select name from area_detail where area_pk = ?",
+		    	new Object[] { area_pk },new RowMapper<String>() {
+	    	public String mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+	    	{
+	    		return new String(resultSet.getString("name"));
+	    	}
+	    });
+	}
+
+	public boolean isExist(int areapk, String areadetailname)
+	{
+		List<String> areadetailnamelist = select(areapk);
+		
+		logger.info("areadetailnamelist = "+areadetailnamelist.toString());
+		
+		if(areadetailnamelist.size() == 0)
+			return false;
+		
+		for(int i =0;i<areadetailnamelist.size();i++)
+		{
+			if(areadetailnamelist.get(i).equals(areadetailname))
+				return true;
+		}
+			return false;
+	}
 }

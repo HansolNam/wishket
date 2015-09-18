@@ -22,6 +22,12 @@ public class Time {
 		Date date = new Date(timestamp.getTime());
 		return sd2.format(date);
 	}
+	static public String toString4(Timestamp timestamp){
+		SimpleDateFormat sd2 = new SimpleDateFormat ( "yyyy_MM_dd_hh_mm_ss");
+		Date date = new Date(timestamp.getTime());
+		return sd2.format(date);
+	}
+	
 	
 	static public Date nextDate(int iDay)
 	{
@@ -65,6 +71,13 @@ public class Time {
 		
 		return sd1.format(date);
 		
+	}
+	
+	static public Timestamp getCurrentTimestamp()
+	{
+		long now = System.currentTimeMillis();
+		
+		return new Timestamp(now);
 	}
 	
 }

@@ -11,10 +11,10 @@ public class AccountInformationInfo {
 	private String company_representative;
 	private String name;
 	private String sex;
-	private Timestamp birth_date;
-	private String regionL;
-	private String regionM;
-	private String regionR;
+	private String birth_date;
+	private String regionl;
+	private String regionm;
+	private String regionr;
 	private String cellphone_num;
 	private String telephone_num;
 	private String fax_num;
@@ -26,10 +26,10 @@ public class AccountInformationInfo {
 	private String account_number;
 	private String introduction;
 	public AccountInformationInfo(int pk, int account_pk, String profile_img, String form, String company_name,
-			String company_representative, String name, String sex, Timestamp birth_date, String regionL,
-			String regionM, String regionR, String cellphone_num, String telephone_num, String fax_num,
-			int subscription, String identity_authentication, String identity_doc, String bank_name,
-			String account_holder, String account_number, String introduction) {
+			String company_representative, String name, String sex, String birth_date, String regionl, String regionm,
+			String regionr, String cellphone_num, String telephone_num, String fax_num, int subscription,
+			String identity_authentication, String identity_doc, String bank_name, String account_holder,
+			String account_number, String introduction) {
 		super();
 		this.pk = pk;
 		this.account_pk = account_pk;
@@ -40,9 +40,9 @@ public class AccountInformationInfo {
 		this.name = name;
 		this.sex = sex;
 		this.birth_date = birth_date;
-		this.regionL = regionL;
-		this.regionM = regionM;
-		this.regionR = regionR;
+		this.regionl = regionl;
+		this.regionm = regionm;
+		this.regionr = regionr;
 		this.cellphone_num = cellphone_num;
 		this.telephone_num = telephone_num;
 		this.fax_num = fax_num;
@@ -102,29 +102,29 @@ public class AccountInformationInfo {
 	public void setSex(String sex) {
 		this.sex = sex;
 	}
-	public Timestamp getBirth_date() {
+	public String getBirth_date() {
 		return birth_date;
 	}
-	public void setBirth_date(Timestamp birth_date) {
+	public void setBirth_date(String birth_date) {
 		this.birth_date = birth_date;
 	}
-	public String getRegionL() {
-		return regionL;
+	public String getRegionl() {
+		return regionl;
 	}
-	public void setRegionL(String regionL) {
-		this.regionL = regionL;
+	public void setRegionl(String regionl) {
+		this.regionl = regionl;
 	}
-	public String getRegionM() {
-		return regionM;
+	public String getRegionm() {
+		return regionm;
 	}
-	public void setRegionM(String regionM) {
-		this.regionM = regionM;
+	public void setRegionm(String regionm) {
+		this.regionm = regionm;
 	}
-	public String getRegionR() {
-		return regionR;
+	public String getRegionr() {
+		return regionr;
 	}
-	public void setRegionR(String regionR) {
-		this.regionR = regionR;
+	public void setRegionr(String regionr) {
+		this.regionr = regionr;
 	}
 	public String getCellphone_num() {
 		return cellphone_num;
@@ -186,5 +186,6 @@ public class AccountInformationInfo {
 	public void setIntroduction(String introduction) {
 		this.introduction = introduction;
 	}
-
+	
+	
 }

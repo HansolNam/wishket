@@ -144,12 +144,12 @@ response.setContentType("text/html; charset=UTF-8");
 					</section>
 					<aside class="signup-aside">
 						<p class="redirect-login">
-							이미 회원이신가요? <a href="/accounts/login/">로그인</a>
+							이미 회원이신가요? <a href="/wjm/accounts/login/">로그인</a>
 						</p>
 						<p class="aside-benefit-text">
-							<strong class="strong-value">9,598</strong>개의 <strong>클라이언트
-								기업</strong>과<br /> <strong class="strong-value">14,733</strong>개의 <strong>개발회사
-								&amp; 프리랜서</strong>가<br /> 함께하는 온라인 아웃소싱 플랫폼 위시켓
+							<strong class="strong-value">${clientnum}</strong>개의 <strong>클라이언트
+								기업</strong>과<br /> <strong class="strong-value">${partnersnum}</strong>개의 <strong>개발회사
+								&amp; 프리랜서</strong>가<br /> 함께하는 온라인 아웃소싱 플랫폼 외주몬
 						</p>
 					</aside>
 				</div>

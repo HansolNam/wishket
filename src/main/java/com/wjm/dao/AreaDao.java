@@ -71,4 +71,21 @@ public class AreaDao implements AreaIDao {
 			return arealist.get(0);
 		}
 	}
+
+	
+	public boolean isExist(int pk)
+	{
+		List<String> arealist = jdbcTemplate.query("select name from area where pk = ?",
+		    	new Object[] { pk },new RowMapper<String>() {
+	    	public String mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+	    	{
+	    		return new String(resultSet.getString("name"));
+	    	}
+	    });
+		
+		if(arealist.size() > 0)
+			return true;
+		else
+			return false;
+	}
 }

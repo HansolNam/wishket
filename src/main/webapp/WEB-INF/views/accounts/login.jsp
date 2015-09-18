@@ -94,10 +94,10 @@
 					</section>
 					<aside class="login-aside">
 					<p class="redirect-signup">
-						아직 회원이 아니신가요? <a href="/accounts/signup/">회원가입 하기</a>
+						아직 회원이 아니신가요? <a href="/wjm/accounts/signup/">회원가입 하기</a>
 					</p>
 					<p class="find-password">
-						비밀번호를 잊으셨나요? <a href="/accounts/password/reset/">비밀번호 찾기</a>
+						비밀번호를 잊으셨나요? <a href="/wjm/accounts/password/reset/">비밀번호 찾기</a>
 					</p>
 					</aside>
 				</div>
@@ -119,10 +119,13 @@
 		if(id_msg != null && id_msg != "")
 		{
 			$("#id_div").addClass('has-error');
+			$("#messages").html("<div class='alert alert-warning fade in'>"+id_msg+"</div>");
 		}
-		if(email_msg != null && email_msg != "")
+		if(password_msg != null && password_msg != "")
 		{
-			$("#email_div").addClass('has-error');
+			$("#password_div").addClass('has-error');
+			$("#messages").html("<div class='alert alert-warning fade in'>"+password_msg+"</div>");
+
 		}
 	});
 	</script>

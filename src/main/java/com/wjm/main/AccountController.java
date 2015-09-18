@@ -1,11 +1,14 @@
 package com.wjm.main;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.fileupload.FileUploadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +16,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.wjm.dao.AccountDao;
 import com.wjm.dao.AccountInformationDao;
+import com.wjm.main.function.Fileupload;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
+import com.wjm.models.AccountInformationInfo;
 
 /**
  * Handles requests for the application home page.
@@ -71,7 +77,7 @@ public class AccountController {
 		//아이디 체크
 		if(!Validator.isId(id))
 		{			
-			mv.addObject("id_msg", "6글자 이상 입력해 주세요.");
+			mv.addObject("id_msg", "아이디는 6글자 이상 입력해 주세요.");
 			return mv;
 		}
 		//패스워드 길이 체크
@@ -118,10 +124,16 @@ public class AccountController {
 	 * 회원가입 페이지
 	 */
 	@RequestMapping(value = "/accounts/signup", method = RequestMethod.GET)
-	public String AccountController_signup_get(HttpServletRequest request) {
+	public ModelAndView AccountController_signup_get(HttpServletRequest request, ModelAndView mv) {
 		logger.info("signup Get Page");
 		
-		return "/accounts/signup";
+		int clientnum = accountDao.select_account("client");
+		int partnersnum = accountDao.select_account("partners");
+		
+		mv.addObject("clientnum",clientnum);
+		mv.addObject("partnersnum",partnersnum);
+		
+		return mv;
 	}
 	
 	/**
@@ -239,7 +251,7 @@ public class AccountController {
 		if(isAvailable)
 		{
 			accountDao.signup(id, email, password, account_type);
-			mv.setViewName("redirect:/accounts/login");
+			mv.setViewName("/accounts/login");
 		}
 		
 		return mv;
@@ -267,10 +279,162 @@ public class AccountController {
 	 * 회원가입 페이지
 	 */
 	@RequestMapping(value = "/accounts/settings/profile", method = RequestMethod.GET)
-	public String AccountController_profile_get(HttpServletRequest request) {
+	public ModelAndView AccountController_profile_get(HttpServletRequest request, ModelAndView mv) {
 		logger.info("profile Get Page");
 		
-		return "/accounts/settings/profile";
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		AccountInformationInfo accountinfo;
+		
+		if(account != null)
+		{
+			logger.info("account 존재");
+			accountinfo = accountInformationDao.select(account.getPk());
+			if(accountinfo  == null)
+			{
+				logger.info("accountinfo 존재X");
+				accountInformationDao.create(account.getPk());
+				accountinfo = accountInformationDao.select(account.getPk());
+			}
+			else
+			{
+				logger.info("accountinfo 존재");
+				if(accountInformationDao.hasBasicInfo(account.getPk()))
+				{
+					mv.addObject("hasBasicInfo","true");
+				}
+				if(accountInformationDao.hasPhoneNum(account.getPk()))
+				{
+					mv.addObject("hasPhoneNum","true");
+				}
+				if(account.getEmail()!=null)
+				{
+					mv.addObject("hasEmail","true");
+				}
+			}
+		}
+		else
+			accountinfo = null;
+			
+		mv.addObject("accountinfo",accountinfo);
+		
+		return mv;
+	}
+	
+	/**
+	 * 기본정보 수정
+	 */
+	@RequestMapping(value = "/accounts/settings/profile", method = RequestMethod.POST)
+	public ModelAndView AccountController_profile_post(HttpServletRequest request,
+ 			HttpServletResponse response,
+ 			ModelAndView mv,
+			 @RequestParam(value = "image", required = false, defaultValue = "") MultipartFile image,
+			 @RequestParam(value = "form_of_business", required = false, defaultValue = "") String form_of_business,
+			 @RequestParam(value = "full_name", required = false, defaultValue = "") String full_name,
+			 @RequestParam(value = "company_name", required = false, defaultValue = "") String company_name,
+			 @RequestParam(value = "representative", required = false, defaultValue = "") String representative,
+			 @RequestParam(value = "gender", required = false, defaultValue = "") String gender,
+			 @RequestParam(value = "date_of_birth_year", required = false, defaultValue = "") String date_of_birth_year,
+			 @RequestParam(value = "date_of_birth_month", required = false, defaultValue = "") String date_of_birth_month,
+			 @RequestParam(value = "date_of_birth_day", required = false, defaultValue = "") String date_of_birth_day,
+			 @RequestParam(value = "address_sido", required = false, defaultValue = "") String address_sido,
+			 @RequestParam(value = "sigungu", required = false, defaultValue = "") String sigungu,
+			 @RequestParam(value = "address_detail", required = false, defaultValue = "") String address_detail,
+			 @RequestParam(value = "email_subscription", required = false, defaultValue = "") String email_subscription,
+			 @RequestParam(value = "cell_phone_number_code", required = false, defaultValue = "") String cell_phone_number_code,
+			 @RequestParam(value = "phone_number_entered", required = false, defaultValue = "") String phone_number_entered,
+			 @RequestParam(value = "fax_number", required = false, defaultValue = "") String fax_number,
+			 @RequestParam("submit_type") String submit_type
+			) throws IOException, FileUploadException, ParseException  {
+		logger.info("profile Post Page");
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+
+		if(account == null)
+		{
+			mv.setViewName("redirect:/accounts/login");
+			return mv;
+		}
+		
+		mv.setViewName("/accounts/settings/profile");
+		AccountInformationInfo accountinfo = accountInformationDao.select(account.getPk());
+		
+		if(accountinfo == null)
+		{
+			accountInformationDao.create(account.getPk());
+			accountinfo = accountInformationDao.select(account.getPk());
+		}
+		
+		if(submit_type.equals("base"))
+		{
+			if(image == null)
+			{
+				mv.addObject("msg", "이미지를 등록해주세요");
+				return mv;
+			}
+			if(image.isEmpty())
+			{
+				mv.addObject("msg", "이미지를 등록해주세요");
+				return mv;
+			}
+			
+			String image_path = Fileupload.upload(request.getRealPath(File.separator), image);
+			
+			if(image_path.equals("error"))
+			{
+				mv.addObject("msg", "이미지 제목은 20 글자까지 가능하고, 최대 용량은 3MB입니다.");
+				return mv;
+			}
+			else
+			{
+				try{
+				String msg = accountInformationDao.updateBase(image_path,form_of_business,full_name,
+						company_name,representative,gender,date_of_birth_year,date_of_birth_month,
+						date_of_birth_day,address_sido,sigungu,address_detail,accountinfo.getPk());
+					if(msg.equals("성공"))
+					{
+						mv.addObject("msg",msg);
+						return mv;
+					}
+					else
+					{
+						mv.addObject("msg",msg);
+						return mv;
+					}
+				}
+				catch(Exception e)
+				{
+					mv.addObject("msg","에러가 발생했습니다.");
+					return mv;
+				}
+			}
+		}
+		
+		
+		/*
+		else if(submit_type.equals("email"))
+		{
+			accountInformationDao.updateEmail(email_subscription);
+		}
+		else if(submit_type.equals("connect"))
+		{
+			accountInformationDao.updateConnect(cell_phone_number_code, cell_phone_number_middle, cell_phone_number_end,
+					phone_number_code, phone_number_entered, fax_number);
+		}
+		else
+		{
+			
+		}*/
+		
+		//submit_type(base, connect, email)
+		//base : image, form_of_business, full_name, company_name, representative, gender, date_of_birth_year, 
+		//       date_of_birth_month, date_of_birth_day, address_sido, sigungu, address_detail
+		//email : email_subscription
+		
+		// connect : cell_phone_number_code, cell_phone_number_middle, cell_phone_number_end
+		//           phone_number_code, phone_number_entered, fax_number
+		
+		
+		
+		return mv;
 	}
 	/**
 	 * 회원가입 페이지

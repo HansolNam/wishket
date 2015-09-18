@@ -1,70 +1,104 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<!--[if IE 6]><html lang="ko" class="no-js old ie6"><![endif]-->
-<!--[if IE 7]><html lang="ko" class="no-js old ie7"><![endif]-->
-<!--[if IE 8]><html lang="ko" class="no-js old ie8"><![endif]-->
-<html class="no-js modern" lang="ko">
+<html
+	class=" modern js flexbox flexboxlegacy canvas canvastext webgl no-touch geolocation postmessage websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths"
+	lang="ko">
 <head
 	prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#">
-<meta charset="utf-8" />
-<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
-<meta content="Wishket Inc,." name="author" />
+<meta charset="utf-8">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+<meta content="Wishket Inc,." name="author">
 <meta
 	content="위시켓은 기업의 프로젝트와 개발자 &amp; 디자이너를 연결해주는 온라인 아웃소싱 서비스 입니다.
 더 이상 지인을 수소문하지 마세요, 위시켓에서 3시간이면 충분합니다."
-	name="description" />
-<meta content="593258114025512" property="fb:app_id" />
-<meta content="website" property="og:type" />
-<meta content="http://www.wishket.com" property="og:url" />
-<meta content="Wishket" property="og:title" />
-<meta content="http://www.wishket.com${pageContext.request.contextPath}/resources/static/img/wishket_logo_256.png"
-	property="og:image" />
+	name="description">
+<meta content="593258114025512" property="fb:app_id">
+<meta content="website" property="og:type">
+<meta content="http://www.wishket.com" property="og:url">
+<meta content="Wishket" property="og:title">
+<meta
+	content="http://www.wishket.com/wjm/resources/static/img/wishket_logo_256.png"
+	property="og:image">
 <meta
 	content="위시켓은 기업의 프로젝트와 개발자 &amp; 디자이너를 연결해주는 온라인 아웃소싱 서비스 입니다.
 더 이상 지인을 수소문하지 마세요, 위시켓에서 3시간이면 충분합니다."
-	property="og:description" />
+	property="og:description">
 <meta content="k6UITCIVaYG0YtRsN8g4GF2T4qg7Z3M6JD2mLJte_n4"
-	name="google-site-verification" />
+	name="google-site-verification">
 <meta content="d2c8672ef81fcd9ceb62f51232d13aada8512a64"
-	name="naver-site-verification" />
+	name="naver-site-verification">
 <title>위시켓(Wishket) · 기본 정보 수정</title>
+<script type="text/javascript" async=""
+	src="http://cdn.mxpnl.com/libs/mixpanel-2.2.min.js"></script>
+<script async="" src="//www.google-analytics.com/analytics.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
-<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
-	type="text/css" />
-<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/aa41eeaffc60.css" rel="stylesheet"
-	type="text/css" />
-<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/35066c295d92.css" rel="stylesheet"
-	type="text/css" />
-<!--[if IE 7]><link rel="stylesheet" href="${pageContext.request.contextPath}/resources/static/CACHE/css/cc2b8202dedf.css" type="text/css" /><![endif]-->
-<!--[if IE 8]><link rel="stylesheet" href="${pageContext.request.contextPath}/resources/static/CACHE/css/0873b963b20a.css" type="text/css" /><![endif]-->
-<link href="${pageContext.request.contextPath}/resources/static/django_facebook/css/facebook.css" media="all"
-	rel="stylesheet" />
+<style type="text/css"></style>
+<link href="/wjm/resources/static/CACHE/css/7911bc0a5c62.css"
+	rel="stylesheet" type="text/css">
+<link href="/wjm/resources/static/CACHE/css/aa41eeaffc60.css"
+	rel="stylesheet" type="text/css">
+<link href="/wjm/resources/static/CACHE/css/35066c295d92.css"
+	rel="stylesheet" type="text/css">
+<!--[if IE 7]><link rel="stylesheet" href="/wjm/resources/static/CACHE/css/cc2b8202dedf.css" type="text/css" /><![endif]-->
+<!--[if IE 8]><link rel="stylesheet" href="/wjm/resources/static/CACHE/css/0873b963b20a.css" type="text/css" /><![endif]-->
+<link href="/wjm/resources/static/django_facebook/css/facebook.css"
+	media="all" rel="stylesheet">
 <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/a52a868564de.js" type="text/javascript"></script>
-<link href="${pageContext.request.contextPath}/resources/static/css/floating.css" rel="stylesheet" />
+<script src="/wjm/resources/static/CACHE/js/a52a868564de.js"
+	type="text/javascript"></script>
+<link href="/wjm/resources/static/css/floating.css" rel="stylesheet">
 <script src="http://wcs.naver.net/wcslog.js" type="text/javascript"></script>
-<link href="${pageContext.request.contextPath}/resources/static/css/p5.css" rel="stylesheet" />
-<link href="${pageContext.request.contextPath}/resources/static/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-<link href="${pageContext.request.contextPath}/resources/static/favicon.ico" rel="icon" type="image/x-icon" />
-<link href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad.png" rel="apple-touch-icon"
-	sizes="76x76" />
-<link href="${pageContext.request.contextPath}/resources/static/touch-icon-iphone-retina.png" rel="apple-touch-icon"
-	sizes="120x120" />
-<link href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad-retina.png" rel="apple-touch-icon"
-	sizes="152x152" />
-<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
-<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
+<link href="/wjm/resources/static/css/p5.css" rel="stylesheet">
+<link href="/wjm/resources/static/favicon.ico" rel="shortcut icon"
+	type="image/x-icon">
+<link href="/wjm/resources/static/favicon.ico" rel="icon"
+	type="image/x-icon">
+<link href="/wjm/resources/static/touch-icon-ipad.png"
+	rel="apple-touch-icon" sizes="76x76">
+<link href="/wjm/resources/static/touch-icon-iphone-retina.png"
+	rel="apple-touch-icon" sizes="120x120">
+<link href="/wjm/resources/static/touch-icon-ipad-retina.png"
+	rel="apple-touch-icon" sizes="152x152">
+<script src="/wjm/resources/static/CACHE/js/cb793deb7347.js"
+	type="text/javascript"></script>
+<script src="/wjm/resources/static/CACHE/js/c3617c8217d0.js"
+	type="text/javascript"></script>
+<style type="text/css">
+
+</style>
 </head>
 <body class="logged-in client account-setting profile">
-	<div id="fb-root"></div>
-	<script src="${pageContext.request.contextPath}/resources/static/django_facebook/js/facebook.js"
+	<div id="fb-root" class=" fb_reset">
+		<script type="text/javascript"
+			src="http://connect.facebook.net/en_US/all.js" async=""
+			id="facebook_js"></script>
+		<div
+			style="position: absolute; top: -10000px; height: 0px; width: 0px;">
+			<div></div>
+		</div>
+		<div
+			style="position: absolute; top: -10000px; height: 0px; width: 0px;">
+			<div>
+				<iframe name="fb_xdm_frame_http" frameborder="0"
+					allowtransparency="true" allowfullscreen="true" scrolling="no"
+					title="Facebook Cross Domain Communication Frame"
+					aria-hidden="true" tabindex="-1" id="fb_xdm_frame_http"
+					src="http://static.ak.facebook.com/connect/xd_arbiter/44OwK74u0Ie.js?version=41#channel=fcf263edc&amp;origin=http%3A%2F%2Flocalhost%3A8080"
+					style="border: none;"></iframe>
+				<iframe name="fb_xdm_frame_https" frameborder="0"
+					allowtransparency="true" allowfullscreen="true" scrolling="no"
+					title="Facebook Cross Domain Communication Frame"
+					aria-hidden="true" tabindex="-1" id="fb_xdm_frame_https"
+					src="https://s-static.ak.facebook.com/connect/xd_arbiter/44OwK74u0Ie.js?version=41#channel=fcf263edc&amp;origin=http%3A%2F%2Flocalhost%3A8080"
+					style="border: none;"></iframe>
+			</div>
+		</div>
+	</div>
+	<script src="/wjm/resources/static/django_facebook/js/facebook.js"
 		type="text/javascript"></script>
 	<script>
     facebookAppId = '593258114025512';
     facebookDefaultScope = ["email", "user_about_me", "user_birthday", "user_website"];
-    staticUrl = '${pageContext.request.contextPath}/resources/static/';
+    staticUrl = '/wjm/resources/static/';
     function facebookJSLoaded(){
         FB.init({appId: facebookAppId, status: false, cookie: true, xfbml: true, oauth: true});
     }
@@ -105,7 +139,7 @@
 									class="dropdown-toggle how_to_use_button"
 									data-toggle="dropdown" href="#">gksthf16111님 <b
 										class="fa fa-caret-down"></b></a>
-								<ul class="dropdown-menu">
+									<ul class="dropdown-menu">
 										<li><a href="/client/info/" tabindex="-1">클라이언트 정보 관리</a></li>
 										<li><a href="/accounts/settings/profile/" tabindex="-1">계정
 												설정</a></li>
@@ -149,7 +183,7 @@
 						<h3 class="user-name-tag-heading">클라이언트</h3>
 						<div class="user-name-tag-body">
 							<img alt="gksthf16111 사진" class="img-circle user-img"
-								src="/media/profiles/28155_20150918_b8e4e483e337e5dc.png" />
+								src="/media/profiles/28155_20150918_b8e4e483e337e5dc.png">
 							<h4 class="username">gksthf16111</h4>
 							<a class="profile-setting" href="/accounts/settings/profile/">기본
 								정보 수정</a>
@@ -181,18 +215,19 @@
 							<button class="btn btn-default" id="show_base_button"
 								onclick="show_base_form()" style="float: right">수정하기</button>
 						</h4>
-						<form action="/accounts/settings/profile/" class="form-horizontal"
+						<form action="/accounts/settings/profile/"
+							class="form-horizontal has-validation-callback"
 							enctype="multipart/form-data" id="base_show_form" method="POST"
 							style="border-bottom: 1px dashed #dedede; padding-bottom: 25px; margin-bottom: 30px;">
 							<input name="csrfmiddlewaretoken" type="hidden"
-								value="dJJdkiYv1G14f8ovj0dfCTXAc7lAZEBD" />
+								value="dJJdkiYv1G14f8ovj0dfCTXAc7lAZEBD">
 							<div class="form-group">
 								<label class="control-label required"><span>*</span> 프로필
 									사진</label>
 								<div class="control-wrapper" style="padding-top: 7px;">
 									<img alt="gksthf16111 사진" class="partners-img"
 										src="/media/profiles/28155_20150918_b8e4e483e337e5dc.png"
-										style="border-radius: 10%; border: 1px solid #dedede; width: 220px; height: 220px;" />
+										style="border-radius: 10%; border: 1px solid #dedede; width: 220px; height: 220px;">
 								</div>
 							</div>
 							<div class="form-group">
@@ -202,7 +237,7 @@
 									<input disabled="" id="get_form_of_business"
 										name="identification"
 										style="border: none; width: 100%; margin-top: 5px;"
-										type="text" value="개인" />
+										type="text" value="개인">
 								</div>
 							</div>
 							<div class="form-group">
@@ -210,7 +245,7 @@
 								<div class="control-wrapper">
 									<input disabled="" name="identification"
 										style="border: none; width: 100%; margin-top: 5px;"
-										type="text" value="남한솔" />
+										type="text" value="남한솔">
 								</div>
 							</div>
 							<div class="form-group">
@@ -218,7 +253,7 @@
 								<div class="control-wrapper">
 									<input disabled="" name="identification"
 										style="border: none; width: 100%; margin-top: 5px;"
-										type="text" value="여자" />
+										type="text" value="여자">
 								</div>
 							</div>
 							<div class="form-group">
@@ -227,7 +262,7 @@
 								<div class="control-wrapper">
 									<input disabled="" name="identification"
 										style="border: none; width: 100%; margin-top: 5px;"
-										type="text" value="1992년 7월 18일" />
+										type="text" value="1992년 7월 18일">
 								</div>
 							</div>
 							<div class="form-group">
@@ -236,7 +271,7 @@
 								<div class="control-wrapper">
 									<input disabled="" name="identification"
 										style="border: none; width: 100%; margin-top: 5px;"
-										type="text" value="서울특별시" />
+										type="text" value="서울특별시">
 								</div>
 							</div>
 							<div class="form-group">
@@ -245,7 +280,7 @@
 								<div class="control-wrapper">
 									<input disabled="" name="identification"
 										style="border: none; width: 100%; margin-top: 5px;"
-										type="text" value="강남구" />
+										type="text" value="강남구">
 								</div>
 							</div>
 							<div class="form-group">
@@ -253,17 +288,18 @@
 								<div class="control-wrapper">
 									<input disabled="" name="identification"
 										style="border: none; width: 100%; margin-top: 5px;"
-										type="text" value="ㅁㄴㅇㄹ" />
+										type="text" value="ㅁㄴㅇㄹ">
 								</div>
 							</div>
 						</form>
-						<form action="/accounts/settings/profile/" class="form-horizontal"
+						<form action="/accounts/settings/profile/"
+							class="form-horizontal has-validation-callback"
 							enctype="multipart/form-data" id="base_edit_form" method="POST"
 							novalidate=""
 							style="display: none; border-bottom: 1px dashed #dedede; padding-bottom: 25px; margin-bottom: 30px;">
 							<input name="csrfmiddlewaretoken" type="hidden"
-								value="dJJdkiYv1G14f8ovj0dfCTXAc7lAZEBD" /><input
-								name="submit_type" type="hidden" value="base" />
+								value="dJJdkiYv1G14f8ovj0dfCTXAc7lAZEBD"><input
+								name="submit_type" type="hidden" value="base">
 							<div class="form-group p5-portfolio-form-group ">
 								<label class="control-label required p5-box-control-label"
 									for=""><span>*</span> 프로필 사진</label>
@@ -277,17 +313,15 @@
 												style="cursor: pointer; left: 0; margin-left: 0"
 												type="button">
 												<i class="fa fa-plus"></i> 이미지 변경
-											</button>
-											<input accept="image/*" class="p5-custom-file-type-input"
+											</button> <input accept="image/*" class="p5-custom-file-type-input"
 											id="p5-file-btn" name="image"
 											style="cursor: pointer; left: 0px; margin-left: 0"
-											type="file" />
-										<button class="btn btn-cancel p5-img-del-btn"
-												style="left: 120px;" type="button">삭제</button>
-											<input id="image_del" name="image_del" type="hidden"
-											value="False" /></span> <span class="help-block"
-											style="position: relative; top: 85px">이미지 파일(.jpg,
-											.jpeg, .png, .gif 등)만 업로드할 수 있습니다.</span>
+											type="file">
+											<button class="btn btn-cancel p5-img-del-btn"
+												style="left: 120px;" type="button">삭제</button> <input
+											id="image_del" name="image_del" type="hidden" value="False"></span>
+										<span class="help-block" style="position: relative; top: 85px">이미지
+											파일(.jpg, .jpeg, .png, .gif 등)만 업로드할 수 있습니다.</span>
 									</div>
 								</div>
 							</div>
@@ -305,10 +339,10 @@
 							</div>
 							<div class="form-group ">
 								<label class="control-label required" id="full_name_label"><span>*</span>
-									담당자명</label>
+									이름</label>
 								<div class="control-wrapper">
 									<input class="form-control" id="full_name" name="full_name"
-										type="text" value="남한솔" />
+										type="text" value="남한솔">
 								</div>
 							</div>
 							<div class="form-group " style="display: none;">
@@ -316,7 +350,7 @@
 									id="company_name_label"><span>*</span> 회사명</label>
 								<div class="control-wrapper">
 									<input class="form-control" id="company_name"
-										name="company_name" type="text" value="" />
+										name="company_name" type="text" value="">
 								</div>
 							</div>
 							<div class="form-group " style="display: none;">
@@ -324,7 +358,7 @@
 									id="representative_label"><span>*</span> 대표자명</label>
 								<div class="control-wrapper">
 									<input class="form-control" id="representative"
-										name="representative" type="text" value="" />
+										name="representative" type="text" value="">
 								</div>
 							</div>
 							<div class="form-group ">
@@ -334,16 +368,16 @@
 									<ul class="list-unstyled">
 										<li><label class="radio-inline" for="gender_1"><input
 												id="gender_1" name="gender" required="" type="radio"
-												value="m" />남성</label></li>
+												value="m">남성</label></li>
 										<li><label class="radio-inline" for="gender_2"><input
 												checked="" id="gender_2" name="gender" required=""
-												type="radio" value="f" />여성</label></li>
+												type="radio" value="f">여성</label></li>
 									</ul>
 								</div>
 							</div>
 							<div class="form-group ">
 								<label class="control-label required" for="date_of_birth"
-									id="date_of_birth_label"><span>*</span> 설립일</label>
+									id="date_of_birth_label"><span>*</span> 생년월일</label>
 								<div class="control-wrapper">
 									<select class="form-control" id="id_date_of_birth_year"
 										name="date_of_birth_year"><option value="">---</option>
@@ -505,7 +539,7 @@
 									주소</label>
 								<div class="control-wrapper">
 									<input class="form-control" id="address_detail"
-										name="address_detail" type="text" value="ㅁㄴㅇㄹ" />
+										name="address_detail" type="text" value="ㅁㄴㅇㄹ">
 								</div>
 							</div>
 							<div class="form-group last-form-group"
@@ -513,7 +547,7 @@
 								<div style="float: right">
 									<input class="btn btn-partners account-btn"
 										id="base_submit_btn" style="margin-right: 10px;" type="submit"
-										value="등록하기" />
+										value="등록하기">
 								</div>
 							</div>
 						</form>
@@ -522,19 +556,20 @@
 							<button class="btn btn-default" id="show_connect_button"
 								onclick="show_connect_form()" style="float: right">수정하기</button>
 						</h4>
-						<form action="/accounts/settings/profile/" class="form-horizontal"
+						<form action="/accounts/settings/profile/"
+							class="form-horizontal has-validation-callback"
 							enctype="multipart/form-data" id="connect_show_form"
 							method="POST"
 							style="border-bottom: 1px dashed #dedede; padding-bottom: 25px; margin-bottom: 30px;">
 							<input name="csrfmiddlewaretoken" type="hidden"
-								value="dJJdkiYv1G14f8ovj0dfCTXAc7lAZEBD" />
+								value="dJJdkiYv1G14f8ovj0dfCTXAc7lAZEBD">
 							<div class="form-group">
 								<label class="control-label required"><span>*</span> 핸드폰
 									번호</label>
 								<div class="control-wrapper">
 									<input disabled="" name="cell_phone_number"
 										style="border: none; width: 100%; margin-top: 5px;"
-										type="text" value="01073813352" />
+										type="text" value="01073813352">
 								</div>
 							</div>
 							<div class="form-group">
@@ -542,7 +577,7 @@
 								<div class="control-wrapper">
 									<input onclick="show_connect_form()"
 										style="border: none; margin-top: 5px; width: 100%; color: #2099bb; cursor: pointer;"
-										type="text" value="세부 사항을 입력해 주세요." />
+										type="text" value="세부 사항을 입력해 주세요.">
 								</div>
 							</div>
 							<div class="form-group">
@@ -550,17 +585,18 @@
 								<div class="control-wrapper">
 									<input onclick="show_connect_form()"
 										style="border: none; margin-top: 5px; width: 100%; color: #2099bb; cursor: pointer;"
-										type="text" value="세부 사항을 입력해 주세요." />
+										type="text" value="세부 사항을 입력해 주세요.">
 								</div>
 							</div>
 						</form>
-						<form action="/accounts/settings/profile/" class="form-horizontal"
+						<form action="/accounts/settings/profile/"
+							class="form-horizontal has-validation-callback"
 							enctype="multipart/form-data" id="connect_edit_form"
 							method="POST"
 							style="display: none; border-bottom: 1px dashed #dedede; padding-bottom: 25px; margin-bottom: 30px;">
 							<input name="csrfmiddlewaretoken" type="hidden"
-								value="dJJdkiYv1G14f8ovj0dfCTXAc7lAZEBD" /><input
-								name="submit_type" type="hidden" value="connect" />
+								value="dJJdkiYv1G14f8ovj0dfCTXAc7lAZEBD"><input
+								name="submit_type" type="hidden" value="connect">
 							<div class="form-group ">
 								<label class="control-label required"><span>*</span> 핸드폰
 									번호</label>
@@ -572,10 +608,10 @@
 										<option value="017">017</option>
 										<option value="019">019</option></select><span class="form-phone-liner">-</span><input
 										class="form-control-phone" id="cell_phone_number_middle"
-										name="cell_phone_number_middle" type="text" value="7381" /><span
+										name="cell_phone_number_middle" type="text" value="7381"><span
 										class="form-phone-liner">-</span><input
 										class="form-control-phone" id="cell_phone_number_end"
-										name="cell_phone_number_end" type="text" value="3352" />
+										name="cell_phone_number_end" type="text" value="3352">
 								</div>
 							</div>
 							<div class="form-group ">
@@ -602,14 +638,14 @@
 										<option value="064">064</option>
 										<option value="999">해외</option></select><span class="form-phone-liner">-</span><input
 										class="form-control-phone-noncell" id="phone_number_entered"
-										name="phone_number_entered" type="text" value="" />
+										name="phone_number_entered" type="text" value="">
 								</div>
 							</div>
 							<div class="form-group ">
 								<label class="control-label" for="company_name">팩스 번호</label>
 								<div class="control-wrapper">
 									<input class="form-control" id="fax_number" name="fax_number"
-										type="text" value="" />
+										type="text" value="">
 								</div>
 							</div>
 							<div class="form-group last-form-group"
@@ -617,22 +653,23 @@
 								<div style="float: right">
 									<input class="btn btn-partners account-btn"
 										id="connect_submit_btn" style="margin-right: 10px;"
-										type="submit" value="등록하기" />
+										type="submit" value="등록하기">
 								</div>
 							</div>
 						</form>
 						<h4>이메일 구독 설정</h4>
-						<form action="/accounts/settings/profile/" class="form-horizontal"
+						<form action="/accounts/settings/profile/"
+							class="form-horizontal has-validation-callback"
 							enctype="multipart/form-data" id="email_edit_form" method="POST">
 							<input name="csrfmiddlewaretoken" type="hidden"
-								value="dJJdkiYv1G14f8ovj0dfCTXAc7lAZEBD" /><input
-								name="submit_type" type="hidden" value="email" />
+								value="dJJdkiYv1G14f8ovj0dfCTXAc7lAZEBD"><input
+								name="submit_type" type="hidden" value="email">
 							<div class="form-group">
 								<label class="control-label">이메일</label>
 								<div class="control-wrapper">
 									<input disabled="" name="identification"
 										style="border: none; width: 100%; margin-top: 5px;"
-										type="text" value="gksthf1611@naver.com" />
+										type="text" value="gksthf1611@naver.com">
 								</div>
 							</div>
 							<div class="form-group ">
@@ -640,8 +677,8 @@
 									<div class="checkbox">
 										<label class="" for="email_subscription"><input
 											checked="checked" id="email_subscription"
-											name="email_subscription" type="checkbox" />위시켓의 프로젝트 소식을
-											구독합니다.</label>
+											name="email_subscription" type="checkbox">위시켓의 프로젝트
+											소식을 구독합니다.</label>
 									</div>
 								</div>
 							</div>
@@ -701,18 +738,19 @@
 			<div class="info">
 				<div class="footer-logo">
 					<img class="footer-logo-img"
-						src="${pageContext.request.contextPath}/resources/static/img/wishket_footer_logo.svg" />
+						src="/wjm/resources/static/img/wishket_footer_logo.svg">
 				</div>
 				<div class="contact">
-					<i class="fa fa-phone"></i> <a href="tel:82269254849">02-6925-4849</a><br />
-					<i class="fa fa-envelope"></i> <a href="mailto:help@wishket.com">help@wishket.com</a><br />
-					<img src="${pageContext.request.contextPath}/resources/static/img/yellow_id.png" style="margin-right: 4px;" /><a
-						href="http://goto.kakao.com/@wishket">Kakao ID 친구추가: @wishket</a><br />
+					<i class="fa fa-phone"></i> <a href="tel:82269254849">02-6925-4849</a><br>
+					<i class="fa fa-envelope"></i> <a href="mailto:help@wishket.com">help@wishket.com</a><br>
+					<img src="/wjm/resources/static/img/yellow_id.png"
+						style="margin-right: 4px;"><a
+						href="http://goto.kakao.com/@wishket">Kakao ID 친구추가: @wishket</a><br>
 					고객센터 운영시간: 오전 10시부터 오후 6시까지<small>(공휴일 제외)</small>
 				</div>
 				<address class="address">
-					서울특별시 강남구 테헤란로77길 11-18 창애빌딩 4층<br /> 사업자등록번호: 209-81-57303 / 대표이사:
-					박우범<br />
+					서울특별시 강남구 테헤란로77길 11-18 창애빌딩 4층<br> 사업자등록번호: 209-81-57303 /
+					대표이사: 박우범<br>
 				</address>
 				<span class="copyright">© 2014 Wishket, inc.</span>
 			</div>
@@ -748,7 +786,7 @@
 				<div class="mixpanel-banner">
 					<a href="https://mixpanel.com/f/partner" target="_blank"><img
 						alt="Mobile Analytics"
-						src="//cdn.mxpnl.com/site_media/images/partner/badge_blue.png" /></a>
+						src="//cdn.mxpnl.com/site_media/images/partner/badge_blue.png"></a>
 				</div>
 			</div>
 		</div>
@@ -1011,6 +1049,9 @@ $( document ).ready(function($) {
         var TRS_URL = TRS_PROTOCOL + '//' + ((TRS_PROTOCOL=='https:')?'analysis.adinsight.co.kr':'adlog.adinsight.co.kr') +  '/emnet/trs_esc.js';
         document.writeln("<scr"+"ipt language='javascript' src='" + TRS_URL + "'></scr"+"ipt>");
         </script>
+	<script language="javascript"
+		src="http://adlog.adinsight.co.kr/emnet/trs_esc.js"></script>
+
 	<script type="text/javascript">
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
           (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -1039,5 +1080,6 @@ typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var
 b._i.push([a,e,d])};b.__SV=1.2}})(document,window.mixpanel||[]);
 mixpanel.init("c7b742deb9d00b4f1c0e1e9e8c5c3115");</script>
 	<script type="text/javascript"> if (!wcs_add) var wcs_add={}; wcs_add["wa"] = "s_3225afd5bb50";if (!_nasa) var _nasa={};wcs.inflow();wcs_do(_nasa);</script>
+
 </body>
 </html>

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 
 import com.wjm.idao.AccountIDao;
 import com.wjm.models.AccountInfo;
+import com.wjm.models.AccountInformationInfo;
 
 @Repository
 public class AccountDao implements AccountIDao {
@@ -53,6 +54,31 @@ public class AccountDao implements AccountIDao {
 		    	}
 		    });
 	}
+	
+	public int select_account(String account_type)
+	{
+		List<AccountInfo> accountlist = jdbcTemplate.query("select * from account where account_type = ?",
+		    	new Object[] { account_type }, new RowMapper<AccountInfo>() {
+		    	public AccountInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new AccountInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getString("email")
+		    				, resultSet.getString("id")
+		    				, resultSet.getString("password")
+		    				, resultSet.getString("account_type")
+		    				, resultSet.getInt("authorized")
+		    				, resultSet.getString("authorization_key")
+		    				, resultSet.getTimestamp("reg_date"));
+		    	}
+		    });
+		
+		if(accountlist == null)
+			return 0;
+		else
+			return accountlist.size();
+	}
+	
 	public List<AccountInfo> select(String id)
 	{
 		return jdbcTemplate.query("select * from account where id = ?",
@@ -147,5 +173,5 @@ public class AccountDao implements AccountIDao {
 
 		return SHA;
 	}
-	
+
 }
