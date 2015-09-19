@@ -21,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.wjm.dao.AccountDao;
 import com.wjm.dao.AccountInformationDao;
+import com.wjm.dao.BankDao;
 import com.wjm.main.function.Fileupload;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
@@ -39,6 +40,9 @@ public class AccountController {
 	
 	@Autowired
 	private AccountInformationDao accountInformationDao;
+	
+	@Autowired
+	private BankDao bankDao;
 	/**
 	 * 로그인 페이지
 	 */
@@ -258,7 +262,7 @@ public class AccountController {
 	}
 	
 	/**
-	 * 회원가입 페이지
+	 * 비밀번호 변경 페이지
 	 */
 	@RequestMapping(value = "/accounts/password/change", method = RequestMethod.GET)
 	public String AccountController_password_change_get(HttpServletRequest request) {
@@ -267,13 +271,212 @@ public class AccountController {
 		return "/accounts/password/change";
 	}
 	/**
-	 * 회원가입 페이지
+	 * 비밀번호 변경 처리 페이지
+	 */
+	@RequestMapping(value ="/accounts/password/change", method = RequestMethod.POST)
+	public ModelAndView AccountController_password_change_post(HttpServletRequest request,
+ 			ModelAndView mv,
+			HttpServletResponse response,
+			 @RequestParam("new_password1") String password,
+			 @RequestParam("new_password2") String password_confirm
+			) {
+		logger.info("/accounts/password/change Post Page");
+	
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null){mv.setViewName("redirect:/accounts/login");return mv;}
+		//패스워드 체크
+		if(password == null)
+		{
+			logger.info("패스워드 X");
+			mv.addObject("messages", "패스워드를 입력해주세요.");
+			return mv;
+		}
+		else if(password.isEmpty())
+		{
+			logger.info("패스워드 X");
+			mv.addObject("messages", "패스워드를 입력해주세요.");
+			return mv;
+		}
+		else if(password.length()<8 || password.length()>32)
+		{			
+			mv.addObject("messages","비밀번호는 8자 이상 32자 이하로 입력해 주세요.");
+			return mv;
+		}
+		
+		//패스워드 체크
+		if(password_confirm == null)
+		{
+			logger.info("패스워드 X");
+			mv.addObject("messages", "확인 패스워드를 입력해주세요.");
+			return mv;
+		}
+		else if(password_confirm.isEmpty())
+		{
+			logger.info("패스워드 X");
+			mv.addObject("messages", "확인 패스워드를 입력해주세요.");
+			return mv;
+		}
+		else if(password.length()<8 || password.length()>32)
+		{			
+			mv.addObject("messages","확인 비밀번호는 8자 이상 32자 이하로 입력해 주세요.");
+			return mv;
+		}
+		
+		if(password.equals(password_confirm))
+		{
+			if(accountDao.change_password(account.getPk(), password))
+			{
+			mv.addObject("messages","비밀번호가 안전하게 변경되었습니다.");
+			mv.setViewName("/accounts/settings/relogin");
+			
+			}
+			else
+			{
+				mv.addObject("messages","비밀번호 변경에 실패했습니다.");
+			}
+			
+		}
+		else
+		{
+			mv.addObject("messages","패스워드가 일치하지 않습니다.");
+		}
+		
+		return mv;
+	}
+				
+	/**
+	 * 계좌 등록 페이지
 	 */
 	@RequestMapping(value = "/accounts/settings/bank_account", method = RequestMethod.GET)
-	public String AccountController_bank_account_get(HttpServletRequest request) {
+	public ModelAndView AccountController_bank_account_get(HttpServletRequest request,
+			ModelAndView mv) {
 		logger.info("bank_account Get Page");
 		
-		return "/accounts/settings/bank_account";
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null){mv.setViewName("redirect:/accounts/login");return mv;}
+		
+		if(accountInformationDao.hasAccount(account.getPk()))
+		{
+			mv.addObject("hasAccount","true");
+			logger.info("hasAccount : true");
+			AccountInformationInfo accountinfo = accountInformationDao.select(account.getPk());
+
+			String bank_name = accountinfo.getBank_name();
+			String account_holder = accountinfo.getAccount_holder();
+			String account_number = accountinfo.getAccount_number();
+
+			mv.addObject("bank_name",bank_name);
+			mv.addObject("bank_id",bankDao.select_name(bank_name));
+			mv.addObject("account_holder",account_holder);
+			mv.addObject("account_number",account_number);
+
+		}
+		else
+		{
+			mv.addObject("hasAccount","false");
+			logger.info("hasAccount : false");
+		}
+
+		
+		return mv;
+	}
+	
+	/**
+	 * 계좌 등록 처리 페이지
+	 */
+	@RequestMapping(value = "/accounts/settings/bank_account", method = RequestMethod.POST)
+	public ModelAndView AccountController_bank_account_get(HttpServletRequest request,
+ 			HttpServletResponse response,
+			 @RequestParam("bank") String bank,
+			 @RequestParam("account_holder") String account_holder,
+			 @RequestParam("account_number") String account_number,
+
+			ModelAndView mv) {
+		logger.info("bank_account Post Page");
+		
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		String bank_name = "";
+		
+		if(account == null){mv.setViewName("redirect:/accounts/login");return mv;}
+		
+		//은행명
+		if(bank == null)
+		{
+			mv.addObject("messages","은행명을 선택해주세요.");
+			return mv;
+		}
+		else if(bank.isEmpty())
+		{
+			mv.addObject("messages","은행명을 선택해주세요.");
+			return mv;
+		}
+		else if(Validator.isDigit(bank))
+		{
+			bank_name = bankDao.select_pk(Integer.parseInt(bank));
+			logger.info("은행명 : "+bank_name);
+			mv.addObject("bank_name", bank_name);
+			mv.addObject("bank_id", bank);
+		}
+		else
+		{
+			mv.addObject("messages","은행명을 올바르게 선택해주세요.");
+			return mv;
+		}
+		
+		//예금주
+		if(account_holder == null)
+		{
+			mv.addObject("messages","예금주를 입력해주세요.");
+			return mv;
+		}
+		else if(account_holder.isEmpty())
+		{
+			mv.addObject("messages","예금주를 입력해주세요.");
+			return mv;
+		}
+		else if(Validator.isValidLength(account_holder, 1, 20) )
+		{
+			logger.info("예금주 : "+account_holder);
+			mv.addObject("account_holder", account_holder);
+		}
+		else
+		{
+			mv.addObject("messages","예금주를 정상적으로 입력해주세요.");
+			return mv;
+		}
+		
+		
+		//예금주
+		if(account_number == null)
+		{
+			mv.addObject("messages","계좌번호를 입력해주세요.");
+			return mv;
+		}
+		else if(account_number.isEmpty())
+		{
+			mv.addObject("messages","계좌번호를 입력해주세요.");
+			return mv;
+		}
+		else if(!Validator.isDigit(account_number))
+		{
+			mv.addObject("messages","계좌번호는 '-'를 제외한 숫자만 가능합니다");
+			return mv;
+		}
+		else if(Validator.isValidLength(account_number, 1, 40) )
+		{
+			logger.info("게좌번호 : "+account_number);
+			mv.addObject("account_number", account_number);
+		}
+		else
+		{
+			mv.addObject("messages","계좌번호를 정상적으로 입력해주세요.");
+			return mv;
+		}
+		
+		accountInformationDao.updateBank(bank_name, account_holder, account_number, account.getPk());
+		logger.info("정상적으로 게좌 등록");
+		
+		return mv;
 	}
 	/**
 	 * 회원가입 페이지
@@ -437,24 +640,97 @@ public class AccountController {
 		return mv;
 	}
 	/**
-	 * 회원가입 페이지
+	 * 재로그인 페이지
 	 */
 	@RequestMapping(value = "/accounts/settings/relogin", method = RequestMethod.GET)
-	public String AccountController_relogin_get(HttpServletRequest request) {
+	public ModelAndView AccountController_relogin_get(HttpServletRequest request,ModelAndView mv) {
 		logger.info("relogin Get Page");
 		
-		return "/accounts/settings/relogin";
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null){mv.setViewName("redirect:/accounts/login");return mv;}
+
+		AccountInformationInfo accountinfo = accountInformationDao.select(account.getPk());
+		
+		mv.addObject("name",accountinfo.getName());
+		
+		return mv;
 	}
 	/**
-	 * 회원가입 페이지
+	 * 재로그인 처리 페이지
+	 */
+	@RequestMapping(value = "/accounts/settings/relogin", method = RequestMethod.POST)
+	public ModelAndView AccountController_relogin_post(HttpServletRequest request
+			,ModelAndView mv,
+ 			HttpServletResponse response,
+			 @RequestParam("password") String password) {
+		logger.info("relogin POST Page");
+		
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		String email = "";
+		if(account == null){mv.setViewName("redirect:/accounts/login");return mv;}
+		else email = account.getEmail();
+
+		//이메일 체크
+		if(email == null)
+		{
+			mv.addObject("messages", "이메일을 입력해주세요.");
+			return mv;
+		}
+		else if(email.isEmpty())
+		{
+			mv.addObject("messages", "이메일을 입력해주세요.");
+			return mv;
+		}
+		if(!Validator.isEmail(email))
+		{			
+			mv.addObject("messages", "이메일을 올바르게 입력해주세요.");
+			return mv;
+		}
+
+		//패스워드 체크
+		if(password == null)
+		{
+			logger.info("패스워드 X");
+			mv.addObject("messages", "패스워드를 입력해주세요.");
+			return mv;
+		}
+		else if(password.isEmpty())
+		{
+			logger.info("패스워드 X");
+			mv.addObject("messages", "패스워드를 입력해주세요.");
+			return mv;
+		}
+		else if(password.length()<8 || password.length()>32)
+		{			
+			mv.addObject("messages","비밀번호는 8자 이상 32자 이하로 입력해 주세요.");
+			return mv;
+		}
+		
+		//로그인 체크
+		account = (AccountInfo)accountDao.login_email(email, password);
+		//로그인 실패
+		if(account == null)
+		{
+			mv.addObject("messages", "비밀번호를 확인하세요.");
+			return mv;
+		}
+		else
+		{
+			mv = new ModelAndView();
+			mv.setViewName("redirect:/accounts/password/change");
+			return mv;
+		}
+	}
+	/**
+	 * 신원 인증
 	 */
 	@RequestMapping(value = "/accounts/settings/verify_identity", method = RequestMethod.GET)
 	public String AccountController_verify_identity_get(HttpServletRequest request) {
 		logger.info("verify_identity Get Page");
 		
-		return "/accounts/settings/change";
+		return "/accounts/settings/verify_identity";
 	}
-	
+
 	/** 로그아웃 */
 	@RequestMapping(value = "/accounts/logout", method = RequestMethod.GET)
 	public ModelAndView AccountController_logout(HttpServletRequest request, ModelAndView mv) {

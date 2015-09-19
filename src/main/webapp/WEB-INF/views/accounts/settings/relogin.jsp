@@ -1,5 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo"%>
+<%
+	AccountInfo account = (AccountInfo) session.getAttribute("account");
+	String name = "";
+	String id = "";
+	
+	if(account == null) response.sendRedirect("/accounts/login");
+	else
+	{
+		name = (String)request.getAttribute("name");
+		id = account.getId();
+	}
+
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <!--[if IE 6]><html lang="ko" class="no-js old ie6"><![endif]-->
@@ -49,9 +63,9 @@
 					<div class="user-name-tag">
 						<h3 class="user-name-tag-heading">클라이언트</h3>
 						<div class="user-name-tag-body">
-							<img alt="<%=account.getId() %> 사진" class="img-circle user-img"
+							<img alt="<%=id %> 사진" class="img-circle user-img"
 								src="${pageContext.request.contextPath}/resources/static/img/default_avatar.jpg" />
-							<h4 class="username"><%=accountinfo.getName() %></h4>
+							<h4 class="username"><%=name %></h4>
 							<a class="profile-setting" href="/wjm/accounts/settings/profile/">기본
 								정보 수정</a>
 						</div>
@@ -85,7 +99,7 @@
 							</p>
 						</div>
 						<h4>보안 로그인</h4>
-						<form action="." class="form-horizontal" method="POST"
+						<form action="/wjm/accounts/settings/relogin" class="form-horizontal" method="POST"
 							style="margin-top: 15px;">
 							<input name="csrfmiddlewaretoken" type="hidden"
 								value="7YCuiuWVSyxVfH1qjb8JOSXcBvfKqQBY" />
@@ -95,7 +109,7 @@
 								<div class="control-wrapper">
 									<input disabled="" name="identification"
 										style="border: none; width: 100%; margin-top: 5px;"
-										type="text" value="gksthf1611@naver.com" />
+										type="text" value="<%=account.getEmail() %>" />
 								</div>
 							</div>
 							<div class="form-group ">
@@ -171,6 +185,14 @@ $( document ).ready(function($) {
 	});
 });
 
+$(document).ready(function(){
+	var messages = "${messages}";
+
+	if(messages != null && messages != "")
+		$("#messages").html("<div class='alert alert-warning fade in'>"+messages+"</div>");
+
+	
+});
 </script>
 </body>
 </html>

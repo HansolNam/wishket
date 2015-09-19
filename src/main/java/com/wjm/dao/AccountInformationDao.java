@@ -253,6 +253,37 @@ public class AccountInformationDao implements AccountInformationIDao {
 		//기본정보를 가지고 있음
 		return true;
 	}
+	
+	public boolean hasAccount(int account_pk)
+	{
+		AccountInformationInfo accountinfo = select(account_pk);
+		
+		//정보가 아예 없는 경우
+		if(accountinfo==null)
+		{
+			create(account_pk);
+			return false;
+		}
+		//정보가 있어도 내용이 없는 경우
+		else
+		{
+			String bank_name = accountinfo.getBank_name();
+			String account_holder = accountinfo.getAccount_holder();
+			String account_number = accountinfo.getAccount_number();
+			
+			if(bank_name == null || account_holder == null || account_number == null)
+				return false;
+			else
+			{
+				if(bank_name.isEmpty() || account_holder.isEmpty() || account_number.isEmpty())
+					return false;
+			}
+		}
+		
+		//계좌정보 가지고 있음
+		return true;
+	}
+	
 	public void updateBasicInfo(int account_pk, String name, String cellphone_num, String form, String company_name, String company_representative, String introduction)
 	{
 		jdbcTemplate.update("update account_information set name=?, cellphone_num=?, form=?, company_name=?, company_representative=?, introduction=? where account_pk=?", new Object[] { name, cellphone_num, form,company_name,company_representative, introduction, account_pk });
@@ -443,6 +474,11 @@ public class AccountInformationDao implements AccountInformationIDao {
 		
 
 
+	}
+	public void updateBank(String bank_name, String account_holder, String account_number,int account_pk)
+	{
+		jdbcTemplate.update("update account_information set bank_name=?, account_holder=?, account_number=? where account_pk=?", 
+				new Object[] { bank_name,account_holder,account_number,account_pk });
 	}
 
 	/*
