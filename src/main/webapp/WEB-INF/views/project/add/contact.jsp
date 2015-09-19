@@ -3,6 +3,19 @@
 <%@ page import="com.wjm.models.AccountInfo"%>
 <%
 	AccountInfo account = (AccountInfo) session.getAttribute("account");
+	String cellphone_num = (String)request.getAttribute("cellphone_num");
+	String[] cellphone_num_list = {"","",""};
+	if(cellphone_num != null )
+	{
+		if(!cellphone_num.isEmpty())
+		{
+			String[] split = cellphone_num.split("-");
+			if(split.length == 3)
+				cellphone_num_list = split;
+		}
+	}
+		
+	
 %>
 
 <!DOCTYPE html>
@@ -78,7 +91,7 @@
 								<label class="control-label" for="name"><span>*</span>이름</label>
 								<div class="control-wrapper">
 									<input autocomplete="off" class="form-control" id="name"
-										name="name" type="text" /><span class="help-block">${name_msg}</span>
+										name="name" type="text" value="${name}" /><span class="help-block">${name_msg}</span>
 								</div>
 							</div>
 							<div class="form-group client-phone-form-group " id="cellphone_num_div">
@@ -86,18 +99,28 @@
 									번호</label>
 								<div class="control-wrapper">
 									<select class="form-control-phone" id="cellphone_num_code"
-										name="cellphone_num_code"><option value="010">010</option>
-										<option value="011">011</option>
-										<option value="016">016</option>
-										<option value="017">017</option>
-										<option value="019">019</option></select><span class="form-phone-liner">-</span><input
+										name="cellphone_num_code">
+										<%
+											String[] cellphone_num_code = {"010","011","016","017","019"};
+										
+											for(int i=0;i<cellphone_num_code.length;i++)
+											{
+												if(cellphone_num_code[i].equals(cellphone_num_list[0]))
+													out.println("<option selected='' value='"+cellphone_num_code[i]+"'>"+cellphone_num_code[i]+"</option>");
+												else
+													out.println("<option value='"+cellphone_num_code[i]+"'>"+cellphone_num_code[i]+"</option>");
+											}
+										
+										%>
+										</select><span class="form-phone-liner">-</span><input
 										class="form-control-phone" id="cellphone_num_middle"
-										name="cellphone_num_middle" type="text" /><span
+										name="cellphone_num_middle" type="text" value="<%=cellphone_num_list[1]%>"/><span
 										class="form-phone-liner">-</span><input
 										class="form-control-phone" id="cellphone_num_end"
-										name="cellphone_num_end" type="text" />
-								</div>
+										name="cellphone_num_end" type="text" value="<%=cellphone_num_list[2]%>"/>
+								
 								<span class="help-block">${cellphone_num_msg}</span>
+								</div>
 							</div>
 							<div class="form-group description-form-group">
 								<label class="control-label"></label>
@@ -110,11 +133,21 @@
 									형태</label>
 								<div class="control-wrapper">
 									<select class="form-control" id="form"
-										name="form"><option
-											selected="selected" value="individual">개인</option>
-										<option value="team">팀</option>
-										<option value="individual_business">개인 사업자</option>
-										<option value="corporate_business">법인 사업자</option></select><span
+										name="form">
+										<%
+										String list1[] = {"individual","team","individual_business","corporate_business"};
+										String list2[] = {"개인","팀","개인 사업자","법인 사업자"};
+										String form = (String)request.getAttribute("form");
+										
+										for(int i=0;i<list1.length;i++)
+										{
+											if(list1[i].equals(form))
+												out.println("<option selected='' value='"+list1[i]+"'>"+list2[i]+"</option>");
+											else
+												out.println("<option value='"+list1[i]+"'>"+list2[i]+"</option>");
+										
+										}
+										%></select><span
 										class="help-block">${form_msg}</span>
 								</div>
 							</div>
@@ -123,18 +156,18 @@
 								<label class="control-label " for="company_name"><span>*</span>회사명</label>
 								<div class="control-wrapper">
 									<input autocomplete="off" class=" form-control"
-										id="company_name" name="company_name" type="text" /><span
+										id="company_name" name="company_name" type="text" value = "${company_name}"/><span
 										class="help-block">${company_name_msg}</span>
 								</div>
 							</div>
 							<div class="form-group client-info-form-group "
-								style="display: none;" id="company_representative_div">
-								<label class="control-label" for="company_representative"><span>*</span>회사
+								style="display: none;" id="representative_div">
+								<label class="control-label" for="representative"><span>*</span>회사
 									대표명</label>
 								<div class="control-wrapper">
 									<input autocomplete="off" class="form-control"
-										id="company_representative" name="company_representative" type="text" /><span
-										class="help-block">${company_representative_msg}</span>
+										id="representative" name="representative" type="text" value = "${representative}" /><span
+										class="help-block">${representative_msg}</span>
 								</div>
 							</div>
 							<div class="form-group description-form-group"
@@ -149,7 +182,7 @@
 									소개</label>
 								<div class="control-wrapper">
 									<textarea autocomplete="off" class="form-control" cols="40"
-										id="introduction" name="introduction" rows="4"></textarea>
+										id="introduction" name="introduction" rows="4">${introduction}</textarea>
 									<span class="help-block" id="company_intro_help"
 										style="display: none"><i
 										class="fa fa-exclamation-circle"></i>150글자 이하로 입력해 주세요.</span> <span
@@ -179,9 +212,8 @@
 		var cellphone_num_msg = "${cellphone_num_msg}";
 		var form_msg = "${form_msg}";
 		var company_name_msg = "${company_name_msg}";
-		var company_representative_msg = "${company_representative_msg}";
+		var representative_msg = "${representative_msg}";
 		var introduction_msg = "${introduction_msg}";
-
 		var name_val = "${name_val}";
 		var cellphone_num_code_val = "${cellphone_num_code_val}";
 		var cellphone_num_middle_val = "${cellphone_num_middle_val}";
@@ -195,12 +227,10 @@
 		{
 			$("#name_div").addClass('has-error');
 		}
-
 		if(name_val != null && name_val != "")
 		{
 			document.getElementById("name").value = name_val;
 		}
-
 		if(cellphone_num_msg != null && cellphone_num_msg != "")
 		{
 			$("#cellphone_num_div").addClass('has-error');
@@ -220,7 +250,6 @@
 			document.getElementById("cellphone_num_middle").value = cellphone_num_middle_val;
 			document.getElementById("cellphone_num_end").value = cellphone_num_end_val;
 		}
-
 		if(form_msg != null && form_msg != "")
 		{
 			$("#form_div").addClass('has-error');
@@ -239,9 +268,9 @@
 			document.getElementById("company_name").value = company_name_val;
 		}
 		
-		if(company_representative_msg != null && company_representative_msg != "")
+		if(representative_msg != null && representative_msg != "")
 		{
-			$("#company_representative_div").addClass('has-error');
+			$("#representative_div").addClass('has-error');
 		}
 		if(company_representative_val != null && company_representative_val != "")
 		{
@@ -255,13 +284,12 @@
 		{
 			document.getElementById("introduction").value = introduction_val;
 		}
-		
 	});
 	</script>
 	<script type="text/javascript">
     $(function () {
       var $form, $form_val;
-      $form = $('#form_of_business');
+      $form = $('#form');
       $form_val = $form.val();
       if ($form_val != 'individual' && $form_val != 'team') {
         $('#company_name').parents('.form-group').show();

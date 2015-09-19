@@ -182,8 +182,7 @@
 							<div class="form-group">
 								<label class="control-label">나머지 주소</label>
 								<div class="control-wrapper">
-									<input onclick="show_base_form()"
-										style="border: none; margin-top: 5px; width: 100%; color: #2099bb; cursor: pointer;"
+									<input style="border: none; margin-top: 5px;"
 										type="text" value="<%=accountinfo.getRegionr()%>" />
 								</div>
 							</div>
@@ -294,12 +293,7 @@
 								<div class="control-wrapper">
 									<select class="form-control" id="id_date_of_birth_year"
 										name="date_of_birth_year"><option value="">---</option>
-										<%
-											for(int i=70;i>=0;i++)
-											{
-												
-											}
-										%>
+										
 										
 										<option value="1945">1945</option>
 										<option value="1946">1946</option>
@@ -459,7 +453,7 @@
 									주소</label>
 								<div class="control-wrapper">
 									<input class="form-control" id="address_detail"
-										name="address_detail" type="text" value="" />
+										name="address_detail" type="text" value="<%=accountinfo.getRegionr()%>" />
 								</div>
 							</div>
 							<div class="form-group last-form-group"
@@ -488,23 +482,69 @@
 								<div class="control-wrapper">
 									<input disabled="" name="cell_phone_number"
 										style="border: none; width: 100%; margin-top: 5px;"
-										type="text" value="01073813352" />
+										type="text" value="<%=accountinfo.getCellphone_num()%>" />
 								</div>
 							</div>
 							<div class="form-group">
 								<label class="control-label">전화번호</label>
 								<div class="control-wrapper">
+								<%
+								if(accountinfo.getTelephone_num()==null )
+								{
+								%>
 									<input onclick="show_connect_form()"
 										style="border: none; margin-top: 5px; width: 100%; color: #2099bb; cursor: pointer;"
 										type="text" value="세부 사항을 입력해 주세요." />
+								<%
+								}
+								else if(accountinfo.getTelephone_num().isEmpty() )
+								{
+								%>
+									<input onclick="show_connect_form()"
+										style="border: none; margin-top: 5px; width: 100%; color: #2099bb; cursor: pointer;"
+										type="text" value="세부 사항을 입력해 주세요." />
+								<%
+								}
+								else
+								{
+									%>
+									<input disabled="" name="phone_number"
+										style="border: none; width: 100%; margin-top: 5px;"
+										type="text" value="<%=accountinfo.getCellphone_num()%>" />
+									<%
+								}
+								%>
 								</div>
 							</div>
 							<div class="form-group">
 								<label class="control-label">팩스 번호</label>
 								<div class="control-wrapper">
+								<%
+								if(accountinfo.getTelephone_num()==null )
+								{
+								%>
 									<input onclick="show_connect_form()"
 										style="border: none; margin-top: 5px; width: 100%; color: #2099bb; cursor: pointer;"
 										type="text" value="세부 사항을 입력해 주세요." />
+								<%
+								}
+								else if(accountinfo.getTelephone_num().isEmpty() )
+								{
+								%>
+									<input onclick="show_connect_form()"
+										style="border: none; margin-top: 5px; width: 100%; color: #2099bb; cursor: pointer;"
+										type="text" value="세부 사항을 입력해 주세요." />
+								<%
+								}
+								else
+								{
+									%>
+									<input disabled="" name="fax_number"
+										style="border: none; width: 100%; margin-top: 5px;"
+										type="text" value="<%=accountinfo.getFax_num()%>" />
+									<%
+								}
+								%>
 								</div>
 							</div>
 						</form>
@@ -520,16 +560,36 @@
 									번호</label>
 								<div class="control-wrapper">
 									<select class="form-control-phone" id="cell_phone_number_code"
-										name="cell_phone_number_code"><option value="010">010</option>
-										<option value="011">011</option>
-										<option value="016">016</option>
-										<option value="017">017</option>
-										<option value="019">019</option></select><span class="form-phone-liner">-</span><input
+										name="cell_phone_number_code">
+										<%
+											String[] cellphone_num_code = {"010","011","016","017","019"};
+											String cellphone_num = accountinfo.getCellphone_num();
+											String[] cellphone_num_list = {"","",""};
+
+											if(cellphone_num != null )
+											{
+												if(!cellphone_num.isEmpty())
+												{
+													String[] split = cellphone_num.split("-");
+													if(split.length == 3)
+														cellphone_num_list = split;
+												}
+											}
+											
+											for(int i=0;i<cellphone_num_code.length;i++)
+											{
+												if(cellphone_num_code[i].equals(cellphone_num_list[0]))
+													out.println("<option selected='' value='"+cellphone_num_code[i]+"'>"+cellphone_num_code[i]+"</option>");
+												else
+													out.println("<option value='"+cellphone_num_code[i]+"'>"+cellphone_num_code[i]+"</option>");
+											}
+										
+										%></select><span class="form-phone-liner">-</span><input
 										class="form-control-phone" id="cell_phone_number_middle"
-										name="cell_phone_number_middle" type="text" value="7381" /><span
+										name="cell_phone_number_middle" type="text" value="<%=cellphone_num_list[1]%>" /><span
 										class="form-phone-liner">-</span><input
 										class="form-control-phone" id="cell_phone_number_end"
-										name="cell_phone_number_end" type="text" value="3352" />
+										name="cell_phone_number_end" type="text" value="<%=cellphone_num_list[2]%>" />
 								</div>
 							</div>
 							<div class="form-group ">
@@ -563,7 +623,7 @@
 								<label class="control-label" for="company_name">팩스 번호</label>
 								<div class="control-wrapper">
 									<input class="form-control" id="fax_number" name="fax_number"
-										type="text" value="" />
+										type="text" value="<%=accountinfo.getFax_num() %>" />
 								</div>
 							</div>
 							<div class="form-group last-form-group"
@@ -766,6 +826,9 @@
         getSigungu = function(value) {
         	var options = '';
         	
+        	if(value == '')
+        		return false;
+        	
         	$.ajax({
         		url : "/wjm/getAddress2",
         		type : "POST",
@@ -880,8 +943,8 @@ $( document ).ready(function($) {
 </html>
 <%
 }
-//else
-//{
-//	response.sendRedirect("/wjm/accounts/login");
-//}
+else
+{
+	response.sendRedirect("/wjm/accounts/login");
+}
 %>

@@ -253,10 +253,13 @@ public class AccountInformationDao implements AccountInformationIDao {
 		//기본정보를 가지고 있음
 		return true;
 	}
-	
 	public void updateBasicInfo(int account_pk, String name, String cellphone_num, String form, String company_name, String company_representative, String introduction)
 	{
 		jdbcTemplate.update("update account_information set name=?, cellphone_num=?, form=?, company_name=?, company_representative=?, introduction=? where account_pk=?", new Object[] { name, cellphone_num, form,company_name,company_representative, introduction, account_pk });
+	}
+	public void updateBasicInfo_individual(int account_pk, String name, String cellphone_num, String form, String introduction)
+	{
+		jdbcTemplate.update("update account_information set name=?, cellphone_num=?, form=?, introduction=? where account_pk=?", new Object[] { name, cellphone_num, form, introduction, account_pk });
 	}
 
 	public String updateBase(String image,String form_of_business,String full_name

@@ -25,6 +25,7 @@ import com.wjm.dao.ProjectDao;
 import com.wjm.main.function.Time;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
+import com.wjm.models.AccountInformationInfo;
 import com.wjm.models.ProjectInfo;
 
 import net.sf.json.JSONObject;
@@ -53,26 +54,49 @@ public class ProjectController {
 	 * 프로젝트 추가
 	 */
 	@RequestMapping(value = "/project/add", method = RequestMethod.GET)
-	public String ProjectController_project_add(HttpServletRequest request) {
+	public ModelAndView ProjectController_project_add(HttpServletRequest request,ModelAndView mv) {
 		logger.info("project add Page");
 		
 		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
 		
 		//기본 정보가 있는 경우, 프로젝트 등록 페이지로
 		if(accountInformationDao.hasContactInfo(account.getPk()))
-			return "redirect:/project/add/detail";
+			mv.setViewName("redirect:/project/add/detail");
 		//기본 정보가 없는 경우, 기본정보 등록 페이지로
 		else
-			return "redirect:/project/add/contact";
+		{
+			mv.setViewName("redirect:/project/add/contact");
+		}
+		
+		return mv;
 	}
 	/**
 	 * 프로젝트 추가위한 기본정보 페이지
 	 */
 	@RequestMapping(value = "/project/add/contact", method = RequestMethod.GET)
-	public String ProjectController_add_contact(HttpServletRequest request) {
-		logger.info("기본 정보 추가 페이지");
-				
-		return "/project/add/contact";
+	public ModelAndView ProjectController_add_contact(HttpServletRequest request,ModelAndView mv) {
+		logger.info("/project/add/contact 페이지");
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+
+		if(account == null) {mv.setViewName("redirect:/accounts/login");return mv;}
+		
+		AccountInformationInfo accountinfo = accountInformationDao.select(account.getPk());
+		
+		logger.info("name = "+accountinfo.getName());
+		logger.info("cellphone_num = "+accountinfo.getCellphone_num());
+		logger.info("form = "+accountinfo.getForm());
+		logger.info("c_name = "+accountinfo.getCompany_name());
+		logger.info("representative = "+accountinfo.getCompany_representative());
+		logger.info("introduction = "+accountinfo.getIntroduction());
+		
+		mv.addObject("name", accountinfo.getName());
+		mv.addObject("cellphone_num", accountinfo.getCellphone_num());
+		mv.addObject("form",accountinfo.getForm());
+		mv.addObject("company_name",accountinfo.getCompany_name());
+		mv.addObject("representative",accountinfo.getCompany_representative());
+		mv.addObject("introduction",accountinfo.getIntroduction());
+		
+		return mv;
 	}
 	/**
 	 * 기본정보 추가 처리
@@ -85,8 +109,8 @@ public class ProjectController {
 			 @RequestParam("cellphone_num_middle") String cellphone_num_middle,
 			 @RequestParam("cellphone_num_end") String cellphone_num_end,
 			 @RequestParam("form") String form,
-			 @RequestParam("company_name") String company_name,
-			 @RequestParam("company_representative") String company_representative,
+			 @RequestParam(value = "company_name", required = false, defaultValue = "") String company_name,
+			 @RequestParam(value = "representative", required = false, defaultValue = "") String company_representative,
 			 @RequestParam("introduction") String introduction
 			 ) {
 		logger.info("기본 정보 추가 처리");
@@ -97,100 +121,157 @@ public class ProjectController {
 		logger.info("cellphone_num_end = "+cellphone_num_end);
 		logger.info("form = "+form);
 		logger.info("company_name = "+company_name);
-		logger.info("company_representative = "+company_representative);
+		logger.info("representative = "+company_representative);
 		logger.info("introduction = "+introduction);
-		
 		
 		
 		//모델앤뷰 생성
 		ModelAndView mv = new ModelAndView();
-		String return_val = "redirect:/project/add/contact";
+		String return_val = "/project/add/contact";
 		mv.setViewName(return_val);
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		
+		boolean isAvailable = true;
+		
+		mv.addObject("name_val",name);
+		mv.addObject("cellphone_num_code_val",cellphone_num_code);
+		mv.addObject("cellphone_num_middle_val",cellphone_num_middle);
+		mv.addObject("cellphone_num_end_val",cellphone_num_end);
+		mv.addObject("form_val",form);
+		mv.addObject("company_name_val",company_name);
+		mv.addObject("representative_val",company_representative);
+		mv.addObject("introduction_val",introduction);
 		
 		
 		//이름
 		if(name == null)
 		{
+			isAvailable = false;
 			mv.addObject("name_msg","이름을 입력해주세요");
-			return mv;
+		}
+		else if(name.isEmpty())
+		{
+			isAvailable = false;
+			mv.addObject("name_msg","이름을 입력해주세요");
 		}
 		else if(name.length()>20)
 		{
+			isAvailable = false;
 			mv.addObject("name_msg","이름은 20글자 이하로 입력해주세요.");
-			return mv;
 		}
 		
 		//핸드폰번호
 		if(!Validator.isPhoneCode(cellphone_num_code)||!Validator.isDigit(cellphone_num_middle)||!Validator.isDigit(cellphone_num_end))
 		{
-			mv.addObject("cellphone_num_msg","핸드폰번호를 올바르게 선택해주세요.");
+			isAvailable = false;
+			mv.addObject("cellphone_num_msg","핸드폰번호를 올바르게 입력해주세요.");
 		}
 		else if(cellphone_num_middle.length()>10 || cellphone_num_end.length()>10)
 		{
+			isAvailable = false;
 			mv.addObject("cellphone_num_msg","핸드폰번호를 올바르게 입력해주세요.");
 		}
 		
 		//회사 형태
 		if(!Validator.isCompanyForm(form))
 		{
+			isAvailable = false;
 			mv.addObject("form_msg","회사형태를 올바르게 선택해주세요");
-			return mv;
 		}
-		//회사명
-		if(company_name == null)
-		{
-			mv.addObject("company_name_msg","회사명을 입력해주세요");
-			return mv;
-		}
-		else if(company_name.length()>20)
-		{
-			mv.addObject("company_name_msg","회사명은 20글자 이하로 입력해주세요.");
-			return mv;
-		}
-		//대표명
-		if(company_representative == null)
-		{
-			mv.addObject("company_representative_msg","대표명을 입력해주세요");
-			return mv;
-		}
-		else if(company_representative.length()>20)
-		{
-			mv.addObject("company_representative_msg","대표명은 20글자 이하로 입력해주세요.");
-			return mv;
-		}
+
 		//회사소개
 		if(introduction == null)
 		{
-			mv.addObject("name_msg","회사소개를 입력해주세요");
-			return mv;
+			isAvailable = false;
+			mv.addObject("introduction_msg","클라이언트 소개를 입력해주세요");
+		}
+		else if(name.isEmpty())
+		{
+			isAvailable = false;
+			mv.addObject("introduction_msg","클라이언트 소개를 입력해주세요");
 		}
 		else if(name.length()>150)
 		{
-			mv.addObject("name_msg","회사소개는 150글자 이하로 입력해주세요.");
-			return mv;
+			isAvailable = false;
+			mv.addObject("introduction_msg","클라이언트 소개는 150글자 이하로 입력해주세요.");
 		}
 		
-		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
-		
-		//사용자 계정 존재시
-		if(account != null)
+		if(!form.equals("individual") && !form.equals("team"))
 		{
-			String cellphone_num = cellphone_num_code + cellphone_num_middle + cellphone_num_end;
-			accountInformationDao.updateBasicInfo(account.getPk(), company_name, cellphone_num, form, company_name, company_representative, introduction);
-			mv.setViewName("redirect:/project/add/detail");
+			//회사명
+			if(company_name == null)
+			{
+				isAvailable = false;
+				mv.addObject("company_name_msg","회사명을 입력해주세요");
+			}
+			else if(company_name.isEmpty())
+			{
+				isAvailable = false;
+				mv.addObject("company_name_msg","회사명을 입력해주세요");
+			}
+			else if(company_name.length()>20)
+			{
+				isAvailable = false;
+				mv.addObject("company_name_msg","회사명은 20글자 이하로 입력해주세요.");
+			}
+			//대표명
+			if(company_representative == null)
+			{
+				isAvailable = false;
+				mv.addObject("representative_msg","대표명을 입력해주세요");
+			}
+			else if(company_representative.isEmpty())
+			{
+				isAvailable = false;
+				mv.addObject("representative_msg","대표명을 입력해주세요");
+			}
+			else if(company_representative.length()>20)
+			{
+				isAvailable = false;
+				mv.addObject("representative_msg","대표명은 20글자 이하로 입력해주세요.");
+			}
+			
+			//사용자 계정 존재시
+			if(account != null && isAvailable)
+			{
+				mv = new ModelAndView();
+				mv.setViewName("redirect:/project/add/detail");
+				String cellphone_num = cellphone_num_code + "-" + cellphone_num_middle + "-" +cellphone_num_end;
+				accountInformationDao.updateBasicInfo(account.getPk(), name, cellphone_num, form, company_name, company_representative, introduction);
+				
+			}
+			
 		}
+		else
+		{
+			//사용자 계정 존재시
+			if(account != null && isAvailable)
+			{
+				mv = new ModelAndView();
+				mv.setViewName("redirect:/project/add/detail");
+				String cellphone_num = cellphone_num_code + "-" + cellphone_num_middle + "-" +cellphone_num_end;
+				accountInformationDao.updateBasicInfo_individual(account.getPk(), name, cellphone_num, form, introduction);
+				mv.setViewName("redirect:/project/add/detail");
+			}
+		}
+		
+		
+		
 		return mv;
 	}
 	/**
 	 * 프로젝트 추가 페이지
 	 */
 	@RequestMapping(value = "/project/add/detail", method = RequestMethod.GET)
-	public String ProjectController_add_detail(HttpServletRequest request) {
+	public ModelAndView ProjectController_add_detail(HttpServletRequest request, ModelAndView mv) {
 		logger.info("add detail Page");
 		
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+
+		if(account == null) {mv.setViewName("redirect:/accounts/login");return mv;}
 		
-		
-		return "/project/add/detail";
+		return mv;
 	}
 	
 	/**
@@ -230,6 +311,8 @@ public class ProjectController {
 		String return_val = "/project/add/detail";
 		mv.setViewName(return_val);
 		
+		
+		
 		//title 체크
 		if(title.isEmpty())
 		{
@@ -245,12 +328,12 @@ public class ProjectController {
 		}
 		else
 		{
+			logger.info("title = "+title);
 			mv.addObject("title_val",title);
 		}
 		
 		
 		//category 체크
-
 		if(category.isEmpty())
 		{
 			logger.info("category!!!!");
@@ -265,6 +348,7 @@ public class ProjectController {
 		}
 		else
 		{
+			logger.info("category_val = "+category);
 			mv.addObject("category_val",category);
 		}
 
@@ -283,6 +367,7 @@ public class ProjectController {
 		}
 		else
 		{
+			logger.info("sub_category_val = "+sub_category);
 			mv.addObject("sub_category_val",sub_category);
 		}
 		
@@ -295,6 +380,7 @@ public class ProjectController {
 		}
 		else
 		{
+			logger.info("is_turnkey_val = "+is_turnkey);
 			mv.addObject("is_turnkey_val",is_turnkey);
 		}
 		
@@ -313,6 +399,7 @@ public class ProjectController {
 		}
 		else
 		{
+			logger.info("project_term_val = "+project_term);
 			mv.addObject("project_term_val",project_term);
 		}
 		
@@ -325,6 +412,7 @@ public class ProjectController {
 		}
 		else
 		{
+			logger.info("budget_maximum_val = "+budget_maximum);
 			mv.addObject("budget_maximum_val",budget_maximum);
 		}	
 		
@@ -343,6 +431,7 @@ public class ProjectController {
 		}
 		else
 		{
+			logger.info("planning_status_val = "+planning_status);
 			mv.addObject("planning_status_val",planning_status);
 		}	
 		
@@ -362,6 +451,7 @@ public class ProjectController {
 		else
 		{
 			description.replace("\n", "<br/>");
+			logger.info("description_val = "+description);
 			mv.addObject("description_val",description);
 		}	
 		
@@ -380,6 +470,7 @@ public class ProjectController {
 		}
 		else
 		{
+			logger.info("skill_required_val = "+skill_required);
 			mv.addObject("skill_required_val",skill_required);
 		}	
 		
@@ -392,6 +483,7 @@ public class ProjectController {
 		}
 		else
 		{
+			logger.info("deadline_val = "+deadline);
 			mv.addObject("deadline_val",deadline);
 		}
 		
@@ -410,6 +502,7 @@ public class ProjectController {
 		}
 		else
 		{
+			logger.info("method_pre_interview_val = "+method_pre_interview);
 			mv.addObject("method_pre_interview_val",method_pre_interview);
 		}
 		
@@ -422,6 +515,8 @@ public class ProjectController {
 		}
 		else
 		{
+			logger.info("address_sido_val = "+address_sido);
+			logger.info("sigungu_val = "+sigungu);
 			mv.addObject("address_sido_val",address_sido);
 			mv.addObject("sigungu_val",sigungu);
 		}
@@ -436,6 +531,7 @@ public class ProjectController {
 		}
 		else
 		{
+			logger.info("date_expected_kick_off_val = "+date_expected_kick_off);
 			mv.addObject("date_expected_kick_off_val",date_expected_kick_off);
 		}
 		
@@ -448,6 +544,7 @@ public class ProjectController {
 		}
 		else
 		{
+			logger.info("has_manage_experience_val = "+has_manage_experience);
 			mv.addObject("has_manage_experience_val",has_manage_experience);
 		}
 		
@@ -468,6 +565,7 @@ public class ProjectController {
 		}
 		else
 		{
+			logger.info("prefer_partner_val = "+prefer_partner);
 			mv.addObject("prefer_partner_val",prefer_partner);
 		}
 		//submit_purpose
@@ -485,6 +583,7 @@ public class ProjectController {
 		}
 		else
 		{
+			logger.info("submit_purpose_val = "+submit_purpose);
 			mv.addObject("submit_purpose_val",submit_purpose);
 		}
 

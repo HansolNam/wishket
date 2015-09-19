@@ -457,12 +457,15 @@ public class AccountController {
 	
 	/** 로그아웃 */
 	@RequestMapping(value = "/accounts/logout", method = RequestMethod.GET)
-	public String AccountController_logout(HttpServletRequest request) {
+	public ModelAndView AccountController_logout(HttpServletRequest request, ModelAndView mv) {
 		logger.info("logout Page");
 		
 		request.getSession().invalidate();
 		
-		return "redirect:/index";
+		mv.addObject("messages", "로그아웃 되었습니다.");
+		mv.setViewName("/accounts/login");
+		
+		return mv;
 	}
 	
 }

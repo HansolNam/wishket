@@ -83,10 +83,22 @@
            <mapping path="/accounts/password/*"/>
            <mapping path="/accounts/settings/*"/>
            <mapping path="/accounts/notification"/>
-           <mapping path="/client/*"/>
+           <mapping path="/client/manage/*"/>
+           <mapping path="/client/manage/past/*"/>
+           <mapping path="/client/manage/project/*"/>
            <mapping path="/mywjm/*"/>
-           <mapping path="/partners/*"/>
-           <mapping path="/project/*"/>
+           <mapping path="/partners/manage/*"/>
+           <mapping path="/partners/manage/past/*"/>
+           <mapping path="/partners/manage/proposal/*"/>
+           <mapping path="/partners/p/background/*"/>
+           <mapping path="/partners/p/background/add/*"/>
+           <mapping path="/partners/p/evaluation/*"/>
+           <mapping path="/partners/p/introduction/*"/>
+           <mapping path="/partners/p/introduction/update/*"/>
+           <mapping path="/partners/p/portfolio/*"/>
+           <mapping path="/partners/p/portfolio/update/*"/>
+           <mapping path="/partners/p/skill/*"/>
+           <mapping path="/partners/p/skill/update/*"/>
            <mapping path="/project/add/*"/>
                 <beans:bean class="com.wjm.interceptor.Interceptor"/>
         </interceptor>

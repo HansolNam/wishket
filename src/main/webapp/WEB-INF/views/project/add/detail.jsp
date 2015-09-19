@@ -6,14 +6,9 @@ request.setCharacterEncoding("UTF-8");
 response.setContentType("text/html; charset=UTF-8");
 %>
 <!DOCTYPE html>
-<!--[if IE 6]><html lang="ko" class="no-js old ie6"><![endif]-->
-<!--[if IE 7]><html lang="ko" class="no-js old ie7"><![endif]-->
-<!--[if IE 8]><html lang="ko" class="no-js old ie8"><![endif]-->
 <html class="no-js modern" lang="ko">
-
 <meta charset="utf-8" />
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
 <title>외주몬(WJM) · 프로젝트 생성</title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
 <link href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
@@ -150,8 +145,7 @@ response.setContentType("text/html; charset=UTF-8");
 													<input id="planning_status_1" name="planning_status"
 														onclick="check_plan();" required="" type="radio"
 														value="idea" /><br />
-													<label class="radio-inline" for="planning_status_1">아이디어만
-														있습니다.</label>
+													<label class="radio-inline" for="planning_status_1">아이디어만 있습니다.</label>
 												</div></label></li>
 										<li><label for="planning_status_2"><div
 													class="radio-no-selected two" id="radio-two"
@@ -184,7 +178,7 @@ response.setContentType("text/html; charset=UTF-8");
 								<div class="control-wrapper">
 									<textarea autocomplete="off" class="form-control" cols="40"
 										id="description" name="description"
-										required="" rows="30"></textarea>
+										required="" rows="30">${description_val}</textarea>
 									<span class="help-block"><p class="text-danger">
 											<span class="label label-danger">주의</span> 이메일, 전화번호 등을 게시하는
 											경우 서비스 이용에 제재를 받을 수 있습니다.
@@ -443,7 +437,6 @@ response.setContentType("text/html; charset=UTF-8");
 		var project_term_val = "${project_term_val}";
 		var budget_maximum_val = "${budget_maximum_val}";
 		var planning_status_val = "${planning_status_val}";
-		var description_val = "${description_val}";
 		var skill_required_val = "${skill_required_val}";
 		var deadline_val = "${deadline_val}";
 		var method_pre_interview_val = "${method_pre_interview_val}";
@@ -470,6 +463,7 @@ response.setContentType("text/html; charset=UTF-8");
 		var prefer_partner_msg = "${prefer_partner_msg}";
 		var submit_purpose_msg = "${submit_purpose_msg}";
 		
+		// 프로젝트 제목
 		if(title_val != null && title_val != "")
 		{
 			document.getElementById("title").value = title_val;
@@ -479,6 +473,7 @@ response.setContentType("text/html; charset=UTF-8");
 			$("#title_div").addClass('has-error');
 		}
 		
+		//카테고리
 		if(category_val != null && category_val != "")
 		{
 			var len = document.getElementById("category").length;
@@ -490,14 +485,62 @@ response.setContentType("text/html; charset=UTF-8");
 							break;
 						}
 				}
+			getCategoryM();
 		}
-		//subcategory
-		//isturnkey
+		
+		//세부 카테고리
+		if(sub_category_val != null && sub_category_val != "")
+		{
+			var len = document.getElementById("sub_category").length;
+			for(var i=0; i<len; i++)
+				{
+					if(document.getElementById("sub_category").options[i].value == sub_category_val)
+						{
+							document.getElementById("sub_category").options[i].selected = true;
+							break;
+						}
+				}
+			$('#sub_category').selecter('refresh');
+		}
+		
+		//다른 카테고리도 필요한지
+		if(is_turnkey_val != null && is_turnkey_val != "")
+		{
+			var value = $("#category").val();
+            var check = document.getElementById('turnkey-box');
+            check.className = "turnkey-checker turnkey-none";
+            var check_dev = document.getElementById('turnkey-dev');
+            var check_design = document.getElementById('turnkey-design');
+            
+            if(is_turnkey_val == "1")
+            	{
+                $('#turnkey_true').prop('checked', true);
+                $('#turnkey_false').prop('checked', false);
+            	}
+            else
+            	{
+                $('#turnkey_true').prop('checked', false);
+                $('#turnkey_false').prop('checked', true);
+            	}
+            
+            reset_plan();
+            if (value == '') {
+                check.className = "turnkey-checker turnkey-show";
+                check_dev.className = "turnkey-none";
+                check_design.className = "turnkey-show";
+            }
+            else {
+                check.className = "turnkey-checker turnkey-show";
+                check_dev.className = "turnkey-show";
+                check_design.className = "turnkey-none";
+            }
+		}
 		if(category_msg != null && category_msg != "")
 		{
 			$("#category_div").addClass('has-error');
 		}
 		
+		//예상기간
 		if(project_term_val != null && project_term_val != "")
 		{
 			document.getElementById("project_term").value = project_term_val;
@@ -506,7 +549,8 @@ response.setContentType("text/html; charset=UTF-8");
 		{
 			$("#project_term_div").addClass('has-error');
 		}
-		
+
+		//지출 가능 예산
 		if(budget_maximum_val != null && budget_maximum_val != "")
 		{
 			document.getElementById("budget_maximum").value = budget_maximum_val;
@@ -515,7 +559,8 @@ response.setContentType("text/html; charset=UTF-8");
 		{
 			$("#budget_maximum_div").addClass('has-error');
 		}
-		
+
+		//기획 상태
 		if(planning_status_val != null && planning_status_val != "")
 		{
 			if(planning_status_val == "idea")
@@ -529,16 +574,14 @@ response.setContentType("text/html; charset=UTF-8");
 		{
 			$("#planning_status_div").addClass('has-error');
 		}
-		
-		if(description_val != null && description_val != "")
-		{
-			document.getElementById("description").value = description_val;
-		}
+
+		//프로젝트 내용
 		if(description_msg != null && description_msg != "")
 		{
 			$("#description_div").addClass('has-error');
 		}
-		
+
+		//관련 기술
 		if(skill_required_val != null && skill_required_val != "")
 		{
 			document.getElementById("skill_required").value = skill_required_val;
@@ -547,9 +590,27 @@ response.setContentType("text/html; charset=UTF-8");
 		{
 			$("#skill_required_div").addClass('has-error');
 		}
+
+		//모집 마감 일자
+		if(deadline_val != null && deadline_val != "")
+		{
+			var len = document.getElementById("deadline").length;
+			for(var i=0; i<len; i++)
+				{
+					if(document.getElementById("deadline").options[i].value == deadline_val)
+						{
+							document.getElementById("deadline").options[i].selected = true;
+							break;
+						}
+				}
+			$('#deadline').selecter('refresh');
+		}
+		if(deadline_msg != null && deadline_msg != "")
+		{
+			$("#deadline_div").addClass('has-error');
+		}
 		
-		//deadline
-		
+		//사전 미팅
 		if(method_pre_interview_val != null && method_pre_interview_val != "")
 		{
 
@@ -562,17 +623,69 @@ response.setContentType("text/html; charset=UTF-8");
 						break;
 					}
 			}
+			$('#method_pre_interview').selecter('refresh');
 		}
 		if(method_pre_interview_msg != null && method_pre_interview_msg != "")
 		{
 			$("#method_pre_interview_div").addClass('has-error');
 		}
 		
+		//사전 미팅 지역
 		if(address_msg != null && address_msg != "")
 			{
 			$("#address_div").addClass('has-error');
 			}
+		if(address_sido_val != null && address_sido_val != "")
+		{
+
+			var len = document.getElementById("address_sido").length;
+			for(var i=0; i<len; i++)
+			{
+				if(document.getElementById("address_sido").options[i].value == address_sido_val)
+					{
+						document.getElementById("address_sido").options[i].selected = true;
+						break;
+					}
+			}
+			getAddress();
+			$('#address_sido').selecter('refresh');
+			$('#sigungu').selecter('refresh');
+		}
+		if(sigungu_val != null && sigungu_val != "")
+		{
+
+			var len = document.getElementById("sigungu").length;
+			for(var i=0; i<len; i++)
+			{
+				if(document.getElementById("sigungu").options[i].value == sigungu_val)
+					{
+						document.getElementById("sigungu").options[i].selected = true;
+						break;
+					}
+			}
+			$('#sigungu').selecter('refresh');
+		}
 		
+		//프로젝트 예상 시작일
+		if(date_expected_kick_off_val != null && date_expected_kick_off_val != "")
+		{
+			var len = document.getElementById("date_expected_kick_off").length;
+			for(var i=0; i<len; i++)
+				{
+					if(document.getElementById("date_expected_kick_off").options[i].value == date_expected_kick_off_val)
+						{
+							document.getElementById("date_expected_kick_off").options[i].selected = true;
+							break;
+						}
+				}
+			$('#date_expected_kick_off').selecter('refresh');
+		}
+		if(date_expected_kick_off_msg != null && date_expected_kick_off_msg != "")
+		{
+			$("#date_expected_kick_off_div").addClass('has-error');
+		}
+		
+		//프로젝트 매니징 경험
 		if(has_manage_experience_val != null && has_manage_experience_val != "")
 		{
 			if(has_manage_experience_val == "true")
@@ -584,7 +697,8 @@ response.setContentType("text/html; charset=UTF-8");
 		{
 			$("#has_manage_experience_div").addClass('has-error');
 		}
-		
+
+		//선호하는 파트너 형태
 		if(prefer_partner_val != null && prefer_partner_val != "")
 		{
 			if(prefer_partner_val == "whatever")
@@ -603,6 +717,7 @@ response.setContentType("text/html; charset=UTF-8");
 			$("#prefer_partner_div").addClass('has-error');
 		}
 		
+		//프로젝트 의뢰 목적
 		if(submit_purpose_val != null && submit_purpose_val != "")
 		{
 			if(submit_purpose_val == "request")
@@ -730,7 +845,6 @@ response.setContentType("text/html; charset=UTF-8");
 	            var check_design = document.getElementById('turnkey-design');
 	            $('#turnkey_true').prop('checked', false);
 	            $('#turnkey_false').prop('checked', false);
-	            reset_plan();
 	            if (value == '') {
 	                check.className = "turnkey-checker turnkey-show";
 	                check_dev.className = "turnkey-none";
@@ -854,7 +968,6 @@ $('#address_sido').on('change', function() {
                 }
             }
         });
-
         $('#budget_maximum').priceFormat({
             prefix: "",
             thousandsSeparator: ",",
