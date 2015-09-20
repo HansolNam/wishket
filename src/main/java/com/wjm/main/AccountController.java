@@ -2,6 +2,7 @@ package com.wjm.main;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.List;
 
@@ -21,11 +22,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.wjm.dao.AccountDao;
 import com.wjm.dao.AccountInformationDao;
+import com.wjm.dao.AuthenticationDao;
 import com.wjm.dao.BankDao;
 import com.wjm.main.function.Fileupload;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
 import com.wjm.models.AccountInformationInfo;
+import com.wjm.models.AuthenticationInfo;
 
 /**
  * Handles requests for the application home page.
@@ -43,6 +46,10 @@ public class AccountController {
 	
 	@Autowired
 	private BankDao bankDao;
+	
+
+	@Autowired
+	private AuthenticationDao authenticationDao;
 	/**
 	 * 로그인 페이지
 	 */
@@ -725,10 +732,123 @@ public class AccountController {
 	 * 신원 인증
 	 */
 	@RequestMapping(value = "/accounts/settings/verify_identity", method = RequestMethod.GET)
-	public String AccountController_verify_identity_get(HttpServletRequest request) {
+	public ModelAndView AccountController_verify_identity_get(HttpServletRequest request,
+			ModelAndView mv) {
 		logger.info("verify_identity Get Page");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null){mv.setViewName("redirect:/accounts/login");return mv;}
+
+		AccountInformationInfo accountinfo = accountInformationDao.select(account.getPk());
+		mv.addObject("accountinfo",accountinfo);
 		
-		return "/accounts/settings/verify_identity";
+		if(accountInformationDao.hasBasicInfo(account.getPk()))
+		{
+			logger.info("기본정보 가지고 있음");
+			
+			//신원 인증 정보 가져옴
+			AuthenticationInfo authenticaitoninfo = authenticationDao.select(account.getPk());
+			
+			logger.info("email_for_tax : "+ authenticaitoninfo.getEmail_for_tax() );
+			
+			mv.addObject("authenticatoninfo",authenticaitoninfo);
+			mv.addObject("hasBasicInfo","true");
+			
+			if(accountinfo.getIdentity_authentication().equals("검수중") )
+			{
+				logger.info("인증 상태 : 검수중");
+				mv.addObject("hasAuthentication","true");
+				mv.addObject("messages","신원 인증 처리중입니다.");
+			}
+			else if(accountinfo.getIdentity_authentication().equals("인증완료") )
+			{
+				logger.info("인증 상태 : 인증완료");
+				mv.addObject("hasAuthentication","true");
+				mv.addObject("messages","신원 인증이 완료되었습니다.");
+			}
+			else if(accountinfo.getIdentity_authentication().equals("인증실패") )
+			{
+				logger.info("인증 상태 : 인증실패");
+				mv.addObject("messages","신원 인증에 실패했습니다. 올바른 정보를 입력해주세요.");
+			}
+			else
+			{
+				logger.info("인증 상태 : 미인증");
+			}
+				
+		}
+		else
+			mv.addObject("messages","기본 정보를 입력하지 않았습니다. 기본 정보 입력 후에 인증 신청이 가능합니다. <a class='alert-link'"+
+						"href='/wjm/accounts/settings/profile/'>[기본정보입력하기]</a>");
+		
+		return mv;
+	}
+	
+	/**
+	 * 신원 인증 처리
+	 * @throws IOException 
+	 */
+	@RequestMapping(value = "/accounts/settings/verify_identity", method = RequestMethod.POST)
+	public ModelAndView AccountController_verify_identity_post(HttpServletRequest request
+			,ModelAndView mv,
+ 			HttpServletResponse response,
+			 @RequestParam(value = "user_type", required = false, defaultValue = "") String user_type
+			 ,@RequestParam("image") MultipartFile image
+			 ,@RequestParam("representer_name") String representer_name
+			 ,@RequestParam("address_detail") String address_detail
+			 ,@RequestParam("email_for_tax") String email_for_tax
+			 ,@RequestParam(value = "identify_number", required = false, defaultValue = "") String identify_number
+			 ,@RequestParam(value = "company_name", required = false, defaultValue = "") String company_name
+			) throws FileUploadException, IOException{
+			logger.info("verify_identity POST Page");
+
+
+			
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null){mv.setViewName("redirect:/accounts/login");return mv;}
+
+		AccountInformationInfo accountinfo = accountInformationDao.select(account.getPk());
+		if(accountinfo == null){mv.setViewName("redirect:/accounts/login");return mv;}
+		
+		mv.addObject("accountinfo",accountinfo);
+		mv.addObject("hasBasicInfo","true");
+
+		
+		String form = accountinfo.getForm();
+
+		String real_path = request.getRealPath(File.separator);
+
+		try{
+		String msg = authenticationDao.updateIdentity_authentication(form,user_type,image,real_path,representer_name,address_detail,email_for_tax,identify_number,company_name,account.getPk());
+			if(msg.equals("성공"))
+			{
+
+				accountInformationDao.updateIdentity_authentication(account.getPk(),"검수중");
+
+				mv.addObject("messages","정상적으로 등록되었습니다.");
+				mv.addObject("hasAuthentication","true");
+				mv.addObject("authenticatoninfo", authenticationDao.select(account.getPk()));
+				return mv;
+			}
+			else
+			{
+				mv.addObject("user_type",user_type);
+				mv.addObject("representer_name",representer_name);
+				mv.addObject("address_detail",address_detail);
+				mv.addObject("email_for_tax",email_for_tax);
+				mv.addObject("identify_number",identify_number);
+				mv.addObject("company_name",company_name);
+				
+				mv.addObject("messages",msg);
+				return mv;
+			}
+		}
+		catch(Exception e)
+		{
+			mv.addObject("messages","에러가 발생했습니다.");
+			return mv;
+		}
+	
 	}
 
 	/** 로그아웃 */

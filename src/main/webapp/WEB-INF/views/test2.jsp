@@ -28,7 +28,7 @@
 	name="google-site-verification" />
 <meta content="d2c8672ef81fcd9ceb62f51232d13aada8512a64"
 	name="naver-site-verification" />
-<title>위시켓(Wishket) · 계좌 관리</title>
+<title>위시켓(Wishket) · 신원 인증</title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
 <link href="/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
 	type="text/css" />
@@ -44,6 +44,7 @@
 <script src="/static/CACHE/js/a52a868564de.js" type="text/javascript"></script>
 <link href="/static/css/floating.css" rel="stylesheet" />
 <script src="http://wcs.naver.net/wcslog.js" type="text/javascript"></script>
+<link href="/static/css/p5.css" rel="stylesheet" />
 <link href="/static/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 <link href="/static/favicon.ico" rel="icon" type="image/x-icon" />
 <link href="/static/touch-icon-ipad.png" rel="apple-touch-icon"
@@ -157,10 +158,10 @@
 						<ul>
 							<li class=""><a class="active"
 								href="/accounts/settings/profile/">기본 정보 수정</a></li>
-							<li class=""><a href="/accounts/settings/verify_identity/">신원
-									인증</a></li>
-							<li class=" active "><a
-								href="/accounts/settings/bank_account/">계좌 관리</a></li>
+							<li class="active"><a
+								href="/accounts/settings/verify_identity/">신원 인증</a></li>
+							<li class=""><a href="/accounts/settings/bank_account/">계좌
+									관리</a></li>
 							<li class=""><a href="/accounts/settings/relogin/">비밀번호
 									변경</a></li>
 						</ul>
@@ -169,146 +170,204 @@
 				<div class="content">
 					<div class="content-header action">
 						<h3 class="header-text">
-							계좌 관리 <small class="small-text">프로젝트 대금을 지급받을 계좌 정보를
-								등록해주세요.</small>
+							신원 인증 <small class="small-text">안전한 프로젝트 계약을 위해
+								신분증(사업자등록증)을 통한 신원 확인이 필요합니다.</small>
 						</h3>
 					</div>
 					<div class="content-inner">
 						<div class="process-guide-box">
-							<img src="/static/img/process-guide-warning.png" />
+							<img src="/static/img/process-guide-success.png" />
 							<p class="process-guide-title-text">
-								<strong>[ 계좌 관리 가이드 ]</strong><br /> 프로젝트 대금의 안전한 송금을 위해 <strong>정확한
-									계좌번호</strong>가 필요합니다.
+								<strong>[ 인증 서류 관리 가이드 ]</strong><br /> 제출한 인증 서류는 <strong
+									style="color: #2099bb"><a href="/privacy/">개인 정보
+										취급 방침</a></strong>에 의해 관리됩니다.
 							</p>
+							<div
+								style="border-top: 1px dashed #dedede; padding-top: 17px; width: 100%;">
+								<div style="float: left;">
+									<img src="/static/img/identity_guide_one.png"
+										style="margin-left: 30px; margin-top: 5px; margin-right: 14px;" />
+								</div>
+								<p style="float: left">
+									<strong>인증 서류 제출</strong><br /> 프로젝트의 계약을 위해, <strong>인증
+										서류 제출이 꼭 필요합니다.</strong><br /> 신원인증 서류는 계약서 작성 시에 이용됩니다.
+								</p>
+								<div style="clear: both"></div>
+							</div>
+							<table style="margin-left: 50px; margin-bottom: 10px;">
+								<tbody>
+									<tr
+										style="border-top: 2px solid #2099bb; border-bottom: 1px solid #e7e7e7">
+										<td
+											style="padding: 11px 20px; font-weight: bold; background: #f5f5f5">법인
+											사업자 , 개인 사업자</td>
+										<td
+											style="padding: 11px 20px; border-right: 1px solid #e7e7e7; border-left: 1px solid #e7e7e7;">사업자
+											등록증</td>
+										<td
+											style="padding: 11px 20px; font-weight: bold; background: #f5f5f5">개인
+											, 팀</td>
+										<td
+											style="padding: 11px 20px; border-right: 1px solid #e7e7e7; border-left: 1px solid #e7e7e7;">주민등록증,
+											여권, 운전면허증</td>
+									</tr>
+								</tbody>
+							</table>
+							<div style="width: 600px;">
+								<div style="float: left;">
+									<img src="/static/img/identity_guide_two.png"
+										style="margin-left: 30px; margin-top: 5px; margin-right: 10px;" />
+								</div>
+								<p style="float: left;">
+									<strong>신원 인증 처리 중</strong><br /> 신원 인증 처리에는 <strong>최대
+										24시간이 소요</strong>됩니다.<br /> 인증 서류에 문제가 있을 경우에는 <strong>위시켓 팀에서
+										이메일로 연락</strong>을 드립니다.
+								</p>
+								<div style="clear: both"></div>
+							</div>
+							<div style="width: 800px; margin-bottom: 15px;">
+								<div style="float: left;">
+									<img src="/static/img/identity_guide_three.png"
+										style="margin-left: 30px; margin-top: 5px; margin-right: 10px;" />
+								</div>
+								<p style="float: left;">
+									<strong>신원 인증 처리 완료</strong><br /> 신원 인증 서류를 변경하실 경우에는 위시켓으로
+									전화를 주시면 신속하게 도와드립니다. <strong>( <i class="fa fa-phone"></i>
+										02-6925-4849)
+									</strong>
+								</p>
+								<div style="clear: both"></div>
+							</div>
 						</div>
-						<h4 id="sub_title">
-							등록 계좌<input class="btn btn-default" id="do_edit"
-								onclick="show_form()" style="float: right" type="submit"
-								value="수정하기" />
-						</h4>
-						<form action="." class="form-horizontal" id="show_bank_form"
-							method="POST" style="margin-top: 25px;">
+						<form action="/accounts/settings/verify_identity/"
+							class="form-horizontal" enctype="multipart/form-data"
+							method="POST">
 							<input name="csrfmiddlewaretoken" type="hidden"
 								value="v1CvkzdEylYHMo4IA35c483YZ2vjwmvs" />
 							<div class="form-group">
-								<label class="control-label required"><span>*</span> 은행명</label>
+								<label class="control-label required"><span>*</span> 회사
+									형태</label>
 								<div class="control-wrapper">
-									<input disabled="" name="identification"
+									<input name="business_form_value" type="hidden"
+										value="individual" /><input disabled=""
+										name="form_of_business"
 										style="border: none; width: 100%; margin-top: 5px;"
-										type="text" value="한국산업은행" />
+										type="text" value="개인" /><span class="help-block">[기본
+										정보 수정] 탭에서 수정 가능합니다.</span>
 								</div>
 							</div>
-							<div class="form-group">
-								<label class="control-label required"><span>*</span> 예금주</label>
+							<div class="form-group " id="individual_type_form"
+								style="display: none;">
+								<label class="control-label required" for="form_of_business"><span>*</span>
+									개인 사업자 형태</label>
 								<div class="control-wrapper">
-									<input disabled="" name="identification"
-										style="border: none; width: 100%; margin-top: 5px;"
-										type="text" value="aaa" />
+									<select class="form-control" id="user_type" name="user_type"
+										required="required"><option selected="" value="1">일반
+											과세자</option>
+										<option value="3">간이 과세자</option>
+										<option value="4">부가가치세 면세 사업자</option></select>
 								</div>
 							</div>
-							<div class="form-group">
-								<label class="control-label required"><span>*</span>
-									계좌번호</label>
-								<div class="control-wrapper">
-									<input disabled="" name="identification"
-										style="border: none; width: 100%; margin-top: 5px;"
-										type="text" value="11" />
+							<div class="form-group p5-portfolio-form-group ">
+								<label class="control-label required p5-box-control-label"
+									for=""><span>*</span>인증 서류 이미지</label>
+								<div class="p5-portfoilo-img-control-wrapper"
+									style="height: 110px;">
+									<div class="control-wrapper">
+										<span class="p5-img-name" id="p5-image-name"
+											style="margin-top: 8px;">제출된 '<strong>인증 서류</strong>'가
+											없습니다.
+										</span> <span class="p5-custom-file-type-input-wrapper"><button
+												class="btn btn-primary p5-custom-file-type-front"
+												style="cursor: pointer; left: 0; margin-left: 0"
+												type="button">
+												<i class="fa fa-plus"></i> 이미지 변경
+											</button>
+											<input accept="image/*" class="p5-custom-file-type-input"
+											id="p5-file-btn" name="image"
+											style="cursor: pointer; left: 0px; margin-left: 0"
+											type="file" />
+										<button class="btn btn-cancel p5-img-del-btn"
+												style="left: 120px;" type="button">삭제</button></span> <span
+											class="help-block" style="position: relative; top: 85px">이미지
+											파일(.jpg, .jpeg, .png, .gif 등)만 업로드할 수 있습니다.</span>
+									</div>
 								</div>
 							</div>
-						</form>
-						<form class="form-horizontal" enctype="multipart/form-data"
-							id="edit_bank_form" method="POST"
-							style="display: none; margin-top: 25px;">
-							<input name="csrfmiddlewaretoken" type="hidden"
-								value="v1CvkzdEylYHMo4IA35c483YZ2vjwmvs" /><span
-								class="help-block"></span>
-							<div class="form-group ">
-								<label class="control-label required" for="id_bank"><span>*</span>
-									은행명</label>
-								<div class="control-wrapper">
-									<select class="form-control" id="id_bank" name="bank"
-										required="required"><option value="">은행 선택</option>
-										<option selected="selected" value="1">한국산업은행</option>
-										<option value="2">기업은행</option>
-										<option value="3">국민은행</option>
-										<option value="4">우리은행</option>
-										<option value="5">신한은행</option>
-										<option value="6">하나은행</option>
-										<option value="7">농협</option>
-										<option value="8">단위농협</option>
-										<option value="9">SC은행</option>
-										<option value="10">외환은행</option>
-										<option value="11">한국씨티은행</option>
-										<option value="12">우체국</option>
-										<option value="13">경남은행</option>
-										<option value="14">광주은행</option>
-										<option value="15">대구은행</option>
-										<option value="16">도이치</option>
-										<option value="17">부산은행</option>
-										<option value="18">산림조합</option>
-										<option value="19">산업은행</option>
-										<option value="20">상호저축은행</option>
-										<option value="21">새마을금고</option>
-										<option value="22">수협</option>
-										<option value="23">신협중앙회</option>
-										<option value="24">전북은행</option>
-										<option value="25">제주은행</option>
-										<option value="26">BOA</option>
-										<option value="27">HSBC</option>
-										<option value="28">JP모간</option>
-										<option value="29">교보증권</option>
-										<option value="30">대신증권</option>
-										<option value="31">대우증권</option>
-										<option value="32">동부증권</option>
-										<option value="33">동양증권</option>
-										<option value="34">메리츠증권</option>
-										<option value="35">미래에셋</option>
-										<option value="36">부국증권</option>
-										<option value="37">삼성증권</option>
-										<option value="38">솔로몬투자증권</option>
-										<option value="39">신영증권</option>
-										<option value="40">신한금융투자</option>
-										<option value="41">우리투자증권</option>
-										<option value="42">유진투자은행</option>
-										<option value="43">이트레이드증권</option>
-										<option value="44">키움증권</option>
-										<option value="45">하나대투</option>
-										<option value="46">하이투자</option>
-										<option value="47">한국투자</option>
-										<option value="48">한화증권</option>
-										<option value="49">현대증권</option>
-										<option value="50">HMC증권</option>
-										<option value="51">LIG투자증권</option>
-										<option value="52">NH증권</option>
-										<option value="53">SK증권</option>
-										<option value="54">비엔비파리바은행</option></select>
+							<section id="individual_form" style="display: none">
+								<div class="form-group ">
+									<label class="control-label required"><span>*</span> 성명</label>
+									<div class="control-wrapper">
+										<input class="form-control" name="representer_name"
+											type="text" value="남한솔" />
+									</div>
 								</div>
-							</div>
-							<div class="form-group ">
-								<label class="control-label required" for="id_account_holder"><span>*</span>
-									예금주</label>
-								<div class="control-wrapper">
-									<input class="form-control" id="id_account_holder"
-										name="account_holder" required="required" type="text"
-										value="aaa" />
+								<div class="form-group ">
+									<label class="control-label required"><span>*</span> 주소</label>
+									<div class="control-wrapper">
+										<input class="form-control" name="address_detail" type="text"
+											value="서울특별시  ㅁㄴㅇㄹ" />
+									</div>
 								</div>
-							</div>
-							<div class="form-group ">
-								<label class="control-label required" for="id_account_number"><span>*</span>
-									계좌번호</label>
-								<div class="control-wrapper">
-									<input class="form-control" id="id_account_number"
-										name="account_number" required="required" type="text"
-										value="11" /><span class="help-block">'-'를 제외하고 입력해주세요.</span>
+								<div class="form-group ">
+									<label class="control-label required"
+										style="padding-left: 60px; *padding-left: 70px; *width: 180px;"><span>*</span>
+										세금계산서용 이메일 주소</label>
+									<div class="control-wrapper">
+										<input class="form-control" name="email_for_tax" type="email" /><span
+											class="help-block">계약서, 세금계산서 등을 받아볼 이메일 주소를 입력해 주세요.</span>
+									</div>
 								</div>
-							</div>
-							<input id="id_owner" name="owner" type="hidden" value="28155" />
-							<div class="form-group">
-								<div style="float: right; margin-top: 15px; margin-right: 10px;">
-									<input class="btn btn-client" id="bank_account_submit_btn"
-										type="submit" value="등록하기" />
-									<div class="btn btn-default" onclick="cancel_edit()"
-										style="margin-left: 10px;">취소</div>
+							</section>
+							<section id="business_form" style="display: none">
+								<div class="form-group ">
+									<label class="control-label required"><span>*</span>
+										사업자 등록 번호</label>
+									<div class="control-wrapper">
+										<input class="form-control" name="identify_number" type="text" /><span
+											class="help-block">'-'를 제외하고 입력해주세요. (10자리)</span>
+									</div>
+								</div>
+								<div class="form-group ">
+									<label class="control-label required"><span>*</span>
+										법인명 (단체명)</label>
+									<div class="control-wrapper">
+										<input class="form-control" name="company_name" type="text"
+											value="" />
+									</div>
+								</div>
+								<div class="form-group ">
+									<label class="control-label required"><span>*</span>
+										대표자명</label>
+									<div class="control-wrapper">
+										<input class="form-control" name="representer_name"
+											type="text" value="" />
+									</div>
+								</div>
+								<div class="form-group ">
+									<label class="control-label required"><span>*</span>
+										사업장 소재지</label>
+									<div class="control-wrapper">
+										<input class="form-control" name="address_detail" type="text"
+											value="서울특별시 강남구 ㅁㄴㅇㄹ" />
+									</div>
+								</div>
+								<div class="form-group ">
+									<label class="control-label required"
+										style="padding-left: 60px; *padding-left: 70px; *width: 180px;"><span>*</span>
+										세금계산서용 이메일 주소</label>
+									<div class="control-wrapper" style="width: 380px;">
+										<input class="form-control" name="email_for_tax"
+											style="width: 340px;" type="email" /><span class="help-block">계약서,
+											세금계산서 등을 받아볼 이메일 주소를 입력해 주세요.</span>
+									</div>
+								</div>
+							</section>
+							<div class="form-group last-form-group"
+								style="padding-top: 15px;">
+								<div style="float: right">
+									<input class="btn btn-partners account-btn"
+										style="margin-right: 10px;" type="submit" value="제출하기" />
 								</div>
 							</div>
 						</form>
@@ -375,28 +434,45 @@
 			</div>
 		</div>
 	</footer>
-	<script type="text/javascript">
+	<script>
     $(document).ready(function(){
-        
+        var type = '개인';
+        if(type == '개인' || type == '팀'){
+            $('#individual_form').css('display', 'block');
+            $('#individual_type_form').remove();
+            $('#business_form').remove();
+        }
+        else if (type == '개인 사업자'){
+            $('#individual_form').remove();
+            $('#individual_type_form').css('display', 'block');
+            $('#business_form').css('display', 'block');
+        }
+        else {
+            $('#individual_form').remove();
+            $('#individual_type_form').remove();
+            $('#business_form').css('display', 'block');
+        }
     });
+    $('.content-inner').on('change','#p5-file-btn', function() {
+            if($('#p5-file-btn').val()==='') {
+                //donothing
+            } else {
+                $('#p5-image-name').html($(this).val().split(/(\\|\/)/g).pop());
+                image=document.getElementById('p5-file-btn');
 
-    var bank_id = $('#id_bank').val();
-    function show_form(){
-        $('#edit_bank_form').css('display', 'block');
-        $('#show_bank_form').css('display', 'none');
-        $('#cancel_edit').css('display', 'block');
-        $('#do_edit').css('display', 'none');
-        $('#bank_account_submit_btn').val('수정하기');
-    }
-    function cancel_edit(){
-        $('#edit_bank_form').css('display', 'none');
-        $('#show_bank_form').css('display', 'block');
-        $('#cancel_edit').css('display', 'none');
-        $('#do_edit').css('display', 'block');
-        $('#id_bank').val(bank_id);
-        $('#id_account_holder').val('aaa');
-        $('#id_account_number').val('11');
-    }
+
+            }
+        });
+    $('.content-inner').on('click','.p5-img-del-btn',function() {
+        var imgAssignTag = '<button type="button" class="btn btn-primary p5-custom-file-type-front" style="cursor: pointer; left: 0; margin-left: 0"><i class="fa fa-plus"></i>&nbsp;이미지 변경</button>'+
+                '<input id="p5-file-btn" type="file" name="image" class="p5-custom-file-type-input" style="cursor: pointer; left: 0px;  margin-left: 0" accept="image/*">'+
+                '<button type="button" class="btn btn-cancel p5-img-del-btn" style="left: 120px;">삭제</button>';
+        $('#p5-image-name').html("제출된 '<strong>인증 서류</strong>'가 없습니다.");
+        $('#p5-file-btn-1').parent().html(imgAssignTag);
+
+        $(this).siblings('input').val("");
+        $(this).parent().siblings('.p5-img-name').html("제출된 '<strong>인증 서류</strong>'가 없습니다.");
+    });
 </script>
 	<script type="text/javascript">
   $(function() {

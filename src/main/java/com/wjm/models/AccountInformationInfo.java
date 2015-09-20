@@ -20,7 +20,6 @@ public class AccountInformationInfo {
 	private String fax_num;
 	private int subscription;
 	private String identity_authentication;
-	private String identity_doc;
 	private String bank_name;
 	private String account_holder;
 	private String account_number;
@@ -28,8 +27,8 @@ public class AccountInformationInfo {
 	public AccountInformationInfo(int pk, int account_pk, String profile_img, String form, String company_name,
 			String company_representative, String name, String sex, String birth_date, String regionl, String regionm,
 			String regionr, String cellphone_num, String telephone_num, String fax_num, int subscription,
-			String identity_authentication, String identity_doc, String bank_name, String account_holder,
-			String account_number, String introduction) {
+			String identity_authentication, String bank_name, String account_holder, String account_number,
+			String introduction) {
 		super();
 		this.pk = pk;
 		this.account_pk = account_pk;
@@ -48,7 +47,6 @@ public class AccountInformationInfo {
 		this.fax_num = fax_num;
 		this.subscription = subscription;
 		this.identity_authentication = identity_authentication;
-		this.identity_doc = identity_doc;
 		this.bank_name = bank_name;
 		this.account_holder = account_holder;
 		this.account_number = account_number;
@@ -156,12 +154,6 @@ public class AccountInformationInfo {
 	public void setIdentity_authentication(String identity_authentication) {
 		this.identity_authentication = identity_authentication;
 	}
-	public String getIdentity_doc() {
-		return identity_doc;
-	}
-	public void setIdentity_doc(String identity_doc) {
-		this.identity_doc = identity_doc;
-	}
 	public String getBank_name() {
 		return bank_name;
 	}
@@ -186,6 +178,5 @@ public class AccountInformationInfo {
 	public void setIntroduction(String introduction) {
 		this.introduction = introduction;
 	}
-	
-	
+
 }

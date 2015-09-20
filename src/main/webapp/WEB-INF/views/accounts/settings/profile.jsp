@@ -18,6 +18,13 @@
 	
 	if(accountinfo != null)
 	{
+
+		String img_path = "";
+		img_path = accountinfo.getProfile_img() ;
+		if(img_path == null)
+			img_path = "resources/static/img/default_avatar.png";
+		if(img_path.isEmpty())
+			img_path = "resources/static/img/default_avatar.png";
 	%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -69,7 +76,7 @@
 						<h3 class="user-name-tag-heading">클라이언트</h3>
 						<div class="user-name-tag-body">
 							<img alt="<%=account.getId() %> 사진" class="img-circle user-img"
-								src="<%=accountinfo.getProfile_img() %>" />
+								src="${pageContext.request.contextPath}/<%=img_path %>" />
 							<h4 class="username"><%=account.getId() %></h4>
 							<a class="profile-setting" href="/wjm/accounts/settings/profile/">기본
 								정보 수정</a>
@@ -111,7 +118,7 @@
 									사진</label>
 								<div class="control-wrapper" style="padding-top: 7px;">
 									<img alt="<%=account.getId() %> 사진" class="partners-img"
-										src="<%=accountinfo.getProfile_img() %>"
+										src="${pageContext.request.contextPath}/<%=img_path %>"
 										style="border-radius: 10%; border: 1px solid #dedede; width: 220px; height: 220px;" />
 								</div>
 							</div>

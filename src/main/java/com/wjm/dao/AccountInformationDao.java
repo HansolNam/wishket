@@ -68,7 +68,6 @@ public class AccountInformationDao implements AccountInformationIDao {
 		    				, resultSet.getString("fax_num")
 		    				, resultSet.getInt("subscription")
 		    				, resultSet.getString("identity_authentication")
-		    				, resultSet.getString("identity_doc")
 		    				, resultSet.getString("bank_name")
 		    				, resultSet.getString("account_holder")
 		    				, resultSet.getString("account_number")
@@ -100,7 +99,6 @@ public class AccountInformationDao implements AccountInformationIDao {
 		    				, resultSet.getString("fax_num")
 		    				, resultSet.getInt("subscription")
 		    				, resultSet.getString("identity_authentication")
-		    				, resultSet.getString("identity_doc")
 		    				, resultSet.getString("bank_name")
 		    				, resultSet.getString("account_holder")
 		    				, resultSet.getString("account_number")
@@ -140,7 +138,6 @@ public class AccountInformationDao implements AccountInformationIDao {
 		    				, resultSet.getString("fax_num")
 		    				, resultSet.getInt("subscription")
 		    				, resultSet.getString("identity_authentication")
-		    				, resultSet.getString("identity_doc")
 		    				, resultSet.getString("bank_name")
 		    				, resultSet.getString("account_holder")
 		    				, resultSet.getString("account_number")
@@ -202,21 +199,41 @@ public class AccountInformationDao implements AccountInformationIDao {
 			String form = accountinfo.getForm();
 			String name = accountinfo.getName();
 			String sex = accountinfo.getSex();
+			String company_name = accountinfo.getCompany_name();
+			String representative = accountinfo.getCompany_representative();
 			String birth = accountinfo.getBirth_date();
 			String regionl = accountinfo.getRegionl();
 			String regionM = accountinfo.getRegionm();
 			String regionR = accountinfo.getRegionr();
 			
-			//하나라도 없으면 기본정보 없음
-			if(profile == null || form == null || name == null || sex==null ||birth == null
-					|| regionl == null || regionM == null || regionR == null)
-				return false;
+			if(form.equals("individual"))
+			{
+				//하나라도 없으면 기본정보 없음
+				if(profile == null || form == null || name == null || sex==null ||birth == null
+						|| regionl == null || regionM == null || regionR == null)
+					return false;
+				else
+				{
+					if(profile.isEmpty() || form.isEmpty() || name.isEmpty() || sex.isEmpty()
+							|| regionl.isEmpty() || regionM.isEmpty() || regionR.isEmpty())
+						return false;
+				}
+			}
 			else
 			{
-				if(profile.isEmpty() || form.isEmpty() || name.isEmpty() || sex==null
-						|| regionl.isEmpty() || regionM.isEmpty() || regionR.isEmpty())
+				//하나라도 없으면 기본정보 없음
+				if(profile == null || form == null || name == null || company_name == null || representative == null ||birth == null
+						|| regionl == null || regionM == null || regionR == null)
 					return false;
+				else
+				{
+					if(profile.isEmpty() || form.isEmpty() || name.isEmpty() ||company_name.isEmpty()|| representative.isEmpty() ||
+							 regionl.isEmpty() || regionM.isEmpty() || regionR.isEmpty())
+						return false;
+				}
 			}
+			
+			
 		}
 		
 		//기본정보를 가지고 있음
@@ -291,6 +308,11 @@ public class AccountInformationDao implements AccountInformationIDao {
 	public void updateBasicInfo_individual(int account_pk, String name, String cellphone_num, String form, String introduction)
 	{
 		jdbcTemplate.update("update account_information set name=?, cellphone_num=?, form=?, introduction=? where account_pk=?", new Object[] { name, cellphone_num, form, introduction, account_pk });
+	}
+	public void updateIdentity_authentication(int account_pk, String identity_authentication)
+	{
+		jdbcTemplate.update("update account_information set identity_authentication=? where account_pk=?"
+				, new Object[] { identity_authentication, account_pk });
 	}
 
 	public String updateBase(String image,String form_of_business,String full_name

@@ -58,6 +58,9 @@
 	<beans:bean id="ApplicantDao" class="com.wjm.dao.ApplicantDao">
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>
+	<beans:bean id="AuthenticationDao" class="com.wjm.dao.AuthenticationDao">
+		<beans:property name="dataSource" ref="dataSource" />
+	</beans:bean>
 	<beans:bean id="BankDao" class="com.wjm.dao.BankDao">
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>
