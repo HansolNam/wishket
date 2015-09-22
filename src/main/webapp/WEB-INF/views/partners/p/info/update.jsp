@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
+<!DOCTYPE html>
 <!--[if IE 6]><html lang="ko" class="no-js old ie6"><![endif]-->
 <!--[if IE 7]><html lang="ko" class="no-js old ie7"><![endif]-->
 <!--[if IE 8]><html lang="ko" class="no-js old ie8"><![endif]-->
@@ -11,7 +11,8 @@
 <meta charset="utf-8" />
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
-<title>외주몬(WJM) · 관리 - 지원 중</title>
+
+<title>외주몬(WJM) · 파트너스 정보 설정</title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
 <link href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
 	type="text/css" />
@@ -27,6 +28,13 @@
 <script src="${pageContext.request.contextPath}/resources/static/CACHE/js/a52a868564de.js" type="text/javascript"></script>
 <link href="${pageContext.request.contextPath}/resources/static/css/floating.css" rel="stylesheet" />
 <script src="http://wcs.naver.net/wcslog.js" type="text/javascript"></script>
+<link href="${pageContext.request.contextPath}/resources/static/css/floating.css" rel="stylesheet" />
+<script src="http://wcs.naver.net/wcslog.js" type="text/javascript"></script>
+<style type="text/css">
+div.ui-tooltip {
+	max-width: 252px !important;
+}
+</style>
 <link href="${pageContext.request.contextPath}/resources/static/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 <link href="${pageContext.request.contextPath}/resources/static/favicon.ico" rel="icon" type="image/x-icon" />
 <link href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad.png" rel="apple-touch-icon"
@@ -38,63 +46,90 @@
 <script src="${pageContext.request.contextPath}/resources/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/resources/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
 </head>
-<body class="logged-in partners partners-management proposal-management">
+<body class="logged-in partners partners-setting">
 	<div id="wrap">
 		
-	<jsp:include page="../../../header2.jsp" flush="false" />
-		<div class="container">
-			<div id="messages"></div>
-		</div>
+		<jsp:include page="../../../header2.jsp" flush="false" />
 		<div class="page">
+			<div class="container">
+				<div id="messages">
+					<div class="alert alert-safe alert-warning fade in">
+						프로젝트 지원을 위해 <a ,="" class="alert-link"
+							href="/partners/p/gksthf16112/info/update/">'파트너스 정보'</a>, <a
+							class="alert-link"
+							href="/partners/p/gksthf16112/introduction/update/">'자기 소개'</a>,
+						<a ,="" class="alert-link"
+							href="/partners/p/gksthf16112/skill/update/">'보유 기술'</a>, <a
+							,="" class="alert-link"
+							href="/partners/p/gksthf16112/portfolio/update/">'포트폴리오'</a>을(를)
+						입력해주세요.
+					</div>
+				</div>
+			</div>
+			<div class="page">
+				<div class="container">
+					<div class="p5-back-content">
+						<p class="p5-back-nav">
+							<a class="p5-back-nav-link"
+								href="/partners/p/gksthf16112/info/update/">[ 프로필 정보 관리 ]</a> <i
+								class="p5-back-nav-arrow fa fa-caret-right"></i> [ 파트너스 정보 ]
+						</p>
+					</div>
+				</div>
+			</div>
 			<div class="page-inner">
 				<div class="sidebar">
-					<div class="user-name-tag">
-						<h3 class="user-name-tag-heading">파트너스</h3>
-						<div class="user-name-tag-body">
-							<img alt="gksthf16112 사진" class="img-circle user-img"
-								src="${pageContext.request.contextPath}/resources/static/img/default_avatar.jpg" />
-							<h4 class="username">gksthf16112</h4>
-							<a class="profile-setting" href="/accounts/settings/profile/">기본
-								정보 수정</a>
-						</div>
-					</div>
 					<div class="sidebar-nav">
 						<ul>
 							<li class="active"><a
-								href="/partners/manage/proposal/counselling/">지원 중</a></li>
+								href="/partners/p/gksthf16112/info/update/">파트너스 정보</a></li>
 							<li class=""><a
-								href="/partners/manage/proposal/end-counselling/">지원 종료</a></li>
+								href="/partners/p/gksthf16112/introduction/update/">자기 소개</a></li>
+							<li class=""><a
+								href="/partners/p/gksthf16112/portfolio/update/">포트폴리오</a></li>
+							<li class=""><a href="/partners/p/gksthf16112/skill/update/">보유
+									기술</a></li>
+							<li class=""><a
+								href="/partners/p/gksthf16112/background/update/">경력, 학력,
+									자격증</a></li>
+							<li class=""><a
+								href="/partners/p/gksthf16112/evaluation/update/">프로젝트 히스토리</a></li>
 						</ul>
 					</div>
 				</div>
 				<div class="content">
-					<div class="content-header action">
-						<h3 class="header-text">
-							지원 중 <small class="small-text">지원한 프로젝트들을 확인할 수 있습니다.</small>
-						</h3>
-					</div>
-					<div class="content-inner">
-						<div class="process-guide-box">
-							<img src="${pageContext.request.contextPath}/resources/static/img/process-guide-success.png"
-								style="float: left" />
-							<p class="process-guide-text" style="float: left">
-								1. <strong>지원한 프로젝트</strong> 목록입니다.<br /> 2. 클라이언트가 <strong>미팅을
-									원할 시에, 위시켓에서 개별적으로 연락</strong>을 드립니다.<br />
-							</p>
-							<div style="clear: both;"></div>
-						</div>
-						<section>
-						<section>
-						<p class="text-muted">지원 중인 프로젝트가 없습니다.</p>
-						</section></section>
+					<div class="content-inner" style="padding-top: 15px;">
+						<section class="p5-partition-title">
+							<h3 class="header-text" style="margin-bottom: 30px">
+								파트너스 정보 <span class="pull-right"><a
+									class="btn btn-primary" href="/partners/p/gksthf16112/"
+									style="margin-top: -7px;">내 프로필에서 보기</a></span>
+							</h3>
+						</section>
+						<section class="p5-partners-info">
+							<span><div class="p5-partners-no-info">
+									<div class="p5-assign-component">
+										<div>
+											<img src="${pageContext.request.contextPath}/resources/static/img/profile_info.png" />
+											<p class="p5-no-partners-info-text">
+												<span class="text-center p5-bold">'파트너스 정보'</span>가 없습니다.
+											</p>
+											<a class="btn btn-md btn-partners"
+												href="/partners/p/gksthf16112/info/update/add"
+												id="p5-put-career"><i class="fa fa-plus"></i> 파트너스 정보
+												등록하기</a>
+										</div>
+									</div>
+								</div></span>
+						</section>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div id="push"></div>
 	</div>
-	<jsp:include page="../../../footer.jsp" flush="false" />
 
+		<jsp:include page="../../../footer.jsp" flush="false" />
 	<script type="text/javascript">
   $(function() {
     wishket.init();

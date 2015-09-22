@@ -44,6 +44,12 @@
 			<version>${spring-framework.version}</version>
 		</dependency>
 		
+		<!-- spring support -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-context-support</artifactId>
+		    <version>3.2.3.RELEASE</version>
+		</dependency>
 		<!-- MySQL database driver -->
 		<dependency>
 			<groupId>mysql</groupId>
@@ -144,13 +150,12 @@
       		<version>2.2.2</version>
       		<scope>compile</scope>
     	</dependency>
-    	
-	    <!-- Java Mail API -->
-	    <dependency>
+    	<!-- Java Mail API -->
+		<dependency>
 		    <groupId>javax.mail</groupId>
 		    <artifactId>mail</artifactId>
 		    <version>1.4.3</version>
-	    </dependency>
+		</dependency>
 	    
 	</dependencies>	
 </project>

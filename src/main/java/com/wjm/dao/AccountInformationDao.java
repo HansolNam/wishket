@@ -372,7 +372,7 @@ public class AccountInformationDao implements AccountInformationIDao {
 				logger.info("비정상적 시,도");
 				return "지역을 정상적으로 선택해주세요.";
 			}
-			else if(!areaDao.isExist(Integer.parseInt(address_sido)))
+			else if(!areaDao.isExist(address_sido))
 			{
 				logger.info("비정상적 시,도");
 				return "지역을 정상적으로 선택해주세요.";
@@ -391,14 +391,14 @@ public class AccountInformationDao implements AccountInformationIDao {
 				logger.info("비정상적 시, 군, 구");
 				return "세부지역을 정상적으로 선택해주세요.";
 			}
-			else if(!areaDetailDao.isExist(Integer.parseInt(address_sido), sigungu))
+			else if(!areaDetailDao.isExist(address_sido, sigungu))
 			{
 				logger.info("비정상적 시, 군, 구");
 				return "세부지역을 정상적으로 선택해주세요.";
 			}
 			else
 			{
-				address_sido = areaDao.select(Integer.parseInt(address_sido));
+				address_sido = areaDao.select(address_sido);
 				logger.info("address_sido = "+address_sido);
 			}
 		}
@@ -503,19 +503,140 @@ public class AccountInformationDao implements AccountInformationIDao {
 				new Object[] { bank_name,account_holder,account_number,account_pk });
 	}
 
-	/*
-	public void updateEmail(String email_subscription, int pk)
+	
+	public String updateEmail(String email_subscription, int pk)
 	{
-		jdbcTemplate.update("update account_information set email_subscription=? where pk=?", 
-				new Object[] { email_subscription,pk });
+		int subscription = 1;
+		
+		if(email_subscription.equals("true"))
+		{
+			logger.info("구독");
+			subscription = 1;
+		}
+		else
+		{
+			logger.info("미구독");
+			subscription = 0;
+		}
+		
+		jdbcTemplate.update("update account_information set subscription=? where pk=?", 
+				new Object[] { subscription,pk });
+		return "성공";
 	}
-
-	public void updateConnect(String cell_phone_number_code, String cell_phone_number_middle, 
+	
+	public String updateConnect(String cell_phone_number_code, String cell_phone_number_middle, 
 			String cell_phone_number_end,String phone_number_code, 
 			String phone_number_entered, String fax_number, int pk)
 	{
+		if(cell_phone_number_code == null)
+		{
+			logger.info("휴대폰 번호는 필수입니다.");
+			return "휴대폰 번호는 필수입니다.";
+		}
+		else if(cell_phone_number_code.isEmpty())
+		{
+			logger.info("휴대폰 번호는 필수입니다.");
+			return "휴대폰 번호는 필수입니다.";
+		}
+		else if( !Validator.isPhoneCode(cell_phone_number_code))
+		{
+			logger.info("올바른 휴대폰 번호 앞자리가 아닙니다.");
+			return "올바른 휴대폰 번호 앞자리가 아닙니다.";
+		}
+		
+		if(cell_phone_number_middle == null)
+		{
+			logger.info("휴대폰 번호는 필수입니다.");
+			return "휴대폰 번호는 필수입니다.";
+		}
+		else if(cell_phone_number_middle.isEmpty())
+		{
+			logger.info("휴대폰 번호는 필수입니다.");
+			return "휴대폰 번호는 필수입니다.";
+		}
+		else if( !Validator.isDigit(cell_phone_number_middle))
+		{
+			logger.info("올바른 휴대폰 번호가 아닙니다.");
+			return "올바른 휴대폰 번호가 아닙니다.";
+		}
+		
+		if(cell_phone_number_end == null)
+		{
+			logger.info("휴대폰 번호는 필수입니다.");
+			return "휴대폰 번호는 필수입니다.";
+		}
+		else if(cell_phone_number_end.isEmpty())
+		{
+			logger.info("휴대폰 번호는 필수입니다.");
+			return "휴대폰 번호는 필수입니다.";
+		}
+		else if( !Validator.isDigit(cell_phone_number_end))
+		{
+			logger.info("올바른 휴대폰 번호가 아닙니다.");
+			return "올바른 휴대폰 번호가 아닙니다.";
+		}
+		
+		if(phone_number_code == null)
+		{
+			phone_number_code = "";
+		}
+		else if(phone_number_code.isEmpty())
+		{
+			phone_number_code = "";
+		}
+		else if( !Validator.isDigit(phone_number_code))
+		{
+			logger.info("올바른 전화 번호가 아닙니다.");
+			return "올바른 전화 번호가 아닙니다.";
+		}
+		
+		if(phone_number_entered == null)
+		{
+			phone_number_entered = "";
+		}
+		else if(phone_number_entered.isEmpty())
+		{
+			phone_number_entered = "";
+		}
+		else if( !Validator.isDigit(phone_number_entered))
+		{
+			logger.info("올바른 전화 번호가 아닙니다.");
+			return "올바른 전화 번호가 아닙니다.";
+		}
+		
+		String telephone_num = "";
+		if(!phone_number_code.isEmpty() && phone_number_entered.isEmpty())
+		{
+			logger.info("올바른 전화 번호가 아닙니다.");
+			return "올바른 전화 번호가 아닙니다.";
+		}
+		else if(phone_number_code.isEmpty() && !phone_number_entered.isEmpty())
+		{
+			logger.info("올바른 전화 번호가 아닙니다.");
+			return "올바른 전화 번호가 아닙니다.";
+		}
+		else
+			telephone_num = phone_number_code+phone_number_entered;
+		
+		if(fax_number == null)
+		{
+			fax_number = "";
+		}
+		else if(fax_number.isEmpty())
+		{
+			fax_number = "";
+		}
+		else if( !Validator.isDigit(fax_number))
+		{
+			logger.info("올바른 팩스 번호가 아닙니다.");
+			return "올바른 팩스 번호가 아닙니다.";
+		}
+		
 		jdbcTemplate.update("update account_information set cellphone_num=?, "
 				+"telephone_num=?, fax_num=? where pk=?", 
-				new Object[] { cellphone_num, telephone_num, fax_num, pk });
-	}*/
+				new Object[] { cell_phone_number_code+"-"+cell_phone_number_middle+"-"+cell_phone_number_end
+						, telephone_num, fax_number, pk });
+		
+		return "성공";
+	}
 }

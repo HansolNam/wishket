@@ -5,6 +5,7 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Random;
 
 import javax.sql.DataSource;
 
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Repository;
 
 import com.wjm.idao.AccountIDao;
 import com.wjm.models.AccountInfo;
-import com.wjm.models.AccountInformationInfo;
 
 @Repository
 public class AccountDao implements AccountIDao {
@@ -103,9 +103,9 @@ public class AccountDao implements AccountIDao {
 		else
 			return accountlist.get(0);
 	}	
-	public List<AccountInfo> select(String id)
+	public AccountInfo select(String id)
 	{
-		return jdbcTemplate.query("select * from account where id = ?",
+		List<AccountInfo> accountlist = jdbcTemplate.query("select * from account where id = ?",
 		    	new Object[] { id }, new RowMapper<AccountInfo>() {
 		    	public AccountInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{
@@ -120,10 +120,16 @@ public class AccountDao implements AccountIDao {
 		    				, resultSet.getTimestamp("reg_date"));
 		    	}
 		    });
+		if(accountlist == null)
+			return null;
+		else if(accountlist.size() == 0 || accountlist.size()>1)
+			return null;
+		else
+			return accountlist.get(0);
 	}	
-	public List<AccountInfo> select_email(String email)
+	public AccountInfo select_email(String email)
 	{
-		return jdbcTemplate.query("select * from account where email = ?",
+		List<AccountInfo> accountlist = jdbcTemplate.query("select * from account where email = ?",
 		    	new Object[] { email }, new RowMapper<AccountInfo>() {
 		    	public AccountInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{
@@ -138,8 +144,24 @@ public class AccountDao implements AccountIDao {
 		    				, resultSet.getTimestamp("reg_date"));
 		    	}
 		    });
+		if(accountlist == null)
+			return null;
+		else if(accountlist.size() == 0 || accountlist.size()>1)
+			return null;
+		else
+			return accountlist.get(0);
 	}
-	
+	public void updateAuthorized(int pk, int authorized)
+	{
+		jdbcTemplate.update("update account set authorized=? where pk=?", new Object[] {authorized, pk });
+	}
+	public String updateAuthenticationKey(int pk, String authorization_key)
+	{
+		String key = SHA256(authorization_key);
+		logger.info("key = "+key);
+		jdbcTemplate.update("update account set authorization_key=? where pk=?", new Object[] {key, pk });
+		return key;
+	}
 	public void deleteAll()
 	{
 		jdbcTemplate.update("delete from account");
@@ -171,22 +193,50 @@ public class AccountDao implements AccountIDao {
 	}
 	
 	/*
+	 * 비밀번호 리셋 체크
+	 */
+	public String reset_password(String email)
+	{
+		//해당 계정 검색
+		AccountInfo account = select_email(email);
+		
+		//존재하지 않는 아이디인 경우
+		if(account == null) return null;
+		else
+		{
+			StringBuffer buffer = new StringBuffer();
+			  Random random = new Random();
+			 
+			  String chars[] = "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,1,2,3,4,5,6,7,8,9,0".split(",");
+			 
+			  for (int i=0 ; i<10 ; i++)
+			  {
+			    buffer.append(chars[random.nextInt(chars.length)]);
+			  }
+	        String new_password = buffer.toString();
+	        
+	        jdbcTemplate.update("update account set password=? where pk = ?", new Object[] { SHA256(new_password),account.getPk() });
+			return new_password;
+		}
+	}
+	
+	/*
 	 * 로그인 체크
 	 */
 	public AccountInfo login(String id, String password)
 	{
 		//해당 아이디 검색
-		List<AccountInfo> accountlist = select(id);
+		AccountInfo account = select(id);
 		
 		//존재하지 않는 아이디인 경우
-		if(accountlist.size() == 0)
+		if(account == null)
 			return null;
 		
 		//패스워드 해시 후, 비교
-		if(!accountlist.get(0).getPassword().equals(SHA256(password)))
+		if(!account.getPassword().equals(SHA256(password)))
 			return null;
 		
-		return accountlist.get(0);
+		return account;
 	}
 
 	/*
@@ -195,17 +245,17 @@ public class AccountDao implements AccountIDao {
 	public AccountInfo login_email(String email, String password)
 	{
 		//해당 아이디 검색
-		List<AccountInfo> accountlist = select_email(email);
+		AccountInfo account = select_email(email);
 		
 		//존재하지 않는 아이디인 경우
-		if(accountlist.size() == 0)
+		if(account == null)
 			return null;
 		
 		//패스워드 해시 후, 비교
-		if(!accountlist.get(0).getPassword().equals(SHA256(password)))
+		if(!account.getPassword().equals(SHA256(password)))
 			return null;
 		
-		return accountlist.get(0);
+		return account;
 	}
 	/*
 	 * SHA-256 �ؽ� �Լ�

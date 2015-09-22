@@ -2,10 +2,11 @@ package com.wjm.main;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Random;
 
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,10 +14,13 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -29,6 +33,8 @@ import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
 import com.wjm.models.AccountInformationInfo;
 import com.wjm.models.AuthenticationInfo;
+
+import net.sf.json.JSONObject;
 
 /**
  * Handles requests for the application home page.
@@ -50,8 +56,13 @@ public class AccountController {
 
 	@Autowired
 	private AuthenticationDao authenticationDao;
+	
+
+	@Autowired
+	private JavaMailSender mailSender;
+	
 	/**
-	 * 로그인 페이지
+	 * 알림 페이지
 	 */
 	@RequestMapping(value = "/accounts/notifications", method = RequestMethod.GET)
 	public String MainController_notifications_get(HttpServletRequest request) {
@@ -59,13 +70,150 @@ public class AccountController {
 		
 		return "/accounts/notifications";
 	}
-	
+	/**
+	 * 비밀번호 찾기 페이지
+	 */
+	@RequestMapping(value = "/accounts/password/reset", method = RequestMethod.GET)
+	public String MainController_password_reset_get(HttpServletRequest request) {
+		logger.info("password_reset_get Page");
+		
+		return "/accounts/password/reset";
+	}
+	/**
+	 * 비밀번호 찾기 처리 페이지
+	 */
+	@RequestMapping(value = "/accounts/password/reset", method = RequestMethod.POST)
+	public ModelAndView MainController_notifications_post(HttpServletRequest request,
+ 			HttpServletResponse response,
+ 			ModelAndView mv,
+			 @RequestParam("email") String email) {
+		logger.info("reset POST Page");
+		
+		String newPassword = accountDao.reset_password(email);
+		
+		if(newPassword == null)
+		{
+			mv.addObject("messages","해당하는 이메일이 존재하지 않습니다.");
+			return mv;
+		}
+		else
+		{	        
+	        logger.info("newPassword = "+newPassword);
+			String result = sendMail("admin@wjm.com","gksthf1611@gmail.com","임시비밀번호는 "
+					+newPassword+" 입니다.", "외주몬 임시 비밀번호 발송 메일입니다.");
+			logger.info("메일 : "+result);
+			
+			if(result.equals("성공"))
+				mv.addObject("messages","임시 비밀번호를 발송하였습니다.");
+			else
+				mv.addObject("messages","임시 비밀번호를 발송에 실패하였습니다.");
+			
+			mv.setViewName("/accounts/login");
+			return mv;
+		}
+		
+	}
+	/**
+	 * 회원가입 인증 페이지
+	 */
+	@RequestMapping(value = "/accounts/reverify", method = RequestMethod.POST, produces = "text/json; charset=utf8")
+	@ResponseBody
+	public String MainController_reverify(HttpServletRequest request,
+ 			HttpServletResponse response) {
+		logger.info("reverify get Page");
+		
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		//
+		
+
+	    JSONObject jObject = new JSONObject();
+	    
+	    
+		Random random = new Random();
+        int f = random.nextInt(1000);
+        
+        String key = accountDao.updateAuthenticationKey(account.getPk(),account.getEmail()+f);
+        
+        account.setAuthorization_key(key);
+        logger.info("key = "+key);
+		String result = sendMail("admin@wjm.com","gksthf1611@gmail.com","인증코드는 "
+				+key+" 입니다.", "외주몬 회원가입 인증 메일입니다.");
+		logger.info("메일 : "+result);
+		
+		if(result.equals("성공"))
+			jObject.put("messages", "success");
+		else
+			jObject.put("messages", "fail");
+		
+		logger.info("jobject = "+jObject.toString());
+		
+		return jObject.toString();
+	}
+	/**
+	 * 회원가입 인증 페이지
+	 */
+	@RequestMapping(value = "/accounts/signup_verify", method = RequestMethod.GET)
+	public String MainController_signup_verify_get(HttpServletRequest request,
+ 			HttpServletResponse response) {
+		logger.info("signup_verify get Page");
+		
+		
+		return "/accounts/signup_verify";
+	}
+	/**
+	 * 회원가입 인증 페이지
+	 */
+	@RequestMapping(value = "/accounts/signup_verify", method = RequestMethod.POST)
+	public ModelAndView MainController_signup_verify_post(HttpServletRequest request,
+ 			HttpServletResponse response,
+ 			ModelAndView mv,
+			 @RequestParam("verification") String verification) {
+		logger.info("signup_verify Post Page");
+		
+		logger.info("verification = "+verification);
+		
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null){mv.setViewName("redirect:/accounts/login");return mv;}
+		
+		String return_val = "";
+		if(account.getAuthorization_key().equals(verification.trim()))
+		{
+			accountDao.updateAuthorized(account.getPk(), 1);
+			account.setAuthorized(1);
+			mv.addObject("messages","이메일 인증에 성공하셨습니다.");
+			
+			//클라이언트의 경우
+			if(account.getAccount_type().equals("client"))
+			{
+				return_val = "redirect:/mywjm/client";
+			}
+			//파트너스의 경우
+			else if(account.getAccount_type().equals("partners"))
+			{
+				return_val = "redirect:/mywjm/partners";
+			}
+			//둘다 아닌 경우, 오류..
+			else
+			{
+				return_val = "redirect:/index";
+			}
+			mv.setViewName(return_val);
+		}
+		else
+		{
+			mv.addObject("messages","이메일 인증에 실패했습니다.");
+		}
+		
+		return mv;
+	}
 	/**
 	 * 로그인 페이지
 	 */
 	@RequestMapping(value = "/accounts/login", method = RequestMethod.GET)
 	public String MainController_login_get(HttpServletRequest request) {
 		logger.info("login Get Page");
+		
+		
 		
 		return "/accounts/login";
 	}
@@ -111,6 +259,10 @@ public class AccountController {
 		//세션에 계정 정보 저장
 		request.getSession().setAttribute("account", account);
 		
+		if(account.getAuthorized() == 0)
+		{
+			return_val = "/accounts/signup_verify";
+		}
 		//클라이언트의 경우
 		if(account.getAccount_type().equals("client"))
 		{
@@ -209,10 +361,10 @@ public class AccountController {
 		else
 		{
 			//아이디 계정 탐색
-			List<AccountInfo> accountlist = accountDao.select(id);
+			AccountInfo account = accountDao.select(id);
 			
 			//헤딩 아이디가 존재하는 경우
-			if(accountlist.size() != 0)
+			if(account != null)
 			{
 				logger.info("입력한 아이디가 이미 사용 중입니다. 다른 이메일을 입력해주세요.");
 				mv.addObject("id_msg", "입력한 아이디가 이미 사용 중입니다. 다른 이메일을 입력해주세요.");
@@ -231,9 +383,9 @@ public class AccountController {
 		else
 		{
 			//이메일 계정 탐색
-			List<AccountInfo> accountlist = accountDao.select_email(email);
+			AccountInfo account = accountDao.select_email(email);
 			//해당 이메일이 존재하는 경우
-			if(accountlist.size() != 0)
+			if(account != null)
 			{
 				logger.info("입력한 이메일은 이미 사용 중입니다. 다른 이메일을 입력해주세요.");
 				mv.addObject("email_msg","입력한 이메일은 이미 사용 중입니다. 다른 이메일을 입력해주세요.");
@@ -262,7 +414,27 @@ public class AccountController {
 		if(isAvailable)
 		{
 			accountDao.signup(id, email, password, account_type);
-			mv.setViewName("/accounts/login");
+			
+			AccountInfo account = accountDao.select(id);		
+
+			Random random = new Random();
+	        int f = random.nextInt(1000);
+	        
+	        String key = accountDao.updateAuthenticationKey(account.getPk(),account.getEmail()+f);
+	        
+	        account.setAuthorization_key(key);
+	        logger.info("key = "+key);
+			String result = sendMail("admin@wjm.com","gksthf1611@gmail.com","인증코드는 "
+					+key+" 입니다.", "외주몬 회원가입 인증 메일입니다.");
+			logger.info("메일 : "+result);
+			
+			if(result.equals("성공"))
+			{
+				request.getSession().setAttribute("account", account);
+				mv.addObject("messages","회원가입에 성공하셨습니다. 이메일 인증을 해주세요.");
+				mv.setViewName("/accounts/signup_verify");
+			}
+			
 		}
 		
 		return mv;
@@ -489,7 +661,9 @@ public class AccountController {
 	 * 회원가입 페이지
 	 */
 	@RequestMapping(value = "/accounts/settings/profile", method = RequestMethod.GET)
-	public ModelAndView AccountController_profile_get(HttpServletRequest request, ModelAndView mv) {
+	public ModelAndView AccountController_profile_get(HttpServletRequest request, ModelAndView mv,
+			 @RequestParam(value = "msg", required = false, defaultValue = "") String msg
+			) {
 		logger.info("profile Get Page");
 		
 		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
@@ -520,12 +694,59 @@ public class AccountController {
 				{
 					mv.addObject("hasEmail","true");
 				}
+				
+
+				mv.addObject("img_path",accountinfo.getProfile_img());
+				mv.addObject("form_of_business",accountinfo.getForm());
+				mv.addObject("full_name",accountinfo.getName());
+				mv.addObject("company_name",accountinfo.getCompany_name());
+				mv.addObject("representative",accountinfo.getCompany_representative());
+				mv.addObject("gender",accountinfo.getSex());
+				
+				
+				String[] list = {"","",""};
+				
+				if(accountinfo.getBirth_date() != null)
+					if(!accountinfo.getBirth_date().isEmpty())
+						list = accountinfo.getBirth_date().split("-");
+				
+				mv.addObject("date_of_birth_year",list[0]);
+				mv.addObject("date_of_birth_month",list[1]);
+				mv.addObject("date_of_birth_day",list[2]);
+				
+				mv.addObject("address_sido",accountinfo.getRegionl());
+				mv.addObject("sigungu",accountinfo.getRegionm());
+				mv.addObject("address_detail",accountinfo.getRegionr());
+
+				list[0]="";list[1]="";list[2]="";
+				if(accountinfo.getCellphone_num() != null)
+					if(!accountinfo.getCellphone_num().isEmpty())
+						list = accountinfo.getCellphone_num().split("-");
+				
+				mv.addObject("cell_phone_number_code",list[0]);
+				mv.addObject("cell_phone_number_middle",list[1]);
+				mv.addObject("cell_phone_number_end",list[2]);
+				
+				String[] list2 = {"",""};
+
+				if(accountinfo.getTelephone_num() != null)
+					if(!accountinfo.getTelephone_num().isEmpty())
+						list2 = accountinfo.getTelephone_num().split("-");
+
+				mv.addObject("phone_number_code",list2[0]);
+				mv.addObject("phone_number_entered",list2[1]);
+				
+				mv.addObject("fax_number",accountinfo.getFax_num());
+				mv.addObject("email_subscription",accountinfo.getSubscription());
+				mv.addObject("msg",msg);
 			}
 		}
 		else
+		{
 			accountinfo = null;
+			mv.setViewName("/accounts/login");
+		}
 			
-		mv.addObject("accountinfo",accountinfo);
 		
 		return mv;
 	}
@@ -533,11 +754,12 @@ public class AccountController {
 	/**
 	 * 기본정보 수정
 	 */
-	@RequestMapping(value = "/accounts/settings/profile", method = RequestMethod.POST)
-	public ModelAndView AccountController_profile_post(HttpServletRequest request,
+	
+	@RequestMapping(value = "/accounts/settings/profile/base", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+	@ResponseBody
+	public String AccountController_profile_post(HttpServletRequest request,
  			HttpServletResponse response,
- 			ModelAndView mv,
-			 @RequestParam(value = "image", required = false, defaultValue = "") MultipartFile image,
+ 			@RequestParam(value = "image", required = false) MultipartFile image,
 			 @RequestParam(value = "form_of_business", required = false, defaultValue = "") String form_of_business,
 			 @RequestParam(value = "full_name", required = false, defaultValue = "") String full_name,
 			 @RequestParam(value = "company_name", required = false, defaultValue = "") String company_name,
@@ -549,22 +771,30 @@ public class AccountController {
 			 @RequestParam(value = "address_sido", required = false, defaultValue = "") String address_sido,
 			 @RequestParam(value = "sigungu", required = false, defaultValue = "") String sigungu,
 			 @RequestParam(value = "address_detail", required = false, defaultValue = "") String address_detail,
-			 @RequestParam(value = "email_subscription", required = false, defaultValue = "") String email_subscription,
-			 @RequestParam(value = "cell_phone_number_code", required = false, defaultValue = "") String cell_phone_number_code,
-			 @RequestParam(value = "phone_number_entered", required = false, defaultValue = "") String phone_number_entered,
-			 @RequestParam(value = "fax_number", required = false, defaultValue = "") String fax_number,
 			 @RequestParam("submit_type") String submit_type
 			) throws IOException, FileUploadException, ParseException  {
-		logger.info("profile Post Page");
+		logger.info("profile Base Post Page");
 		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
 
+		logger.info("image = "+image);
+		logger.info("form_of_business = "+form_of_business);
+		logger.info("full_name = "+full_name);
+		logger.info("company_name = "+company_name);
+		logger.info("representative = "+representative);
+		logger.info("gender = "+gender);
+		logger.info("date_of_birth_year = "+date_of_birth_year);
+		logger.info("date_of_birth_month = "+date_of_birth_month);
+		logger.info("date_of_birth_day = "+date_of_birth_day);
+		logger.info("address_sido = "+address_sido);
+		logger.info("sigungu = "+sigungu);
+		logger.info("address_detail = "+address_detail);
+		logger.info("submit_type = "+submit_type);
+		
 		if(account == null)
 		{
-			mv.setViewName("redirect:/accounts/login");
-			return mv;
+			response.sendRedirect("redirect:/accounts/login");
 		}
-		
-		mv.setViewName("/accounts/settings/profile");
+	    JSONObject jObject = new JSONObject();
 		AccountInformationInfo accountinfo = accountInformationDao.select(account.getPk());
 		
 		if(accountinfo == null)
@@ -572,26 +802,25 @@ public class AccountController {
 			accountInformationDao.create(account.getPk());
 			accountinfo = accountInformationDao.select(account.getPk());
 		}
-		
 		if(submit_type.equals("base"))
 		{
 			if(image == null)
 			{
-				mv.addObject("msg", "이미지를 등록해주세요");
-				return mv;
+				jObject.put("msg", "이미지를 등록해주세요");
+				return jObject.toString();
 			}
 			if(image.isEmpty())
 			{
-				mv.addObject("msg", "이미지를 등록해주세요");
-				return mv;
+				jObject.put("msg", "이미지를 등록해주세요");
+				return jObject.toString();
 			}
 			
 			String image_path = Fileupload.upload(request.getRealPath(File.separator), image);
 			
 			if(image_path.equals("error"))
 			{
-				mv.addObject("msg", "이미지 제목은 20 글자까지 가능하고, 최대 용량은 3MB입니다.");
-				return mv;
+				jObject.put("msg", "이미지 제목은 20 글자까지 가능하고, 최대 용량은 3MB입니다.");
+				return jObject.toString();
 			}
 			else
 			{
@@ -601,50 +830,163 @@ public class AccountController {
 						date_of_birth_day,address_sido,sigungu,address_detail,accountinfo.getPk());
 					if(msg.equals("성공"))
 					{
-						mv.addObject("msg",msg);
-						return mv;
+						jObject.put("msg","success");
+
 					}
 					else
 					{
-						mv.addObject("msg",msg);
-						return mv;
+						jObject.put("msg",msg);
+						return jObject.toString();
 					}
 				}
 				catch(Exception e)
 				{
-					mv.addObject("msg","에러가 발생했습니다.");
-					return mv;
+					jObject.put("msg","에러가 발생했습니다.");
+					return jObject.toString();
 				}
 			}
 		}
-		
-		
-		/*
-		else if(submit_type.equals("email"))
+		else
 		{
-			accountInformationDao.updateEmail(email_subscription);
+			jObject.put("msg","올바르지 않은 접근입니다");
+			return jObject.toString();
 		}
-		else if(submit_type.equals("connect"))
+		
+
+		if(accountInformationDao.hasBasicInfo(account.getPk()))
 		{
-			accountInformationDao.updateConnect(cell_phone_number_code, cell_phone_number_middle, cell_phone_number_end,
-					phone_number_code, phone_number_entered, fax_number);
+			jObject.put("hasBasicInfo","true");
+		}
+		
+		jObject.put("accountinfo", accountInformationDao.select(account.getPk()));
+		logger.info("jObject = "+jObject.toString());
+
+		return jObject.toString();
+		
+	}
+	
+	@RequestMapping(value = "/accounts/settings/profile/connect", method = RequestMethod.POST, produces = "text/json; charset=utf8")
+	@ResponseBody
+	public String AccountController_profile_connect(HttpServletRequest request,
+ 			HttpServletResponse response,
+ 			 @RequestParam(value = "cell_phone_number_code", required = false, defaultValue = "") String cell_phone_number_code,
+			 @RequestParam(value = "cell_phone_number_middle", required = false, defaultValue = "") String cell_phone_number_middle,
+			 @RequestParam(value = "cell_phone_number_end", required = false, defaultValue = "") String cell_phone_number_end,
+			 @RequestParam(value = "phone_number_code", required = false, defaultValue = "") String phone_number_code,
+			 @RequestParam(value = "phone_number_entered", required = false, defaultValue = "") String phone_number_entered,
+			 @RequestParam(value = "fax_number", required = false, defaultValue = "") String fax_number,
+			 @RequestParam("submit_type") String submit_type
+			) throws IOException, FileUploadException, ParseException  {
+		logger.info("profile connect Post Page");
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+
+		logger.info("cell_phone_number_code = "+cell_phone_number_code);
+		logger.info("cell_phone_number_middle = "+cell_phone_number_middle);
+
+		logger.info("cell_phone_number_end = "+cell_phone_number_end);
+
+		logger.info("phone_number_code = "+phone_number_code);
+		logger.info("phone_number_entered = "+phone_number_entered);
+		logger.info("fax_number = "+fax_number);
+		logger.info("submit_type = "+submit_type);
+		
+		if(account == null)
+		{
+			response.sendRedirect("redirect:/accounts/login");
+		}
+	    JSONObject jObject = new JSONObject();
+		AccountInformationInfo accountinfo = accountInformationDao.select(account.getPk());
+		
+		if(accountinfo == null)
+		{
+			accountInformationDao.create(account.getPk());
+			accountinfo = accountInformationDao.select(account.getPk());
+		}
+		
+		if(submit_type.equals("connect"))
+		{
+			String msg = accountInformationDao.updateConnect(cell_phone_number_code, cell_phone_number_middle, cell_phone_number_end,
+					phone_number_code, phone_number_entered, fax_number, accountinfo.getPk());
+			if(msg.equals("성공"))
+			{
+				jObject.put("msg","success");
+			}
+			else
+			{
+				jObject.put("msg",msg);
+				return jObject.toString();
+			}
 		}
 		else
 		{
-			
-		}*/
+			jObject.put("msg","올바르지 않은 접근입니다");
+			return jObject.toString();
+		}
+
+		if(accountInformationDao.hasPhoneNum(account.getPk()))
+		{
+			jObject.put("hasPhoneNum","true");
+		}
+
+		jObject.put("accountinfo", accountInformationDao.select(account.getPk()));
+		logger.info("jObject = "+jObject.toString());
+
+		return jObject.toString();
 		
-		//submit_type(base, connect, email)
-		//base : image, form_of_business, full_name, company_name, representative, gender, date_of_birth_year, 
-		//       date_of_birth_month, date_of_birth_day, address_sido, sigungu, address_detail
-		//email : email_subscription
 		
-		// connect : cell_phone_number_code, cell_phone_number_middle, cell_phone_number_end
-		//           phone_number_code, phone_number_entered, fax_number
+	}
+	@RequestMapping(value = "/accounts/settings/profile/email", method = RequestMethod.POST, produces = "text/json; charset=utf8")
+	@ResponseBody
+	public String AccountController_profile_post(HttpServletRequest request,
+ 			HttpServletResponse response,
+			 @RequestParam(value = "email_subscription", required = false, defaultValue = "") String email_subscription,
+			 @RequestParam("submit_type") String submit_type
+			) throws IOException, FileUploadException, ParseException  {
+		logger.info("profile email Post Page");
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+
+		logger.info("email_subscription = "+email_subscription);
+		logger.info("submit_type = "+submit_type);
+		
+		if(account == null)
+		{
+			response.sendRedirect("redirect:/accounts/login");
+		}
+	    JSONObject jObject = new JSONObject();
+		AccountInformationInfo accountinfo = accountInformationDao.select(account.getPk());
+		
+		if(accountinfo == null)
+		{
+			accountInformationDao.create(account.getPk());
+			accountinfo = accountInformationDao.select(account.getPk());
+		}
+		
+		if(submit_type.equals("email"))
+		{
+			String msg = accountInformationDao.updateEmail(email_subscription, accountinfo.getPk());
+			if(msg.equals("성공"))
+			{		
+				jObject.put("msg","success");
+			}
+			else
+			{
+				jObject.put("msg",msg);
+				return jObject.toString();
+			}
+		}
+		else
+		{
+			jObject.put("msg","올바르지 않은 접근입니다");
+			return jObject.toString();
+		}
+		
+		jObject.put("accountinfo", accountInformationDao.select(account.getPk()));
+
+		logger.info("jObject = "+jObject.toString());
+		
+		return jObject.toString();
 		
 		
-		
-		return mv;
 	}
 	/**
 	 * 재로그인 페이지
@@ -863,5 +1205,23 @@ public class AccountController {
 		
 		return mv;
 	}
-	
+
+	//메일 전송
+	public String sendMail(String from, String to, String content, String subject) {
+		
+		try {
+			MimeMessage message = mailSender.createMimeMessage();
+			MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
+			messageHelper.setTo(to);
+			messageHelper.setText(content, true);
+			messageHelper.setFrom(from);
+			messageHelper.setSubject(subject);	// 메일제목은 생략이 가능하다
+			
+			mailSender.send(message);
+		} catch(Exception e){
+			System.out.println(e);
+		}
+		
+		return "성공";
+	}
 }

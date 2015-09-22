@@ -740,32 +740,6 @@ public class ProjectController {
 
 	}
 	
-	//지역 리스트(area_pk_
-	@RequestMapping(value = "/getAddress2", method = RequestMethod.POST, produces="application/json;charset=UTF-8")
-	@ResponseBody
-	public String ProjectController_getAddress2(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam("area") String area) {
-		logger.info("getAddress2 AJAX");
-
-
-		logger.info("area = "+area);
-		JSONObject jObject = new JSONObject();
-		area = area.trim();
-		
-		if(area.equals(""))
-		{
-			logger.info(jObject.toString());
-			return jObject.toString();
-		}
-		else
-		{
-			List<String> arealist = areaDetailDao.select(Integer.parseInt(area));
-			jObject.put("arealist", arealist);
-			logger.info(jObject.toString());
-			return jObject.toString();
-		}
-
-	}
 
 	/**
 	 * 프로젝트 찾기

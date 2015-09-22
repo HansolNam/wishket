@@ -71,7 +71,31 @@ public class AreaDao implements AreaIDao {
 			return arealist.get(0);
 		}
 	}
-
+	public String select(String name)
+	{
+		List<Integer> arealist = jdbcTemplate.query("select area.pk from area where area.name = ?",
+		    	new Object[] { name },new RowMapper<Integer>() {
+	    	public Integer mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+	    	{
+	    		return new Integer(resultSet.getInt("pk"));
+	    	}
+	    });
+		
+		if(arealist.size() > 1)
+		{
+			logger.info("지역 호출 에러");
+			return "";
+		}
+		else if(arealist.size() == 0)
+		{
+			logger.info("지역 호출 에러");
+			return "";
+		}
+		else
+		{
+			return arealist.get(0).toString();
+		}
+	}
 	
 	public boolean isExist(int pk)
 	{
@@ -80,6 +104,22 @@ public class AreaDao implements AreaIDao {
 	    	public String mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{
 	    		return new String(resultSet.getString("name"));
+	    	}
+	    });
+		
+		if(arealist.size() > 0)
+			return true;
+		else
+			return false;
+	}
+	
+	public boolean isExist(String name)
+	{
+		List<Integer> arealist = jdbcTemplate.query("select pk from area where name = ?",
+		    	new Object[] { name },new RowMapper<Integer>() {
+	    	public Integer mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+	    	{
+	    		return new Integer(resultSet.getString("pk"));
 	    	}
 	    });
 		

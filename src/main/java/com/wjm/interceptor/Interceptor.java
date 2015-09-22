@@ -29,6 +29,11 @@ public class Interceptor extends HandlerInterceptorAdapter{
                     response.sendRedirect("/wjm/accounts/login"); 
                     return false;
             }
+            else if(account.getAuthorized() == 0)
+            {
+                response.sendRedirect("/wjm/accounts/signup_verify"); 
+                return false;
+            }
             
         } catch (Exception e) {
             e.printStackTrace();

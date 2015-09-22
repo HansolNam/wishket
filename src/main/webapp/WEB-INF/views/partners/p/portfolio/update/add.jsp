@@ -20,7 +20,7 @@
 <meta content="website" property="og:type" />
 <meta content="http://www.wishket.com" property="og:url" />
 <meta content="Wishket" property="og:title" />
-<meta content="http://www.wishket.com/static/img/wishket_logo_256.png"
+<meta content="http://www.wishket.com${pageContext.request.contextPath}/resources/static/img/wishket_logo_256.png"
 	property="og:image" />
 <meta
 	content="위시켓은 기업의 프로젝트와 개발자 &amp; 디자이너를 연결해주는 온라인 아웃소싱 서비스 입니다.
@@ -32,46 +32,46 @@
 	name="naver-site-verification" />
 <title>위시켓(Wishket) · 파트너스 정보 설정</title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
-<link href="/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
+<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
 	type="text/css" />
-<link href="/static/CACHE/css/aa41eeaffc60.css" rel="stylesheet"
+<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/aa41eeaffc60.css" rel="stylesheet"
 	type="text/css" />
-<link href="/static/CACHE/css/35066c295d92.css" rel="stylesheet"
+<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/35066c295d92.css" rel="stylesheet"
 	type="text/css" />
-<!--[if IE 7]><link rel="stylesheet" href="/static/CACHE/css/cc2b8202dedf.css" type="text/css" /><![endif]-->
-<!--[if IE 8]><link rel="stylesheet" href="/static/CACHE/css/0873b963b20a.css" type="text/css" /><![endif]-->
-<link href="/static/django_facebook/css/facebook.css" media="all"
+<!--[if IE 7]><link rel="stylesheet" href="${pageContext.request.contextPath}/resources/static/CACHE/css/cc2b8202dedf.css" type="text/css" /><![endif]-->
+<!--[if IE 8]><link rel="stylesheet" href="${pageContext.request.contextPath}/resources/static/CACHE/css/0873b963b20a.css" type="text/css" /><![endif]-->
+<link href="${pageContext.request.contextPath}/resources/static/django_facebook/css/facebook.css" media="all"
 	rel="stylesheet" />
 <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-<script src="/static/CACHE/js/a52a868564de.js" type="text/javascript"></script>
-<link href="/static/css/floating.css" rel="stylesheet" />
+<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/a52a868564de.js" type="text/javascript"></script>
+<link href="${pageContext.request.contextPath}/resources/static/css/floating.css" rel="stylesheet" />
 <script src="http://wcs.naver.net/wcslog.js" type="text/javascript"></script>
-<link href="/static/css/floating.css" rel="stylesheet" />
+<link href="${pageContext.request.contextPath}/resources/static/css/floating.css" rel="stylesheet" />
 <script src="http://wcs.naver.net/wcslog.js" type="text/javascript"></script>
 <style type="text/css">
 div.ui-tooltip {
 	max-width: 252px !important;
 }
 </style>
-<link href="/static/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-<link href="/static/favicon.ico" rel="icon" type="image/x-icon" />
-<link href="/static/touch-icon-ipad.png" rel="apple-touch-icon"
+<link href="${pageContext.request.contextPath}/resources/static/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+<link href="${pageContext.request.contextPath}/resources/static/favicon.ico" rel="icon" type="image/x-icon" />
+<link href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad.png" rel="apple-touch-icon"
 	sizes="76x76" />
-<link href="/static/touch-icon-iphone-retina.png" rel="apple-touch-icon"
+<link href="${pageContext.request.contextPath}/resources/static/touch-icon-iphone-retina.png" rel="apple-touch-icon"
 	sizes="120x120" />
-<link href="/static/touch-icon-ipad-retina.png" rel="apple-touch-icon"
+<link href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad-retina.png" rel="apple-touch-icon"
 	sizes="152x152" />
-<script src="/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
-<script src="/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
 </head>
 <body class="logged-in partners partners-setting">
 	<div id="fb-root"></div>
-	<script src="/static/django_facebook/js/facebook.js"
+	<script src="${pageContext.request.contextPath}/resources/static/django_facebook/js/facebook.js"
 		type="text/javascript"></script>
 	<script>
     facebookAppId = '593258114025512';
     facebookDefaultScope = ["email", "user_about_me", "user_birthday", "user_website"];
-    staticUrl = '/static/';
+    staticUrl = '${pageContext.request.contextPath}/resources/static/';
     function facebookJSLoaded(){
         FB.init({appId: facebookAppId, status: false, cookie: true, xfbml: true, oauth: true});
     }
@@ -303,7 +303,7 @@ div.ui-tooltip {
 										정수로 입력할 수 있습니다.</span>
 								</div>
 								<div class="process-guide-box" style="margin-left: 150px;">
-									<img src="/static/img/process-guide-success.png"
+									<img src="${pageContext.request.contextPath}/resources/static/img/process-guide-success.png"
 										style="float: left" />
 									<p class="process-guide-text" style="float: left">
 										<strong>[포트폴리오 추가 가이드]</strong><br /> 포트폴리오 이미지는 <strong>가로
@@ -424,7 +424,7 @@ div.ui-tooltip {
 									</div>
 									<div class="modal-body">
 										<p class="text-center bold-font">
-											<img alt="loading" src="/static/img/ajax-loader.gif"
+											<img alt="loading" src="${pageContext.request.contextPath}/resources/static/img/ajax-loader.gif"
 												style="width: 40px; height: 40px;" /><br />
 											<br /> <span id="p5-modal-porfolio-title">이미지 작업 중입니다.</span><br />
 											잠시만 기다려 주세요.
@@ -439,63 +439,8 @@ div.ui-tooltip {
 		</div>
 		<div id="push"></div>
 	</div>
-	<footer class="footer">
-		<div class="footer-inner">
-			<div class="info">
-				<div class="footer-logo">
-					<img class="footer-logo-img"
-						src="/static/img/wishket_footer_logo.svg" />
-				</div>
-				<div class="contact">
-					<i class="fa fa-phone"></i> <a href="tel:82269254849">02-6925-4849</a><br />
-					<i class="fa fa-envelope"></i> <a href="mailto:help@wishket.com">help@wishket.com</a><br />
-					<img src="/static/img/yellow_id.png" style="margin-right: 4px;" /><a
-						href="http://goto.kakao.com/@wishket">Kakao ID 친구추가: @wishket</a><br />
-					고객센터 운영시간: 오전 10시부터 오후 6시까지<small>(공휴일 제외)</small>
-				</div>
-				<address class="address">
-					서울특별시 강남구 테헤란로77길 11-18 창애빌딩 4층<br /> 사업자등록번호: 209-81-57303 / 대표이사:
-					박우범<br />
-				</address>
-				<span class="copyright">© 2014 Wishket, inc.</span>
-			</div>
-			<div class="category">
-				<h5 class="category-heading">위시켓</h5>
-				<ul class="category-list">
-					<li class="category-item"><a href="/service-intro/">서비스 소개</a></li>
-					<li class="category-item"><a href="/client-use/">클라이언트
-							이용방법</a></li>
-					<li class="category-item"><a href="/partners-use/">파트너스
-							이용방법</a></li>
-					<li class="category-item"><a href="/service-fee/">이용요금</a></li>
-					<li class="category-item"><a href="/faq">자주 묻는 질문</a></li>
-				</ul>
-			</div>
-			<div class="category">
-				<h5 class="category-heading">관련 정보</h5>
-				<ul class="category-list">
-					<li class="category-item"><a href="/company-intro/">회사소개</a></li>
-					<li class="category-item"><a href="/terms-of-service/">이용약관</a></li>
-					<li class="category-item"><a
-						href="http://blog.wishket.com/category/media/">보도자료</a></li>
-				</ul>
-			</div>
-			<div class="category">
-				<h5 class="category-heading">관련 링크</h5>
-				<ul class="category-list">
-					<li class="category-item"><a
-						href="http://www.facebook.com/wishket">페이스북</a></li>
-					<li class="category-item"><a href="http://blog.wishket.com">블로그</a></li>
-					<li class="category-item"><a href="http://twitter.com/wishket">트위터</a></li>
-				</ul>
-				<div class="mixpanel-banner">
-					<a href="https://mixpanel.com/f/partner" target="_blank"><img
-						alt="Mobile Analytics"
-						src="//cdn.mxpnl.com/site_media/images/partner/badge_blue.png" /></a>
-				</div>
-			</div>
-		</div>
-	</footer>
+		<jsp:include page="../../../../footer.jsp" flush="false" />
+
 	<script>
     $(document).ready( function() {
         var split = location.href.split('/');

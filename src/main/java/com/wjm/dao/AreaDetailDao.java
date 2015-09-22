@@ -85,4 +85,21 @@ public class AreaDetailDao implements AreaDetailIDao {
 		}
 			return false;
 	}
+	
+	public boolean isExist(String areaname, String areadetailname)
+	{
+		List<String> areadetailnamelist = select(areaname);
+		
+		logger.info("areadetailnamelist = "+areadetailnamelist.toString());
+		
+		if(areadetailnamelist.size() == 0)
+			return false;
+		
+		for(int i =0;i<areadetailnamelist.size();i++)
+		{
+			if(areadetailnamelist.get(i).equals(areadetailname))
+				return true;
+		}
+			return false;
+	}
 }

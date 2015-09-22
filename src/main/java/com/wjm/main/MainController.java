@@ -30,7 +30,7 @@ public class MainController {
 	/**
 	 * Ȩȭ��
 	 */
-	@RequestMapping(value = "/index", method = RequestMethod.GET)
+	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView MainController_index(HttpServletRequest request, ModelAndView mv) {
 		logger.info("index Page");
 		

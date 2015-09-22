@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
+<!DOCTYPE html>
 <!--[if IE 6]><html lang="ko" class="no-js old ie6"><![endif]-->
 <!--[if IE 7]><html lang="ko" class="no-js old ie7"><![endif]-->
 <!--[if IE 8]><html lang="ko" class="no-js old ie8"><![endif]-->
@@ -11,7 +11,6 @@
 <meta charset="utf-8" />
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
-
 <title>외주몬(WJM) · 파트너스 정보 설정</title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
 <link href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
@@ -61,8 +60,7 @@ div.ui-tooltip {
 							<a class="p5-back-nav-link"
 								href="/partners/p/gksthf16112/info/update/">[ 프로필 정보 관리 ]</a> <i
 								class="p5-back-nav-arrow fa fa-caret-right"></i> <a
-								href="/partners/p/gksthf16112/introduction/update/">[ 자기 소개
-								]</a>
+								href="/partners/p/gksthf16112/info/update/">[ 파트너스 정보 ]</a>
 						</p>
 					</div>
 				</div>
@@ -71,9 +69,9 @@ div.ui-tooltip {
 				<div class="sidebar">
 					<div class="sidebar-nav">
 						<ul>
-							<li class=""><a href="/partners/p/gksthf16112/info/update/">파트너스
-									정보</a></li>
 							<li class="active"><a
+								href="/partners/p/gksthf16112/info/update/">파트너스 정보</a></li>
+							<li class=""><a
 								href="/partners/p/gksthf16112/introduction/update/">자기 소개</a></li>
 							<li class=""><a
 								href="/partners/p/gksthf16112/portfolio/update/">포트폴리오</a></li>
@@ -90,79 +88,167 @@ div.ui-tooltip {
 				<div class="content">
 					<div class="content-inner" style="padding-top: 15px;">
 						<section class="p5-partition-title">
-						<h3 class="header-text" style="margin-bottom: 30px">자기 소개 등록</h3>
+							<h3 class="header-text" style="margin-bottom: 30px">파트너스 정보
+								등록</h3>
 						</section>
-						<section>
 						<div class="p5-content-body">
 							<form class="form-horizontal has-validation-callback"
 								id="partners-info-edit-form" method="POST">
 								<input name="csrfmiddlewaretoken" type="hidden"
-									value="6Tjq3XUiP4iuLFxhByMfs0Kty5RN8ZLk" />
+									value="K0aCXjNzfSfjdDu1siojuxEQYZptQDj9" /><span
+									class="help-block"></span>
 								<div class="form-group p5-form-group">
-									<label class="control-label required" for="availability"><span>*</span>자기소개</label>
-									<div class="control-wrapper">
-										<textarea class="form-control" id="p5-description"
-											name="description" rows="12"></textarea>
+									<label class="control-label required p5-box-control-label"
+										for="job"><span>*</span>직군</label>
+									<div class="control-wrapper p5-control-wrapper">
+										<select class="form-control" id="p5-job" name="job"
+											required="required"><option value="">선택</option>
+											<option value="1">개발자</option>
+											<option value="2">디자이너</option></select>
 									</div>
-									<span class="p5-form-self-introduction-information">한글
-										기준 5000자 미만</span>
+								</div>
+								<div class="form-group p5-form-group">
+									<label class="control-label " for="job_subcategory_develop">관심
+										분야</label>
+									<div class="control-wrapper p5-info-check-wrapper">
+										<span class="p5-job-subcategory_develop">개발</span>
+										<div class="checkbox p5-checkbox p5-develop-checkbox">
+											<input id="job_subcategory_develop_1"
+												name="job_subcategory_develop" type="checkbox" value="101" /><label
+												for="job_subcategory_develop_1">웹</label><input
+												id="job_subcategory_develop_2"
+												name="job_subcategory_develop" type="checkbox" value="102" /><label
+												for="job_subcategory_develop_2">애플리케이션</label><input
+												id="job_subcategory_develop_3"
+												name="job_subcategory_develop" type="checkbox" value="103" /><label
+												for="job_subcategory_develop_3">워드프레스</label><input
+												id="job_subcategory_develop_4"
+												name="job_subcategory_develop" type="checkbox" value="104" /><label
+												for="job_subcategory_develop_4">퍼블리싱</label><br />
+											<input id="job_subcategory_develop_5"
+												name="job_subcategory_develop" type="checkbox" value="105" /><label
+												for="job_subcategory_develop_5">일반 소프트웨어</label><input
+												id="job_subcategory_develop_6"
+												name="job_subcategory_develop" type="checkbox" value="106" /><label
+												for="job_subcategory_develop_6">커머스,쇼핑몰</label><input
+												id="job_subcategory_develop_7"
+												name="job_subcategory_develop" type="checkbox" value="107" /><label
+												for="job_subcategory_develop_7">게임</label><input
+												id="job_subcategory_develop_8"
+												name="job_subcategory_develop" type="checkbox" value="108" /><label
+												for="job_subcategory_develop_8">임베디드</label><br />
+											<input id="job_subcategory_develop_9"
+												name="job_subcategory_develop" type="checkbox" value="109" /><label
+												for="job_subcategory_develop_9">기타</label>
+										</div>
+										<span class="p5-job-subcategory_design">디자인</span><br />
+										<div class="checkbox p5-checkbox p5-design-checkbox">
+											<input id="job_subcategory_design_1"
+												name="job_subcategory_design" type="checkbox" value="201" /><label
+												for="job_subcategory_design_1">웹</label><input
+												id="job_subcategory_design_2" name="job_subcategory_design"
+												type="checkbox" value="202" /><label
+												for="job_subcategory_design_2">애플리케이션</label><input
+												id="job_subcategory_design_3" name="job_subcategory_design"
+												type="checkbox" value="203" /><label
+												for="job_subcategory_design_3">제품</label><input
+												id="job_subcategory_design_4" name="job_subcategory_design"
+												type="checkbox" value="204" /><label
+												for="job_subcategory_design_4">프레젠테이션</label><br />
+											<input id="job_subcategory_design_5"
+												name="job_subcategory_design" type="checkbox" value="205" /><label
+												for="job_subcategory_design_5">인쇄물</label><input
+												id="job_subcategory_design_6" name="job_subcategory_design"
+												type="checkbox" value="206" /><label
+												for="job_subcategory_design_6">커머스, 쇼핑몰</label><input
+												id="job_subcategory_design_7" name="job_subcategory_design"
+												type="checkbox" value="207" /><label
+												for="job_subcategory_design_7">로고</label><input
+												id="job_subcategory_design_8" name="job_subcategory_design"
+												type="checkbox" value="208" /><label
+												for="job_subcategory_design_8">그래픽</label><br />
+											<input id="job_subcategory_design_9"
+												name="job_subcategory_design" type="checkbox" value="209" /><label
+												for="job_subcategory_design_9">영상</label><input
+												id="job_subcategory_design_10" name="job_subcategory_design"
+												type="checkbox" value="210" /><label
+												for="job_subcategory_design_10">게임</label><input
+												id="job_subcategory_design_11" name="job_subcategory_design"
+												type="checkbox" value="211" /><label
+												for="job_subcategory_design_11">기타</label>
+										</div>
+									</div>
+								</div>
+								<div class="form-group p5-form-group">
+									<label class="control-label required p5-box-control-label"
+										for="p5-availability"><span>*</span>활동가능성</label>
+									<div class="control-wrapper">
+										<select class="form-control" id="p5-availability"
+											name="availability" required="required"><option
+												selected="selected" value="0">활동가능</option>
+											<option value="1">협의필요</option>
+											<option value="2">활동불가</option></select>
+									</div>
 								</div>
 								<div
 									class="form-group p5-form-group p5-profile-manage-btn-group">
 									<div class="btn-wrapper pull-right">
 										<a class="btn btn-cancel p5-btn-left"
-											href="/partners/p/gksthf16112/introduction/update/">취소</a><input
-											class="btn btn-partners btn-submit p5-btn-submit"
-											type="submit" value="등록" />
+											href="/partners/p/gksthf16112/info/update/" type="button">취소</a>
+										<button class="btn btn-partners btn-submit" type="submit">등록</button>
 									</div>
 								</div>
 							</form>
 						</div>
-						</section>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div id="push"></div>
 	</div>
-			<jsp:include page="../../../../footer.jsp" flush="false" />
-
+	
+		<jsp:include page="../../../../footer.jsp" flush="false" />
 	<script>
-        $(document).ready(function() {
+$(document).ready(function() {
+    $('.content-inner').on('click','.btn-submit', function(e) {
+        e.preventDefault();
 
-            $('.content-inner').on('keyup','#p5-description', function(e) {
-                if($(this).val().length > 5000) {
-                    $('.p5-form-self-introduction-information').css('color','#f33d12');
-                    setTimeout( function() {
-                        $('.p5-form-self-introduction-information').css('color','#999');
-                    }, 600);
-                    $(this).val($(this).val().substr(0,5000));
-                } else {
-                    $('.p5-form-self-introduction-information').css('color','#999');
-                }
-            });
+        if($('#p5-job').val()==""||$('#p5-availability').val()=="") {
+            if($('#p5-job').val()=="") {
+                $('#p5-job').parent().addClass('has-error');
+                $('#p5-job').addClass('error');
+                $('#p5-job').parent().children('.form-error').remove();
+                $('#p5-job').parent().append('<span class="help-block form-error"><i class="fa fa-exclamation-circle"></i> 이 항목은 필수입니다.</span>');
+            } else {
+                $('#p5-job').parent().removeClass('has-error');
+                $('#p5-job').removeClass('error');
+                $('#p5-job').parent().children('.form-error').remove();
+            }
 
-            $('.content-inner').on('click','.btn-submit', function(e) {
+            if($('#p5-availability').val()=="") {
+                $('#p5-availability').parent().addClass('has-error');
+                $('#p5-availability').addClass('error');
+                $('#p5-availability').parent().children('.form-error').remove();
+                $('#p5-availability').parent().append('<span class="help-block form-error"><i class="fa fa-exclamation-circle"></i> 이 항목은 필수입니다.</span>');
+            } else {
+                $('#p5-availability').parent().removeClass('has-error');
+                $('#p5-availability').removeClass('error');
+                $('#p5-availability').parent().children('.form-error').remove();
+            }
+            return 0;
+        }
+        else{
+            $('#partners-info-edit-form').submit();
+        }
 
-                if($('#p5-description').val()=="") {
 
-                    $('#p5-description').parent().addClass('has-error');
-                    $('#p5-description').addClass('error');
-                    $('#p5-description').parent().children('.form-error').remove();
-                    $('#p5-description').parent().append('<span class="help-block form-error"><i class="fa fa-exclamation-circle"></i> 이 항목은 필수입니다.</span>');
-                    return 0;
-                } else {
-                    $('#p5-description').parent().removeClass('has-error');
-                    $('#p5-description').removeClass('error');
-                    $('#p5-description').parent().children('.form-error').remove();
-                }
-
-            });
+    });
 
 
-        });
 
-    </script>
+});
+
+</script>
 	<script type="text/javascript">
   $(function() {
     wishket.init();

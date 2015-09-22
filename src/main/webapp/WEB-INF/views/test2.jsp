@@ -1,565 +1,75 @@
+<table cellspacing="0" cellpadding="0" style="border-radius:5px;min-width:340px;background:#fff;margin:0 auto;margin-left:20px;margin-right:20px;margin-bottom:0px;border:1px solid #ddd;font-size:14px;font-family:AppleSDGothic,나눔고딕,Dotum,Baekmuk Dotum,Undotum,Latin font,sans-serif;line-height:160%">
+            <tbody>
+            <tr>
+                <td style="background:#2d3a45;border-top-left-radius:5px;border-top-right-radius:5px;height:32px;padding-left:15px">
+                    <p style="font-size:11px;color:#333;margin-top:10px">
+                    <span style="font-size:11pt;color:#fff;display:inline;min-height:32px">
+                        <span style="float:left;text-align:left;display:inline;color:#fff;margin-left:0;min-width:300px">
+                            <a href="http://sender.wishket.com/track/click/30008203/www.wishket.com?p=eyJzIjoiNGcydTEzMU1XZ0RTbXRfRDRxeXZubGs3MlNFIiwidiI6MSwicCI6IntcInVcIjozMDAwODIwMyxcInZcIjoxLFwidXJsXCI6XCJodHRwOlxcXC9cXFwvd3d3Lndpc2hrZXQuY29tXCIsXCJpZFwiOlwiYjk5MWJmZDdmMTAzNGU3MDgzNjJhOWQxZWU5YTlkNzVcIixcInVybF9pZHNcIjpbXCJkNjNkYjk1Njc4ODE0M2ZhYTI5NWE1OTZhMGE0NTU0N2UyYjNhZmNmXCJdfSJ9" style="color:#fff;text-decoration:none;font-size:12pt" target="_blank"><span> www.wishket.com</span></a>
 
-<!DOCTYPE html>
-<!--[if IE 6]><html lang="ko" class="no-js old ie6"><![endif]-->
-<!--[if IE 7]><html lang="ko" class="no-js old ie7"><![endif]-->
-<!--[if IE 8]><html lang="ko" class="no-js old ie8"><![endif]-->
-<html class="no-js modern" lang="ko">
-<head
-	prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#">
-<meta charset="utf-8" />
-<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
-<meta content="Wishket Inc,." name="author" />
-<meta
-	content="위시켓은 기업의 프로젝트와 개발자 &amp; 디자이너를 연결해주는 온라인 아웃소싱 서비스 입니다.
-더 이상 지인을 수소문하지 마세요, 위시켓에서 3시간이면 충분합니다."
-	name="description" />
-<meta content="593258114025512" property="fb:app_id" />
-<meta content="website" property="og:type" />
-<meta content="http://www.wishket.com" property="og:url" />
-<meta content="Wishket" property="og:title" />
-<meta content="http://www.wishket.com/static/img/wishket_logo_256.png"
-	property="og:image" />
-<meta
-	content="위시켓은 기업의 프로젝트와 개발자 &amp; 디자이너를 연결해주는 온라인 아웃소싱 서비스 입니다.
-더 이상 지인을 수소문하지 마세요, 위시켓에서 3시간이면 충분합니다."
-	property="og:description" />
-<meta content="k6UITCIVaYG0YtRsN8g4GF2T4qg7Z3M6JD2mLJte_n4"
-	name="google-site-verification" />
-<meta content="d2c8672ef81fcd9ceb62f51232d13aada8512a64"
-	name="naver-site-verification" />
-<title>위시켓(Wishket) · 신원 인증</title>
-<script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
-<link href="/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
-	type="text/css" />
-<link href="/static/CACHE/css/aa41eeaffc60.css" rel="stylesheet"
-	type="text/css" />
-<link href="/static/CACHE/css/35066c295d92.css" rel="stylesheet"
-	type="text/css" />
-<!--[if IE 7]><link rel="stylesheet" href="/static/CACHE/css/cc2b8202dedf.css" type="text/css" /><![endif]-->
-<!--[if IE 8]><link rel="stylesheet" href="/static/CACHE/css/0873b963b20a.css" type="text/css" /><![endif]-->
-<link href="/static/django_facebook/css/facebook.css" media="all"
-	rel="stylesheet" />
-<!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-<script src="/static/CACHE/js/a52a868564de.js" type="text/javascript"></script>
-<link href="/static/css/floating.css" rel="stylesheet" />
-<script src="http://wcs.naver.net/wcslog.js" type="text/javascript"></script>
-<link href="/static/css/p5.css" rel="stylesheet" />
-<link href="/static/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-<link href="/static/favicon.ico" rel="icon" type="image/x-icon" />
-<link href="/static/touch-icon-ipad.png" rel="apple-touch-icon"
-	sizes="76x76" />
-<link href="/static/touch-icon-iphone-retina.png" rel="apple-touch-icon"
-	sizes="120x120" />
-<link href="/static/touch-icon-ipad-retina.png" rel="apple-touch-icon"
-	sizes="152x152" />
-<script src="/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
-<script src="/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
-</head>
-<body class="logged-in client account-setting">
-	<div id="fb-root"></div>
-	<script src="/static/django_facebook/js/facebook.js"
-		type="text/javascript"></script>
-	<script>
-    facebookAppId = '593258114025512';
-    facebookDefaultScope = ["email", "user_about_me", "user_birthday", "user_website"];
-    staticUrl = '/static/';
-    function facebookJSLoaded(){
-        FB.init({appId: facebookAppId, status: false, cookie: true, xfbml: true, oauth: true});
-    }
-    window.fbAsyncInit = facebookJSLoaded;
-    F = new facebookClass(facebookAppId);
-    F.load();
-</script>
-	<div id="wrap">
-		<header class="header">
-			<section class="nav-main navbar" role="navigation"
-				style="background-color: #2d3a45;">
-				<div class="container"
-					style="background-color: #2d3a45; color: #fff;">
-					<div class="nav-inner"
-						style="background-color: #2d3a45; color: #fff;">
-						<div class="navbar-header " style="color: #fff">
-							<a class="navbar-brand" href="/mywishket/">Wishket</a>
-						</div>
-						<nav>
-							<ul class="nav navbar-nav nav-primary">
-								<li class="" style="color: #fff"><a href="/project/add/"
-									style="color: #fff">프로젝트 등록</a></li>
-								<li class="" style="color: #fff"><a href="/project/"
-									style="color: #fff">프로젝트 찾기</a></li>
-								<li class="" style="color: #fff"><a href="/partners/"
-									style="color: #fff">파트너스 목록</a></li>
-							</ul>
-							<ul class="nav navbar-nav navbar-right nav-secondary">
-								<li class="help"><a
-									class="nav-help pull-left how_to_use_button"
-									href="/client-use/"><i class="fa fa-question-circle fa-lg "></i></a></li>
-								<li class="notification"><a
-									class="nav-notification how_to_use_button"
-									href="/accounts/notifications/"><i
-										class="fa fa-bell fa-lg "></i><span
-										class="badge badge-notification">4</span></a></li>
-								<li class="dropdown"><a
-									class="dropdown-toggle how_to_use_button"
-									data-toggle="dropdown" href="#">gksthf16111님 <b
-										class="fa fa-caret-down"></b></a>
-								<ul class="dropdown-menu">
-										<li><a href="/client/info/" tabindex="-1">클라이언트 정보 관리</a></li>
-										<li><a href="/accounts/settings/profile/" tabindex="-1">계정
-												설정</a></li>
-										<li class="divider"></li>
-										<li class="dropdown_li"><a class="dropdown_li"
-											href="/accounts/logout/" tabindex="-1">로그아웃</a></li>
-									</ul></li>
-							</ul>
-						</nav>
-					</div>
-				</div>
-			</section>
-			<section class="nav-sub"
-				style="box-shadow: 1px 1px #bdc4cc; background-color: #dadee2;">
-				<div class="container">
-					<div class="nav-inner">
-						<nav>
-							<ul class="nav navbar-nav">
-								<li class=""><a href="/client/manage/project/submitted/"
-									style="color: #333; font-weight: 500 !important;">검수 중</a></li>
-								<li class=""><a href="/client/manage/recruiting/"
-									style="color: #333; font-weight: 500 !important;">지원자 모집 중</a></li>
-								<li class=""><a href="/client/manage/contract-in-progress/"
-									style="color: #333; font-weight: 500 !important;">진행 중인
-										프로젝트</a></li>
-								<li class=""><a href="/client/manage/past/review-contract/"
-									style="color: #333; font-weight: 500 !important;">종료된 프로젝트</a></li>
-							</ul>
-						</nav>
-					</div>
-				</div>
-			</section>
-		</header>
-		<div class="container">
-			<div id="messages"></div>
-		</div>
-		<div class="page">
-			<div class="page-inner">
-				<div class="sidebar">
-					<div class="user-name-tag">
-						<h3 class="user-name-tag-heading">클라이언트</h3>
-						<div class="user-name-tag-body">
-							<img alt="gksthf16111 사진" class="img-circle user-img"
-								src="/media/profiles/28155_20150918_b8e4e483e337e5dc.png" />
-							<h4 class="username">gksthf16111</h4>
-							<a class="profile-setting" href="/accounts/settings/profile/">기본
-								정보 수정</a>
-						</div>
-					</div>
-					<div class="sidebar-nav">
-						<ul>
-							<li class=""><a class="active"
-								href="/accounts/settings/profile/">기본 정보 수정</a></li>
-							<li class="active"><a
-								href="/accounts/settings/verify_identity/">신원 인증</a></li>
-							<li class=""><a href="/accounts/settings/bank_account/">계좌
-									관리</a></li>
-							<li class=""><a href="/accounts/settings/relogin/">비밀번호
-									변경</a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="content">
-					<div class="content-header action">
-						<h3 class="header-text">
-							신원 인증 <small class="small-text">안전한 프로젝트 계약을 위해
-								신분증(사업자등록증)을 통한 신원 확인이 필요합니다.</small>
-						</h3>
-					</div>
-					<div class="content-inner">
-						<div class="process-guide-box">
-							<img src="/static/img/process-guide-success.png" />
-							<p class="process-guide-title-text">
-								<strong>[ 인증 서류 관리 가이드 ]</strong><br /> 제출한 인증 서류는 <strong
-									style="color: #2099bb"><a href="/privacy/">개인 정보
-										취급 방침</a></strong>에 의해 관리됩니다.
-							</p>
-							<div
-								style="border-top: 1px dashed #dedede; padding-top: 17px; width: 100%;">
-								<div style="float: left;">
-									<img src="/static/img/identity_guide_one.png"
-										style="margin-left: 30px; margin-top: 5px; margin-right: 14px;" />
-								</div>
-								<p style="float: left">
-									<strong>인증 서류 제출</strong><br /> 프로젝트의 계약을 위해, <strong>인증
-										서류 제출이 꼭 필요합니다.</strong><br /> 신원인증 서류는 계약서 작성 시에 이용됩니다.
-								</p>
-								<div style="clear: both"></div>
-							</div>
-							<table style="margin-left: 50px; margin-bottom: 10px;">
-								<tbody>
-									<tr
-										style="border-top: 2px solid #2099bb; border-bottom: 1px solid #e7e7e7">
-										<td
-											style="padding: 11px 20px; font-weight: bold; background: #f5f5f5">법인
-											사업자 , 개인 사업자</td>
-										<td
-											style="padding: 11px 20px; border-right: 1px solid #e7e7e7; border-left: 1px solid #e7e7e7;">사업자
-											등록증</td>
-										<td
-											style="padding: 11px 20px; font-weight: bold; background: #f5f5f5">개인
-											, 팀</td>
-										<td
-											style="padding: 11px 20px; border-right: 1px solid #e7e7e7; border-left: 1px solid #e7e7e7;">주민등록증,
-											여권, 운전면허증</td>
-									</tr>
-								</tbody>
-							</table>
-							<div style="width: 600px;">
-								<div style="float: left;">
-									<img src="/static/img/identity_guide_two.png"
-										style="margin-left: 30px; margin-top: 5px; margin-right: 10px;" />
-								</div>
-								<p style="float: left;">
-									<strong>신원 인증 처리 중</strong><br /> 신원 인증 처리에는 <strong>최대
-										24시간이 소요</strong>됩니다.<br /> 인증 서류에 문제가 있을 경우에는 <strong>위시켓 팀에서
-										이메일로 연락</strong>을 드립니다.
-								</p>
-								<div style="clear: both"></div>
-							</div>
-							<div style="width: 800px; margin-bottom: 15px;">
-								<div style="float: left;">
-									<img src="/static/img/identity_guide_three.png"
-										style="margin-left: 30px; margin-top: 5px; margin-right: 10px;" />
-								</div>
-								<p style="float: left;">
-									<strong>신원 인증 처리 완료</strong><br /> 신원 인증 서류를 변경하실 경우에는 위시켓으로
-									전화를 주시면 신속하게 도와드립니다. <strong>( <i class="fa fa-phone"></i>
-										02-6925-4849)
-									</strong>
-								</p>
-								<div style="clear: both"></div>
-							</div>
-						</div>
-						<form action="/accounts/settings/verify_identity/"
-							class="form-horizontal" enctype="multipart/form-data"
-							method="POST">
-							<input name="csrfmiddlewaretoken" type="hidden"
-								value="v1CvkzdEylYHMo4IA35c483YZ2vjwmvs" />
-							<div class="form-group">
-								<label class="control-label required"><span>*</span> 회사
-									형태</label>
-								<div class="control-wrapper">
-									<input name="business_form_value" type="hidden"
-										value="individual" /><input disabled=""
-										name="form_of_business"
-										style="border: none; width: 100%; margin-top: 5px;"
-										type="text" value="개인" /><span class="help-block">[기본
-										정보 수정] 탭에서 수정 가능합니다.</span>
-								</div>
-							</div>
-							<div class="form-group " id="individual_type_form"
-								style="display: none;">
-								<label class="control-label required" for="form_of_business"><span>*</span>
-									개인 사업자 형태</label>
-								<div class="control-wrapper">
-									<select class="form-control" id="user_type" name="user_type"
-										required="required"><option selected="" value="1">일반
-											과세자</option>
-										<option value="3">간이 과세자</option>
-										<option value="4">부가가치세 면세 사업자</option></select>
-								</div>
-							</div>
-							<div class="form-group p5-portfolio-form-group ">
-								<label class="control-label required p5-box-control-label"
-									for=""><span>*</span>인증 서류 이미지</label>
-								<div class="p5-portfoilo-img-control-wrapper"
-									style="height: 110px;">
-									<div class="control-wrapper">
-										<span class="p5-img-name" id="p5-image-name"
-											style="margin-top: 8px;">제출된 '<strong>인증 서류</strong>'가
-											없습니다.
-										</span> <span class="p5-custom-file-type-input-wrapper"><button
-												class="btn btn-primary p5-custom-file-type-front"
-												style="cursor: pointer; left: 0; margin-left: 0"
-												type="button">
-												<i class="fa fa-plus"></i> 이미지 변경
-											</button>
-											<input accept="image/*" class="p5-custom-file-type-input"
-											id="p5-file-btn" name="image"
-											style="cursor: pointer; left: 0px; margin-left: 0"
-											type="file" />
-										<button class="btn btn-cancel p5-img-del-btn"
-												style="left: 120px;" type="button">삭제</button></span> <span
-											class="help-block" style="position: relative; top: 85px">이미지
-											파일(.jpg, .jpeg, .png, .gif 등)만 업로드할 수 있습니다.</span>
-									</div>
-								</div>
-							</div>
-							<section id="individual_form" style="display: none">
-								<div class="form-group ">
-									<label class="control-label required"><span>*</span> 성명</label>
-									<div class="control-wrapper">
-										<input class="form-control" name="representer_name"
-											type="text" value="남한솔" />
-									</div>
-								</div>
-								<div class="form-group ">
-									<label class="control-label required"><span>*</span> 주소</label>
-									<div class="control-wrapper">
-										<input class="form-control" name="address_detail" type="text"
-											value="서울특별시  ㅁㄴㅇㄹ" />
-									</div>
-								</div>
-								<div class="form-group ">
-									<label class="control-label required"
-										style="padding-left: 60px; *padding-left: 70px; *width: 180px;"><span>*</span>
-										세금계산서용 이메일 주소</label>
-									<div class="control-wrapper">
-										<input class="form-control" name="email_for_tax" type="email" /><span
-											class="help-block">계약서, 세금계산서 등을 받아볼 이메일 주소를 입력해 주세요.</span>
-									</div>
-								</div>
-							</section>
-							<section id="business_form" style="display: none">
-								<div class="form-group ">
-									<label class="control-label required"><span>*</span>
-										사업자 등록 번호</label>
-									<div class="control-wrapper">
-										<input class="form-control" name="identify_number" type="text" /><span
-											class="help-block">'-'를 제외하고 입력해주세요. (10자리)</span>
-									</div>
-								</div>
-								<div class="form-group ">
-									<label class="control-label required"><span>*</span>
-										법인명 (단체명)</label>
-									<div class="control-wrapper">
-										<input class="form-control" name="company_name" type="text"
-											value="" />
-									</div>
-								</div>
-								<div class="form-group ">
-									<label class="control-label required"><span>*</span>
-										대표자명</label>
-									<div class="control-wrapper">
-										<input class="form-control" name="representer_name"
-											type="text" value="" />
-									</div>
-								</div>
-								<div class="form-group ">
-									<label class="control-label required"><span>*</span>
-										사업장 소재지</label>
-									<div class="control-wrapper">
-										<input class="form-control" name="address_detail" type="text"
-											value="서울특별시 강남구 ㅁㄴㅇㄹ" />
-									</div>
-								</div>
-								<div class="form-group ">
-									<label class="control-label required"
-										style="padding-left: 60px; *padding-left: 70px; *width: 180px;"><span>*</span>
-										세금계산서용 이메일 주소</label>
-									<div class="control-wrapper" style="width: 380px;">
-										<input class="form-control" name="email_for_tax"
-											style="width: 340px;" type="email" /><span class="help-block">계약서,
-											세금계산서 등을 받아볼 이메일 주소를 입력해 주세요.</span>
-									</div>
-								</div>
-							</section>
-							<div class="form-group last-form-group"
-								style="padding-top: 15px;">
-								<div style="float: right">
-									<input class="btn btn-partners account-btn"
-										style="margin-right: 10px;" type="submit" value="제출하기" />
-								</div>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div id="push"></div>
-	</div>
-	<footer class="footer">
-		<div class="footer-inner">
-			<div class="info">
-				<div class="footer-logo">
-					<img class="footer-logo-img"
-						src="/static/img/wishket_footer_logo.svg" />
-				</div>
-				<div class="contact">
-					<i class="fa fa-phone"></i> <a href="tel:82269254849">02-6925-4849</a><br />
-					<i class="fa fa-envelope"></i> <a href="mailto:help@wishket.com">help@wishket.com</a><br />
-					<img src="/static/img/yellow_id.png" style="margin-right: 4px;" /><a
-						href="http://goto.kakao.com/@wishket">Kakao ID 친구추가: @wishket</a><br />
-					고객센터 운영시간: 오전 10시부터 오후 6시까지<small>(공휴일 제외)</small>
-				</div>
-				<address class="address">
-					서울특별시 강남구 테헤란로77길 11-18 창애빌딩 4층<br /> 사업자등록번호: 209-81-57303 / 대표이사:
-					박우범<br />
-				</address>
-				<span class="copyright">© 2014 Wishket, inc.</span>
-			</div>
-			<div class="category">
-				<h5 class="category-heading">위시켓</h5>
-				<ul class="category-list">
-					<li class="category-item"><a href="/service-intro/">서비스 소개</a></li>
-					<li class="category-item"><a href="/client-use/">클라이언트
-							이용방법</a></li>
-					<li class="category-item"><a href="/partners-use/">파트너스
-							이용방법</a></li>
-					<li class="category-item"><a href="/service-fee/">이용요금</a></li>
-					<li class="category-item"><a href="/faq">자주 묻는 질문</a></li>
-				</ul>
-			</div>
-			<div class="category">
-				<h5 class="category-heading">관련 정보</h5>
-				<ul class="category-list">
-					<li class="category-item"><a href="/company-intro/">회사소개</a></li>
-					<li class="category-item"><a href="/terms-of-service/">이용약관</a></li>
-					<li class="category-item"><a
-						href="http://blog.wishket.com/category/media/">보도자료</a></li>
-				</ul>
-			</div>
-			<div class="category">
-				<h5 class="category-heading">관련 링크</h5>
-				<ul class="category-list">
-					<li class="category-item"><a
-						href="http://www.facebook.com/wishket">페이스북</a></li>
-					<li class="category-item"><a href="http://blog.wishket.com">블로그</a></li>
-					<li class="category-item"><a href="http://twitter.com/wishket">트위터</a></li>
-				</ul>
-				<div class="mixpanel-banner">
-					<a href="https://mixpanel.com/f/partner" target="_blank"><img
-						alt="Mobile Analytics"
-						src="//cdn.mxpnl.com/site_media/images/partner/badge_blue.png" /></a>
-				</div>
-			</div>
-		</div>
-	</footer>
-	<script>
-    $(document).ready(function(){
-        var type = '개인';
-        if(type == '개인' || type == '팀'){
-            $('#individual_form').css('display', 'block');
-            $('#individual_type_form').remove();
-            $('#business_form').remove();
-        }
-        else if (type == '개인 사업자'){
-            $('#individual_form').remove();
-            $('#individual_type_form').css('display', 'block');
-            $('#business_form').css('display', 'block');
-        }
-        else {
-            $('#individual_form').remove();
-            $('#individual_type_form').remove();
-            $('#business_form').css('display', 'block');
-        }
-    });
-    $('.content-inner').on('change','#p5-file-btn', function() {
-            if($('#p5-file-btn').val()==='') {
-                //donothing
-            } else {
-                $('#p5-image-name').html($(this).val().split(/(\\|\/)/g).pop());
-                image=document.getElementById('p5-file-btn');
+                        </span>
+                        <span style="float:right;text-align:right;padding-right:12px;margin-right:3px;white-space:nowrap;color:#fff;min-height:32px;display:inline-block">
 
+                            <img src="https://ci4.googleusercontent.com/proxy/8y0UF9WeAv4mwPwMh-5sbHCnqg1vrvLWpDM6kH1_BX2AcJ1T2-Qhu7dEEihLmhWLpd4Qd00pHmWeSHk1Al1f4Sfb5QYzyCOYwJD7ogN2B7zIWg=s0-d-e1-ft#http://www.wishket.com/static/img/sub_img/email_facebook.png" style="padding-right:3px" class="CToWUd"><a href="http://sender.wishket.com/track/click/30008203/facebook.com?p=eyJzIjoiLUcyam5STzl2azVwNXIwcGdqUGI3ZGxJMEhzIiwidiI6MSwicCI6IntcInVcIjozMDAwODIwMyxcInZcIjoxLFwidXJsXCI6XCJodHRwOlxcXC9cXFwvZmFjZWJvb2suY29tXFxcL3dpc2hrZXRcIixcImlkXCI6XCJiOTkxYmZkN2YxMDM0ZTcwODM2MmE5ZDFlZTlhOWQ3NVwiLFwidXJsX2lkc1wiOltcImE5NDZjMjIwYTExOWZkZWExMzA4MDU5MWEyYmM3NzQ0YWExNTZhZjJcIl19In0" style="color:#fff;padding-left:3px;font-size:12px;text-decoration:none;margin-right:10px" target="_blank"><span> <span class="il">위시</span><span class="il">켓</span> 페이스북</span></a>
+                            |
+                            <img src="https://ci4.googleusercontent.com/proxy/UqauMW6T2v2s3ZTWhd-L7pPCvyHMqpS1fHYc7AiICuBk_Vyrykffv0nqqwOFOteKKcHBSkj7LCUqtaSx5OozG9LC9Xc2MvBQ1OjSduXN=s0-d-e1-ft#http://www.wishket.com/static/img/sub_img/email_blog.png" style="margin-left:10px" class="CToWUd"><a href="http://sender.wishket.com/track/click/30008203/blog.wishket.com?p=eyJzIjoiTFJoWmxrZVNuQ1I5dlY4azN2UjIzYUtmZTB3IiwidiI6MSwicCI6IntcInVcIjozMDAwODIwMyxcInZcIjoxLFwidXJsXCI6XCJodHRwOlxcXC9cXFwvYmxvZy53aXNoa2V0LmNvbVwiLFwiaWRcIjpcImI5OTFiZmQ3ZjEwMzRlNzA4MzYyYTlkMWVlOWE5ZDc1XCIsXCJ1cmxfaWRzXCI6W1wiZDg0NjRiMjRhN2IxODRjODJkNWQ4YWFjZDg1ODZhYmRkZGM0OTczYlwiXX0ifQ" style="color:#fff;padding-left:7px;display:inline-block;font-size:12px;text-decoration:none;margin-right:3px" target="_blank"><span> <span class="il">위시</span><span class="il">켓</span> 블로그</span></a>
+                        </span>
+                    </span>
+                    </p>
+                </td>
+            </tr>
+            <tr style="background-color:#f8f9fa">
+                <td style="background-color:#f8f9fa;min-height:93px">
+                    <img src="https://ci3.googleusercontent.com/proxy/H93OV72pCIi8qMTUC7FJIKanYyKz0HuhQjoI3pM7OMvWzXYPtexoaqGrikjZM78r4T5Lny943eYYzM3Gj4cg1X1ov32TBU7xL_mhPEzo=s0-d-e1-ft#http://www.wishket.com/static/img/sub_img/email_logo.png" style="margin:35px 286px" class="CToWUd">
+                </td>
+            </tr>
+            <tr>
+                <td style="word-break:break-all;border-bottom:1px solid #cccccc;max-width:640px;margin-bottom:4px;padding:20px;padding-left:25px;padding-bottom:4px;min-height:354px">
+                    <span style="line-height:10%"><br></span>
+                    
+<p style="margin:6px!important;text-align:left!important;color:#333">
+    gksthf1611 님 안녕하세요, <span class="il">위시</span><span class="il">켓</span>입니다.<br>
+    아래의 버튼을 클릭하면 <span class="il">위시</span><span class="il">켓</span> 이메일 인증이 완료됩니다. <br>
+</p>
+<p style="margin:6px!important;padding-top:12px!important;text-align:left!important;color:#333">
+    <a href="http://sender.wishket.com/track/click/30008203/www.wishket.com?p=eyJzIjoieDFKdFNvaTFYNHRJSWF1TGIxWE43MjN1WndjIiwidiI6MSwicCI6IntcInVcIjozMDAwODIwMyxcInZcIjoxLFwidXJsXCI6XCJodHRwOlxcXC9cXFwvd3d3Lndpc2hrZXQuY29tXFxcL2FjY291bnRzXFxcL2FjdGl2YXRlXFxcL2RjMTBlYzU5YWE2MTVmYmI5ZTNkM2ViNjI1OTE1MGJmMWVmMGQ0NjBcXFwvXCIsXCJpZFwiOlwiYjk5MWJmZDdmMTAzNGU3MDgzNjJhOWQxZWU5YTlkNzVcIixcInVybF9pZHNcIjpbXCJiMGNhMzg1NTk2NDFmYjNmMjIwMDUwODVhNjAyNWEzM2E4MTViNjVlXCJdfSJ9" style="color:#fff;background-color:#446eab;border:1px solid #3d6299;border-color:#3d6299;border-radius:2px;text-decoration:none;padding:11px 19px;font-size:17.5px" target="_blank">이메일 주소 인증하기</a>
+    <br><br>
+</p>
+<p style="margin:6px!important;padding-top:12px!important;text-align:left!important;color:#333">
+    위의 버튼을 클릭했는데도 인증이 안 되는 경우, 사용하는 브라우저의 주소창에 아래의 주소를 입력해주세요.<br>
+</p>
+<p style="margin:6px!important;padding-top:12px!important;text-align:left!important;color:#333">
+    <a href="http://www.wishket.com/accounts/activate/dc10ec59aa615fbb9e3d3eb6259150bf1ef0d460/" target="_blank">http://www.wishket.com/<wbr>accounts/activate/<wbr>dc10ec59aa615fbb9e3d3eb6259150<wbr>bf1ef0d460/</a> <br>
+</p>
+<p style="margin:6px!important;padding-top:12px!important;text-align:left!important;color:#333">
+    이메일 주소 인증 절차는 회원님의 계정 정보를 보호하기 위해 꼭 필요합니다.<br>
+    인증된 메일은 <span class="il">위시</span><span class="il">켓</span>을 이용하는 기본 이메일 주소로 사용됩니다.<br>
+    변경을 원하시면 언제든지 고객센터로 연락바랍니다.<br>
+</p>
+<p style="margin:6px!important;padding-top:12px!important;text-align:left!important;color:#333">
+    감사합니다.<br>
+    <span class="il">위시</span><span class="il">켓</span> 드림<br>
+</p>
 
-            }
-        });
-    $('.content-inner').on('click','.p5-img-del-btn',function() {
-        var imgAssignTag = '<button type="button" class="btn btn-primary p5-custom-file-type-front" style="cursor: pointer; left: 0; margin-left: 0"><i class="fa fa-plus"></i>&nbsp;이미지 변경</button>'+
-                '<input id="p5-file-btn" type="file" name="image" class="p5-custom-file-type-input" style="cursor: pointer; left: 0px;  margin-left: 0" accept="image/*">'+
-                '<button type="button" class="btn btn-cancel p5-img-del-btn" style="left: 120px;">삭제</button>';
-        $('#p5-image-name').html("제출된 '<strong>인증 서류</strong>'가 없습니다.");
-        $('#p5-file-btn-1').parent().html(imgAssignTag);
+                    <span style="color:#767676;white-space:nowrap;margin-right:0px;float:right;font-size:9pt">© 2013 Wishket, inc.</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="min-width:640px;height:100px;color:#cccccc;background-color:#2d343f;margin:19px 0 0;display:block;padding:20px;border-bottom-left-radius:5px;border-bottom-right-radius:5px;margin-top:0px!important">
+                    <p style="padding-left:5px;font-size:11pt;color:#333;text-align:left!important">
+                        <span style="white-space:nowrap;margin-right:30px;font-size:10pt;color:#fff!important"><span> 주식회사</span> <span class="il">위시</span><span class="il">켓</span></span><br>
+                        <span style="white-space:nowrap;margin-right:8px;font-size:10pt;color:#fff!important"><span> 이메일 문의:</span> <a href="mailto:help@wishket.com" style="text-decoration:none;color:#fff" target="_blank">help@wishket.com</a></span>
+                        <span style="color:#fff">|</span>
+                        <span style="margin-bottom:6px;white-space:nowrap;margin-right:8px;font-size:10pt;padding-bottom:12px;padding-left:5px;color:#fff!important"><span> 고객센터:</span> <a href="tel:82269254849" style="color:#fff!important;text-decoration:none" target="_blank">02-6925-4849</a></span>
+                        <span style="color:#fff">|</span>
+                        <span style="margin-bottom:6px;white-space:nowrap;margin-right:30px;font-size:10pt;padding-bottom:12px;padding-left:5px;color:#fff!important"><span> 카카오톡:</span> <a></a>@wishket</span>
+                        <br><span style="line-height:70%"><br></span>
 
-        $(this).siblings('input').val("");
-        $(this).parent().siblings('.p5-img-name').html("제출된 '<strong>인증 서류</strong>'가 없습니다.");
-    });
-</script>
-	<script type="text/javascript">
-  $(function() {
-    wishket.init();
-    
-    svgeezy.init(false, 'png');
-  });
-</script>
-	<script>
-
-$( document ).ready(function($) {
-    var p5TotalSubNavigationFlag = 0;
-
-
-	if ( $( window ).width() >= 1200 ) {
-		$( '.p5-side-nav-deactive' ).css( 'display', 'none' );
-	} else  {
-		$( '.p5-side-nav-active' ).css( 'display', 'none' );
-		$( '.p5-side-nav-deactive' ).css( 'display', 'block');
-	}
-
-	$('.content-inner').on('click', '.p5-side-nav-active-btn', function () {
-		$('.p5-side-nav-active').css( 'display', 'none' );
-		$('.p5-side-nav-deactive').css('display','block');
-	});
-
-	$('.content-inner').on('click', '.p5-side-nav-deactive-btn', function () {
-		$('.p5-side-nav-active').css( 'display', 'block' );
-		$('.p5-side-nav-deactive').css('display','none');
-	});
-
-
-    $( window ).scroll ( function () {
-		if ( $(window).scrollTop() > 87 && p5TotalSubNavigationFlag === 0) {
-			setTimeout(function() {
-				$('#p5-total-sub-navigation-wrapper').removeClass('hide fadeOut');
-				$('#p5-total-sub-navigation-wrapper').addClass('fadeInDown');
-			}, 200 );
-			flag = 1;
-
-
-		} else if ( $(window).scrollTop() <= 87 ){
-			p5TotalSubNavigationFlag = 0;
-			$('#p5-total-sub-navigation-wrapper').removeClass('fadeInDown');
-			$('#p5-total-sub-navigation-wrapper').addClass('fadeOut');
-			setTimeout(function() {
-				$('#p5-total-sub-navigation-wrapper').addClass('hide');
-			}, 200 );
-		}
-	});
-});
-
-</script>
-	<script type="text/javascript">
-        var TRS_AIDX = 9287;
-        var TRS_PROTOCOL = document.location.protocol;
-        document.writeln();
-        var TRS_URL = TRS_PROTOCOL + '//' + ((TRS_PROTOCOL=='https:')?'analysis.adinsight.co.kr':'adlog.adinsight.co.kr') +  '/emnet/trs_esc.js';
-        document.writeln("<scr"+"ipt language='javascript' src='" + TRS_URL + "'></scr"+"ipt>");
-        </script>
-	<script type="text/javascript">
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-        ga('create', 'UA-31427125-2', 'wishket.com');
-        var ga_now = new Date();
-        var dimension4Value = "Y" + ga_now.getFullYear()
-                              + "M" + (ga_now.getMonth()+1)
-                              + "D" + (ga_now.getDate())
-                              + "H" + (ga_now.getHours())
-                              + "I" + (ga_now.getMinutes())
-                              + "W" + (ga_now.getDay());
-        ga('require', 'displayfeatures');
-        ga('set', '&uid', '28155');
-        ga('send', 'pageview', {
-          'dimension1': 'user',
-          'dimension2': 'client',
-          'dimension3': '28155',
-          'dimension4': dimension4Value
-        });
-      </script>
-	<script type="text/javascript">(function(e,b){if(!b.__SV){var a,f,i,g;window.mixpanel=b;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===e.location.protocol?"https:":"http:")+'//cdn.mxpnl.com/libs/mixpanel-2.2.min.js';f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f);b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==
-typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.set_once people.increment people.append people.track_charge people.clear_charges people.delete_user".split(" ");for(g=0;g<i.length;g++)f(c,i[g]);
-b._i.push([a,e,d])};b.__SV=1.2}})(document,window.mixpanel||[]);
-mixpanel.init("c7b742deb9d00b4f1c0e1e9e8c5c3115");</script>
-	<script type="text/javascript"> if (!wcs_add) var wcs_add={}; wcs_add["wa"] = "s_3225afd5bb50";if (!_nasa) var _nasa={};wcs.inflow();wcs_do(_nasa);</script>
-</body>
-</html>
+                        <span style="color:#fff!important;white-space:nowrap;margin-right:8px;margin-top:5px;font-size:8pt">
+이 메일은 회원 계정 관련 메일입니다.
+<a href="http://sender.wishket.com/track/click/30008203/www.wishket.com?p=eyJzIjoid1F5WUl1cVo3Vm1lbko0VW9fd2pYN0lLbHVrIiwidiI6MSwicCI6IntcInVcIjozMDAwODIwMyxcInZcIjoxLFwidXJsXCI6XCJodHRwOlxcXC9cXFwvd3d3Lndpc2hrZXQuY29tXFxcL2FjY291bnRzXFxcL3NldHRpbmdzXFxcL3Byb2ZpbGVcXFwvXCIsXCJpZFwiOlwiYjk5MWJmZDdmMTAzNGU3MDgzNjJhOWQxZWU5YTlkNzVcIixcInVybF9pZHNcIjpbXCI1MDJmMmY3NTJiNDNkNDEyZTI1ZjZhMjdlZmY1OTgyYTgyNDRiOTVjXCJdfSJ9" style="text-decoration:none;color:#ffffff" target="_blank"> 수신 설정</a> </span>
+                    </p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
