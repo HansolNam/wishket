@@ -9,10 +9,10 @@ public class EducationInfo {
 	private String major;
 	private String level;
 	private String state;
-	private Timestamp start_date;
-	private Timestamp end_date;
+	private String start_date;
+	private String end_date;
 	public EducationInfo(int pk, int account_pk, String school_name, String major, String level, String state,
-			Timestamp start_date, Timestamp end_date) {
+			String start_date, String end_date) {
 		super();
 		this.pk = pk;
 		this.account_pk = account_pk;
@@ -59,19 +59,17 @@ public class EducationInfo {
 	public void setState(String state) {
 		this.state = state;
 	}
-	public Timestamp getStart_date() {
+	public String getStart_date() {
 		return start_date;
 	}
-	public void setStart_date(Timestamp start_date) {
+	public void setStart_date(String start_date) {
 		this.start_date = start_date;
 	}
-	public Timestamp getEnd_date() {
+	public String getEnd_date() {
 		return end_date;
 	}
-	public void setEnd_date(Timestamp end_date) {
+	public void setEnd_date(String end_date) {
 		this.end_date = end_date;
 	}
-	
-	
 	
 }

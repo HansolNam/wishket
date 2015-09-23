@@ -8,9 +8,9 @@ public class LicenseInfo {
 	private String name;
 	private String publishing_office;
 	private String serial_num;
-	private Timestamp publication_date;
+	private String publication_date;
 	public LicenseInfo(int pk, int account_pk, String name, String publishing_office, String serial_num,
-			Timestamp publication_date) {
+			String publication_date) {
 		super();
 		this.pk = pk;
 		this.account_pk = account_pk;
@@ -49,10 +49,10 @@ public class LicenseInfo {
 	public void setSerial_num(String serial_num) {
 		this.serial_num = serial_num;
 	}
-	public Timestamp getPublication_date() {
+	public String getPublication_date() {
 		return publication_date;
 	}
-	public void setPublication_date(Timestamp publication_date) {
+	public void setPublication_date(String publication_date) {
 		this.publication_date = publication_date;
 	}
 	

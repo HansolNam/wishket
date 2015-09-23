@@ -12,7 +12,7 @@
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
 
-<title>외주몬(WJM) · 파트너스 - gksthf16112</title>
+<title>외주몬(WJM) · 파트너스 - <%=this_account.getId() %></title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
 <link href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
 	type="text/css" />
@@ -59,24 +59,24 @@ div.ui-tooltip {
 					<div class="partners-name-tag">
 						<h3 class="partners-name-tag-heading">파트너스</h3>
 						<div class="partners-name-tag-body">
-							<img alt="gksthf16112 사진" class="p5-partners-img-lg"
+							<img alt="<%=this_account.getId() %> 사진" class="p5-partners-img-lg"
 								src="${pageContext.request.contextPath}/resources/static/img/default_avatar.jpg" />
-							<h4 class="partners-username-bottom">gksthf16112</h4>
+							<h4 class="partners-username-bottom"><%=this_account.getId() %></h4>
 						</div>
 					</div>
 					<div class="sidebar-nav">
 						<ul>
-							<li class=""><a href="/partners/p/gksthf16112/">전체보기</a></li>
-							<li class=""><a href="/partners/p/gksthf16112/introduction/">자기
+							<li class=""><a href="/partners/p/<%=this_account.getId() %>/">전체보기</a></li>
+							<li class=""><a href="/partners/p/<%=this_account.getId() %>/introduction/">자기
 									소개</a></li>
-							<li class=""><a href="/partners/p/gksthf16112/portfolio/">포트폴리오</a></li>
-							<li class=""><a href="/partners/p/gksthf16112/skill/">보유
+							<li class=""><a href="/partners/p/<%=this_account.getId() %>/portfolio/">포트폴리오</a></li>
+							<li class=""><a href="/partners/p/<%=this_account.getId() %>/skill/">보유
 									기술</a></li>
-							<li class=""><a href="/partners/p/gksthf16112/background/">경력,
+							<li class=""><a href="/partners/p/<%=this_account.getId() %>/background/">경력,
 									학력, 자격증</a></li>
 							<li class="active" style="border-top: 1px dashed #dedede"><a
-								href="/partners/p/gksthf16112/evaluation/">클라이언트의 평가</a></li>
-							<li class=""><a href="/partners/p/gksthf16112/history/">위시켓에서
+								href="/partners/p/<%=this_account.getId() %>/evaluation/">클라이언트의 평가</a></li>
+							<li class=""><a href="/partners/p/<%=this_account.getId() %>/history/">위시켓에서
 									진행한 프로젝트</a></li>
 						</ul>
 					</div>
@@ -85,8 +85,8 @@ div.ui-tooltip {
 					<div class="content-inner" style="padding-top: 15px;">
 						<section style="border-bottom:1px dashed #dedede;">
 						<h3 class="p5-profile-head">
-							gksthf16112의 평가<a class="btn btn-primary pull-right"
-								href="/partners/p/gksthf16112/evaluation/update/"
+							<%=this_account.getId() %>의 평가<a class="btn btn-primary pull-right"
+								href="/partners/p/<%=this_account.getId() %>/evaluation/update/"
 								style="margin-top: -7px;">업데이트 하기</a>
 						</h3>
 						<div class="evaluation-head">

@@ -31,7 +31,7 @@ public class CareerDao implements CareerIDao {
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
 	}
 
-	public void create(int account_pk, String company_name, String department, String position, Timestamp start_date, Timestamp end_date)
+	public void create(int account_pk, String company_name, String department, String position, String start_date, String end_date)
 	{
 		jdbcTemplate.update("insert into career (account_pk, company_name, department, position, start_date, end_date) values (?, ?, ?, ?, ?, ?)", new Object[] { account_pk, company_name, department, position, start_date, end_date });
 	}
@@ -46,8 +46,8 @@ public class CareerDao implements CareerIDao {
 		    				, resultSet.getString("company_name")
 		    				, resultSet.getString("department")
 		    				, resultSet.getString("position")
-		    				, resultSet.getTimestamp("start_date")
-		    				, resultSet.getTimestamp("end_date"));
+		    				, resultSet.getString("start_date")
+		    				, resultSet.getString("end_date"));
 		    	}
 		    });
 	}
@@ -63,8 +63,8 @@ public class CareerDao implements CareerIDao {
 	    				, resultSet.getString("company_name")
 	    				, resultSet.getString("department")
 	    				, resultSet.getString("position")
-	    				, resultSet.getTimestamp("start_date")
-	    				, resultSet.getTimestamp("end_date"));
+	    				, resultSet.getString("start_date")
+	    				, resultSet.getString("end_date"));
 	    	}
 	    });
 	}

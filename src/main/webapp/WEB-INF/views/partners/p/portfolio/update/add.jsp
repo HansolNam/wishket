@@ -108,12 +108,12 @@ div.ui-tooltip {
 										class="fa fa-bell fa-lg "></i></a></li>
 								<li class="dropdown"><a
 									class="dropdown-toggle how_to_use_button"
-									data-toggle="dropdown" href="#">gksthf16112님 <b
+									data-toggle="dropdown" href="#"><%=this_account.getId() %>님 <b
 										class="fa fa-caret-down"></b></a>
 								<ul class="dropdown-menu">
-										<li><a href="/partners/p/gksthf16112/" tabindex="-1">내
+										<li><a href="/partners/p/<%=this_account.getId() %>/" tabindex="-1">내
 												프로필 보기</a></li>
-										<li><a href="/partners/p/gksthf16112/info/update/"
+										<li><a href="/partners/p/<%=this_account.getId() %>/info/update/"
 											tabindex="-1">프로필 정보 관리</a></li>
 										<li><a href="/accounts/settings/profile/" tabindex="-1">계정
 												설정</a></li>
@@ -132,7 +132,7 @@ div.ui-tooltip {
 					<div class="nav-inner">
 						<nav>
 							<ul class="nav navbar-nav">
-								<li class=""><a href="/partners/p/gksthf16112/"
+								<li class=""><a href="/partners/p/<%=this_account.getId() %>/"
 									style="color: #333; font-weight: 500 !important;">내 프로필</a></li>
 								<li class=""><a href="/partners/manage/interest/"
 									style="color: #333; font-weight: 500 !important;">관심 프로젝트</a></li>
@@ -160,9 +160,9 @@ div.ui-tooltip {
 					<div class="p5-back-content">
 						<p class="p5-back-nav">
 							<a class="p5-back-nav-link"
-								href="/partners/p/gksthf16112/info/update/">[ 프로필 정보 관리 ]</a> <i
+								href="/partners/p/<%=this_account.getId() %>/info/update/">[ 프로필 정보 관리 ]</a> <i
 								class="p5-back-nav-arrow fa fa-caret-right"></i> <a
-								href="/partners/p/gksthf16112/portfolio/update/">[ 포트폴리오 ]</a>
+								href="/partners/p/<%=this_account.getId() %>/portfolio/update/">[ 포트폴리오 ]</a>
 						</p>
 					</div>
 				</div>
@@ -171,19 +171,19 @@ div.ui-tooltip {
 				<div class="sidebar">
 					<div class="sidebar-nav">
 						<ul>
-							<li class=""><a href="/partners/p/gksthf16112/info/update/">파트너스
+							<li class=""><a href="/partners/p/<%=this_account.getId() %>/info/update/">파트너스
 									정보</a></li>
 							<li class=""><a
-								href="/partners/p/gksthf16112/introduction/update/">자기 소개</a></li>
+								href="/partners/p/<%=this_account.getId() %>/introduction/update/">자기 소개</a></li>
 							<li class="active"><a
-								href="/partners/p/gksthf16112/portfolio/update/">포트폴리오</a></li>
-							<li class=""><a href="/partners/p/gksthf16112/skill/update/">보유
+								href="/partners/p/<%=this_account.getId() %>/portfolio/update/">포트폴리오</a></li>
+							<li class=""><a href="/partners/p/<%=this_account.getId() %>/skill/update/">보유
 									기술</a></li>
 							<li class=""><a
-								href="/partners/p/gksthf16112/background/update/">경력, 학력,
+								href="/partners/p/<%=this_account.getId() %>/background/update/">경력, 학력,
 									자격증</a></li>
 							<li class=""><a
-								href="/partners/p/gksthf16112/evaluation/update/">프로젝트 히스토리</a></li>
+								href="/partners/p/<%=this_account.getId() %>/evaluation/update/">프로젝트 히스토리</a></li>
 						</ul>
 					</div>
 				</div>
@@ -194,7 +194,7 @@ div.ui-tooltip {
 							<h3 class="header-text" style="margin-bottom: 30px">포트폴리오 추가</h3>
 						</section>
 						<section class="p5-section">
-							<form action="/partners/p/gksthf16112/portfolio/update/add/"
+							<form action="/partners/p/<%=this_account.getId() %>/portfolio/update/add/"
 								enctype="multipart/form-data" id="p5-fix-portfolio-form"
 								method="POST">
 								<input name="csrfmiddlewaretoken" type="hidden"
@@ -410,7 +410,7 @@ div.ui-tooltip {
 							</form>
 							<span class="pull-right p5-portfolio-btn-group"><a
 								class="btn btn-cancel p5-btn-left"
-								href="/partners/p/gksthf16112/portfolio/update/"
+								href="/partners/p/<%=this_account.getId() %>/portfolio/update/"
 								id="p5-portfolio-cancel-btn">취소</a>
 							<button class="btn btn-partners p5-submit-portfolio-btn">추가</button></span>
 						</section>

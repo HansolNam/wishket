@@ -32,7 +32,7 @@ public class EducationDao implements EducationIDao {
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
 	}
 
-	public void create(int account_pk,String school_name,String major,String level,String state,Timestamp start_date,Timestamp end_date)
+	public void create(int account_pk,String school_name,String major,String level,String state,String start_date,String end_date)
 	{		
 		jdbcTemplate.update("insert into education (account_pk,school_name,major,level,state,start_date,end_date ) values (?, ?, ?, ?, ?, ?, ?)", new Object[] { account_pk,school_name,major,level,state,start_date,end_date });
 	}
@@ -48,8 +48,8 @@ public class EducationDao implements EducationIDao {
 	    				, resultSet.getString("major")
 	    				, resultSet.getString("level")
 	    				, resultSet.getString("state")
-	    				, resultSet.getTimestamp("start_date")
-	    				, resultSet.getTimestamp("end_date"));
+	    				, resultSet.getString("start_date")
+	    				, resultSet.getString("end_date"));
 	    	}
 	    });
 		
@@ -67,8 +67,8 @@ public class EducationDao implements EducationIDao {
 	    				, resultSet.getString("major")
 	    				, resultSet.getString("level")
 	    				, resultSet.getString("state")
-	    				, resultSet.getTimestamp("start_date")
-	    				, resultSet.getTimestamp("end_date"));
+	    				, resultSet.getString("start_date")
+	    				, resultSet.getString("end_date"));
 	    	}
 	    });
 		

@@ -54,13 +54,13 @@ div.ui-tooltip {
 				<div id="messages">
 					<div class="alert alert-safe alert-warning fade in">
 						프로젝트 지원을 위해 <a ,="" class="alert-link"
-							href="/partners/p/gksthf16112/info/update/">'파트너스 정보'</a>, <a
+							href="/partners/p/<%=this_account.getId() %>/info/update/">'파트너스 정보'</a>, <a
 							class="alert-link"
-							href="/partners/p/gksthf16112/introduction/update/">'자기 소개'</a>,
+							href="/partners/p/<%=this_account.getId() %>/introduction/update/">'자기 소개'</a>,
 						<a ,="" class="alert-link"
-							href="/partners/p/gksthf16112/skill/update/">'보유 기술'</a>, <a
+							href="/partners/p/<%=this_account.getId() %>/skill/update/">'보유 기술'</a>, <a
 							,="" class="alert-link"
-							href="/partners/p/gksthf16112/portfolio/update/">'포트폴리오'</a>을(를)
+							href="/partners/p/<%=this_account.getId() %>/portfolio/update/">'포트폴리오'</a>을(를)
 						입력해주세요.
 					</div>
 				</div>
@@ -70,7 +70,7 @@ div.ui-tooltip {
 					<div class="p5-back-content">
 						<p class="p5-back-nav">
 							<a class="p5-back-nav-link"
-								href="/partners/p/gksthf16112/info/update/">[ 프로필 정보 관리 ]</a> <i
+								href="/partners/p/<%=this_account.getId() %>/info/update/">[ 프로필 정보 관리 ]</a> <i
 								class="p5-back-nav-arrow fa fa-caret-right"></i> [ 포트폴리오 ]
 						</p>
 					</div>
@@ -80,19 +80,19 @@ div.ui-tooltip {
 				<div class="sidebar">
 					<div class="sidebar-nav">
 						<ul>
-							<li class=""><a href="/partners/p/gksthf16112/info/update/">파트너스
+							<li class=""><a href="/partners/p/<%=this_account.getId() %>/info/update/">파트너스
 									정보</a></li>
 							<li class=""><a
-								href="/partners/p/gksthf16112/introduction/update/">자기 소개</a></li>
+								href="/partners/p/<%=this_account.getId() %>/introduction/update/">자기 소개</a></li>
 							<li class="active"><a
-								href="/partners/p/gksthf16112/portfolio/update/">포트폴리오</a></li>
-							<li class=""><a href="/partners/p/gksthf16112/skill/update/">보유
+								href="/partners/p/<%=this_account.getId() %>/portfolio/update/">포트폴리오</a></li>
+							<li class=""><a href="/partners/p/<%=this_account.getId() %>/skill/update/">보유
 									기술</a></li>
 							<li class=""><a
-								href="/partners/p/gksthf16112/background/update/">경력, 학력,
+								href="/partners/p/<%=this_account.getId() %>/background/update/">경력, 학력,
 									자격증</a></li>
 							<li class=""><a
-								href="/partners/p/gksthf16112/evaluation/update/">프로젝트 히스토리</a></li>
+								href="/partners/p/<%=this_account.getId() %>/evaluation/update/">프로젝트 히스토리</a></li>
 						</ul>
 					</div>
 				</div>
@@ -102,7 +102,7 @@ div.ui-tooltip {
 						<section class="p5-partition-title">
 						<h3 class="header-text" style="margin-bottom: 30px">
 							포트폴리오 <span class="pull-right"><a class="btn btn-primary"
-								href="/partners/p/gksthf16112/portfolio"
+								href="/partners/p/<%=this_account.getId() %>/portfolio"
 								style="margin-top: -7px;">내 프로필에서 보기</a></span>
 						</h3>
 						</section>
@@ -129,7 +129,7 @@ div.ui-tooltip {
 						<h4 class="p5-portfolio-title">
 							포트폴리오 (<span id="p5-portfolio-num">0</span>) <a
 								class="btn btn-partners pull-right"
-								href="/partners/p/gksthf16112/portfolio/update/add/"
+								href="/partners/p/<%=this_account.getId() %>/portfolio/update/add/"
 								id="p5-add-portfolio-btn" style="margin-top: -7px;">추가</a>
 						</h4>
 						</section>

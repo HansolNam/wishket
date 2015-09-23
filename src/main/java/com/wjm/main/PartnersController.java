@@ -27,6 +27,9 @@ import com.wjm.dao.TechniqueDao;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
 import com.wjm.models.AccountInformationInfo;
+import com.wjm.models.CareerInfo;
+import com.wjm.models.EducationInfo;
+import com.wjm.models.LicenseInfo;
 import com.wjm.models.TechniqueInfo;
 
 import net.sf.json.JSONObject;
@@ -100,10 +103,9 @@ public class PartnersController {
 		
 		mv.addObject("isSame",isSame(account, this_account));
 
-		
 		AccountInformationInfo this_accountinfo = accountInformationDao.select(this_account.getPk());
-		//List<PortfolioInfo> this_portfoliolist = portfolioDao.select(this_account.getPk());
-		
+		mv.addObject("this_accountinfo",this_accountinfo);
+
 		//자기소개 값
 		if(Validator.hasValue(this_accountinfo.getIntroduction()))
 			mv.addObject("introduction",this_accountinfo.getIntroduction());
@@ -140,7 +142,8 @@ public class PartnersController {
 
 		//url 아이디의 account 가져옴
 		AccountInformationInfo this_accountinfo = accountInformationDao.select(this_account.getPk());
-		
+		mv.addObject("this_accountinfo",this_accountinfo);
+
 		//자기소개 값이 존재한다면
 		if(Validator.hasValue(this_accountinfo.getIntroduction()))
 			{
@@ -149,16 +152,8 @@ public class PartnersController {
 			}
 		
 		mv.addObject("this_account",this_account);
-		
 
-		//같은 계정이라면
-		if(isSame != null)
-		{
-			mv.addObject("isSame",isSame(account, this_account));
-			mv.setViewName("/partners/p/introduction/update");
-		}
-		//같은 계정이 아니라면
-		else
+		mv.addObject("isSame",isSame(account, this_account));
 		mv.setViewName("/partners/p/introduction");
 
 		
@@ -187,7 +182,7 @@ public class PartnersController {
 		//자기 자신이 아닌데 업데이트에 접근하는 경우
 		if(isSame == null)
 		{
-			mv.setViewName("redirect:/partners/p/"+id+"/");
+			mv.setViewName("redirect:/partners/p/"+id+"/introduction");
 			return mv;
 		}
 		
@@ -352,16 +347,17 @@ public class PartnersController {
 		}
 		mv.addObject("this_account",this_account);
 		
+		AccountInformationInfo this_accountinfo = accountInformationDao.select(this_account.getPk());
+		mv.addObject("this_accountinfo",this_accountinfo);
+		
 		String isSame = isSame(account, this_account);
 		mv.addObject("isSame",isSame);
 
 		List<TechniqueInfo> skill = techniqueDao.select(this_account.getPk());
 		mv.addObject("skill",skill);
 		
-		if(isSame == null)
-			mv.setViewName("/partners/p/skill");
-		else
-			mv.setViewName("/partners/p/skill/update");
+		
+		mv.setViewName("/partners/p/skill");
 
 		return mv;
 	}
@@ -391,7 +387,7 @@ public class PartnersController {
 		//자기 자신이 아닌데 업데이트에 접근하는 경우
 		if(isSame == null)
 		{
-			mv.setViewName("redirect:/partners/p/"+id+"/");
+			mv.setViewName("redirect:/partners/p/"+id+"/skill");
 			return mv;
 		}
 		
@@ -714,9 +710,109 @@ public class PartnersController {
 	public ModelAndView PartnersController_p_background(HttpServletRequest request, ModelAndView mv,
 			@PathVariable("id") String id) {
 		logger.info("index Page");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		AccountInfo this_account = accountDao.select(id);
+		
+		if(this_account == null)
+		{
+			mv.setViewName("/partners");
+			return mv;
+		}
+		mv.addObject("this_account",this_account);
+		
+		AccountInformationInfo this_accountinfo = accountInformationDao.select(this_account.getPk());
+		mv.addObject("this_accountinfo",this_accountinfo);
+		
+		String isSame = isSame(account, this_account);
+		mv.addObject("isSame",isSame);
+
+		List<CareerInfo> career = careerDao.select(this_account.getPk());
+		List<EducationInfo> education = educationDao.select(this_account.getPk());
+		List<LicenseInfo> license = licenseDao.select(this_account.getPk());		
+		
+		mv.addObject("career",career);
+		mv.addObject("education",education);
+		mv.addObject("license",license);
+		
+		mv.setViewName("/partners/p/background");
+		
+		return mv;
+	}
+	
+
+	/**
+	 * 경력, 학력, 자격 정보 관리
+	 */
+	@RequestMapping(value = "/partners/p/{id}/background/update", method = RequestMethod.GET)
+	public ModelAndView PartnersController_backgroundupdate(HttpServletRequest request, ModelAndView mv,
+			@PathVariable("id") String id) {
+		logger.info("/partners/p/{id}/background/update Page");
 		
 
-		mv.setViewName("/partners/p/background");
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		AccountInfo this_account = accountDao.select(id);
+				
+		if(this_account == null)
+		{
+			mv.setViewName("redirect:/partners/");
+			return mv;
+		}
+		
+		String isSame = isSame(account, this_account);
+		
+		//자기 자신이 아닌데 업데이트에 접근하는 경우
+		if(isSame == null)
+		{
+			mv.setViewName("redirect:/partners/p/"+id+"/");
+			return mv;
+		}
+		
+		List<CareerInfo> career = careerDao.select(this_account.getPk());
+		List<EducationInfo> education = educationDao.select(this_account.getPk());
+		List<LicenseInfo> license = licenseDao.select(this_account.getPk());		
+		
+		mv.addObject("career",career);
+		mv.addObject("education",education);
+		mv.addObject("license",license);
+		
+		mv.setViewName("/partners/p/background/update");
+
+		
+		return mv;
+	}
+
+	/**
+	 * 경력 정보 추가
+	 */
+	@RequestMapping(value = "/partners/p/{id}/background/update/add/employ", method = RequestMethod.GET)
+	public ModelAndView PartnersController_backgroundupdateaddemploy(HttpServletRequest request, ModelAndView mv,
+			@PathVariable("id") String id) {
+		logger.info("/partners/p/{id}/info/update/add/employ Page");
+		
+		
+		return mv;
+	}
+	/**
+	 * 자격증 정보 추가
+	 */
+	@RequestMapping(value = "/partners/p/{id}/background/update/add/certify", method = RequestMethod.GET)
+	public ModelAndView PartnersController_backgroundupdateaddcertify(HttpServletRequest request, ModelAndView mv,
+			@PathVariable("id") String id) {
+		logger.info("/partners/p/{id}/info/update/add/certify Page");
+		
+		
+		return mv;
+	}
+	/**
+	 * 프로필 정보 추가
+	 */
+	@RequestMapping(value = "/partners/p/{id}/background/update/add/edu", method = RequestMethod.GET)
+	public ModelAndView PartnersController_backgroundupdateaddedu(HttpServletRequest request, ModelAndView mv,
+			@PathVariable("id") String id) {
+		logger.info("/partners/p/{id}/info/update/add/edu Page");
+		
+		
 		return mv;
 	}
 	
@@ -775,51 +871,6 @@ public class PartnersController {
 		return mv;
 	}
 
-	/**
-	 * 경력, 학력, 자격 정보 관리
-	 */
-	@RequestMapping(value = "/partners/p/{id}/background/update", method = RequestMethod.GET)
-	public ModelAndView PartnersController_backgroundupdate(HttpServletRequest request, ModelAndView mv,
-			@PathVariable("id") String id) {
-		logger.info("/partners/p/{id}/info/update Page");
-		
-		
-		return mv;
-	}
-
-	/**
-	 * 경력 정보 추가
-	 */
-	@RequestMapping(value = "/partners/p/{id}/background/update/add/employ", method = RequestMethod.GET)
-	public ModelAndView PartnersController_backgroundupdateaddemploy(HttpServletRequest request, ModelAndView mv,
-			@PathVariable("id") String id) {
-		logger.info("/partners/p/{id}/info/update/add/employ Page");
-		
-		
-		return mv;
-	}
-	/**
-	 * 자격증 정보 추가
-	 */
-	@RequestMapping(value = "/partners/p/{id}/background/update/add/certify", method = RequestMethod.GET)
-	public ModelAndView PartnersController_backgroundupdateaddcertify(HttpServletRequest request, ModelAndView mv,
-			@PathVariable("id") String id) {
-		logger.info("/partners/p/{id}/info/update/add/certify Page");
-		
-		
-		return mv;
-	}
-	/**
-	 * 프로필 정보 추가
-	 */
-	@RequestMapping(value = "/partners/p/{id}/background/update/add/edu", method = RequestMethod.GET)
-	public ModelAndView PartnersController_backgroundupdateaddedu(HttpServletRequest request, ModelAndView mv,
-			@PathVariable("id") String id) {
-		logger.info("/partners/p/{id}/info/update/add/edu Page");
-		
-		
-		return mv;
-	}
 	/**
 	 * 프로젝트 히스토리 관리
 	 */

@@ -4,6 +4,7 @@
 	import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo, com.wjm.models.TechniqueInfo, java.util.List"%>
 <%
 	AccountInfo this_account = (AccountInfo) request.getAttribute("this_account");
+	AccountInformationInfo this_accountinfo = (AccountInformationInfo) request.getAttribute("this_accountinfo");
 	AccountInfo account = (AccountInfo) session.getAttribute("account");
 	List<TechniqueInfo> skill = (List<TechniqueInfo>) request.getAttribute("skill");
 	String isSame = (String) request.getAttribute("isSame");
@@ -89,7 +90,7 @@ div.ui-tooltip {
 						<div class="partners-name-tag-body">
 							<img alt="<%=this_account.getId() %> 사진"
 								class="p5-partners-img-lg"
-								src="${pageContext.request.contextPath}/resources/static/img/default_avatar.jpg" />
+								src="${pageContext.request.contextPath}/<%=this_accountinfo.getProfile_img() %>" />
 							<h4 class="partners-username-bottom"><%=this_account.getId()%></h4>
 						</div>
 					</div>
@@ -122,6 +123,7 @@ div.ui-tooltip {
 						<section>
 						<h3 class="p5-profile-head">
 							<%=this_account.getId()%>의 보유 기술
+						<%if(isSame != null){ %><a class="btn btn-primary pull-right" href="/wjm/partners/p/<%=this_account.getId() %>/skill/update/" style="margin-top: -7px;">업데이트 하기</a><%} %>
 						</h3>
 						</section>
 						<section>

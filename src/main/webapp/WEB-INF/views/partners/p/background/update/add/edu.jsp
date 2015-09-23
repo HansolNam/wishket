@@ -57,9 +57,9 @@ div.ui-tooltip {
 					<div class="p5-back-content">
 						<p class="p5-back-nav">
 							<a class="p5-back-nav-link"
-								href="/partners/p/gksthf16112/info/update/">[ 프로필 정보 관리 ]</a> <i
+								href="/partners/p/<%=this_account.getId() %>/info/update/">[ 프로필 정보 관리 ]</a> <i
 								class="p5-back-nav-arrow fa fa-caret-right"></i> <a
-								href="/partners/p/gksthf16112/background/update/">[ 경력, 학력,
+								href="/partners/p/<%=this_account.getId() %>/background/update/">[ 경력, 학력,
 								자격증 ]</a>
 						</p>
 					</div>
@@ -69,19 +69,19 @@ div.ui-tooltip {
 				<div class="sidebar">
 					<div class="sidebar-nav">
 						<ul>
-							<li class=""><a href="/partners/p/gksthf16112/info/update/">파트너스
+							<li class=""><a href="/partners/p/<%=this_account.getId() %>/info/update/">파트너스
 									정보</a></li>
 							<li class=""><a
-								href="/partners/p/gksthf16112/introduction/update/">자기 소개</a></li>
+								href="/partners/p/<%=this_account.getId() %>/introduction/update/">자기 소개</a></li>
 							<li class=""><a
-								href="/partners/p/gksthf16112/portfolio/update/">포트폴리오</a></li>
-							<li class=""><a href="/partners/p/gksthf16112/skill/update/">보유
+								href="/partners/p/<%=this_account.getId() %>/portfolio/update/">포트폴리오</a></li>
+							<li class=""><a href="/partners/p/<%=this_account.getId() %>/skill/update/">보유
 									기술</a></li>
 							<li class="active"><a
-								href="/partners/p/gksthf16112/background/update/">경력, 학력,
+								href="/partners/p/<%=this_account.getId() %>/background/update/">경력, 학력,
 									자격증</a></li>
 							<li class=""><a
-								href="/partners/p/gksthf16112/evaluation/update/">프로젝트 히스토리</a></li>
+								href="/partners/p/<%=this_account.getId() %>/evaluation/update/">프로젝트 히스토리</a></li>
 						</ul>
 					</div>
 				</div>
@@ -191,7 +191,7 @@ div.ui-tooltip {
 							</div>
 							<span class="pull-right"><a
 								class="btn btn-cancel p5-education-cancel-btn p5-btn-left"
-								href="/partners/p/gksthf16112/background/update/">취소</a>
+								href="/partners/p/<%=this_account.getId() %>/background/update/">취소</a>
 							<button class="btn btn-partners btn-submit" type="button">추가</button></span>
 						</form>
 						</section>

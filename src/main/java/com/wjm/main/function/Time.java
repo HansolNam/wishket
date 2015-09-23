@@ -27,6 +27,11 @@ public class Time {
 		Date date = new Date(timestamp.getTime());
 		return sd2.format(date);
 	}
+	static public String toString5(Timestamp timestamp){
+		SimpleDateFormat sd2 = new SimpleDateFormat ( "yyyy년 MM월");
+		Date date = new Date(timestamp.getTime());
+		return sd2.format(date);
+	}
 	
 	
 	static public Date nextDate(int iDay)
@@ -40,6 +45,15 @@ public class Time {
 	static public Timestamp dateToTimestamp(String today) throws ParseException
 	{
 		SimpleDateFormat sd1 = new SimpleDateFormat ( "yyyy-MM-dd");
+		Date date = sd1.parse(today);
+		Timestamp timestamp = new java.sql.Timestamp(date.getTime());
+		
+		return timestamp;
+	}
+	
+	static public Timestamp dateToTimestamp5(String today) throws ParseException
+	{
+		SimpleDateFormat sd1 = new SimpleDateFormat ( "yyyy년 MM월");
 		Date date = sd1.parse(today);
 		Timestamp timestamp = new java.sql.Timestamp(date.getTime());
 		

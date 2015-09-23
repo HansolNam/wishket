@@ -1,5 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page
+	import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo, com.wjm.models.LicenseInfo, com.wjm.models.EducationInfo, com.wjm.models.CareerInfo, java.util.List"%>
+<%
+	AccountInfo this_account = (AccountInfo) request.getAttribute("this_account");
+	AccountInfo account = (AccountInfo) session.getAttribute("account");
+	List<CareerInfo> career = (List<CareerInfo>) request.getAttribute("career");
+	List<EducationInfo> education = (List<EducationInfo>) request.getAttribute("education");
+	List<LicenseInfo> license = (List<LicenseInfo>) request.getAttribute("license");
+	String isSame = (String) request.getAttribute("isSame");
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <!--[if IE 6]><html lang="ko" class="no-js old ie6"><![endif]-->
@@ -59,7 +69,7 @@ div.ui-tooltip {
 					<div class="p5-back-content">
 						<p class="p5-back-nav">
 							<a class="p5-back-nav-link"
-								href="/partners/p/gksthf16112/info/update/">[ 프로필 정보 관리 ]</a> <i
+								href="/wjm/partners/p/<%=this_account.getId()%>/info/update/">[ 프로필 정보 관리 ]</a> <i
 								class="p5-back-nav-arrow fa fa-caret-right"></i> [ 경력, 학력, 자격증 ]
 						</p>
 					</div>
@@ -69,19 +79,19 @@ div.ui-tooltip {
 				<div class="sidebar">
 					<div class="sidebar-nav">
 						<ul>
-							<li class=""><a href="/partners/p/gksthf16112/info/update/">파트너스
+							<li class=""><a href="/wjm/partners/p/<%=this_account.getId()%>/info/update/">파트너스
 									정보</a></li>
 							<li class=""><a
-								href="/partners/p/gksthf16112/introduction/update/">자기 소개</a></li>
+								href="/wjm/partners/p/<%=this_account.getId()%>/introduction/update/">자기 소개</a></li>
 							<li class=""><a
-								href="/partners/p/gksthf16112/portfolio/update/">포트폴리오</a></li>
-							<li class=""><a href="/partners/p/gksthf16112/skill/update/">보유
+								href="/wjm/partners/p/<%=this_account.getId()%>/portfolio/update/">포트폴리오</a></li>
+							<li class=""><a href="/wjm/partners/p/<%=this_account.getId()%>/skill/update/">보유
 									기술</a></li>
 							<li class="active"><a
-								href="/partners/p/gksthf16112/background/update/">경력, 학력,
+								href="/wjm/partners/p/<%=this_account.getId()%>/background/update/">경력, 학력,
 									자격증</a></li>
 							<li class=""><a
-								href="/partners/p/gksthf16112/evaluation/update/">프로젝트 히스토리</a></li>
+								href="/wjm/partners/p/<%=this_account.getId()%>/evaluation/update/">프로젝트 히스토리</a></li>
 						</ul>
 					</div>
 				</div>
@@ -91,7 +101,7 @@ div.ui-tooltip {
 						<h3 class="header-text" style="margin-bottom: 30px">
 							경력, 학력, 자격증 <span class="pull-right"><a
 								class="btn btn-primary"
-								href="/partners/p/gksthf16112/background"
+								href="/wjm/partners/p/<%=this_account.getId()%>/background"
 								style="margin-top: -7px;">내 프로필에서 보기</a></span>
 						</h3>
 						</section>

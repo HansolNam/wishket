@@ -4,6 +4,7 @@
 	import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo, com.wjm.models.TechniqueInfo, java.util.List"%>
 <%
 	AccountInfo this_account = (AccountInfo) request.getAttribute("this_account");
+AccountInformationInfo this_accountinfo = (AccountInformationInfo) request.getAttribute("this_accountinfo");
 	String introduction = (String) request.getAttribute("introduction");
 	List<TechniqueInfo> skill = (List<TechniqueInfo>) request.getAttribute("skill");
 	String isSame = (String) request.getAttribute("isSame");
@@ -91,7 +92,7 @@ div.ui-tooltip {
 						<div class="partners-name-tag-body">
 							<img alt="<%=this_account.getId() %> 사진"
 								class="p5-partners-img-lg"
-								src="${pageContext.request.contextPath}/resources/static/img/default_avatar.jpg" />
+								src="${pageContext.request.contextPath}/<%=this_accountinfo.getProfile_img() %>" />
 							<h4 class="partners-username-bottom"><%=this_account.getId()%>
 							</h4>
 						</div>

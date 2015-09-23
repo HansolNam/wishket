@@ -108,7 +108,7 @@ public class AccountInformationDao implements AccountInformationIDao {
 		
 		if(accountinfolist.size()>1)
 		{
-			logger.info("기본정보가 2개 혹은 0개, 에러");
+			logger.info("기본정보가 2개, 에러");
 			return null;
 		}
 		else if(accountinfolist.size() == 0)

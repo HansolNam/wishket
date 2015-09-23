@@ -32,7 +32,7 @@ public class LicenseDao implements LicenseIDao {
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
 	}
 
-	public void create(int account_pk, String name, String publishing_office, String serial_num, Timestamp publication_date)
+	public void create(int account_pk, String name, String publishing_office, String serial_num, String publication_date)
 	{
 		jdbcTemplate.update("insert into license (account_pk, name, publishing_office, serial_num, publication_date) values (?, ?, ?, ?, ?)", new Object[] {account_pk, name, publishing_office, serial_num, publication_date });
 	}
@@ -47,7 +47,7 @@ public class LicenseDao implements LicenseIDao {
 	    				, resultSet.getString("name")
 	    				, resultSet.getString("publishing_office")
 	    				, resultSet.getString("serial_num")
-	    				, resultSet.getTimestamp("publication_date"));
+	    				, resultSet.getString("publication_date"));
 	    	}
 	    });
 	}
@@ -63,7 +63,7 @@ public class LicenseDao implements LicenseIDao {
 	    				, resultSet.getString("name")
 	    				, resultSet.getString("publishing_office")
 	    				, resultSet.getString("serial_num")
-	    				, resultSet.getTimestamp("publication_date"));
+	    				, resultSet.getString("publication_date"));
 	    	}
 	    });
 	}
