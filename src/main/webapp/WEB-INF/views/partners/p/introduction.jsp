@@ -1,5 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	<%@ page import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo"%>
+<%
+	AccountInfo this_account = (AccountInfo)request.getAttribute("this_account");
+	String introduction = (String)request.getAttribute("introduction");
+	String isSame = (String)request.getAttribute("isSame");
+	introduction = introduction.replaceAll("\r\n","<br/>");
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <!--[if IE 6]><html lang="ko" class="no-js old ie6"><![endif]-->
@@ -52,14 +59,14 @@ div.ui-tooltip {
 			<div class="container">
 				<div id="messages">
 					<div class="alert alert-safe alert-warning fade in">
-						프로젝트 지원을 위해 <a ,="" class="alert-link"
-							href="/partners/p/gksthf16112/info/update/">'파트너스 정보'</a>, <a
+						프로젝트 지원을 위해 <a class="alert-link"
+							href="/wjm/partners/p/<%=this_account.getId() %>/info/update/">'파트너스 정보'</a>, <a
 							class="alert-link"
-							href="/partners/p/gksthf16112/introduction/update/">'자기 소개'</a>,
-						<a ,="" class="alert-link"
-							href="/partners/p/gksthf16112/skill/update/">'보유 기술'</a>, <a
-							,="" class="alert-link"
-							href="/partners/p/gksthf16112/portfolio/update/">'포트폴리오'</a>을(를)
+							href="/wjm/partners/p/<%=this_account.getId() %>/introduction/update/">'자기 소개'</a>,
+						<a class="alert-link"
+							href="/wjm/partners/p/<%=this_account.getId() %>/skill/update/">'보유 기술'</a>, <a
+							class="alert-link"
+							href="/wjm/partners/p/<%=this_account.getId() %>/portfolio/update/">'포트폴리오'</a>을(를)
 						입력해주세요.
 					</div>
 				</div>
@@ -69,7 +76,7 @@ div.ui-tooltip {
 					<div class="p5-back-content">
 						<p class="p5-back-nav">
 							<a class="p5-back-nav-link"
-								href="/partners/p/gksthf16112/info/update/">[ 프로필 정보 관리 ]</a> <i
+								href="/wjm/partners/p/<%=this_account.getId() %>/info/update/">[ 프로필 정보 관리 ]</a> <i
 								class="p5-back-nav-arrow fa fa-caret-right"></i> [ 자기 소개 ]
 						</p>
 					</div>
@@ -79,49 +86,53 @@ div.ui-tooltip {
 				<div class="sidebar">
 					<div class="sidebar-nav">
 						<ul>
-							<li class=""><a href="/partners/p/gksthf16112/info/update/">파트너스
+							<li class=""><a href="/wjm/partners/p/<%=this_account.getId() %>/info/update/">파트너스
 									정보</a></li>
 							<li class="active"><a
-								href="/partners/p/gksthf16112/introduction/update/">자기 소개</a></li>
+								href="/wjm/partners/p/<%=this_account.getId() %>/introduction/update/">자기 소개</a></li>
 							<li class=""><a
-								href="/partners/p/gksthf16112/portfolio/update/">포트폴리오</a></li>
-							<li class=""><a href="/partners/p/gksthf16112/skill/update/">보유
+								href="/wjm/partners/p/<%=this_account.getId() %>/portfolio/update/">포트폴리오</a></li>
+							<li class=""><a href="/wjm/partners/p/<%=this_account.getId() %>/skill/update/">보유
 									기술</a></li>
 							<li class=""><a
-								href="/partners/p/gksthf16112/background/update/">경력, 학력,
+								href="/wjm/partners/p/<%=this_account.getId() %>/background/update/">경력, 학력,
 									자격증</a></li>
 							<li class=""><a
-								href="/partners/p/gksthf16112/evaluation/update/">프로젝트 히스토리</a></li>
+								href="/wjm/partners/p/<%=this_account.getId() %>/evaluation/update/">프로젝트 히스토리</a></li>
 						</ul>
 					</div>
 				</div>
 				<div class="content">
 					<div class="content-inner" style="padding-top: 15px;">
-						<section class="p5-partition-title">
-						<h3 class="header-text" style="margin-bottom: 30px">
-							자기 소개 <span class="pull-right"><a class="btn btn-primary"
-								href="/partners/p/gksthf16112/introduction"
-								style="margin-top: -7px;">내 프로필에서 보기</a></span>
-						</h3>
-						</section>
-						<section class="p5-last-section p5-introduction-body">
-						<p id="p5-partners-self-introduction"></p>
-						<div class="p5-empty-component-md">
-							<div class="p5-assign-component">
-								<div>
-									<img src="${pageContext.request.contextPath}/resources/static/img/profile_introduction.png" />
-									<div class="p5-no-partners-info-text text-center">
-										등록된 <span class="p5-bold">'자기소개'</span>가 없습니다.
+						<section>
+						
+							<h3 class="p5-profile-head"><%=this_account.getId() %>의 자기 소개</h3>
+							</section>
+						<section class="p5-section"
+							style="text-overflow: ellipsis; overflow: hidden; word-wrap: break-word;">
+							<h4 class="header-text">자기 소개</h4>
+								<% 
+									if(introduction!= null)
+									{
+										out.println(introduction);
+									}
+									else
+									{
+								%>
+								<div class="p5-empty-component-md">
+									<div class="p5-assign-component">
+										<div>
+											<div>
+													입력된 <span class="text-center p5-bold">'자기소개'</span>가 없습니다.
+												</p>
+											</div>
+										</div>
 									</div>
 								</div>
-							</div>
-						</div>
+								<%
+									}
+								%>
 						<p></p>
-						<div class="btn-wrapper pull-right">
-							<a class="btn btn-default btn-submit" href="add/"
-								id="p5-modify-self-introduction"
-								style="margin-bottom: -110px !important;">입력</a>
-						</div>
 						</section>
 					</div>
 				</div>

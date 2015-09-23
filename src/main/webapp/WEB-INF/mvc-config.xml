@@ -104,6 +104,7 @@
            <mapping path="/accounts/password/*"/>
            <mapping path="/accounts/settings/*"/>
            <mapping path="/accounts/notification"/>
+           <mapping path="/accounts/signup_verify"/>
            <mapping path="/client/manage/*"/>
            <mapping path="/client/manage/past/*"/>
            <mapping path="/client/manage/project/*"/>
@@ -112,7 +113,9 @@
            <mapping path="/partners/manage/past/*"/>
            <mapping path="/partners/manage/proposal/*"/>
            <mapping path="/partners/p/background/*"/>
-           <mapping path="/partners/p/background/add/*"/>
+           <mapping path="/partners/p/background/update/add/*"/>
+           <mapping path="/partners/p/info/*"/>
+           <mapping path="/partners/p/info/update/*"/>
            <mapping path="/partners/p/evaluation/*"/>
            <mapping path="/partners/p/introduction/*"/>
            <mapping path="/partners/p/introduction/update/*"/>

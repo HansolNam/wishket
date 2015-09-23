@@ -135,4 +135,14 @@ public class Validator {
 		else
 			return false;
 	}
+	
+	static public boolean hasValue(String input)
+	{
+		if(input == null)
+			return false;
+		else if(input.trim().isEmpty())
+			return false;
+		else
+			return true;
+	}
 }

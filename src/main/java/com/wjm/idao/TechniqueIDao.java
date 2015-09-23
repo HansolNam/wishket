@@ -12,5 +12,5 @@ public interface TechniqueIDao {
 	List<TechniqueInfo> selectAll();
 	List<TechniqueInfo> select(int account_pk);
 	void deleteAll();
-	void delete(int pk);
+	String delete(int pk);
 }

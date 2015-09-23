@@ -106,10 +106,15 @@ public class AccountInformationDao implements AccountInformationIDao {
 		    	}
 		    });
 		
-		if(accountinfolist.size()>1 || accountinfolist.size() == 0)
+		if(accountinfolist.size()>1)
 		{
 			logger.info("기본정보가 2개 혹은 0개, 에러");
 			return null;
+		}
+		else if(accountinfolist.size() == 0)
+		{
+			create(account_pk);
+			return select(account_pk);
 		}
 		else
 			return accountinfolist.get(0);
@@ -638,5 +643,11 @@ public class AccountInformationDao implements AccountInformationIDao {
 						, telephone_num, fax_number, pk });
 		
 		return "성공";
+	}
+	
+	//자기소개 업데이트
+	public void updateIntroduction(int account_pk, String introduction)
+	{
+		jdbcTemplate.update("update account_information set introduction=? where account_pk=?", new Object[] { introduction, account_pk });
 	}
 }

@@ -1,5 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page
+	import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo, com.wjm.models.TechniqueInfo, java.util.List"%>
+<%
+	AccountInfo this_account = (AccountInfo) request.getAttribute("this_account");
+	String introduction = (String) request.getAttribute("introduction");
+	List<TechniqueInfo> skill = (List<TechniqueInfo>) request.getAttribute("skill");
+	String isSame = (String) request.getAttribute("isSame");
+	introduction = introduction.replaceAll("\r\n", "<br/>");
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <!--[if IE 6]><html lang="ko" class="no-js old ie6"><![endif]-->
@@ -12,44 +21,65 @@
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
 
-<title>외주몬(WJM) · 파트너스 - gksthf16112</title>
+<title>외주몬(WJM) · <%=this_account.getAccount_type()%> - <%=this_account.getId()%></title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
-<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
-	type="text/css" />
-<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/aa41eeaffc60.css" rel="stylesheet"
-	type="text/css" />
-<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/35066c295d92.css" rel="stylesheet"
-	type="text/css" />
+<link
+	href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css"
+	rel="stylesheet" type="text/css" />
+<link
+	href="${pageContext.request.contextPath}/resources/static/CACHE/css/aa41eeaffc60.css"
+	rel="stylesheet" type="text/css" />
+<link
+	href="${pageContext.request.contextPath}/resources/static/CACHE/css/35066c295d92.css"
+	rel="stylesheet" type="text/css" />
 <!--[if IE 7]><link rel="stylesheet" href="${pageContext.request.contextPath}/resources/static/CACHE/css/cc2b8202dedf.css" type="text/css" /><![endif]-->
 <!--[if IE 8]><link rel="stylesheet" href="${pageContext.request.contextPath}/resources/static/CACHE/css/0873b963b20a.css" type="text/css" /><![endif]-->
-<link href="${pageContext.request.contextPath}/resources/static/django_facebook/css/facebook.css" media="all"
-	rel="stylesheet" />
+<link
+	href="${pageContext.request.contextPath}/resources/static/django_facebook/css/facebook.css"
+	media="all" rel="stylesheet" />
 <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/a52a868564de.js" type="text/javascript"></script>
-<link href="${pageContext.request.contextPath}/resources/static/css/floating.css" rel="stylesheet" />
+<script
+	src="${pageContext.request.contextPath}/resources/static/CACHE/js/a52a868564de.js"
+	type="text/javascript"></script>
+<link
+	href="${pageContext.request.contextPath}/resources/static/css/floating.css"
+	rel="stylesheet" />
 <script src="http://wcs.naver.net/wcslog.js" type="text/javascript"></script>
-<link href="${pageContext.request.contextPath}/resources/static/css/floating.css" rel="stylesheet" />
+<link
+	href="${pageContext.request.contextPath}/resources/static/css/floating.css"
+	rel="stylesheet" />
 <script src="http://wcs.naver.net/wcslog.js" type="text/javascript"></script>
 <style type="text/css">
 div.ui-tooltip {
 	max-width: 252px !important;
 }
 </style>
-<link href="${pageContext.request.contextPath}/resources/static/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-<link href="${pageContext.request.contextPath}/resources/static/favicon.ico" rel="icon" type="image/x-icon" />
-<link href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad.png" rel="apple-touch-icon"
-	sizes="76x76" />
-<link href="${pageContext.request.contextPath}/resources/static/touch-icon-iphone-retina.png" rel="apple-touch-icon"
-	sizes="120x120" />
-<link href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad-retina.png" rel="apple-touch-icon"
-	sizes="152x152" />
-<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
-<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
+<link
+	href="${pageContext.request.contextPath}/resources/static/favicon.ico"
+	rel="shortcut icon" type="image/x-icon" />
+<link
+	href="${pageContext.request.contextPath}/resources/static/favicon.ico"
+	rel="icon" type="image/x-icon" />
+<link
+	href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad.png"
+	rel="apple-touch-icon" sizes="76x76" />
+<link
+	href="${pageContext.request.contextPath}/resources/static/touch-icon-iphone-retina.png"
+	rel="apple-touch-icon" sizes="120x120" />
+<link
+	href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad-retina.png"
+	rel="apple-touch-icon" sizes="152x152" />
+<script
+	src="${pageContext.request.contextPath}/resources/static/CACHE/js/cb793deb7347.js"
+	type="text/javascript"></script>
+<script
+	src="${pageContext.request.contextPath}/resources/static/CACHE/js/c3617c8217d0.js"
+	type="text/javascript"></script>
 </head>
 <body class="logged-in partners partners-setting">
 	<div id="wrap">
-		
-	<jsp:include page="../header2.jsp" flush="false" />
+
+		<jsp:include page="../header2.jsp" flush="false" />
 		<div class="page">
 			<div class="container">
 				<div id="messages"></div>
@@ -59,24 +89,33 @@ div.ui-tooltip {
 					<div class="partners-name-tag">
 						<h3 class="partners-name-tag-heading">파트너스</h3>
 						<div class="partners-name-tag-body">
-							<img alt="gksthf16112 사진" class="p5-partners-img-lg"
+							<img alt="<%=this_account.getId() %> 사진"
+								class="p5-partners-img-lg"
 								src="${pageContext.request.contextPath}/resources/static/img/default_avatar.jpg" />
-							<h4 class="partners-username-bottom">gksthf16112</h4>
+							<h4 class="partners-username-bottom"><%=this_account.getId()%>
+							</h4>
 						</div>
 					</div>
 					<div class="sidebar-nav">
 						<ul>
-							<li class="active"><a href="/partners/p/gksthf16112/">전체보기</a></li>
-							<li class=""><a href="/partners/p/gksthf16112/introduction/">자기
+							<li class="active"><a
+								href="/wjm/partners/p/<%=this_account.getId()%>/">전체보기</a></li>
+							<li class=""><a
+								href="/wjm/partners/p/<%=this_account.getId()%>/introduction/">자기
 									소개</a></li>
-							<li class=""><a href="/partners/p/gksthf16112/portfolio/">포트폴리오</a></li>
-							<li class=""><a href="/partners/p/gksthf16112/skill/">보유
+							<li class=""><a
+								href="/wjm/partners/p/<%=this_account.getId()%>/portfolio/">포트폴리오</a></li>
+							<li class=""><a
+								href="/wjm/partners/p/<%=this_account.getId()%>/skill/">보유
 									기술</a></li>
-							<li class=""><a href="/partners/p/gksthf16112/background/">경력,
+							<li class=""><a
+								href="/wjm/partners/p/<%=this_account.getId()%>/background/">경력,
 									학력, 자격증</a></li>
 							<li class="" style="border-top: 1px dashed #dedede"><a
-								href="/partners/p/gksthf16112/evaluation/">클라이언트의 평가</a></li>
-							<li class=""><a href="/partners/p/gksthf16112/history/">위시켓에서
+								href="/wjm/partners/p/<%=this_account.getId()%> /evaluation/">클라이언트의
+									평가</a></li>
+							<li class=""><a
+								href="/wjm/partners/p/<%=this_account.getId()%>/history/">위시켓에서
 									진행한 프로젝트</a></li>
 						</ul>
 					</div>
@@ -84,23 +123,28 @@ div.ui-tooltip {
 				<div class="content">
 					<div class="content-inner" style="padding-top: 15px;">
 						<section class="p5-partition-title">
+
 						<h2 class="p5-header-text">
-							<span style="margin-right: 12px;">gksthf16112</span> <span
+							<span style="margin-right: 12px;"><%=this_account.getId()%></span>
+							<span
 								class="label label-md label-partners-availability possible ">활동가능</span>
-							<a class="btn btn-primary pull-right"
-								href="/partners/p/gksthf16112/info/update/"
+							<%
+								if (isSame != null) {
+							%><a class="btn btn-primary pull-right"
+								href="/wjm/partners/p/<%=this_account.getId()%>/info/update/"
 								style="margin-top: 7px;">업데이트 하기</a>
+							<%
+								}
+							%>
 						</h2>
+
 						<h5 class="p5-basic-info-underground">
-							<span><span><i class="fa fa-question"></i></span> <span>직종
-									미입력</span><span class="p5-basic-info-seperator">|</span></span> <span><span><i
-									class="fa fa-user"></i></span> <span>개인</span><span
+							<span> <span>직종 미입력</span><span
+								class="p5-basic-info-seperator">|</span></span> <span> <span>개인</span><span
 								class="p5-basic-info-seperator">|</span></span> <span
-								class="text-muted"><span><i
-									class="fa fa-credit-card"></i></span> <span>신원 미인증</span><span
+								class="text-muted"><span>신원 미인증</span><span
 								class="p5-basic-info-seperator">|</span></span> <span
-								class="text-muted"><span><i class="fa fa-phone"></i></span>
-								<span>연락처 미등록</span></span>
+								class="text-muted"> <span>연락처 미등록</span></span>
 						</h5>
 						</section>
 						<section class="profile-info"
@@ -154,35 +198,73 @@ div.ui-tooltip {
 						<div class="p5-2spanInfo">
 							<div>
 								<h4 class="p5-page-title" style="margin-top: 25px;">
-									자기소개<a class="btn btn-primary pull-right"
-										href="/partners/p/gksthf16112/introduction/update/"
+									자기소개
+									<%
+									if (isSame != null) {
+								%>
+									<a class="btn btn-primary pull-right"
+										href="/wjm/partners/p/<%=this_account.getId()%>/introduction/update/"
 										style="margin-top: -7px;">업데이트 하기</a>
+									<%
+										}
+									%>
 								</h4>
+
+								<%
+									if (introduction != null) {
+								%>
+								<div class="p5-description-hasvalue"
+									style="text-overflow: ellipsis; overflow: hidden; word-wrap: break-word; margin-bottom: 30px;">
+									<%=introduction%>
+								</div>
+								<%
+									if (isSame == null) {
+								%>
+								<div>
+									<h6 class="pull-right" style="margin-top: -20px;">
+										<a class="p5-more-introduction"
+											href="/wjm/partners/p/<%=this_account.getId()%>/introduction/">자기소개
+											더 보기 &gt;</a>
+									</h6>
+								</div>
+								<%
+									}
+								%>
+								<%
+									} else {
+								%>
 								<div class="p5-empty-component-md">
 									<div class="p5-assign-component">
 										<div>
 											<div>
-												<img src="${pageContext.request.contextPath}/resources/static/img/profile_introduction.png" />
-												<p class="p5-no-partners-info-text">
-													입력된 <span class="text-center p5-bold">'자기소개'</span>가 없습니다.
+												입력된 <span class="text-center p5-bold">'자기소개'</span>가 없습니다.
 												</p>
 											</div>
 										</div>
 									</div>
 								</div>
+								<%
+									}
+								%>
 							</div>
 						</div>
 						</section>
 						<section class="p5-partition p5-portfolio-partition">
 						<h4 class="p5-page-title">
-							포트폴리오<a class="btn btn-primary pull-right"
-								href="/partners/p/gksthf16112/portfolio/update/"
+							포트폴리오<%
+							if (isSame != null) {
+						%><a class="btn btn-primary pull-right"
+								href="/wjm/partners/p/<%=this_account.getId()%>/portfolio/update/"
 								style="margin-top: -7px;">업데이트 하기</a>
+							<%
+								}
+							%>
 						</h4>
 						<div class="p5-represent-portfolio-img-list">
 							<span class="p5-portfolio-no-img3"><div>
 									<div>
-										<img src="${pageContext.request.contextPath}/resources/static/img/profile_portfolio.png" />
+										<img
+											src="${pageContext.request.contextPath}/resources/static/img/profile_portfolio.png" />
 										<div class="p5-no-partners-info-text">
 											등록된 <span class="p5-bold">'포트폴리오'</span>가 없습니다.
 										</div>
@@ -192,55 +274,116 @@ div.ui-tooltip {
 						</section>
 						<section class="p5-partition">
 						<h4 class="p5-page-title">
-							보유 기술<a class="btn btn-primary pull-right"
-								href="/partners/p/gksthf16112/skill/update/"
+							보유 기술<%
+							if (isSame != null) {
+						%><a class="btn btn-primary pull-right"
+								href="/wjm/partners/p/<%=this_account.getId()%>/skill/update/"
 								style="margin-top: -7px;">업데이트 하기</a>
+							<%
+								}
+							%>
 						</h4>
-						<span><div class="p5-partners-no-info">
+						<%
+							if (skill == null) {
+						%> <span><div class="p5-partners-no-info">
 								<div class="p5-assign-component">
 									<div>
-										<img src="${pageContext.request.contextPath}/resources/static/img/profile_skill.png" />
+										<img
+											src="${pageContext.request.contextPath}/resources/static/img/profile_skill.png" />
 										<div class="p5-no-partners-info-text text-center">
 											등록된 <span class="text-center p5-bold">'보유 기술'</span>이 없습니다.
 										</div>
 									</div>
 								</div>
-							</div></span></section>
-						<section class="p5-partition">
-						<section>
+							</div></span> 
+							<%
+							 	} 
+							else 
+								{
+							 %>
+						<table
+							class="table table-responsive table-hover p5-haveskill-table">
+							<thead>
+								<tr>
+									<th class="p5-head-title p5-head-title-no-body-tool">종류</th>
+									<th class="p5-head-rating p5-head-raing-no-body-tool">숙련도</th>
+									<th class="p5-head-experience p5-head-experience-no-body-tool">경험</th>
+								</tr>
+							</thead>
+							<tbody>
+							<%
+								for(int i=0;i<skill.size();i++)
+								{
+									if(i == 8) break;
+							%>
+								<tr>
+									<td class="p5-head-title"><%=skill.get(i).getName() %><%if(skill.get(i).getRepresentative() == 1) out.print("<span class='label label-sm label-open'>대표 보유 기술</span>"); %></td>
+									<td class="p5-head-rating"><%=skill.get(i).getSkill() %></td>
+									<td class="p5-head-experience"><%=skill.get(i).getExperience() %></td>
+								</tr>
+							<%
+								}
+							%>
+								
+							</tbody>
+						</table>
+
+						<%
+							if (isSame == null) {
+						%>
+						<div>
+							<h6 class="pull-right" style="margin-top: -20px;">
+								<a class="p5-more-introduction"
+									href="/wjm/partners/p/<%=this_account.getId()%>/skill/">보유기술
+									더 보기 &gt;</a>
+							</h6>
+						</div>
+						<%
+							}
+						%>
+						<%
+							}
+						%> </section>
+						<section class="p5-partition"> <section>
 						<h4 class="p5-page-title">
-							경력<a class="btn btn-primary pull-right"
-								href="/partners/p/gksthf16112/background/update/"
+							경력<%
+							if (isSame != null) {
+						%><a class="btn btn-primary pull-right"
+								href="/wjm/partners/p/<%=this_account.getId()%>/background/update/"
 								style="margin-top: -7px;">업데이트 하기</a>
+							<%
+								}
+							%>
 						</h4>
 						<span><div class="p5-empty-component-md">
 								<div class="p5-assign-component">
 									<div>
-										<img src="${pageContext.request.contextPath}/resources/static/img/profile_employ.png" />
+										<img
+											src="${pageContext.request.contextPath}/resources/static/img/profile_employ.png" />
 										<div class="p5-no-partners-info-text text-center">
 											등록된 <span class="text-center p5-bold">'경력'</span>이 없습니다.
 										</div>
 									</div>
 								</div>
-							</div></span></section>
-						<section>
+							</div></span></section> <section>
 						<h4 class="p5-page-title">학력</h4>
 						<span><div class="p5-empty-component-md">
 								<div class="p5-assign-component">
 									<div>
-										<img src="${pageContext.request.contextPath}/resources/static/img/profile_edu.png" />
+										<img
+											src="${pageContext.request.contextPath}/resources/static/img/profile_edu.png" />
 										<div class="p5-no-partners-info-text text-center">
 											등록된 <span class="text-center p5-bold">'학력'</span>이 없습니다.
 										</div>
 									</div>
 								</div>
-							</div></span></section>
-						<section>
+							</div></span></section> <section>
 						<h4 class="p5-page-title">자격증</h4>
 						<span><div class="p5-empty-component-md">
 								<div class="p5-assign-component">
 									<div>
-										<img src="${pageContext.request.contextPath}/resources/static/img/profile_certify.png" />
+										<img
+											src="${pageContext.request.contextPath}/resources/static/img/profile_certify.png" />
 										<div class="p5-no-partners-info-text text-center">
 											등록된 <span class="text-center p5-bold">'자격증'</span>이 없습니다.
 										</div>
@@ -249,14 +392,20 @@ div.ui-tooltip {
 							</div></span></section></section>
 						<section class="p5-evaluation-list">
 						<h4 class="p5-page-title">
-							평가<a class="btn btn-primary pull-right"
-								href="/partners/p/gksthf16112/evaluation/update/"
+							평가<%
+							if (isSame != null) {
+						%><a class="btn btn-primary pull-right"
+								href="/wjm/partners/p/<%=this_account.getId()%>/evaluation/update/"
 								style="margin-top: -7px; *margin-top: -17px;">업데이트 하기</a>
+							<%
+								}
+							%>
 						</h4>
 						<div class="p5-empty-component-lg">
 							<div class="p5-assign-component">
 								<div>
-									<img src="${pageContext.request.contextPath}/resources/static/img/profile_evaluation.png" />
+									<img
+										src="${pageContext.request.contextPath}/resources/static/img/profile_evaluation.png" />
 									<p class="p5-no-partners-info-text">
 										등록된 <span class="text-center p5-bold">'평가'</span>가 없습니다.
 									</p>
@@ -276,8 +425,11 @@ div.ui-tooltip {
 		href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css"
 		rel="stylesheet" />
 	<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
-	<script src="${pageContext.request.contextPath}/resources/static/js/Chart.js"></script>
-	<script src="${pageContext.request.contextPath}/resources/static/js/excanvas.js" type="text/javascript"></script>
+	<script
+		src="${pageContext.request.contextPath}/resources/static/js/Chart.js"></script>
+	<script
+		src="${pageContext.request.contextPath}/resources/static/js/excanvas.js"
+		type="text/javascript"></script>
 	<script>
     $(document).ready(function() {
         $('.content-inner').on('click','.p5-review-show-btn', function(e) {

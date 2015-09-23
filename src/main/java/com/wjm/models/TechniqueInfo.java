@@ -8,13 +8,15 @@ public class TechniqueInfo {
 	private String name;
 	private String experience;
 	private String skill;
-	public TechniqueInfo(int pk, int account_pk, String name, String experience, String skill) {
+	private int representative;
+	public TechniqueInfo(int pk, int account_pk, String name, String experience, String skill, int representative) {
 		super();
 		this.pk = pk;
 		this.account_pk = account_pk;
 		this.name = name;
 		this.experience = experience;
 		this.skill = skill;
+		this.representative = representative;
 	}
 	public int getPk() {
 		return pk;
@@ -46,7 +48,12 @@ public class TechniqueInfo {
 	public void setSkill(String skill) {
 		this.skill = skill;
 	}
+	public int getRepresentative() {
+		return representative;
+	}
+	public void setRepresentative(int representative) {
+		this.representative = representative;
+	}
 	
 	
-
 }

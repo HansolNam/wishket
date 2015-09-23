@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo"%>
+<%@ page import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo, com.wjm.models.TechniqueInfo"%>
 <%
 	AccountInfo this_account = (AccountInfo)request.getAttribute("this_account");
 	AccountInfo account = (AccountInfo)session.getAttribute("account");
 	String isSame = (String)request.getAttribute("isSame");
+	TechniqueInfo skill = (TechniqueInfo)request.getAttribute("skill");
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -95,10 +96,10 @@ div.ui-tooltip {
 				<div class="content">
 					<div class="content-inner" style="padding-top: 15px;">
 						<section class="p5-partition-title">
-						<h3 class="header-text" style="margin-bottom: 30px">보유 기술 추가</h3>
+						<h3 class="header-text" style="margin-bottom: 30px">보유 기술 수정</h3>
 						</section>
 						<section>
-						<form id="skill_add_form" method="POST">
+						<form id="skill_edit_form" method="POST">
 							<input name="csrfmiddlewaretoken" type="hidden"
 								value="6Tjq3XUiP4iuLFxhByMfs0Kty5RN8ZLk" />
 							<div class="form-group p5-form-group">
@@ -147,7 +148,7 @@ div.ui-tooltip {
 							<span class="pull-right"><a
 								class="btn btn-cancel p5-btn-left"
 								href="/wjm/partners/p/<%=this_account.getId()%>/skill/update/" type="button">취소</a>
-							<button class="btn btn-partners btn-submit">등록</button></span>
+							<button class="btn btn-partners btn-submit">수정</button></span>
 						</form>
 						</section>
 					</div>
@@ -160,6 +161,44 @@ div.ui-tooltip {
 
 	<script>
 $(document).ready(function() {
+	
+	var name = "<%=skill.getName() %>";
+	var experience = "<%=skill.getExperience() %>";
+	var skill = "<%=skill.getSkill()%>";
+	
+	if(name != null && name != "")
+	{
+		document.getElementById("p5-skill-name-input").value = name;
+	}
+	
+	if(experience != null && experience != "")
+	{
+		var len = document.getElementById("p5-partners-experience-select").length;
+		for(var i=0; i<len; i++)
+		{
+			if(document.getElementById("p5-partners-experience-select").options[i].value == experience)
+			{
+				document.getElementById("p5-partners-experience-select").options[i].selected = true;
+				break;
+			}
+		}
+		$('#p5-partners-experience-select').selecter('refresh');
+	}
+
+	if(skill != null && skill != "")
+	{
+		var len = document.getElementById("p5-partners-rating-select").length;
+		for(var i=0; i<len; i++)
+		{
+			if(document.getElementById("p5-partners-rating-select").options[i].value == skill)
+			{
+				document.getElementById("p5-partners-rating-select").options[i].selected = true;
+				break;
+			}
+		}
+		$('#p5-partners-rating-select').selecter('refresh');
+	}
+	
     $('.content-inner').on('click','.btn-submit', function(e) {
         e.preventDefault();
 
@@ -199,8 +238,8 @@ $(document).ready(function() {
         else{            
             $.ajax({
     		    type: "POST",
-    		    url: "/wjm/partners/p/<%=account.getId()%>/skill/update/add",
-    		    data: $('#skill_add_form').serialize(),  // 폼데이터 직렬화
+    		    url: "/wjm/partners/p/<%=account.getId()%>/skill/update/edit/<%=skill.getPk()%>",
+    		    data: $('#skill_edit_form').serialize(),  // 폼데이터 직렬화
     		    dataType: "json",   // 데이터타입을 JSON형식으로 지정
     		    contentType: "application/x-www-form-urlencoded; charset=utf-8",
     		    success: function(data) { // data: 백엔드에서 requestBody 형식으로 보낸 데이터를 받는다.

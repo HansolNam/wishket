@@ -1,5 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	<%@ page import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo"%>
+<%
+	AccountInfo account = (AccountInfo)session.getAttribute("account");
+	String introduction = (String)request.getAttribute("introduction");
+	introduction = introduction.replaceAll("\r\n","<br/>");
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <!--[if IE 6]><html lang="ko" class="no-js old ie6"><![endif]-->
@@ -11,8 +17,7 @@
 <meta charset="utf-8" />
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
-
-<title>외주몬(WJM) · 파트너스 - gksthf16112</title>
+<title>외주몬(WJM) · 파트너스 정보 설정</title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
 <link href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
 	type="text/css" />
@@ -48,62 +53,102 @@ div.ui-tooltip {
 </head>
 <body class="logged-in partners partners-setting">
 	<div id="wrap">
-		
 		<jsp:include page="../../../header2.jsp" flush="false" />
 		<div class="page">
 			<div class="container">
-				<div id="messages"></div>
+				<div id="messages">
+					<div class="alert alert-safe alert-warning fade in">
+						프로젝트 지원을 위해 <a class="alert-link"
+							href="/wjm/partners/p/<%=account.getId() %>/info/update/">'파트너스 정보'</a>, <a
+							class="alert-link"
+							href="/wjm/partners/p/<%=account.getId() %>/introduction/update/">'자기 소개'</a>,
+						<a class="alert-link"
+							href="/wjm/partners/p/<%=account.getId() %>/skill/update/">'보유 기술'</a>, <a
+							class="alert-link"
+							href="/wjm/partners/p/<%=account.getId() %>/portfolio/update/">'포트폴리오'</a>을(를)
+						입력해주세요.
+					</div>
+				</div>
+			</div>
+			<div class="page">
+				<div class="container">
+					<div class="p5-back-content">
+						<p class="p5-back-nav">
+							<a class="p5-back-nav-link"
+								href="/wjm/partners/p/<%=account.getId() %>/info/update/">[ 프로필 정보 관리 ]</a> <i
+								class="p5-back-nav-arrow fa fa-caret-right"></i> [ 자기 소개 ]
+						</p>
+					</div>
+				</div>
 			</div>
 			<div class="page-inner">
 				<div class="sidebar">
-					<div class="partners-name-tag">
-						<h3 class="partners-name-tag-heading">파트너스</h3>
-						<div class="partners-name-tag-body">
-							<img alt="gksthf16112 사진" class="p5-partners-img-lg"
-								src="${pageContext.request.contextPath}/resources/static/img/default_avatar.jpg" />
-							<h4 class="partners-username-bottom">gksthf16112</h4>
-						</div>
-					</div>
 					<div class="sidebar-nav">
 						<ul>
-							<li class=""><a href="/partners/p/gksthf16112/">전체보기</a></li>
+							<li class=""><a href="/wjm/partners/p/<%=account.getId() %>/info/update/">파트너스
+									정보</a></li>
 							<li class="active"><a
-								href="/partners/p/gksthf16112/introduction/">자기 소개</a></li>
-							<li class=""><a href="/partners/p/gksthf16112/portfolio/">포트폴리오</a></li>
-							<li class=""><a href="/partners/p/gksthf16112/skill/">보유
+								href="/wjm/partners/p/<%=account.getId() %>/introduction/update/">자기 소개</a></li>
+							<li class=""><a
+								href="/wjm/partners/p/<%=account.getId() %>/portfolio/update/">포트폴리오</a></li>
+							<li class=""><a href="/wjm/partners/p/<%=account.getId() %>/skill/update/">보유
 									기술</a></li>
-							<li class=""><a href="/partners/p/gksthf16112/background/">경력,
-									학력, 자격증</a></li>
-							<li class="" style="border-top: 1px dashed #dedede"><a
-								href="/partners/p/gksthf16112/evaluation/">클라이언트의 평가</a></li>
-							<li class=""><a href="/partners/p/gksthf16112/history/">위시켓에서
-									진행한 프로젝트</a></li>
+							<li class=""><a
+								href="/wjm/partners/p/<%=account.getId() %>/background/update/">경력, 학력,
+									자격증</a></li>
+							<li class=""><a
+								href="/wjm/partners/p/<%=account.getId() %>/evaluation/update/">프로젝트 히스토리</a></li>
 						</ul>
 					</div>
 				</div>
 				<div class="content">
 					<div class="content-inner" style="padding-top: 15px;">
-						<section>
-						<h3 class="p5-profile-head">
-							gksthf16112의 자기 소개 <a class="btn btn-primary pull-right"
-								href="/partners/p/gksthf16112/introduction/update/"
-								style="margin-top: -7px;">업데이트 하기</a>
+						<section class="p5-partition-title">
+						<h3 class="header-text" style="margin-bottom: 30px">
+							자기 소개 <span class="pull-right">
+							
+							<a class="btn btn-primary"
+								href="/wjm/partners/p/<%=account.getId() %>"
+								style="margin-top: -7px;">내 프로필에서 보기</a>
+								</span>
 						</h3>
 						</section>
-						<section class="p5-section"
-							style="text-overflow: ellipsis;overflow: hidden;word-wrap: break-word;">
-						<h4 class="header-text">자기 소개</h4>
-						<div class="p5-empty-component-md">
-							<div class="p5-assign-component">
-								<div>
-									<img src="${pageContext.request.contextPath}/resources/static/img/profile_introduction.png" />
-									<div class="p5-no-partners-info-text text-center">
-										등록된 <span class="p5-bold">'자기소개'</span>가 없습니다.
+						<section class="p5-last-section p5-introduction-body">
+						<p id="p5-partners-self-introduction"></p>
+						
+								<% 
+									if(introduction!= null)
+									{
+										
+								%>
+								<div class="p5-description-hasvalue"
+									style="text-overflow: ellipsis; overflow: hidden; word-wrap: break-word; margin-bottom: 30px;">
+									<%=introduction%>
+								</div>
+								<%
+									}
+									else
+									{
+								%>
+								<div class="p5-empty-component-md">
+									<div class="p5-assign-component">
+										<div>
+											<div>
+													입력된 <span class="text-center p5-bold">'자기소개'</span>가 없습니다.
+												</p>
+											</div>
+										</div>
 									</div>
 								</div>
-							</div>
-						</div>
+								<%
+									}
+								%>
 						<p></p>
+						<div class="btn-wrapper pull-right">
+							<a class="btn btn-default btn-submit" href="/wjm/partners/p/<%=account.getId() %>/introduction/update/add"
+								id="p5-modify-self-introduction"
+								style="margin-bottom: -110px !important;">입력</a>
+						</div>
 						</section>
 					</div>
 				</div>
@@ -111,8 +156,8 @@ div.ui-tooltip {
 		</div>
 		<div id="push"></div>
 	</div>
-			<jsp:include page="../../../footer.jsp" flush="false" />
-
+	
+	<jsp:include page="../../../footer.jsp" flush="false" />
 	<script type="text/javascript">
   $(function() {
     wishket.init();
@@ -165,40 +210,5 @@ $( document ).ready(function($) {
 });
 
 </script>
-	<script type="text/javascript">
-        var TRS_AIDX = 9287;
-        var TRS_PROTOCOL = document.location.protocol;
-        document.writeln();
-        var TRS_URL = TRS_PROTOCOL + '//' + ((TRS_PROTOCOL=='https:')?'analysis.adinsight.co.kr':'adlog.adinsight.co.kr') +  '/emnet/trs_esc.js';
-        document.writeln("<scr"+"ipt language='javascript' src='" + TRS_URL + "'></scr"+"ipt>");
-        </script>
-	<script type="text/javascript">
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-        ga('create', 'UA-31427125-2', 'wishket.com');
-        var ga_now = new Date();
-        var dimension4Value = "Y" + ga_now.getFullYear()
-                              + "M" + (ga_now.getMonth()+1)
-                              + "D" + (ga_now.getDate())
-                              + "H" + (ga_now.getHours())
-                              + "I" + (ga_now.getMinutes())
-                              + "W" + (ga_now.getDay());
-        ga('require', 'displayfeatures');
-        ga('set', '&uid', '28338');
-        ga('send', 'pageview', {
-          'dimension1': 'user',
-          'dimension2': 'partners',
-          'dimension3': '28338',
-          'dimension4': dimension4Value
-        });
-      </script>
-	<script type="text/javascript">(function(e,b){if(!b.__SV){var a,f,i,g;window.mixpanel=b;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===e.location.protocol?"https:":"http:")+'//cdn.mxpnl.com/libs/mixpanel-2.2.min.js';f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f);b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==
-typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.set_once people.increment people.append people.track_charge people.clear_charges people.delete_user".split(" ");for(g=0;g<i.length;g++)f(c,i[g]);
-b._i.push([a,e,d])};b.__SV=1.2}})(document,window.mixpanel||[]);
-mixpanel.init("c7b742deb9d00b4f1c0e1e9e8c5c3115");</script>
-	<script type="text/javascript"> if (!wcs_add) var wcs_add={}; wcs_add["wa"] = "s_3225afd5bb50";if (!_nasa) var _nasa={};wcs.inflow();wcs_do(_nasa);</script>
 </body>
 </html>
