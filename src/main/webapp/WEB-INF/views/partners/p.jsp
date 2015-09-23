@@ -2,11 +2,17 @@
 	pageEncoding="UTF-8"%>
 <%@ page
 	import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo, com.wjm.models.TechniqueInfo, java.util.List"%>
+<%@ page
+	import="com.wjm.models.LicenseInfo, com.wjm.models.EducationInfo, com.wjm.models.CareerInfo"%>
+
 <%
 	AccountInfo this_account = (AccountInfo) request.getAttribute("this_account");
-AccountInformationInfo this_accountinfo = (AccountInformationInfo) request.getAttribute("this_accountinfo");
+	AccountInformationInfo this_accountinfo = (AccountInformationInfo) request.getAttribute("this_accountinfo");
 	String introduction = (String) request.getAttribute("introduction");
 	List<TechniqueInfo> skill = (List<TechniqueInfo>) request.getAttribute("skill");
+	List<CareerInfo> career = (List<CareerInfo>) request.getAttribute("career");
+	List<EducationInfo> education = (List<EducationInfo>) request.getAttribute("education");
+	List<LicenseInfo> license = (List<LicenseInfo>) request.getAttribute("license");
 	String isSame = (String) request.getAttribute("isSame");
 	introduction = introduction.replaceAll("\r\n", "<br/>");
 %>
@@ -359,8 +365,6 @@ div.ui-tooltip {
 						<span><div class="p5-empty-component-md">
 								<div class="p5-assign-component">
 									<div>
-										<img
-											src="${pageContext.request.contextPath}/resources/static/img/profile_employ.png" />
 										<div class="p5-no-partners-info-text text-center">
 											등록된 <span class="text-center p5-bold">'경력'</span>이 없습니다.
 										</div>
@@ -371,8 +375,6 @@ div.ui-tooltip {
 						<span><div class="p5-empty-component-md">
 								<div class="p5-assign-component">
 									<div>
-										<img
-											src="${pageContext.request.contextPath}/resources/static/img/profile_edu.png" />
 										<div class="p5-no-partners-info-text text-center">
 											등록된 <span class="text-center p5-bold">'학력'</span>이 없습니다.
 										</div>
@@ -383,8 +385,6 @@ div.ui-tooltip {
 						<span><div class="p5-empty-component-md">
 								<div class="p5-assign-component">
 									<div>
-										<img
-											src="${pageContext.request.contextPath}/resources/static/img/profile_certify.png" />
 										<div class="p5-no-partners-info-text text-center">
 											등록된 <span class="text-center p5-bold">'자격증'</span>이 없습니다.
 										</div>

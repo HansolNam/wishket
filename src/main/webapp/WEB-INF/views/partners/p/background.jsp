@@ -149,9 +149,10 @@ div.ui-tooltip {
 									</div>
 								</div>
 							</div></span> <%
- 	} else {
- 		for (int i = 0; i < career.size(); i++) {
- %>
+						 	} 
+							else {
+							
+						%>
 						<table class="table table-responsive table-hover p5-career-table">
 							<thead>
 								<tr>
@@ -164,19 +165,25 @@ div.ui-tooltip {
 								</tr>
 							</thead>
 							<tbody>
+						<%
+						 		for (int i = 0; i < career.size(); i++) {
+						 %>
+						
 								<tr>
 									<td
-										class="p5-head-companyName p5-head-companyName-no-body-tool">aaa</td>
-									<td class="p5-head-work p5-head-work-no-body-tool">aaa</td>
-									<td class="p5-head-position p5-head-position-no-body-tool">aaa</td>
-									<td class="p5-head-period p5-head-period-no-body-tool">2004년
-										3월~<br>2012년 8월
+										class="p5-head-companyName p5-head-companyName-no-body-tool"><%=career.get(i).getCompany_name() %></td>
+									<td class="p5-head-work p5-head-work-no-body-tool"><%=career.get(i).getDepartment() %></td>
+									<td class="p5-head-position p5-head-position-no-body-tool"><%=career.get(i).getPosition() %></td>
+									<td class="p5-head-period p5-head-period-no-body-tool"><%=career.get(i).getStart_date() %>~<br><%=career.get(i).getEnd_date() %>
 									</td>
 								</tr>
+						<%
+								}
+						%>
+						
 							</tbody>
 						</table>
 						<%
-							}
 							}
 						%> </section>
 						<section>
@@ -192,10 +199,11 @@ div.ui-tooltip {
 										</div>
 									</div>
 								</div>
-							</div></span> <%
- 	} else {
- 		for (int i = 0; i < education.size(); i++) {
- %>
+							</div></span> 
+						<%
+						 	} else {
+						 		
+						%>
 						<table
 							class="table table-responsive table-hover p5-educationalHistory-table">
 							<thead>
@@ -209,23 +217,29 @@ div.ui-tooltip {
 								</tr>
 							</thead>
 							<tbody>
+						<%
+						 		for (int i = 0; i < education.size(); i++) {
+						 %>
+						
 								<tr>
-									<td class="p5-head-schoolName p5-head-schoolName-no-body-tool">waa</td>
+									<td class="p5-head-schoolName p5-head-schoolName-no-body-tool"><%=education.get(i).getSchool_name() %></td>
 									<td
-										class="p5-head-schoolClassification p5-head-schoolClassification-no-body-tool">대학교</td>
-									<td class="p5-head-major p5-head-major-no-body-tool">aa</td>
-									<td class="p5-head-status p5-head-status-no-body-tool">휴학</td>
+										class="p5-head-schoolClassification p5-head-schoolClassification-no-body-tool"><%=education.get(i).getLevel()%></td>
+									<td class="p5-head-major p5-head-major-no-body-tool"><%=education.get(i).getMajor() %></td>
+									<td class="p5-head-status p5-head-status-no-body-tool"><%=education.get(i).getState() %></td>
 									<td
-										class="p5-head-entranceDate p5-head-entranceDate-no-body-tool">2006년
-										8월</td>
+										class="p5-head-entranceDate p5-head-entranceDate-no-body-tool"><%=education.get(i).getStart_date() %></td>
 									<td
-										class="p5-head-graduationDate p5-head-graduationDate-no-body-tool">2010년
-										9월</td>
+										class="p5-head-graduationDate p5-head-graduationDate-no-body-tool"><%=education.get(i).getEnd_date() %></td>
 								</tr>
+						<%
+								}
+						
+						%>
 							</tbody>
 						</table>
+						
 						<%
-							}
 							}
 						%> </section>
 						<section>
@@ -242,9 +256,9 @@ div.ui-tooltip {
 									</div>
 								</div>
 							</div></span> <%
- 	} else {
- 		for (int i = 0; i < education.size(); i++) {
- %>
+ 							} 
+							else {
+						%>
 						<table
 							class="table table-responsive table-hover p5-certificate-table">
 							<thead>
@@ -256,24 +270,32 @@ div.ui-tooltip {
 								</tr>
 							</thead>
 							<tbody>
+						<%
+						
+						 		for (int i = 0; i < license.size(); i++) {
+						 %>
+						
 								<tr>
 									<td
-										class="p5-head-classification p5-head-classification-no-body-tool">sdff</td>
+										class="p5-head-classification p5-head-classification-no-body-tool"><%=license.get(i).getName() %></td>
 									<td
-										class="p5-head-certificateNumber p5-head-certificateNumber-no-body-tool">sdf</td>
+										class="p5-head-certificateNumber p5-head-certificateNumber-no-body-tool"><%=license.get(i).getSerial_num() %></td>
 									<td
-										class="p5-head-certificateDepartment p5-head-certificateDepartment-no-body-tool">sdf</td>
+										class="p5-head-certificateDepartment p5-head-certificateDepartment-no-body-tool"><%=license.get(i).getPublishing_office() %></td>
 									<td
-										class="p5-head-certificateDate p5-head-certificateDate-no-body-tool">2001년
-										4월 19일</td>
+										class="p5-head-certificateDate p5-head-certificateDate-no-body-tool"><%=license.get(i).getPublication_date() %></td>
 								</tr>
+
+							<%
+									}
+						
+						%>
 							</tbody>
 						</table>
-
+						
 						<%
-							}
-							}
-						%> </section>
+								}
+							%> </section>
 					</div>
 				</div>
 			</div>

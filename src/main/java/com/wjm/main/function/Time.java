@@ -94,4 +94,12 @@ public class Time {
 		return new Timestamp(now);
 	}
 	
+	static public boolean isCompare(Timestamp a, Timestamp b)
+	{
+		if(a.getTime()<=b.getTime())
+			return true;
+		else
+			return false;
+	}
+	
 }

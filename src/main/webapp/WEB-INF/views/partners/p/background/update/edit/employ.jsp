@@ -1,10 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	<%@ page import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo"%>
+	<%@ page import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo, com.wjm.models.CareerInfo"%>
+	<%@ page import="java.sql.Timestamp, com.wjm.main.function.Time"%>
+
 <%
 	AccountInfo this_account = (AccountInfo)request.getAttribute("this_account");
 	AccountInfo account = (AccountInfo)session.getAttribute("account");
 	String isSame = (String)request.getAttribute("isSame");
+	CareerInfo career = (CareerInfo)request.getAttribute("career");
+	Timestamp temp = Time.dateToTimestamp5(career.getStart_date());
+	int date_hired_year = temp.getYear()+1900;
+	int date_hired_month = temp.getMonth();
+	temp = Time.dateToTimestamp5(career.getEnd_date());
+	int date_retired_year = temp.getYear()+1900;
+	int date_retired_month = temp.getMonth();
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -96,11 +105,11 @@ div.ui-tooltip {
 				<div class="content">
 					<div class="content-inner" style="padding-top: 15px;">
 						<section class="p5-partition-title">
-						<h3 class="header-text" style="margin-bottom: 30px">경력 추가</h3>
+						<h3 class="header-text" style="margin-bottom: 30px">경력 수정</h3>
 						</section>
 						<section>
 						<h4>경력</h4>
-						<form id="employment_add_form" method="POST">
+						<form id="employment_edit_form" method="POST">
 							<input name="csrfmiddlewaretoken" type="hidden"
 								value="6Tjq3XUiP4iuLFxhByMfs0Kty5RN8ZLk" />
 							<div class="form-group p5-portfolio-form-group">
@@ -281,8 +290,8 @@ div.ui-tooltip {
         			
         			
         		    type: "POST",
-        		    url: "/wjm/partners/p/<%=account.getId()%>/background/update/add/employ",
-        		    data: $('#employment_add_form').serialize(),  // 폼데이터 직렬화
+        		    url: "/wjm/partners/p/<%=account.getId()%>/background/update/edit/employ/<%=career.getPk()%>",
+        		    data: $('#employment_edit_form').serialize(),  // 폼데이터 직렬화
         		    dataType: "json",   // 데이터타입을 JSON형식으로 지정
         		    contentType: "application/x-www-form-urlencoded; charset=utf-8",
         		    success: function(data) { // data: 백엔드에서 requestBody 형식으로 보낸 데이터를 받는다.
@@ -291,6 +300,9 @@ div.ui-tooltip {
         		    if(messages == "success")
         		        	{location.href="/wjm/partners/p/<%=account.getId()%>/background/update"; 
         		        	}
+        		    else if(messages == "error")
+		        	{location.href="/wjm/partners/p/<%=account.getId()%>/background"; 
+		        	}
         		        else
         		        	{
         					$("#messages").html("<div class='alert alert-warning fade in'>"+messages+"</div>");
@@ -321,7 +333,79 @@ div.ui-tooltip {
 $( document ).ready(function($) {
     var p5TotalSubNavigationFlag = 0;
 
+	var company_name = "<%=career.getCompany_name() %>";
+	var division = "<%=career.getDepartment() %>";
+	var position = "<%=career.getPosition() %>";
+	var date_hired_year = "<%=date_hired_year%>";
+	var date_hired_month = "<%=date_hired_month%>";
+	var date_retired_year = "<%=date_retired_year%>";
+	var date_retired_month = "<%=date_retired_month%>";
 
+	if(company_name != null && company_name != "")
+	{
+		document.getElementById("p5-company-name-input").value = company_name;
+	}
+	if(division != null && division != "")
+	{
+		document.getElementById("p5-division-input").value = division;
+	}
+	if(position != null && position != "")
+	{
+		document.getElementById("p5-position-input").value = position;
+	}
+	if(date_hired_year != null && date_hired_year != "")
+	{
+		var len = document.getElementById("p5-hired-year-select").length;
+		for(var i=0; i<len; i++)
+		{
+			if(document.getElementById("p5-hired-year-select").options[i].value == date_hired_year)
+			{
+				document.getElementById("p5-hired-year-select").options[i].selected = true;
+				break;
+			}
+		}
+		$('#p5-hired-year-select').selecter('refresh');
+	}
+	if(date_hired_month != null && date_hired_month != "")
+	{
+		var len = document.getElementById("p5-hired-month-select").length;
+		for(var i=0; i<len; i++)
+		{
+			if(document.getElementById("p5-hired-month-select").options[i].value == date_hired_month)
+			{
+				document.getElementById("p5-hired-month-select").options[i].selected = true;
+				break;
+			}
+		}
+		$('#p5-hired-month-select').selecter('refresh');
+	}
+	if(date_retired_year != null && date_retired_year != "")
+	{
+		var len = document.getElementById("p5-retired-year-select").length;
+		for(var i=0; i<len; i++)
+		{
+			if(document.getElementById("p5-retired-year-select").options[i].value == date_retired_year)
+			{
+				document.getElementById("p5-retired-year-select").options[i].selected = true;
+				break;
+			}
+		}
+		$('#p5-retired-year-select').selecter('refresh');
+	}
+	if(date_retired_month != null && date_retired_month != "")
+	{
+		var len = document.getElementById("p5-retired-month-select").length;
+		for(var i=0; i<len; i++)
+		{
+			if(document.getElementById("p5-retired-month-select").options[i].value == date_retired_month)
+			{
+				document.getElementById("p5-retired-month-select").options[i].selected = true;
+				break;
+			}
+		}
+		$('#p5-retired-month-select').selecter('refresh');
+	}
+	
 	if ( $( window ).width() >= 1200 ) {
 		$( '.p5-side-nav-deactive' ).css( 'display', 'none' );
 	} else  {

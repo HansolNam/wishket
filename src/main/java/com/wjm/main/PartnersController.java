@@ -1,5 +1,6 @@
 package com.wjm.main;
 
+import java.text.ParseException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -758,7 +759,8 @@ public class PartnersController {
 			mv.setViewName("redirect:/partners/");
 			return mv;
 		}
-		
+		mv.addObject("this_account",this_account);
+
 		String isSame = isSame(account, this_account);
 		
 		//자기 자신이 아닌데 업데이트에 접근하는 경우
@@ -790,8 +792,235 @@ public class PartnersController {
 			@PathVariable("id") String id) {
 		logger.info("/partners/p/{id}/info/update/add/employ Page");
 		
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		AccountInfo this_account = accountDao.select(id);
+				
+		if(this_account == null)
+		{
+			mv.setViewName("redirect:/partners/");
+			return mv;
+		}
+		mv.addObject("this_account",this_account);
+		
+		String isSame = isSame(account, this_account);
+		mv.addObject("isSame",isSame);
+
+		//자기 자신이 아닌데 업데이트에 접근하는 경우
+		if(isSame == null)
+		{
+			mv.setViewName("redirect:/partners/p/"+id+"/");
+			return mv;
+		}
+		
+		mv.setViewName("/partners/p/background/update/add/employ");
 		
 		return mv;
+	}
+	
+
+	/**
+	 * 경력 정보 추가 처리
+	 */
+	@RequestMapping(value = "/partners/p/{id}/background/update/add/employ", method = RequestMethod.POST, produces = "text/json; charset=utf8")
+	@ResponseBody
+	public String PartnersController_backgroundupdateaddemploy_post(HttpServletRequest request, 
+			HttpServletResponse response,
+			@PathVariable("id") String id,
+			@RequestParam("company_name") String company_name,
+			@RequestParam("division") String division,
+			@RequestParam("position") String position,
+			@RequestParam("date_hired_year") String date_hired_year,
+			@RequestParam("date_hired_month") String date_hired_month,
+			@RequestParam("date_retired_year") String date_retired_year,
+			@RequestParam("date_retired_month") String date_retired_month) {
+		
+		logger.info("/partners/p/{id}/info/update/add/employ Page");
+		
+		logger.info("id = "+id);
+		logger.info("company_name = "+company_name);
+		logger.info("division = "+division);
+		logger.info("position = "+position);
+		logger.info("date_hired_year = "+date_hired_year);
+		logger.info("date_hired_month = "+date_hired_month);
+		logger.info("date_retired_year = "+date_retired_year);
+		logger.info("date_retired_month = "+date_retired_month);
+		JSONObject jObject = new JSONObject();
+		
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		AccountInfo this_account = accountDao.select(id);
+				
+		if(this_account == null)
+		{
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+
+		String isSame = isSame(account, this_account);
+
+		//자기 자신이 아닌데 업데이트에 접근하는 경우
+		if(isSame == null)
+		{
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+
+		String result;
+		try{
+		result = careerDao.createCareer(this_account.getPk(),company_name,division,position,
+				date_hired_year,date_hired_month,date_retired_year,date_retired_month);
+		}
+		catch(ParseException e)
+		{
+			logger.info(e.toString());
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+		logger.info("result = "+result);
+		if(result.equals("성공"))
+			jObject.put("messages", "success");
+		else
+		{
+			jObject.put("messages",result);
+		}
+		
+		return jObject.toString();
+	}
+	
+
+	/**
+	 * 경력 정보 수정
+	 */
+	@RequestMapping(value = "/partners/p/{id}/background/update/edit/employ/{pk}", method = RequestMethod.GET)
+	public ModelAndView PartnersController_backgroundupdateeditemploy(HttpServletRequest request, ModelAndView mv,
+			@PathVariable("id") String id,
+			@PathVariable("pk") String pk) {
+		logger.info("/partners/p/{id}/info/update/edit/employ Page");
+		
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		AccountInfo this_account = accountDao.select(id);
+				
+		if(this_account == null)
+		{
+			mv.setViewName("redirect:/partners/");
+			return mv;
+		}
+		mv.addObject("this_account",this_account);
+		
+		String isSame = isSame(account, this_account);
+		mv.addObject("isSame",isSame);
+
+		//자기 자신이 아닌데 업데이트에 접근하는 경우
+		if(isSame == null)
+		{
+			mv.setViewName("redirect:/partners/p/"+id+"/");
+			return mv;
+		}
+		
+		//pk가 숫자가 아니라면 반환
+		if(!Validator.isDigit(pk))
+		{			
+			mv.setViewName("redirect:/partners/p/"+id+"/");
+			return mv;
+		}
+		
+		CareerInfo career = careerDao.select_career(Integer.parseInt(pk));
+		
+		if(career == null)
+		{
+			mv.setViewName("redirect:/partners/p/"+id+"/");
+			return mv;
+		}
+		
+		mv.addObject("career",career);
+		
+		mv.setViewName("/partners/p/background/update/edit/employ");
+		
+		return mv;
+	}
+
+	/**
+	 * 경력 정보 수정 처리
+	 */
+	@RequestMapping(value = "/partners/p/{id}/background/update/edit/employ/{pk}", method = RequestMethod.POST, produces = "text/json; charset=utf8")
+	@ResponseBody
+	public String PartnersController_backgroundupdateeditemploy_post(HttpServletRequest request,
+			HttpServletResponse response,
+			@PathVariable("id") String id,
+			@PathVariable("pk") String pk,
+			@RequestParam("company_name") String company_name,
+			@RequestParam("division") String division,
+			@RequestParam("position") String position,
+			@RequestParam("date_hired_year") String date_hired_year,
+			@RequestParam("date_hired_month") String date_hired_month,
+			@RequestParam("date_retired_year") String date_retired_year,
+			@RequestParam("date_retired_month") String date_retired_month) {
+		
+		logger.info("/partners/p/{id}/info/update/edit/employ post Page");
+
+		logger.info("id = "+id);
+		logger.info("company_name = "+company_name);
+		logger.info("division = "+division);
+		logger.info("position = "+position);
+		logger.info("date_hired_year = "+date_hired_year);
+		logger.info("date_hired_month = "+date_hired_month);
+		logger.info("date_retired_year = "+date_retired_year);
+		logger.info("date_retired_month = "+date_retired_month);
+		
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		AccountInfo this_account = accountDao.select(id);
+		
+		JSONObject jObject = new JSONObject();
+		
+		if(this_account == null)
+		{
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+		
+		String isSame = isSame(account, this_account);
+
+		//자기 자신이 아닌데 업데이트에 접근하는 경우
+		if(isSame == null)
+		{
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+		
+		//pk가 숫자가 아니라면 반환
+		if(!Validator.isDigit(pk))
+		{			
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+		
+		String result;
+		try{
+		result = careerDao.updateCareer(Integer.parseInt(pk),company_name,division,position,
+				date_hired_year,date_hired_month,date_retired_year,date_retired_month);
+		}
+		catch(ParseException e)
+		{
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+
+		logger.info("result = "+result);
+		if(result.equals("성공"))
+			jObject.put("messages", "success");
+		else
+		{
+			jObject.put("messages",result);
+		}
+		
+		return jObject.toString();
 	}
 	/**
 	 * 자격증 정보 추가
@@ -801,17 +1030,62 @@ public class PartnersController {
 			@PathVariable("id") String id) {
 		logger.info("/partners/p/{id}/info/update/add/certify Page");
 		
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		AccountInfo this_account = accountDao.select(id);
+				
+		if(this_account == null)
+		{
+			mv.setViewName("redirect:/partners/");
+			return mv;
+		}
+		mv.addObject("this_account",this_account);
 		
+		String isSame = isSame(account, this_account);
+		mv.addObject("isSame",isSame);
+
+		//자기 자신이 아닌데 업데이트에 접근하는 경우
+		if(isSame == null)
+		{
+			mv.setViewName("redirect:/partners/p/"+id+"/");
+			return mv;
+		}
+		
+		mv.setViewName("/partners/p/background/update/add/certify");
+
 		return mv;
 	}
 	/**
-	 * 프로필 정보 추가
+	 * 학력 정보 추가
 	 */
 	@RequestMapping(value = "/partners/p/{id}/background/update/add/edu", method = RequestMethod.GET)
 	public ModelAndView PartnersController_backgroundupdateaddedu(HttpServletRequest request, ModelAndView mv,
 			@PathVariable("id") String id) {
 		logger.info("/partners/p/{id}/info/update/add/edu Page");
+
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		AccountInfo this_account = accountDao.select(id);
+				
+		if(this_account == null)
+		{
+			mv.setViewName("redirect:/partners/");
+			return mv;
+		}
+		mv.addObject("this_account",this_account);
 		
+		String isSame = isSame(account, this_account);
+		mv.addObject("isSame",isSame);
+
+		//자기 자신이 아닌데 업데이트에 접근하는 경우
+		if(isSame == null)
+		{
+			mv.setViewName("redirect:/partners/p/"+id+"/");
+			return mv;
+		}
+		
+		mv.setViewName("/partners/p/background/update/add/edu");
+
 		
 		return mv;
 	}
