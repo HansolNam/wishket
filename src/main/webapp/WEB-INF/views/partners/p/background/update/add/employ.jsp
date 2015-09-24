@@ -291,6 +291,10 @@ div.ui-tooltip {
         		    if(messages == "success")
         		        	{location.href="/wjm/partners/p/<%=account.getId()%>/background/update"; 
         		        	}
+		        else if(messages == "error")
+		        	{
+		        	location.href="/wjm/partners/p/<%=account.getId()%>/background"; 
+		        	}
         		        else
         		        	{
         					$("#messages").html("<div class='alert alert-warning fade in'>"+messages+"</div>");

@@ -31,6 +31,7 @@ import com.wjm.models.AccountInformationInfo;
 import com.wjm.models.CareerInfo;
 import com.wjm.models.EducationInfo;
 import com.wjm.models.LicenseInfo;
+import com.wjm.models.PortfolioInfo;
 import com.wjm.models.TechniqueInfo;
 
 import net.sf.json.JSONObject;
@@ -296,22 +297,63 @@ public class PartnersController {
 	@RequestMapping(value = "/partners/p/{id}/portfolio", method = RequestMethod.GET)
 	public ModelAndView PartnersController_p_portfolio(HttpServletRequest request, ModelAndView mv,
 			@PathVariable("id") String id) {
-		logger.info("index Page");
+		logger.info("/partners/p/{id}/portfolio Page");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		AccountInfo this_account = accountDao.select(id);
+				
+		if(this_account == null)
+		{
+			mv.setViewName("/partners");
+			return mv;
+		}
 		
-		mv.setViewName("/partners/p/{id}/portfolio");
+		String isSame = isSame(account, this_account);
+		mv.addObject("isSame",isSame);
+
+		//url 아이디의 account 가져옴
+		mv.addObject("this_account",this_account);
+
+		List<PortfolioInfo> portfolio = portfolioDao.select(this_account.getPk());
+		mv.addObject("portfolio",portfolio);
+		mv.setViewName("/partners/p/portfolio");
 
 		return mv;
 	}
 	
 	/**
-	 * 포트폴리오 보기
+	 * 포트폴리오 보기2
 	 */
 	@RequestMapping(value = "/partners/p/{id}/portfolio/update", method = RequestMethod.GET)
 	public ModelAndView PartnersController_p_portfolio_update(HttpServletRequest request, ModelAndView mv,
 			@PathVariable("id") String id) {
 		logger.info("/partners/p/{id}/portfolio/update Page");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		AccountInfo this_account = accountDao.select(id);
+				
+		if(this_account == null)
+		{
+			mv.setViewName("redirect:/partners/");
+			return mv;
+		}
+		mv.addObject("this_account",this_account);
+
+		String isSame = isSame(account, this_account);
+		mv.addObject("isSame",isSame);
 		
-		mv.setViewName("/partners/p/{id}/portfolio/update");
+		//자기 자신이 아닌데 업데이트에 접근하는 경우
+		if(isSame == null)
+		{
+			mv.setViewName("redirect:/partners/p/"+id+"/portfolio");
+			return mv;
+		}
+		
+		List<PortfolioInfo> portfolio = portfolioDao.select(this_account.getPk());
+		mv.addObject("portfolio",portfolio);
+		
+		
+		mv.setViewName("/partners/p/portfolio/update");
 
 		return mv;
 	}
@@ -325,7 +367,7 @@ public class PartnersController {
 			@PathVariable("id") String id) {
 		logger.info("index Page");
 		
-		mv.setViewName("/partners/p/{id}/portfolio/update/add");
+		mv.setViewName("/partners/p/portfolio/update/add");
 
 		return mv;
 	}
@@ -929,6 +971,9 @@ public class PartnersController {
 		
 		CareerInfo career = careerDao.select_career(Integer.parseInt(pk));
 		
+		logger.info("startdate = "+career.getStart_date());
+		logger.info("startdate = "+career.getEnd_date());
+
 		if(career == null)
 		{
 			mv.setViewName("redirect:/partners/p/"+id+"/");
@@ -1022,6 +1067,373 @@ public class PartnersController {
 		
 		return jObject.toString();
 	}
+	
+
+	/**
+	 * 경력 삭제
+	 */
+	@RequestMapping(value = "/partners/p/{id}/background/update/delete_/employ", method = RequestMethod.POST, produces = "text/json; charset=utf8")
+	@ResponseBody
+	public String  PartnersController_backgroundupdatedelete_post(HttpServletRequest request,
+			HttpServletResponse response,
+			@PathVariable("id") String id,
+			@RequestParam("employ_id") String employ_id) {
+		
+		logger.info("/partners/p/{id}/background/update/delete_/employ Post Page");
+		logger.info("id = "+id);
+		logger.info("employ_id = "+employ_id);
+		
+		JSONObject jObject = new JSONObject();
+		
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		AccountInfo this_account = accountDao.select(id);
+				
+		if(this_account == null)
+		{
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+		
+		String isSame = isSame(account, this_account);
+
+		//자기 자신이 아닌데 업데이트에 접근하는 경우
+		if(isSame == null)
+		{
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+		
+		if(!Validator.isDigit(employ_id))
+		{
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+		
+		String result = careerDao.delete(Integer.parseInt(employ_id));
+		
+		logger.info("result = "+result);
+		if(result.equals("성공"))
+			jObject.put("messages", "success");
+		else
+		{
+			jObject.put("messages",result);
+		}
+		
+		return jObject.toString();
+	}
+	
+		/**
+	 * 학력 정보 추가
+	 */
+	@RequestMapping(value = "/partners/p/{id}/background/update/add/edu", method = RequestMethod.GET)
+	public ModelAndView PartnersController_backgroundupdateaddedu(HttpServletRequest request, ModelAndView mv,
+			@PathVariable("id") String id) {
+		logger.info("/partners/p/{id}/info/update/add/edu Page");
+
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		AccountInfo this_account = accountDao.select(id);
+				
+		if(this_account == null)
+		{
+			mv.setViewName("redirect:/partners/");
+			return mv;
+		}
+		mv.addObject("this_account",this_account);
+		
+		String isSame = isSame(account, this_account);
+		mv.addObject("isSame",isSame);
+
+		//자기 자신이 아닌데 업데이트에 접근하는 경우
+		if(isSame == null)
+		{
+			mv.setViewName("redirect:/partners/p/"+id+"/");
+			return mv;
+		}
+		
+		mv.setViewName("/partners/p/background/update/add/edu");
+
+		
+		return mv;
+	}
+	/**
+	 * 학력 정보 추가 처리
+	 */
+	@RequestMapping(value = "/partners/p/{id}/background/update/add/edu", method = RequestMethod.POST, produces = "text/json; charset=utf8")
+	@ResponseBody
+	public String PartnersController_backgroundupdateaddedu_post(HttpServletRequest request, 
+			HttpServletResponse response,
+			@PathVariable("id") String id,
+			@RequestParam("school_name") String school_name,
+			@RequestParam("major") String major,
+			@RequestParam("edu_type") String edu_type,
+			@RequestParam("edu_status") String edu_status,
+			@RequestParam("date_entrance_year") String date_entrance_year,
+			@RequestParam("date_entrance_month") String date_entrance_month,
+			@RequestParam("date_graduate_year") String date_graduate_year,
+			@RequestParam("date_graduate_month") String date_graduate_month) {
+		logger.info("/partners/p/{id}/info/update/add/edu post Page");
+
+
+		logger.info("id = "+id);
+		logger.info("school_name = "+school_name);
+		logger.info("major = "+major);
+		logger.info("edu_type = "+edu_type);
+		logger.info("edu_status = "+edu_status);
+		logger.info("date_entrance_year = "+date_entrance_year);
+		logger.info("date_entrance_month = "+date_entrance_month);
+		logger.info("date_graduate_year = "+date_graduate_year);
+		logger.info("date_graduate_month = "+date_graduate_month);
+		
+		JSONObject jObject = new JSONObject();
+		
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		AccountInfo this_account = accountDao.select(id);
+				
+		if(this_account == null)
+		{
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+		
+		String isSame = isSame(account, this_account);
+
+		//자기 자신이 아닌데 업데이트에 접근하는 경우
+		if(isSame == null)
+		{
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+		
+
+		String result;
+		try{
+		result = educationDao.createEdu(this_account.getPk(), school_name, major, edu_type,
+				edu_status, date_entrance_year
+				, date_entrance_month, date_graduate_year, date_graduate_month);
+		}
+		catch(ParseException e)
+		{
+			logger.info(e.toString());
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+		logger.info("result = "+result);
+		if(result.equals("성공"))
+			jObject.put("messages", "success");
+		else
+		{
+			jObject.put("messages",result);
+		}
+		
+		return jObject.toString();
+		
+	}
+
+
+	/**
+	 * 학력 정보 수정
+	 */
+	@RequestMapping(value = "/partners/p/{id}/background/update/edit/edu/{pk}", method = RequestMethod.GET)
+	public ModelAndView PartnersController_backgroundupdateeditedu(HttpServletRequest request, ModelAndView mv,
+			@PathVariable("id") String id,
+			@PathVariable("pk") String pk) {
+		logger.info("/partners/p/{id}/info/update/edit/edu Page");
+
+		logger.info("id = "+id);
+		logger.info("pk = "+pk);
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		AccountInfo this_account = accountDao.select(id);
+				
+		if(this_account == null)
+		{
+			mv.setViewName("redirect:/partners/");
+			return mv;
+		}
+		mv.addObject("this_account",this_account);
+		
+		String isSame = isSame(account, this_account);
+		mv.addObject("isSame",isSame);
+
+		//자기 자신이 아닌데 업데이트에 접근하는 경우
+		if(isSame == null)
+		{
+			mv.setViewName("redirect:/partners/p/"+id+"/");
+			return mv;
+		}
+		
+		//pk가 숫자가 아니라면 반환
+		if(!Validator.isDigit(pk))
+		{			
+			mv.setViewName("redirect:/partners/p/"+id+"/");
+			return mv;
+		}
+		
+		EducationInfo edu = educationDao.select_edu(Integer.parseInt(pk));
+		
+		if(edu == null)
+		{
+			mv.setViewName("redirect:/partners/p/"+id+"/");
+			return mv;
+		}
+		
+		mv.addObject("edu",edu);
+		
+		mv.setViewName("/partners/p/background/update/edit/edu");
+		
+		return mv;
+	}
+
+	/**
+	 * 학력 정보 수정 처리
+	 */
+	@RequestMapping(value = "/partners/p/{id}/background/update/edit/edu/{pk}", method = RequestMethod.POST, produces = "text/json; charset=utf8")
+	@ResponseBody
+	public String PartnersController_backgroundupdateeditedu_post(HttpServletRequest request,
+			HttpServletResponse response,
+			@PathVariable("id") String id,
+			@PathVariable("pk") String pk,
+			@RequestParam("school_name") String school_name,
+			@RequestParam("major") String major,
+			@RequestParam("edu_type") String edu_type,
+			@RequestParam("edu_status") String edu_status,
+			@RequestParam("date_entrance_year") String date_entrance_year,
+			@RequestParam("date_entrance_month") String date_entrance_month,
+			@RequestParam("date_graduate_year") String date_graduate_year,
+			@RequestParam("date_graduate_month") String date_graduate_month) {
+		
+		logger.info("/partners/p/{id}/info/update/edit/edu post Page");
+
+		logger.info("id = "+id);
+		logger.info("pk = "+pk);
+		logger.info("school_name = "+school_name);
+		logger.info("major = "+major);
+		logger.info("edu_type = "+edu_type);
+		logger.info("edu_status = "+edu_status);
+		logger.info("date_entrance_year = "+date_entrance_year);
+		logger.info("date_entrance_month = "+date_entrance_month);
+		logger.info("date_graduate_year = "+date_graduate_year);
+		logger.info("date_graduate_month = "+date_graduate_month);
+		
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		AccountInfo this_account = accountDao.select(id);
+		
+		JSONObject jObject = new JSONObject();
+		
+		if(this_account == null)
+		{
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+		
+		String isSame = isSame(account, this_account);
+
+		//자기 자신이 아닌데 업데이트에 접근하는 경우
+		if(isSame == null)
+		{
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+		
+		//pk가 숫자가 아니라면 반환
+		if(!Validator.isDigit(pk))
+		{			
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+		
+		String result;
+		try{
+		result = educationDao.updateEdu(Integer.parseInt(pk), school_name, major, edu_type, 
+				edu_status, date_entrance_year
+				, date_entrance_month, date_graduate_year, date_graduate_month);
+		}
+		catch(ParseException e)
+		{
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+
+		logger.info("result = "+result);
+		if(result.equals("성공"))
+			jObject.put("messages", "success");
+		else
+		{
+			jObject.put("messages",result);
+		}
+		
+		return jObject.toString();
+	}
+
+
+
+	/**
+	 * 교육 삭제
+	 */
+	@RequestMapping(value = "/partners/p/{id}/background/update/delete_/edu", method = RequestMethod.POST, produces = "text/json; charset=utf8")
+	@ResponseBody
+	public String  PartnersController_backgroundupdatedeleteedu_post(HttpServletRequest request,
+			HttpServletResponse response,
+			@PathVariable("id") String id,
+			@RequestParam("education_id") String education_id) {
+		
+		logger.info("/partners/p/{id}/background/update/delete_/edu Post Page");
+		logger.info("id = "+id);
+		logger.info("education_id = "+education_id);
+		
+		JSONObject jObject = new JSONObject();
+		
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		AccountInfo this_account = accountDao.select(id);
+				
+		if(this_account == null)
+		{
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+		
+		String isSame = isSame(account, this_account);
+
+		//자기 자신이 아닌데 업데이트에 접근하는 경우
+		if(isSame == null)
+		{
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+		
+		if(!Validator.isDigit(education_id))
+		{
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+		
+		String result = educationDao.delete(Integer.parseInt(education_id));
+		
+		logger.info("result = "+result);
+		if(result.equals("성공"))
+			jObject.put("messages", "success");
+		else
+		{
+			jObject.put("messages",result);
+		}
+		
+		return jObject.toString();
+	}
+
+
 	/**
 	 * 자격증 정보 추가
 	 */
@@ -1055,14 +1467,89 @@ public class PartnersController {
 
 		return mv;
 	}
-	/**
-	 * 학력 정보 추가
-	 */
-	@RequestMapping(value = "/partners/p/{id}/background/update/add/edu", method = RequestMethod.GET)
-	public ModelAndView PartnersController_backgroundupdateaddedu(HttpServletRequest request, ModelAndView mv,
-			@PathVariable("id") String id) {
-		logger.info("/partners/p/{id}/info/update/add/edu Page");
 
+
+	/**
+	 * 자격증 정보 추가 처리
+	 */
+	@RequestMapping(value = "/partners/p/{id}/background/update/add/certify", method = RequestMethod.POST, produces = "text/json; charset=utf8")
+	@ResponseBody
+	public String PartnersController_backgroundupdateaddcertify_post(HttpServletRequest request, 
+			HttpServletResponse response,
+			@PathVariable("id") String id,
+			@RequestParam("title") String title,
+			@RequestParam("institution") String institution,
+			@RequestParam("certification_number") String certification_number,
+			@RequestParam("date_issued_year") String date_issued_year,
+			@RequestParam("date_issued_month") String date_issued_month,
+			@RequestParam("date_issued_day") String date_issued_day) {
+		
+		logger.info("/partners/p/{id}/info/update/add/employ Page");
+		
+		logger.info("id = "+id);
+		logger.info("title = "+title);
+		logger.info("institution = "+institution);
+		logger.info("certification_number = "+certification_number);
+		logger.info("date_issued_year = "+date_issued_year);
+		logger.info("date_issued_month = "+date_issued_month);
+		logger.info("date_issued_day = "+date_issued_day);
+		
+		JSONObject jObject = new JSONObject();
+		
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		AccountInfo this_account = accountDao.select(id);
+				
+		if(this_account == null)
+		{
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+
+		String isSame = isSame(account, this_account);
+
+		//자기 자신이 아닌데 업데이트에 접근하는 경우
+		if(isSame == null)
+		{
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+
+		String result;
+		try{
+		result = licenseDao.createLicense(this_account.getPk(),title,institution,certification_number,
+				date_issued_year,date_issued_month,date_issued_day);
+		}
+		catch(ParseException e)
+		{
+			logger.info(e.toString());
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+		logger.info("result = "+result);
+		if(result.equals("성공"))
+			jObject.put("messages", "success");
+		else
+		{
+			jObject.put("messages",result);
+		}
+		
+		return jObject.toString();
+	}
+	
+
+
+	/**
+	 * 자격증 정보 수정
+	 */
+	@RequestMapping(value = "/partners/p/{id}/background/update/edit/certify/{pk}", method = RequestMethod.GET)
+	public ModelAndView PartnersController_backgroundupdateaddcertify(HttpServletRequest request, ModelAndView mv,
+			@PathVariable("id") String id,
+			@PathVariable("pk") String pk) {
+		logger.info("/partners/p/{id}/info/update/edit/certify Page");
+		
 
 		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
 		AccountInfo this_account = accountDao.select(id);
@@ -1083,11 +1570,156 @@ public class PartnersController {
 			mv.setViewName("redirect:/partners/p/"+id+"/");
 			return mv;
 		}
-		
-		mv.setViewName("/partners/p/background/update/add/edu");
 
+		//pk가 숫자가 아니라면 반환
+		if(!Validator.isDigit(pk))
+		{			
+			mv.setViewName("redirect:/partners/p/"+id+"/");
+			return mv;
+		}
 		
+		LicenseInfo license = licenseDao.select_license(Integer.parseInt(pk));
+		mv.addObject("license",license);
+		
+		mv.setViewName("/partners/p/background/update/edit/certify");
+
 		return mv;
+	}
+
+
+	/**
+	 * 자격증 정보 수정 처리
+	 */
+	@RequestMapping(value = "/partners/p/{id}/background/update/edit/certify/{pk}", method = RequestMethod.POST, produces = "text/json; charset=utf8")
+	@ResponseBody
+	public String PartnersController_backgroundupdateeditcertify_post(HttpServletRequest request, 
+			HttpServletResponse response,
+			@PathVariable("id") String id,
+			@PathVariable("pk") String pk,
+			@RequestParam("title") String title,
+			@RequestParam("institution") String institution,
+			@RequestParam("certification_number") String certification_number,
+			@RequestParam("date_issued_year") String date_issued_year,
+			@RequestParam("date_issued_month") String date_issued_month,
+			@RequestParam("date_issued_day") String date_issued_day) {
+		
+		logger.info("/partners/p/{id}/info/update/edit/employ Page");
+		
+		logger.info("id = "+id);
+		logger.info("title = "+title);
+		logger.info("institution = "+institution);
+		logger.info("certification_number = "+certification_number);
+		logger.info("date_issued_year = "+date_issued_year);
+		logger.info("date_issued_month = "+date_issued_month);
+		logger.info("date_issued_day = "+date_issued_day);
+		
+		JSONObject jObject = new JSONObject();
+		
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		AccountInfo this_account = accountDao.select(id);
+				
+		if(this_account == null)
+		{
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+
+		String isSame = isSame(account, this_account);
+
+		//자기 자신이 아닌데 업데이트에 접근하는 경우
+		if(isSame == null)
+		{
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+
+		//pk가 숫자가 아니라면 반환
+		if(!Validator.isDigit(pk))
+		{			
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+		
+		String result;
+		try{
+		result = licenseDao.updateLicense(Integer.parseInt(pk),title,institution,certification_number,
+				date_issued_year,date_issued_month,date_issued_day);
+		}
+		catch(ParseException e)
+		{
+			logger.info(e.toString());
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+		logger.info("result = "+result);
+		if(result.equals("성공"))
+			jObject.put("messages", "success");
+		else
+		{
+			jObject.put("messages",result);
+		}
+		
+		return jObject.toString();
+	}
+	
+	/**
+	 * 자격증 삭제
+	 */
+	@RequestMapping(value = "/partners/p/{id}/background/update/delete_/certify", method = RequestMethod.POST, produces = "text/json; charset=utf8")
+	@ResponseBody
+	public String  PartnersController_backgroundupdatedeletecertify_post(HttpServletRequest request,
+			HttpServletResponse response,
+			@PathVariable("id") String id,
+			@RequestParam("certify_id") String certify_id) {
+		
+		logger.info("/partners/p/{id}/background/update/delete_/certify Post Page");
+		logger.info("id = "+id);
+		logger.info("certify_id = "+certify_id);
+		
+		JSONObject jObject = new JSONObject();
+		
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		AccountInfo this_account = accountDao.select(id);
+				
+		if(this_account == null)
+		{
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+		
+		String isSame = isSame(account, this_account);
+
+		//자기 자신이 아닌데 업데이트에 접근하는 경우
+		if(isSame == null)
+		{
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+		
+		if(!Validator.isDigit(certify_id))
+		{
+			jObject.put("messages", "error");
+			logger.info("jobject = "+jObject.toString());
+			return jObject.toString();
+		}
+		
+		String result = licenseDao.delete(Integer.parseInt(certify_id));
+		
+		logger.info("result = "+result);
+		if(result.equals("성공"))
+			jObject.put("messages", "success");
+		else
+		{
+			jObject.put("messages",result);
+		}
+		
+		return jObject.toString();
 	}
 	
 	/**

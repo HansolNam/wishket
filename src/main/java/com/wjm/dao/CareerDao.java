@@ -102,9 +102,10 @@ public class CareerDao implements CareerIDao {
 	{
 		jdbcTemplate.update("delete from career");
 	}
-	public void delete(int pk)
+	public String delete(int pk)
 	{
-		jdbcTemplate.update("delete from account where pk = ?", new Object[] { pk });
+		jdbcTemplate.update("delete from career where pk = ?", new Object[] { pk });
+		return "성공";
 	}
 	
 	public String createCareer(int account_pk,String company_name,String division,String position,

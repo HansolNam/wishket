@@ -1,5 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page
+	import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo, com.wjm.models.PortfolioInfo, java.util.List"%>
+<%
+	AccountInfo this_account = (AccountInfo) request.getAttribute("this_account");
+	AccountInfo account = (AccountInfo) session.getAttribute("account");
+	List<PortfolioInfo> portfolio = (List<PortfolioInfo>) request.getAttribute("portfolio");
+	String isSame = (String) request.getAttribute("isSame");
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <!--[if IE 6]><html lang="ko" class="no-js old ie6"><![endif]-->

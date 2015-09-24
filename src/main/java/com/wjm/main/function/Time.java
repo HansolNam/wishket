@@ -50,7 +50,15 @@ public class Time {
 		
 		return timestamp;
 	}
-	
+
+	static public Timestamp dateToTimestamp3(String today) throws ParseException
+	{
+		SimpleDateFormat sd1 = new SimpleDateFormat ( "yyyy년 MM월 dd일");
+		Date date = sd1.parse(today);
+		Timestamp timestamp = new java.sql.Timestamp(date.getTime());
+		
+		return timestamp;
+	}
 	static public Timestamp dateToTimestamp5(String today) throws ParseException
 	{
 		SimpleDateFormat sd1 = new SimpleDateFormat ( "yyyy년 MM월");

@@ -1,10 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	<%@ page import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo"%>
+	<%@ page import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo, com.wjm.models.LicenseInfo"%>
+	<%@ page import="java.sql.Timestamp, com.wjm.main.function.Time"%>>
 <%
 	AccountInfo this_account = (AccountInfo)request.getAttribute("this_account");
 	AccountInfo account = (AccountInfo)session.getAttribute("account");
 	String isSame = (String)request.getAttribute("isSame");
+	LicenseInfo license = (LicenseInfo)request.getAttribute("license");
+	Timestamp temp = Time.dateToTimestamp5(license.getPublication_date());
+	int date_issued_year = temp.getYear()+1900;
+	int date_issued_month = temp.getMonth()+1;
+	int date_issued_day = temp.getDate()+1;
+
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -96,11 +103,11 @@ div.ui-tooltip {
 				<div class="content">
 					<div class="content-inner" style="padding-top: 15px;">
 						<section class="p5-partition-title">
-						<h3 class="header-text" style="margin-bottom: 30px">자격증 추가</h3>
+						<h3 class="header-text" style="margin-bottom: 30px">자격증 수정</h3>
 						</section>
 						<section>
 						<h4>자격증</h4>
-						<form id="certification_add_form" method="POST">
+						<form id="certification_edit_form" method="POST">
 							<input name="csrfmiddlewaretoken" type="hidden"
 								value="6Tjq3XUiP4iuLFxhByMfs0Kty5RN8ZLk" />
 							<div class="form-group p5-portfolio-form-group">
@@ -161,7 +168,7 @@ div.ui-tooltip {
 							<span class="pull-right"><a
 								class="btn btn-cancel p5-certificate-cancel-btn p5-btn-left"
 								href="/partners/p/<%=this_account.getId() %>/background/update/">취소</a>
-							<button class="btn btn-partners btn-submit" type="button">추가</button></span>
+							<button class="btn btn-partners btn-submit" type="button">수정</button></span>
 						</form>
 						</section>
 					</div>
@@ -202,7 +209,35 @@ $(document).ready(function() {
             return 0;
         }
         else{
-            $('#certification_add_form').submit();
+            $.ajax({
+    		    type: "POST",
+    		    url: "/wjm/partners/p/<%=account.getId()%>/background/update/edit/certify/<%=license.getPk()%>",
+    		    data: $('#certification_edit_form').serialize(),  // 폼데이터 직렬화
+    		    dataType: "json",   // 데이터타입을 JSON형식으로 지정
+    		    contentType: "application/x-www-form-urlencoded; charset=utf-8",
+    		    success: function(data) { // data: 백엔드에서 requestBody 형식으로 보낸 데이터를 받는다.
+    		        var messages = data.messages;
+
+    		    if(messages == "success")
+    		        	{location.href="/wjm/partners/p/<%=account.getId()%>/background/update"; 
+    		        	}
+	        else if(messages == "error")
+	        	{
+	        	location.href="/wjm/partners/p/<%=account.getId()%>/background"; 
+	        	}
+    		        else
+    		        	{
+    					$("#messages").html("<div class='alert alert-warning fade in'>"+messages+"</div>");
+
+    		        	}
+    		        
+    		    },
+    		    error: function(jqXHR, textStatus, errorThrown) {
+    		        //에러코드
+    		        alert('에러가 발생했습니다.');
+    		    }
+    		});
+            
         }
 
         function p5MakeWarning(itemId) {
@@ -232,7 +267,71 @@ $(document).ready(function() {
 $( document ).ready(function($) {
     var p5TotalSubNavigationFlag = 0;
 
+    var title = "<%=license.getName() %>";
+	var institution = "<%=license.getPublishing_office() %>";
+    var certification_number = "<%=license.getSerial_num() %>";
+    var date_issued_year = "<%=date_issued_year%>";
+	var date_issued_month = "<%=date_issued_month%>";
+	var date_issued_day = "<%=date_issued_day%>";
+	
 
+	if(title != null && title != "")
+	{
+		document.getElementById("p5-certification-title-input").value = title;
+	}
+
+	if(institution != null && institution != "")
+	{
+		document.getElementById("p5-Institution-input").value = institution;
+	}
+
+	if(certification_number != null && certification_number != "")
+	{
+		document.getElementById("p5-certificationNumber-input").value = certification_number;
+	}
+
+	if(date_issued_year != null && date_issued_year != "")
+	{
+		var len = document.getElementById("p5-issuedYear-select").length;
+		for(var i=0; i<len; i++)
+		{
+			if(document.getElementById("p5-issuedYear-select").options[i].value == date_issued_year)
+			{
+				document.getElementById("p5-issuedYear-select").options[i].selected = true;
+				break;
+			}
+		}	
+		$('#p5-issuedYear-select').selecter('refresh');
+	}
+
+	if(date_issued_month != null && date_issued_month != "")
+	{
+		var len = document.getElementById("p5-issuedMonth-select").length;
+		for(var i=0; i<len; i++)
+		{
+			if(document.getElementById("p5-issuedMonth-select").options[i].value == date_issued_month)
+			{
+				document.getElementById("p5-issuedMonth-select").options[i].selected = true;
+				break;
+			}
+		}	
+		$('#p5-issuedMonth-select').selecter('refresh');
+	}
+
+	if(date_issued_day != null && date_issued_day != "")
+	{
+		var len = document.getElementById("p5-issuedDay-select").length;
+		for(var i=0; i<len; i++)
+		{
+			if(document.getElementById("p5-issuedDay-select").options[i].value == date_issued_day)
+			{
+				document.getElementById("p5-issuedDay-select").options[i].selected = true;
+				break;
+			}
+		}	
+		$('#p5-issuedDay-select').selecter('refresh');
+	}
+	
 	if ( $( window ).width() >= 1200 ) {
 		$( '.p5-side-nav-deactive' ).css( 'display', 'none' );
 	} else  {
@@ -272,40 +371,5 @@ $( document ).ready(function($) {
 });
 
 </script>
-	<script type="text/javascript">
-        var TRS_AIDX = 9287;
-        var TRS_PROTOCOL = document.location.protocol;
-        document.writeln();
-        var TRS_URL = TRS_PROTOCOL + '//' + ((TRS_PROTOCOL=='https:')?'analysis.adinsight.co.kr':'adlog.adinsight.co.kr') +  '/emnet/trs_esc.js';
-        document.writeln("<scr"+"ipt language='javascript' src='" + TRS_URL + "'></scr"+"ipt>");
-        </script>
-	<script type="text/javascript">
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-        ga('create', 'UA-31427125-2', 'wishket.com');
-        var ga_now = new Date();
-        var dimension4Value = "Y" + ga_now.getFullYear()
-                              + "M" + (ga_now.getMonth()+1)
-                              + "D" + (ga_now.getDate())
-                              + "H" + (ga_now.getHours())
-                              + "I" + (ga_now.getMinutes())
-                              + "W" + (ga_now.getDay());
-        ga('require', 'displayfeatures');
-        ga('set', '&uid', '28338');
-        ga('send', 'pageview', {
-          'dimension1': 'user',
-          'dimension2': 'partners',
-          'dimension3': '28338',
-          'dimension4': dimension4Value
-        });
-      </script>
-	<script type="text/javascript">(function(e,b){if(!b.__SV){var a,f,i,g;window.mixpanel=b;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===e.location.protocol?"https:":"http:")+'//cdn.mxpnl.com/libs/mixpanel-2.2.min.js';f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f);b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==
-typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.set_once people.increment people.append people.track_charge people.clear_charges people.delete_user".split(" ");for(g=0;g<i.length;g++)f(c,i[g]);
-b._i.push([a,e,d])};b.__SV=1.2}})(document,window.mixpanel||[]);
-mixpanel.init("c7b742deb9d00b4f1c0e1e9e8c5c3115");</script>
-	<script type="text/javascript"> if (!wcs_add) var wcs_add={}; wcs_add["wa"] = "s_3225afd5bb50";if (!_nasa) var _nasa={};wcs.inflow();wcs_do(_nasa);</script>
 </body>
 </html>

@@ -13,5 +13,5 @@ public interface LicenseIDao {
 	List<LicenseInfo> selectAll();
 	List<LicenseInfo> select(int account_pk);
 	void deleteAll();
-	void delete(int pk);
+	String delete(int pk);
 }

@@ -10,10 +10,10 @@
 	CareerInfo career = (CareerInfo)request.getAttribute("career");
 	Timestamp temp = Time.dateToTimestamp5(career.getStart_date());
 	int date_hired_year = temp.getYear()+1900;
-	int date_hired_month = temp.getMonth();
+	int date_hired_month = temp.getMonth()+1;
 	temp = Time.dateToTimestamp5(career.getEnd_date());
 	int date_retired_year = temp.getYear()+1900;
-	int date_retired_month = temp.getMonth();
+	int date_retired_month = temp.getMonth()+1;
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -192,7 +192,7 @@ div.ui-tooltip {
 							<span class="pull-right"><a
 								class="btn btn-cancel p5-career-cancel-btn p5-btn-left"
 								href="/wjm/partners/p/<%=this_account.getId() %>/background/update/">취소</a>
-							<button class="btn btn-partners btn-submit">추가</button></span>
+							<button class="btn btn-partners btn-submit">수정</button></span>
 						</form>
 						</section>
 					</div>

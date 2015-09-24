@@ -13,5 +13,5 @@ public interface EducationIDao {
 	List<EducationInfo> selectAll();
 	List<EducationInfo> select(int account_pk);
 	void deleteAll();
-	void delete(int pk);
+	String delete(int pk);
 }

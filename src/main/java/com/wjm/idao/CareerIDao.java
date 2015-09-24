@@ -13,5 +13,5 @@ public interface CareerIDao {
 	List<CareerInfo> selectAll();
 	List<CareerInfo> select(int account_pk);
 	void deleteAll();
-	void delete(int pk);
+	String delete(int pk);
 }

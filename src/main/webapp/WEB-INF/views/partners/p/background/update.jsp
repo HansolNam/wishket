@@ -434,17 +434,105 @@ $(document).ready(function() {
 
     $('#p5-delete-educationalHistory-modal-btn').click(function(event) {
         event.preventDefault();
-        $('#education_delete').submit();
+        $.ajax({
+		    type: "POST",
+		    url: "/wjm/partners/p/<%=account.getId()%>/background/update/delete_/edu",
+		    data: $('#education_delete').serialize(),  // 폼데이터 직렬화
+		    dataType: "json",   // 데이터타입을 JSON형식으로 지정
+		    contentType: "application/x-www-form-urlencoded; charset=utf-8",
+		    success: function(data) { // data: 백엔드에서 requestBody 형식으로 보낸 데이터를 받는다.
+		        var messages = data.messages;
+
+		    	if(messages == "success")
+		        	{
+		    		location.href="/wjm/partners/p/<%=account.getId()%>/background/update"; 
+		        	}
+		        else if(messages == "error")
+		        	{
+		        	location.href="/wjm/partners/p/<%=account.getId()%>/background"; 
+		        	}
+		        else
+		        	{
+					$("#messages").html("<div class='alert alert-warning fade in'>"+messages+"</div>");
+		        	}
+		        
+		    },
+		    error: function(jqXHR, textStatus, errorThrown) 
+		    {
+		        //에러코드
+		        alert('에러가 발생했습니다.');
+		    }
+		});
+        
+        
     });
 
     $('#p5-delete-career-modal-btn').click(function(event) {
         event.preventDefault();
-        $('#employ_delete').submit();
+
+        $.ajax({
+		    type: "POST",
+		    url: "/wjm/partners/p/<%=account.getId()%>/background/update/delete_/employ",
+		    data: $('#employ_delete').serialize(),  // 폼데이터 직렬화
+		    dataType: "json",   // 데이터타입을 JSON형식으로 지정
+		    contentType: "application/x-www-form-urlencoded; charset=utf-8",
+		    success: function(data) { // data: 백엔드에서 requestBody 형식으로 보낸 데이터를 받는다.
+		        var messages = data.messages;
+
+		    	if(messages == "success")
+		        	{
+		    		location.href="/wjm/partners/p/<%=account.getId()%>/background/update"; 
+		        	}
+		        else if(messages == "error")
+		        	{
+		        	location.href="/wjm/partners/p/<%=account.getId()%>/background"; 
+		        	}
+		        else
+		        	{
+					$("#messages").html("<div class='alert alert-warning fade in'>"+messages+"</div>");
+		        	}
+		        
+		    },
+		    error: function(jqXHR, textStatus, errorThrown) 
+		    {
+		        //에러코드
+		        alert('에러가 발생했습니다.');
+		    }
+		});
+        
     });
 
     $('#p5-delete-certificate-modal-btn').click(function(event) {
         event.preventDefault();
-        $('#certify_delete').submit();
+        $.ajax({
+		    type: "POST",
+		    url: "/wjm/partners/p/<%=account.getId()%>/background/update/delete_/certify",
+		    data: $('#certify_delete').serialize(),  // 폼데이터 직렬화
+		    dataType: "json",   // 데이터타입을 JSON형식으로 지정
+		    contentType: "application/x-www-form-urlencoded; charset=utf-8",
+		    success: function(data) { // data: 백엔드에서 requestBody 형식으로 보낸 데이터를 받는다.
+		        var messages = data.messages;
+
+		    	if(messages == "success")
+		        	{
+		    		location.href="/wjm/partners/p/<%=account.getId()%>/background/update"; 
+		        	}
+		        else if(messages == "error")
+		        	{
+		        	location.href="/wjm/partners/p/<%=account.getId()%>/background"; 
+		        	}
+		        else
+		        	{
+					$("#messages").html("<div class='alert alert-warning fade in'>"+messages+"</div>");
+		        	}
+		        
+		    },
+		    error: function(jqXHR, textStatus, errorThrown) 
+		    {
+		        //에러코드
+		        alert('에러가 발생했습니다.');
+		    }
+		});
     });
 
 });

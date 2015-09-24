@@ -1,10 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	<%@ page import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo"%>
+	<%@ page import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo, com.wjm.models.EducationInfo"%>
+	<%@ page import="java.sql.Timestamp, com.wjm.main.function.Time"%>
+
 <%
 	AccountInfo this_account = (AccountInfo)request.getAttribute("this_account");
 	AccountInfo account = (AccountInfo)session.getAttribute("account");
 	String isSame = (String)request.getAttribute("isSame");
+	EducationInfo edu = (EducationInfo)request.getAttribute("edu");
+	Timestamp temp = Time.dateToTimestamp5(edu.getStart_date());
+	int date_entrance_year = temp.getYear()+1900;
+	int date_entrance_month = temp.getMonth()+1;
+	temp = Time.dateToTimestamp5(edu.getEnd_date());
+	int date_graduate_year = temp.getYear()+1900;
+	int date_graduate_month = temp.getMonth()+1;
+	
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -94,11 +104,11 @@ div.ui-tooltip {
 				<div class="content">
 					<div class="content-inner" style="padding-top: 15px;">
 						<section class="p5-partition-title">
-						<h3 class="header-text" style="margin-bottom: 30px">학력 추가</h3>
+						<h3 class="header-text" style="margin-bottom: 30px">학력 수정</h3>
 						</section>
 						<section>
 						<h4>학력</h4>
-						<form id="education_add_form" method="POST">
+						<form id="education_edit_form" method="POST">
 							<input name="csrfmiddlewaretoken" type="hidden"
 								value="6Tjq3XUiP4iuLFxhByMfs0Kty5RN8ZLk" />
 							<div class="form-group p5-portfolio-form-group">
@@ -126,11 +136,11 @@ div.ui-tooltip {
 									<select class="form-control p5-classificate-select"
 										data-validation="required" id="p5-classification-select"
 										name="edu_type"><option value="">분류</option>
-										<option value="HIGH_SCHOOL">고등학교</option>
-										<option value="COLLEGE">전문대</option>
-										<option value="UNIVERSITY">대학교</option>
-										<option value="GRADUATE_SCHOOL">대학원</option>
-										<option value="DOCTOR\'S_COURSE">박사과정</option></select>
+										<option value="고등학교">고등학교</option>
+										<option value="전문대">전문대</option>
+										<option value="대학교">대학교</option>
+										<option value="대학원">대학원</option>
+										<option value="박사과정">박사과정</option></select>
 								</div>
 							</div>
 							<div class="form-group p5-portfolio-form-group">
@@ -141,10 +151,10 @@ div.ui-tooltip {
 										data-validation="required" id="p5-status-select"
 										name="edu_status"><option selected="selected"
 											value="">상태</option>
-										<option value="ENROLL">재학</option>
-										<option value="ABSENCE">휴학</option>
-										<option value="GRADUATE">졸업</option>
-										<option value="DROPOUT">자퇴</option></select>
+										<option value="재학">재학</option>
+										<option value="휴학">휴학</option>
+										<option value="졸업">졸업</option>
+										<option value="자퇴">자퇴</option></select>
 								</div>
 							</div>
 							<div class="form-group p5-portfolio-form-group">
@@ -198,7 +208,7 @@ div.ui-tooltip {
 							<span class="pull-right"><a
 								class="btn btn-cancel p5-education-cancel-btn p5-btn-left"
 								href="/partners/p/<%=this_account.getId() %>/background/update/">취소</a>
-							<button class="btn btn-partners btn-submit" type="button">추가</button></span>
+							<button class="btn btn-partners btn-submit" type="button">수정</button></span>
 						</form>
 						</section>
 					</div>
@@ -249,7 +259,36 @@ div.ui-tooltip {
                 return 0;
             }
             else{
-                $('#education_add_form').submit();
+				$.ajax({	
+        			
+        		    type: "POST",
+        		    url: "/wjm/partners/p/<%=account.getId()%>/background/update/edit/edu/<%=edu.getPk()%>",
+        		    data: $('#education_edit_form').serialize(),  // 폼데이터 직렬화
+        		    dataType: "json",   // 데이터타입을 JSON형식으로 지정
+        		    contentType: "application/x-www-form-urlencoded; charset=utf-8",
+        		    success: function(data) { // data: 백엔드에서 requestBody 형식으로 보낸 데이터를 받는다.
+        		        var messages = data.messages;
+
+        		    if(messages == "success")
+        		        	{location.href="/wjm/partners/p/<%=account.getId()%>/background/update"; 
+        		        	}
+		        else if(messages == "error")
+		        	{
+		        	location.href="/wjm/partners/p/<%=account.getId()%>/background"; 
+		        	}
+        		        else
+        		        	{
+        					$("#messages").html("<div class='alert alert-warning fade in'>"+messages+"</div>");
+
+        		        	}
+        		        
+        		    },
+        		    error: function(jqXHR, textStatus, errorThrown) {
+        		        //에러코드
+        		        alert('에러가 발생했습니다.');
+        		    }
+        		});
+
             }
 
 
@@ -282,7 +321,103 @@ div.ui-tooltip {
 $( document ).ready(function($) {
     var p5TotalSubNavigationFlag = 0;
 
+    var school_name = "<%=edu.getSchool_name()%>";
+	var major = "<%=edu.getMajor()%>";
+    var edu_type = "<%=edu.getLevel()%>";
+    var edu_status = "<%=edu.getState()%>";
+	var date_entrance_year = "<%=date_entrance_year%>";
+	var date_entrance_month = "<%=date_entrance_month%>";
+	var date_graduate_year = "<%=date_graduate_year%>";
+	var date_graduate_month = "<%=date_graduate_month%>";
 
+
+	if(school_name != null && school_name != "")
+	{
+		document.getElementById("p5-school-name-input").value = school_name;
+	}
+	if(major != null && major != "")
+	{
+		document.getElementById("p5-major-input").value = major;
+	}
+	if(edu_type != null && edu_type != "")
+	{
+		var len = document.getElementById("p5-classification-select").length;
+		for(var i=0; i<len; i++)
+		{
+			if(document.getElementById("p5-classification-select").options[i].value == edu_type)
+			{
+				document.getElementById("p5-classification-select").options[i].selected = true;
+				break;
+			}
+		}	
+		$('#p5-classification-select').selecter('refresh');
+	}
+	if(edu_status != null && edu_status != "")
+	{
+		var len = document.getElementById("p5-status-select").length;
+		for(var i=0; i<len; i++)
+		{
+			if(document.getElementById("p5-status-select").options[i].value == edu_status)
+			{
+				document.getElementById("p5-status-select").options[i].selected = true;
+				break;
+			}
+		}		
+		$('#p5-status-select').selecter('refresh');
+	}
+	if(date_entrance_year != null && date_entrance_year != "")
+	{
+		var len = document.getElementById("p5-entranceYear-select").length;
+		for(var i=0; i<len; i++)
+		{
+			if(document.getElementById("p5-entranceYear-select").options[i].value == date_entrance_year)
+			{
+				document.getElementById("p5-entranceYear-select").options[i].selected = true;
+				break;
+			}
+		}
+		$('#p5-entranceYear-select').selecter('refresh');
+	}
+	if(date_entrance_month != null && date_entrance_month != "")
+	{
+		var len = document.getElementById("p5-entranceMonth-select").length;
+		for(var i=0; i<len; i++)
+		{
+			if(document.getElementById("p5-entranceMonth-select").options[i].value == date_entrance_month)
+			{
+				document.getElementById("p5-entranceMonth-select").options[i].selected = true;
+				break;
+			}
+		}
+		$('#p5-entranceMonth-select').selecter('refresh');
+	}
+	if(date_graduate_year != null && date_graduate_year != "")
+	{
+		var len = document.getElementById("p5-graduateYear-select").length;
+		for(var i=0; i<len; i++)
+		{
+			if(document.getElementById("p5-graduateYear-select").options[i].value == date_graduate_year)
+			{
+				document.getElementById("p5-graduateYear-select").options[i].selected = true;
+				break;
+			}
+		}
+		$('#p5-graduateYear-select').selecter('refresh');
+	}
+	if(date_graduate_month != null && date_graduate_month != "")
+	{
+		var len = document.getElementById("p5-graduateMonth-select").length;
+		for(var i=0; i<len; i++)
+		{
+			if(document.getElementById("p5-graduateMonth-select").options[i].value == date_graduate_month)
+			{
+				document.getElementById("p5-graduateMonth-select").options[i].selected = true;
+				break;
+			}
+		}
+		$('#p5-graduateMonth-select').selecter('refresh');
+	}
+	
 	if ( $( window ).width() >= 1200 ) {
 		$( '.p5-side-nav-deactive' ).css( 'display', 'none' );
 	} else  {

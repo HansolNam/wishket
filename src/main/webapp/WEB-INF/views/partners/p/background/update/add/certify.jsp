@@ -202,7 +202,34 @@ $(document).ready(function() {
             return 0;
         }
         else{
-            $('#certification_add_form').submit();
+				$.ajax({
+    		    type: "POST",
+    		    url: "/wjm/partners/p/<%=account.getId()%>/background/update/add/certify",
+    		    data: $('#certification_add_form').serialize(),  // 폼데이터 직렬화
+    		    dataType: "json",   // 데이터타입을 JSON형식으로 지정
+    		    contentType: "application/x-www-form-urlencoded; charset=utf-8",
+    		    success: function(data) { // data: 백엔드에서 requestBody 형식으로 보낸 데이터를 받는다.
+    		        var messages = data.messages;
+
+    		    if(messages == "success")
+    		        	{location.href="/wjm/partners/p/<%=account.getId()%>/background/update"; 
+    		        	}
+	        else if(messages == "error")
+	        	{
+	        	location.href="/wjm/partners/p/<%=account.getId()%>/background"; 
+	        	}
+    		        else
+    		        	{
+    					$("#messages").html("<div class='alert alert-warning fade in'>"+messages+"</div>");
+
+    		        	}
+    		        
+    		    },
+    		    error: function(jqXHR, textStatus, errorThrown) {
+    		        //에러코드
+    		        alert('에러가 발생했습니다.');
+    		    }
+    		});
         }
 
         function p5MakeWarning(itemId) {
@@ -272,40 +299,5 @@ $( document ).ready(function($) {
 });
 
 </script>
-	<script type="text/javascript">
-        var TRS_AIDX = 9287;
-        var TRS_PROTOCOL = document.location.protocol;
-        document.writeln();
-        var TRS_URL = TRS_PROTOCOL + '//' + ((TRS_PROTOCOL=='https:')?'analysis.adinsight.co.kr':'adlog.adinsight.co.kr') +  '/emnet/trs_esc.js';
-        document.writeln("<scr"+"ipt language='javascript' src='" + TRS_URL + "'></scr"+"ipt>");
-        </script>
-	<script type="text/javascript">
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-        ga('create', 'UA-31427125-2', 'wishket.com');
-        var ga_now = new Date();
-        var dimension4Value = "Y" + ga_now.getFullYear()
-                              + "M" + (ga_now.getMonth()+1)
-                              + "D" + (ga_now.getDate())
-                              + "H" + (ga_now.getHours())
-                              + "I" + (ga_now.getMinutes())
-                              + "W" + (ga_now.getDay());
-        ga('require', 'displayfeatures');
-        ga('set', '&uid', '28338');
-        ga('send', 'pageview', {
-          'dimension1': 'user',
-          'dimension2': 'partners',
-          'dimension3': '28338',
-          'dimension4': dimension4Value
-        });
-      </script>
-	<script type="text/javascript">(function(e,b){if(!b.__SV){var a,f,i,g;window.mixpanel=b;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===e.location.protocol?"https:":"http:")+'//cdn.mxpnl.com/libs/mixpanel-2.2.min.js';f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f);b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==
-typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.set_once people.increment people.append people.track_charge people.clear_charges people.delete_user".split(" ");for(g=0;g<i.length;g++)f(c,i[g]);
-b._i.push([a,e,d])};b.__SV=1.2}})(document,window.mixpanel||[]);
-mixpanel.init("c7b742deb9d00b4f1c0e1e9e8c5c3115");</script>
-	<script type="text/javascript"> if (!wcs_add) var wcs_add={}; wcs_add["wa"] = "s_3225afd5bb50";if (!_nasa) var _nasa={};wcs.inflow();wcs_do(_nasa);</script>
 </body>
 </html>
