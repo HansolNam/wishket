@@ -13,6 +13,65 @@ import org.springframework.web.multipart.MultipartFile;
 public class Fileupload {
 	private static final Logger logger = LoggerFactory.getLogger(Fileupload.class);
 
+	static public String delete_portfolio(String realPath, String filename)
+	{
+		realPath += "resources\\upload\\portfolio\\";
+		String savePath = realPath.replace('\\','/');
+		
+		File file = new File(savePath+filename);
+		
+		if(file.delete())
+		{
+			logger.info("성공적으로 삭제");
+			return "성공";
+		}
+		else
+		{
+			logger.info("삭제 실패");
+			return "error";
+		}
+
+	}
+	static public String upload_portfolio(String realPath, MultipartFile image, int pk)
+			 throws IOException, FileUploadException{
+		
+		// \wjm\ + 
+		realPath += "resources\\upload\\portfolio\\";
+		String savePath = realPath.replace('\\','/');
+		
+		File targetDir = new File(savePath);
+		if (!targetDir.exists()) {
+	         targetDir.mkdirs();
+	      }
+		
+		String fileName =  image.getOriginalFilename();
+		//if(!Validator.isValidLength(fileName, 1, 50))
+
+		String rootPath, FinalFileName;
+		try{
+			byte[] bytes = image.getBytes();
+			
+			String now = Time.toString4(Time.getCurrentTimestamp());
+			FinalFileName = now+"_"+pk+"_"+fileName;
+			
+			rootPath = savePath+FinalFileName;
+			logger.info("rootPath = "+rootPath);
+			
+			File serverFile = new File(rootPath);
+			BufferedOutputStream stream = new BufferedOutputStream(
+					new FileOutputStream(serverFile));
+			stream.write(bytes);
+			stream.close();
+
+			logger.info("img path = "+now+pk+fileName);
+			return FinalFileName;
+		}
+		catch(Exception e){
+			logger.info("Exception = "+e.toString());
+			return "error";
+		}
+		
+	}
 	static public String upload(String tempSavePath, MultipartFile image)
 			 throws IOException, FileUploadException{
 		String now = Time.toString4(Time.getCurrentTimestamp());
@@ -112,5 +171,33 @@ public class Fileupload {
 				return "error";
 			}
 	}
+
 	
+	static public boolean isImage(MultipartFile image)
+	{
+		String FileName = image.getOriginalFilename();
+		int point = FileName.lastIndexOf(".");
+		String pre_fileType = FileName.substring(point+1, FileName.length());
+		String fileType = pre_fileType.toLowerCase();
+		
+		if(!fileType.equals("jpg") &&!fileType.equals("jpeg") &&!fileType.equals("png") &&
+				!fileType.equals("bmp") &&!fileType.equals("gif") )
+			return false;
+		
+		return true;
+	}
+	
+	static public boolean isValidFileSize(MultipartFile image, int max) throws  IOException
+	{
+		byte[] bytes = image.getBytes();
+		
+		if(((double)bytes.length/(double)(1024*1024)) > max)
+	      {
+		      logger.info("파일 용량 : "+((double)bytes.length/(double)(1024*1024)));
+	    	  return false;
+	      }
+		
+		return true;
+		
+	}
 }

@@ -1,10 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page
-	import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo"%>
+	import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo, com.wjm.models.Partners_infoInfo"%>
 <%
 	AccountInfo this_account = (AccountInfo) request.getAttribute("this_account");
 	AccountInfo account = (AccountInfo) session.getAttribute("account");
+	Partners_infoInfo info = (Partners_infoInfo) request.getAttribute("info");
+	String isSame = (String) request.getAttribute("isSame");
+	String hasInfo = (String) request.getAttribute("hasInfo");
 %>
 <!DOCTYPE html>
 <!--[if IE 6]><html lang="ko" class="no-js old ie6"><![endif]-->
@@ -18,7 +21,7 @@
 <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
 <title>외주몬(WJM) · 파트너스 정보 설정</title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
-<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
+<link href="/resources/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
 	type="text/css" />
 <link href="${pageContext.request.contextPath}/resources/static/CACHE/css/aa41eeaffc60.css" rel="stylesheet"
 	type="text/css" />
@@ -295,7 +298,65 @@ $(document).ready(function() {
 $( document ).ready(function($) {
     var p5TotalSubNavigationFlag = 0;
 
+    <% 
+    if(hasInfo != null)
+    {
+    %>
+    var job = "<%=info.getJob()%>";
+    var job_subcategory_develop = "<%=info.getJob_subcategory_develop()%>";
+    var job_subcategory_design = "<%=info.getJob_subcategory_design()%>";
+    var availability = "<%=info.getAvailability()%>";
 
+	if(job != null && job != "")
+	{
+		var len = document.getElementById("p5-job").length;
+		for(var i=0; i<len; i++)
+		{
+			if(document.getElementById("p5-job").options[i].value == job)
+			{
+				document.getElementById("p5-job").options[i].selected = true;
+				break;
+			}
+		}	
+		$('#p5-job').selecter('refresh');
+	}
+	if(availability != null && availability != "")
+	{
+		var len = document.getElementById("p5-availability").length;
+		for(var i=0; i<len; i++)
+		{
+			if(document.getElementById("p5-availability").options[i].value == availability)
+			{
+				document.getElementById("p5-availability").options[i].selected = true;
+				break;
+			}
+		}	
+		$('#p5-availability').selecter('refresh');
+	}
+
+	if(job_subcategory_design != null && job_subcategory_design != "")
+	{
+	    var design = job_subcategory_design.split(",");
+	    
+	    for(var i=0;i<design.length;i++)
+			$("input:checkbox[name='job_subcategory_design'][value=" + design[i] + "]").attr("checked", true);
+
+		for (var idx in design) {	
+			$("input:checkbox[name='job_subcategory_design'][value=" + design[idx] + "]").attr("checked", true);
+		}
+	}
+	if(job_subcategory_develop != null && job_subcategory_develop != "")
+	{
+	    var develop = job_subcategory_develop.split(",");
+		for (var idx in develop) {
+			$("input:checkbox[name='job_subcategory_develop'][value=" + develop[idx] + "]").attr("checked", true);
+		}
+	}
+    <%
+    }
+    %>
+    
+    
 	if ( $( window ).width() >= 1200 ) {
 		$( '.p5-side-nav-deactive' ).css( 'display', 'none' );
 	} else  {

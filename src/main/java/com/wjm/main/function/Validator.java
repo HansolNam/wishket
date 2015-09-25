@@ -72,7 +72,7 @@ public class Validator {
 	
 	static public boolean isProjectCategory(String category, String sub_category)
 	{
-		if(category.equals("develop"))
+		if(category.equals("개발"))
 		{
 			if(sub_category.equals("웹"))
 				return true;
@@ -84,7 +84,7 @@ public class Validator {
 				return true;
 			else if(sub_category.equals("일반소프트웨어"))
 				return true;
-			else if(sub_category.equals("커머스&쇼핑몰"))
+			else if(sub_category.equals("커머스_쇼핑몰"))
 				return true;
 			else if(sub_category.equals("게임"))
 				return true;
@@ -95,7 +95,7 @@ public class Validator {
 			else 
 				return false;
 		}
-		else if(category.equals("design"))
+		else if(category.equals("디자인"))
 		{
 			if(sub_category.equals("웹"))
 				return true;
@@ -107,11 +107,13 @@ public class Validator {
 				return true;
 			else if(sub_category.equals("인쇄물"))
 				return true;
-			else if(sub_category.equals("커머스&쇼핑몰"))
+			else if(sub_category.equals("커머스_쇼핑몰"))
 				return true;
 			else if(sub_category.equals("로고"))
 				return true;
 			else if(sub_category.equals("영상"))
+				return true;
+			else if(sub_category.equals("그래픽"))
 				return true;
 			else if(sub_category.equals("게임"))
 				return true;

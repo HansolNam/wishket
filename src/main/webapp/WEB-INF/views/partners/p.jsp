@@ -3,16 +3,28 @@
 <%@ page
 	import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo, com.wjm.models.TechniqueInfo, java.util.List"%>
 <%@ page
-	import="com.wjm.models.LicenseInfo, com.wjm.models.EducationInfo, com.wjm.models.CareerInfo"%>
+	import="com.wjm.models.LicenseInfo, com.wjm.models.EducationInfo, com.wjm.models.CareerInfo, com.wjm.models.Partners_infoInfo, com.wjm.models.PortfolioInfo"%>
 
 <%
 	AccountInfo this_account = (AccountInfo) request.getAttribute("this_account");
 	AccountInformationInfo this_accountinfo = (AccountInformationInfo) request.getAttribute("this_accountinfo");
 	String introduction = (String) request.getAttribute("introduction");
+	Partners_infoInfo info = (Partners_infoInfo) request.getAttribute("info");
+	List<PortfolioInfo> portfolio = (List<PortfolioInfo>) request.getAttribute("portfolio");
+	if (portfolio != null && portfolio.size() == 0)
+		portfolio = null;
 	List<TechniqueInfo> skill = (List<TechniqueInfo>) request.getAttribute("skill");
+	if (skill != null && skill.size() == 0)
+		skill = null;
 	List<CareerInfo> career = (List<CareerInfo>) request.getAttribute("career");
+	if (career != null && career.size() == 0)
+		career = null;
 	List<EducationInfo> education = (List<EducationInfo>) request.getAttribute("education");
+	if (education != null && education.size() == 0)
+		education = null;
 	List<LicenseInfo> license = (List<LicenseInfo>) request.getAttribute("license");
+	if (license != null && license.size() == 0)
+		license = null;
 	String isSame = (String) request.getAttribute("isSame");
 	introduction = introduction.replaceAll("\r\n", "<br/>");
 %>
@@ -134,7 +146,14 @@ div.ui-tooltip {
 						<h2 class="p5-header-text">
 							<span style="margin-right: 12px;"><%=this_account.getId()%></span>
 							<span
-								class="label label-md label-partners-availability possible ">활동가능</span>
+								class="label label-md label-partners-availability possible ">
+								<%
+									if (info == null)
+										out.print("황동 가능성 미입력");
+									else
+										out.print(info.getAvailability());
+								%>
+							</span>
 							<%
 								if (isSame != null) {
 							%><a class="btn btn-primary pull-right"
@@ -146,8 +165,14 @@ div.ui-tooltip {
 						</h2>
 
 						<h5 class="p5-basic-info-underground">
-							<span> <span>직종 미입력</span><span
-								class="p5-basic-info-seperator">|</span></span> <span> <span>개인</span><span
+							<span> <span>
+									<%
+										if (info == null)
+											out.print("직종 미입력");
+										else
+											out.print(info.getJob());
+									%>
+							</span><span class="p5-basic-info-seperator">|</span></span> <span> <span>개인</span><span
 								class="p5-basic-info-seperator">|</span></span> <span
 								class="text-muted"><span>신원 미인증</span><span
 								class="p5-basic-info-seperator">|</span></span> <span
@@ -172,7 +197,14 @@ div.ui-tooltip {
 										계약한 프로젝트<span class="p5-contractCount">0 <span>건</span></span>
 									</div>
 									<div>
-										포트폴리오<span class="p5-portfolioCount">0 <span>개</span></span>
+										포트폴리오<span class="p5-portfolioCount">
+											<%
+												if (portfolio == null)
+													out.print("0");
+												else
+													out.print(portfolio.size());
+											%><span>개</span>
+										</span>
 									</div></span>
 								<div style="clear: right"></div>
 							</div>
@@ -268,15 +300,47 @@ div.ui-tooltip {
 							%>
 						</h4>
 						<div class="p5-represent-portfolio-img-list">
+							<%
+								if (portfolio == null) {
+							%>
+
 							<span class="p5-portfolio-no-img3"><div>
 									<div>
-										<img
-											src="${pageContext.request.contextPath}/resources/static/img/profile_portfolio.png" />
 										<div class="p5-no-partners-info-text">
 											등록된 <span class="p5-bold">'포트폴리오'</span>가 없습니다.
 										</div>
 									</div>
 								</div></span>
+							<%
+								} else {
+							%>
+							<div class="p5-represent-portfolio-img-list">
+								
+								<%
+									int portfolionum = portfolio.size();
+									if(portfolionum>3) portfolionum = 3;
+									for(int i=0;i<portfolionum;i++)
+									{
+								%>
+								<span category-id="<%=portfolio.get(i).getCategoryL() %>" subcategory-id="<%=portfolio.get(i).getCategoryM() %>" style="width:210px"><img
+									src="/resources/upload/portfolio/<%=portfolio.get(i).getImg0() %>"><a
+									href="/wjm/partners/p/<%=this_account.getId() %>/portfolio/<%=portfolio.get(i).getPk() %>/update/"><span
+										class="p5-img-info"><div class="p5-img-brief-info">
+												<div class="p5-img-title text-right"><%=portfolio.get(i).getName() %></div>
+												<div class="p5-img-category text-right"><%=portfolio.get(i).getCategoryL() %> &gt; <%=portfolio.get(i).getCategoryM() %></div>
+												<div class="p5-img-project-date text-right"><%=portfolio.get(i).getStart_date() %> ~
+													<%=portfolio.get(i).getEnd_date() %></div>
+											</div>
+											</span>
+										</a>
+									</span> 
+								<%
+									}
+								%>
+							</div>
+							<%
+								}
+							%>
 						</div>
 						</section>
 						<section class="p5-partition">
@@ -302,12 +366,9 @@ div.ui-tooltip {
 										</div>
 									</div>
 								</div>
-							</div></span> 
-							<%
-							 	} 
-							else 
-								{
-							 %>
+							</div></span> <%
+ 	} else {
+ %>
 						<table
 							class="table table-responsive table-hover p5-haveskill-table">
 							<thead>
@@ -318,20 +379,24 @@ div.ui-tooltip {
 								</tr>
 							</thead>
 							<tbody>
-							<%
-								for(int i=0;i<skill.size();i++)
-								{
-									if(i == 8) break;
-							%>
+								<%
+									for (int i = 0; i < skill.size(); i++) {
+											if (i == 8)
+												break;
+								%>
 								<tr>
-									<td class="p5-head-title"><%=skill.get(i).getName() %><%if(skill.get(i).getRepresentative() == 1) out.print("<span class='label label-sm label-open'>대표 보유 기술</span>"); %></td>
-									<td class="p5-head-rating"><%=skill.get(i).getSkill() %></td>
-									<td class="p5-head-experience"><%=skill.get(i).getExperience() %></td>
+									<td class="p5-head-title"><%=skill.get(i).getName()%>
+										<%
+											if (skill.get(i).getRepresentative() == 1)
+														out.print("<span class='label label-sm label-open'>대표 보유 기술</span>");
+										%></td>
+									<td class="p5-head-rating"><%=skill.get(i).getSkill()%></td>
+									<td class="p5-head-experience"><%=skill.get(i).getExperience()%></td>
 								</tr>
-							<%
-								}
-							%>
-								
+								<%
+									}
+								%>
+
 							</tbody>
 						</table>
 
@@ -347,10 +412,9 @@ div.ui-tooltip {
 						</div>
 						<%
 							}
-						%>
-						<%
-							}
-						%> </section>
+						%> <%
+ 	}
+ %> </section>
 						<section class="p5-partition"> <section>
 						<h4 class="p5-page-title">
 							경력<%
@@ -362,7 +426,10 @@ div.ui-tooltip {
 								}
 							%>
 						</h4>
-						<span><div class="p5-empty-component-md">
+						<span> <%
+ 	if (career == null) {
+ %>
+							<div class="p5-empty-component-md">
 								<div class="p5-assign-component">
 									<div>
 										<div class="p5-no-partners-info-text text-center">
@@ -370,9 +437,44 @@ div.ui-tooltip {
 										</div>
 									</div>
 								</div>
-							</div></span></section> <section>
+							</div> <%
+ 	} else {
+ %>
+							<table class="table table-responsive table-hover p5-career-table">
+								<thead>
+									<tr>
+										<th class="p5-head-companyName">회사명</th>
+										<th class="p5-head-work">근무부서 및 담당업무</th>
+										<th class="p5-head-position">직위</th>
+										<th class="p5-head-period">근무기간</th>
+									</tr>
+								</thead>
+								<tbody>
+									<%
+										for (int i = 0; i < career.size(); i++) {
+									%>
+
+									<tr>
+										<td class="p5-head-companyName"><%=career.get(i).getCompany_name()%></td>
+										<td class="p5-head-work"><%=career.get(i).getDepartment()%></td>
+										<td class="p5-head-position"><%=career.get(i).getPosition()%></td>
+										<td class="p5-head-period"><%=career.get(i).getStart_date()%>~<br><%=career.get(i).getEnd_date()%>
+										</td>
+									</tr>
+
+									<%
+										}
+									%>
+								</tbody>
+							</table> <%
+ 	}
+ %>
+						</span></section> <section>
 						<h4 class="p5-page-title">학력</h4>
-						<span><div class="p5-empty-component-md">
+
+						<%
+							if (education == null) {
+						%> <span><div class="p5-empty-component-md">
 								<div class="p5-assign-component">
 									<div>
 										<div class="p5-no-partners-info-text text-center">
@@ -380,9 +482,50 @@ div.ui-tooltip {
 										</div>
 									</div>
 								</div>
-							</div></span></section> <section>
+							</div></span> <%
+ 	} else {
+ %>
+						<table
+							class="table table-responsive table-hover p5-educationalHistory-table">
+							<thead>
+								<tr>
+									<th class="p5-head-schoolName">학교명</th>
+									<th class="p5-head-schoolClassification">분류</th>
+									<th class="p5-head-major">전공</th>
+									<th class="p5-head-status">상태</th>
+									<th class="p5-head-entranceDate">입학일</th>
+									<th class="p5-head-graduationDate">졸업일</th>
+
+								</tr>
+							</thead>
+							<tbody>
+								<%
+									for (int i = 0; i < education.size(); i++) {
+								%>
+
+								<tr>
+									<td class="p5-head-schoolName"><%=education.get(i).getSchool_name()%></td>
+									<td class="p5-head-schoolClassification"><%=education.get(i).getLevel()%></td>
+									<td class="p5-head-major"><%=education.get(i).getMajor()%></td>
+									<td class="p5-head-status"><%=education.get(i).getState()%></td>
+									<td class="p5-head-entranceDate"><%=education.get(i).getStart_date()%></td>
+									<td class="p5-head-graduationDate"><%=education.get(i).getEnd_date()%></td>
+
+								</tr>
+								<%
+									}
+								%>
+
+							</tbody>
+						</table>
+						<%
+							}
+						%> </section> <section>
 						<h4 class="p5-page-title">자격증</h4>
-						<span><div class="p5-empty-component-md">
+
+						<%
+							if (license == null) {
+						%> <span><div class="p5-empty-component-md">
 								<div class="p5-assign-component">
 									<div>
 										<div class="p5-no-partners-info-text text-center">
@@ -390,7 +533,40 @@ div.ui-tooltip {
 										</div>
 									</div>
 								</div>
-							</div></span></section></section>
+							</div></span> <%
+ 	} else {
+ %>
+						<table
+							class="table table-responsive table-hover p5-certificate-table">
+							<thead>
+								<tr>
+									<th class="p5-head-classification">구분</th>
+									<th class="p5-head-certificateNumber">자격증번호</th>
+									<th class="p5-head-certificateDepartment">발행처</th>
+									<th class="p5-head-certificateDate">발행일자</th>
+								</tr>
+							</thead>
+							<tbody>
+								<%
+									for (int i = 0; i < license.size(); i++) {
+								%>
+
+								<tr>
+									<td class="p5-head-classification"><%=license.get(i).getName()%></td>
+									<td class="p5-head-certificateNumber"><%=license.get(i).getSerial_num()%></td>
+									<td class="p5-head-certificateDepartment"><%=license.get(i).getPublishing_office()%></td>
+									<td class="p5-head-certificateDate"><%=license.get(i).getPublication_date()%></td>
+								</tr>
+
+								<%
+									}
+								%>
+
+							</tbody>
+						</table>
+						<%
+							}
+						%> </section></section>
 						<section class="p5-evaluation-list">
 						<h4 class="p5-page-title">
 							평가<%

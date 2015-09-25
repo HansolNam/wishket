@@ -1,5 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo"%>
+<%
+	AccountInfo this_account = (AccountInfo)request.getAttribute("this_account");
+	AccountInfo account = (AccountInfo)session.getAttribute("account");
+	String isSame = (String)request.getAttribute("isSame");
+%>
 
 <!DOCTYPE html>
 <!--[if IE 6]><html lang="ko" class="no-js old ie6"><![endif]-->
@@ -11,26 +17,8 @@
 <meta charset="utf-8" />
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
-<meta content="Wishket Inc,." name="author" />
-<meta
-	content="위시켓은 기업의 프로젝트와 개발자 &amp; 디자이너를 연결해주는 온라인 아웃소싱 서비스 입니다.
-더 이상 지인을 수소문하지 마세요, 위시켓에서 3시간이면 충분합니다."
-	name="description" />
-<meta content="593258114025512" property="fb:app_id" />
-<meta content="website" property="og:type" />
-<meta content="http://www.wishket.com" property="og:url" />
-<meta content="Wishket" property="og:title" />
-<meta content="http://www.wishket.com${pageContext.request.contextPath}/resources/static/img/wishket_logo_256.png"
-	property="og:image" />
-<meta
-	content="위시켓은 기업의 프로젝트와 개발자 &amp; 디자이너를 연결해주는 온라인 아웃소싱 서비스 입니다.
-더 이상 지인을 수소문하지 마세요, 위시켓에서 3시간이면 충분합니다."
-	property="og:description" />
-<meta content="k6UITCIVaYG0YtRsN8g4GF2T4qg7Z3M6JD2mLJte_n4"
-	name="google-site-verification" />
-<meta content="d2c8672ef81fcd9ceb62f51232d13aada8512a64"
-	name="naver-site-verification" />
-<title>위시켓(Wishket) · 파트너스 정보 설정</title>
+
+<title>외주몬(WJM) · 파트너스 정보 설정</title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
 <link href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
 	type="text/css" />
@@ -65,92 +53,8 @@ div.ui-tooltip {
 <script src="${pageContext.request.contextPath}/resources/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
 </head>
 <body class="logged-in partners partners-setting">
-	<div id="fb-root"></div>
-	<script src="${pageContext.request.contextPath}/resources/static/django_facebook/js/facebook.js"
-		type="text/javascript"></script>
-	<script>
-    facebookAppId = '593258114025512';
-    facebookDefaultScope = ["email", "user_about_me", "user_birthday", "user_website"];
-    staticUrl = '${pageContext.request.contextPath}/resources/static/';
-    function facebookJSLoaded(){
-        FB.init({appId: facebookAppId, status: false, cookie: true, xfbml: true, oauth: true});
-    }
-    window.fbAsyncInit = facebookJSLoaded;
-    F = new facebookClass(facebookAppId);
-    F.load();
-</script>
 	<div id="wrap">
-		<header class="header">
-			<section class="nav-main navbar" role="navigation"
-				style="background-color: #2d3a45;">
-				<div class="container"
-					style="background-color: #2d3a45; color: #fff;">
-					<div class="nav-inner"
-						style="background-color: #2d3a45; color: #fff;">
-						<div class="navbar-header " style="color: #fff">
-							<a class="navbar-brand" href="/mywishket/">Wishket</a>
-						</div>
-						<nav>
-							<ul class="nav navbar-nav nav-primary">
-								<li class="" style="color: #fff"><a href="/project/"
-									style="color: #fff">프로젝트 찾기</a></li>
-								<li class="" style="color: #fff"><a href="/partners/"
-									style="color: #fff">파트너스 목록</a></li>
-							</ul>
-							<ul class="nav navbar-nav navbar-right nav-secondary">
-								<li class="help"><a
-									class="nav-help pull-left how_to_use_button"
-									href="/partners-use/"><i
-										class="fa fa-question-circle fa-lg "></i></a></li>
-								<li class="notification"><a
-									class="nav-notification how_to_use_button"
-									href="/accounts/notifications/"><i
-										class="fa fa-bell fa-lg "></i></a></li>
-								<li class="dropdown"><a
-									class="dropdown-toggle how_to_use_button"
-									data-toggle="dropdown" href="#"><%=this_account.getId() %>님 <b
-										class="fa fa-caret-down"></b></a>
-								<ul class="dropdown-menu">
-										<li><a href="/partners/p/<%=this_account.getId() %>/" tabindex="-1">내
-												프로필 보기</a></li>
-										<li><a href="/partners/p/<%=this_account.getId() %>/info/update/"
-											tabindex="-1">프로필 정보 관리</a></li>
-										<li><a href="/accounts/settings/profile/" tabindex="-1">계정
-												설정</a></li>
-										<li class="divider"></li>
-										<li class="dropdown_li"><a class="dropdown_li"
-											href="/accounts/logout/" tabindex="-1">로그아웃</a></li>
-									</ul></li>
-							</ul>
-						</nav>
-					</div>
-				</div>
-			</section>
-			<section class="nav-sub"
-				style="box-shadow: 1px 1px #bdc4cc; background-color: #dadee2;">
-				<div class="container">
-					<div class="nav-inner">
-						<nav>
-							<ul class="nav navbar-nav">
-								<li class=""><a href="/partners/p/<%=this_account.getId() %>/"
-									style="color: #333; font-weight: 500 !important;">내 프로필</a></li>
-								<li class=""><a href="/partners/manage/interest/"
-									style="color: #333; font-weight: 500 !important;">관심 프로젝트</a></li>
-								<li class=""><a href="/partners/manage/proposal/"
-									style="color: #333; font-weight: 500 !important;">지원 내역</a></li>
-								<li class=""><a
-									href="/partners/manage/contract-in-progress/"
-									style="color: #333; font-weight: 500 !important;">진행 중인
-										프로젝트</a></li>
-								<li class=""><a
-									href="/partners/manage/past/review-contract/"
-									style="color: #333; font-weight: 500 !important;">완료한 프로젝트</a></li>
-							</ul>
-						</nav>
-					</div>
-				</div>
-			</section>
-		</header>
+		<jsp:include page="../../../../header2.jsp" flush="false" />
 		<div class="page">
 			<div class="container">
 				<div id="messages"></div>
@@ -160,9 +64,9 @@ div.ui-tooltip {
 					<div class="p5-back-content">
 						<p class="p5-back-nav">
 							<a class="p5-back-nav-link"
-								href="/partners/p/<%=this_account.getId() %>/info/update/">[ 프로필 정보 관리 ]</a> <i
+								href="/wjm/partners/p/<%=this_account.getId() %>/info/update/">[ 프로필 정보 관리 ]</a> <i
 								class="p5-back-nav-arrow fa fa-caret-right"></i> <a
-								href="/partners/p/<%=this_account.getId() %>/portfolio/update/">[ 포트폴리오 ]</a>
+								href="/wjm/partners/p/<%=this_account.getId() %>/portfolio/update/">[ 포트폴리오 ]</a>
 						</p>
 					</div>
 				</div>
@@ -171,19 +75,19 @@ div.ui-tooltip {
 				<div class="sidebar">
 					<div class="sidebar-nav">
 						<ul>
-							<li class=""><a href="/partners/p/<%=this_account.getId() %>/info/update/">파트너스
+							<li class=""><a href="/wjm/partners/p/<%=this_account.getId() %>/info/update/">파트너스
 									정보</a></li>
 							<li class=""><a
-								href="/partners/p/<%=this_account.getId() %>/introduction/update/">자기 소개</a></li>
+								href="/wjm/partners/p/<%=this_account.getId() %>/introduction/update/">자기 소개</a></li>
 							<li class="active"><a
-								href="/partners/p/<%=this_account.getId() %>/portfolio/update/">포트폴리오</a></li>
-							<li class=""><a href="/partners/p/<%=this_account.getId() %>/skill/update/">보유
+								href="/wjm/partners/p/<%=this_account.getId() %>/portfolio/update/">포트폴리오</a></li>
+							<li class=""><a href="/wjm/partners/p/<%=this_account.getId() %>/skill/update/">보유
 									기술</a></li>
 							<li class=""><a
-								href="/partners/p/<%=this_account.getId() %>/background/update/">경력, 학력,
+								href="/wjm/partners/p/<%=this_account.getId() %>/background/update/">경력, 학력,
 									자격증</a></li>
 							<li class=""><a
-								href="/partners/p/<%=this_account.getId() %>/evaluation/update/">프로젝트 히스토리</a></li>
+								href="/wjm/partners/p/<%=this_account.getId() %>/evaluation/update/">프로젝트 히스토리</a></li>
 						</ul>
 					</div>
 				</div>
@@ -194,7 +98,7 @@ div.ui-tooltip {
 							<h3 class="header-text" style="margin-bottom: 30px">포트폴리오 추가</h3>
 						</section>
 						<section class="p5-section">
-							<form action="/partners/p/<%=this_account.getId() %>/portfolio/update/add/"
+							<form action="/wjm/partners/p/<%=this_account.getId() %>/portfolio/update/add/"
 								enctype="multipart/form-data" id="p5-fix-portfolio-form"
 								method="POST">
 								<input name="csrfmiddlewaretoken" type="hidden"
@@ -219,8 +123,8 @@ div.ui-tooltip {
 										<select class="form-control" data-validation="required"
 											id="p5-form-category" name="categoryId"><option
 												selected="selected" value="">카테고리</option>
-											<option value="1">개발</option>
-											<option value="2">디자인</option></select><select class="form-control"
+											<option value="개발">개발</option>
+											<option value="디자인">디자인</option></select><select class="form-control"
 											data-validation="required" id="p5-form-subcategory"
 											name="subcategoryId"><option selected="selected"
 												value="">세부 카테고리</option></select>
@@ -410,7 +314,7 @@ div.ui-tooltip {
 							</form>
 							<span class="pull-right p5-portfolio-btn-group"><a
 								class="btn btn-cancel p5-btn-left"
-								href="/partners/p/<%=this_account.getId() %>/portfolio/update/"
+								href="/wjm/partners/p/<%=this_account.getId() %>/portfolio/update/"
 								id="p5-portfolio-cancel-btn">취소</a>
 							<button class="btn btn-partners p5-submit-portfolio-btn">추가</button></span>
 						</section>
@@ -742,40 +646,74 @@ div.ui-tooltip {
                 $('input[name="isImage2Changed"]').val(1);
                 $('input[name="isImage3Changed"]').val(1);
                 $('#p5-form-tag-input').remove();
-                document.forms["p5-fix-portfolio-form"].submit();
-            }
+                
+      		  var formData = new FormData($('#p5-fix-portfolio-form')[0]);
+
+      		$.ajax({
+    		    type: "POST",
+    		    url: "/wjm/partners/p/<%=this_account.getId() %>/portfolio/update/add/",
+    		    data: formData,  // 폼데이터 직렬화
+    		    async: false,
+    		    cache: false,
+    		    contentType: false,
+    		    processData: false,
+    		    dataType: "json",   // 데이터타입을 JSON형식으로 지정
+    		    success: function(data) { // data: 백엔드에서 requestBody 형식으로 보낸 데이터를 받는다.
+    		        var messages = data.messages;
+
+    			    if(messages == "success")
+    	        	{
+    			    	location.href="/wjm/partners/p/<%=account.getId()%>/portfolio/update"; 
+    	        	}
+    			    else if(messages == "error")
+    			    	{
+    			    	location.href="/wjm/partners/p/<%=account.getId()%>/portfolio"; 
+    			    	}
+    			    else
+    	        	{
+    				$("#messages").html("<div class='alert alert-warning fade in'>"+messages+"</div>");
+
+			    	$('#p5-delete-portfolio-modal').modal('hide');
+    	        	}
+            
+    		    },
+    		    error: function(jqXHR, textStatus, errorThrown) {
+    		        //에러코드
+    		        alert('에러가 발생했습니다.');
+    		    }
+    		});            }
         });
     });
 
     function getSubCategory(dom) {
         var temp='';
 
-        if($(dom).val()==1) { //개발
+        if($(dom).val()=='개발') { //개발
             temp = '<option selected="selected" value="">세부 카테고리</option>' +
-            '<option value="101">웹</option>'+
-            '<option value="102">애플리케이션</option>'+
-            '<option value="103">워드프레스</option>'+
-            '<option value="104">퍼블리싱</option>'+
-            '<option value="105">일반 소프트웨어</option>'+
-            '<option value="106">커머스, 쇼핑몰</option>'+
-            '<option value="107">게임</option>'+
-            '<option value="108">임베디드</option>'+
-            '<option value="109">기타</option>';
+            '<option value="웹">웹</option>'+
+            '<option value="애플리케이션">애플리케이션</option>'+
+            '<option value="워드프레스">워드프레스</option>'+
+            '<option value="퍼블리싱">퍼블리싱</option>'+
+            '<option value="일반소프트웨어">일반 소프트웨어</option>'+
+            '<option value="커머스&쇼핑몰">커머스, 쇼핑몰</option>'+
+            '<option value="게임">게임</option>'+
+            '<option value="임베디드">임베디드</option>'+
+            '<option value="기타">기타</option>';
 
             $('#p5-form-subcategory').html(temp);
-        } else if($(dom).val()==2) {//디자인
+        } else if($(dom).val()=='디자인') {//디자인
             temp = '<option selected="selected" value="">세부 카테고리</option>' +
-            '<option value="201">웹</option>'+
-            '<option value="202">애플리케이션</option>'+
-            '<option value="203">제품</option>'+
-            '<option value="204">프레젠테이션</option>'+
-            '<option value="205">인쇄물</option>'+
-            '<option value="206">커머스, 쇼핑몰</option>'+
-            '<option value="207">로고</option>'+
-            '<option value="208">그래픽</option>'+
-            '<option value="209">영상</option>'+
-            '<option value="210">게임</option>'+
-            '<option value="211">기타</option>';
+            '<option value="웹">웹</option>'+
+            '<option value="애플리케이션">애플리케이션</option>'+
+            '<option value="제품">제품</option>'+
+            '<option value="프레젠테이션">프레젠테이션</option>'+
+            '<option value="인쇄물">인쇄물</option>'+
+            '<option value="커머스&쇼핑몰">커머스, 쇼핑몰</option>'+
+            '<option value="로고">로고</option>'+
+            '<option value="그래픽">그래픽</option>'+
+            '<option value="영상">영상</option>'+
+            '<option value="게임">게임</option>'+
+            '<option value="기타">기타</option>';
             $('#p5-form-subcategory').html(temp);
         } else { //선택 제대로 안됐을 때
             temp = '<option selected="selected" value="">세부 카테고리</option>'
@@ -860,40 +798,5 @@ $( document ).ready(function($) {
 });
 
 </script>
-	<script type="text/javascript">
-        var TRS_AIDX = 9287;
-        var TRS_PROTOCOL = document.location.protocol;
-        document.writeln();
-        var TRS_URL = TRS_PROTOCOL + '//' + ((TRS_PROTOCOL=='https:')?'analysis.adinsight.co.kr':'adlog.adinsight.co.kr') +  '/emnet/trs_esc.js';
-        document.writeln("<scr"+"ipt language='javascript' src='" + TRS_URL + "'></scr"+"ipt>");
-        </script>
-	<script type="text/javascript">
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-        ga('create', 'UA-31427125-2', 'wishket.com');
-        var ga_now = new Date();
-        var dimension4Value = "Y" + ga_now.getFullYear()
-                              + "M" + (ga_now.getMonth()+1)
-                              + "D" + (ga_now.getDate())
-                              + "H" + (ga_now.getHours())
-                              + "I" + (ga_now.getMinutes())
-                              + "W" + (ga_now.getDay());
-        ga('require', 'displayfeatures');
-        ga('set', '&uid', '28338');
-        ga('send', 'pageview', {
-          'dimension1': 'user',
-          'dimension2': 'partners',
-          'dimension3': '28338',
-          'dimension4': dimension4Value
-        });
-      </script>
-	<script type="text/javascript">(function(e,b){if(!b.__SV){var a,f,i,g;window.mixpanel=b;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===e.location.protocol?"https:":"http:")+'//cdn.mxpnl.com/libs/mixpanel-2.2.min.js';f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f);b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==
-typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.set_once people.increment people.append people.track_charge people.clear_charges people.delete_user".split(" ");for(g=0;g<i.length;g++)f(c,i[g]);
-b._i.push([a,e,d])};b.__SV=1.2}})(document,window.mixpanel||[]);
-mixpanel.init("c7b742deb9d00b4f1c0e1e9e8c5c3115");</script>
-	<script type="text/javascript"> if (!wcs_add) var wcs_add={}; wcs_add["wa"] = "s_3225afd5bb50";if (!_nasa) var _nasa={};wcs.inflow();wcs_do(_nasa);</script>
 </body>
 </html>

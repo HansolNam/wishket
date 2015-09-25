@@ -6,8 +6,11 @@
 	AccountInfo this_account = (AccountInfo) request.getAttribute("this_account");
 	AccountInfo account = (AccountInfo) session.getAttribute("account");
 	List<CareerInfo> career = (List<CareerInfo>) request.getAttribute("career");
+	if(career!= null && career.size() == 0) career = null;
 	List<EducationInfo> education = (List<EducationInfo>) request.getAttribute("education");
+	if(education!= null && education.size() == 0) education = null;
 	List<LicenseInfo> license = (List<LicenseInfo>) request.getAttribute("license");
+	if(license!= null && license.size() == 0) license = null;
 	String isSame = (String) request.getAttribute("isSame");
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">

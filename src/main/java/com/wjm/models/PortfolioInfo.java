@@ -10,8 +10,8 @@ public class PortfolioInfo {
 	private String categoryL;
 	private String categoryM;
 	private String description;
-	private Timestamp start_date;
-	private Timestamp end_date;
+	private String start_date;
+	private String end_date;
 	private int participation_rate;
 	private String img0;
 	private String explanation0;
@@ -20,9 +20,11 @@ public class PortfolioInfo {
 	private String img2;
 	private String explanation2;
 	private String tag;
+	private Timestamp reg_date;
 	public PortfolioInfo(int pk, int account_pk, int representative, String name, String categoryL, String categoryM,
-			String description, Timestamp start_date, Timestamp end_date, int participation_rate, String img0,
-			String explanation0, String img1, String explanation1, String img2, String explanation2, String tag) {
+			String description, String start_date, String end_date, int participation_rate, String img0,
+			String explanation0, String img1, String explanation1, String img2, String explanation2, String tag,
+			Timestamp reg_date) {
 		super();
 		this.pk = pk;
 		this.account_pk = account_pk;
@@ -41,6 +43,7 @@ public class PortfolioInfo {
 		this.img2 = img2;
 		this.explanation2 = explanation2;
 		this.tag = tag;
+		this.reg_date = reg_date;
 	}
 	public int getPk() {
 		return pk;
@@ -84,16 +87,16 @@ public class PortfolioInfo {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public Timestamp getStart_date() {
+	public String getStart_date() {
 		return start_date;
 	}
-	public void setStart_date(Timestamp start_date) {
+	public void setStart_date(String start_date) {
 		this.start_date = start_date;
 	}
-	public Timestamp getEnd_date() {
+	public String getEnd_date() {
 		return end_date;
 	}
-	public void setEnd_date(Timestamp end_date) {
+	public void setEnd_date(String end_date) {
 		this.end_date = end_date;
 	}
 	public int getParticipation_rate() {
@@ -144,7 +147,13 @@ public class PortfolioInfo {
 	public void setTag(String tag) {
 		this.tag = tag;
 	}
-	
+	public Timestamp getReg_date() {
+		return reg_date;
+	}
+	public void setReg_date(Timestamp reg_date) {
+		this.reg_date = reg_date;
+	}
+
 	
 	
 }
