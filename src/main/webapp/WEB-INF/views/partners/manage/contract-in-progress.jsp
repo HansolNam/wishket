@@ -1,5 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	<%@ page import="com.wjm.models.AccountInfo, com.wjm.models.ProjectInfo, java.util.*, com.wjm.main.function.Time"%>
+<%
+	AccountInfo account = (AccountInfo)session.getAttribute("account");
+	List<ProjectInfo> projectlist = (List<ProjectInfo>)request.getAttribute("projectlist");
+	int projectCnt = 0;
+	
+	if(projectlist != null)
+		projectCnt = projectlist.size();
+	%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <!--[if IE 6]><html lang="ko" class="no-js old ie6"><![endif]-->
@@ -85,9 +94,13 @@
 							<div style="clear: both;"></div>
 						</div>
 						<section>
+						
 						<section>
 						<p class="text-muted">진행 중인 프로젝트가 없습니다.</p>
-						</section></section>
+						</section>
+						
+						
+						</section>
 					</div>
 				</div>
 			</div>

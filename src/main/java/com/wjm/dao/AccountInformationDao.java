@@ -211,7 +211,11 @@ public class AccountInformationDao implements AccountInformationIDao {
 			String regionM = accountinfo.getRegionm();
 			String regionR = accountinfo.getRegionr();
 			
-			if(form.equals("individual"))
+			if(form == null)
+			{
+				return false;
+			}
+			else if(form.equals("individual"))
 			{
 				//하나라도 없으면 기본정보 없음
 				if(profile == null || form == null || name == null || sex==null ||birth == null

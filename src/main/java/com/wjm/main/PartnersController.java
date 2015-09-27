@@ -31,11 +31,14 @@ import com.wjm.dao.TechniqueDao;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
 import com.wjm.models.AccountInformationInfo;
+import com.wjm.models.ApplicantInfo;
 import com.wjm.models.CareerInfo;
+import com.wjm.models.ContractInfo;
 import com.wjm.models.EducationInfo;
 import com.wjm.models.LicenseInfo;
 import com.wjm.models.Partners_infoInfo;
 import com.wjm.models.PortfolioInfo;
+import com.wjm.models.ProjectInfo;
 import com.wjm.models.TechniqueInfo;
 
 import net.sf.json.JSONObject;
@@ -2215,6 +2218,41 @@ public class PartnersController {
 	///////////////////////////////////////////////////////////////////////////////////
 	// 파트너스 포르젝트 관리
 	////////////////////////////////////////////////////////////////////////////////////
+	
+
+	/**
+	 * 지원자 마이페이지
+	 */
+	/*@RequestMapping(value = "/mywjm/partners", method = RequestMethod.GET)
+	public ModelAndView MywjmController_mywjm_partners(HttpServletRequest request,
+			ModelAndView mv) {
+		logger.info("mywjm partners Page");
+		
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		
+		if(account == null)
+		{
+			mv.setViewName("/accounts/login");
+			return mv;
+		}
+		else if(!account.getAccount_type().equals("partners"))
+		{
+			mv.setViewName("/accounts/login");
+			return mv;
+		}
+		
+		List<ProjectInfo> interest = applicantDao.getInterestProject(account.getPk());
+		List<ApplicantInfo> apply = applicantDao.select_applicant(account.getPk(), "지원중");
+		List<ContractInfo> contract = null;
+
+		mv.setViewName("/mywjm/partners");
+		mv.addObject("interest",interest);
+		mv.addObject("apply",apply);
+		mv.addObject("contract",contract);
+		
+		return mv;
+	}
+	*/
 	/**
 	 * 관심 프로젝트
 	 */
@@ -2222,6 +2260,24 @@ public class PartnersController {
 	public ModelAndView PartnersController_manage_interest(HttpServletRequest request, ModelAndView mv) {
 		logger.info("/partners/manage/interest Page");
 
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		
+		if(account == null)
+		{
+			mv.setViewName("/accounts/login");
+			return mv;
+		}
+		else if(!account.getAccount_type().equals("partners"))
+		{
+			mv.setViewName("/accounts/login");
+			return mv;
+		}
+		
+		List<ProjectInfo> interest = applicantDao.getInterestProject(account.getPk());
+		mv.setViewName("/partners/manage/interest");
+		mv.addObject("interest",interest);
+		
 		return mv;
 	}
 
@@ -2232,6 +2288,24 @@ public class PartnersController {
 	public ModelAndView PartnersController_manage_proposalcounselling(HttpServletRequest request, ModelAndView mv) {
 		logger.info("/partners/manage/proposal/counselling Page");
 
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		
+		if(account == null)
+		{
+			mv.setViewName("/accounts/login");
+			return mv;
+		}
+		else if(!account.getAccount_type().equals("partners"))
+		{
+			mv.setViewName("/accounts/login");
+			return mv;
+		}
+		
+		List<ApplicantInfo> apply = applicantDao.select_applicant(account.getPk(), "지원중");
+		
+		mv.addObject("apply",apply);
+		
+		mv.setViewName("/partners/manage/proposal/counselling");
 		return mv;
 	}
 
@@ -2242,6 +2316,25 @@ public class PartnersController {
 	public ModelAndView PartnersController_manage_proposalendcounselling(HttpServletRequest request, ModelAndView mv) {
 		logger.info("/partners/manage/proposal/end-counselling Page");
 
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		
+		if(account == null)
+		{
+			mv.setViewName("/accounts/login");
+			return mv;
+		}
+		else if(!account.getAccount_type().equals("partners"))
+		{
+			mv.setViewName("/accounts/login");
+			return mv;
+		}
+		
+		List<ApplicantInfo> apply = applicantDao.select_applicant(account.getPk(), "지원종료");
+		
+		mv.addObject("apply",apply);
+		
+		mv.setViewName("/partners/manage/proposal/end-counselling");
+		
 		return mv;
 	}
 

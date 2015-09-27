@@ -1,5 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page import="com.wjm.models.AccountInfo, com.wjm.models.ApplicantInfo, com.wjm.models.PortfolioInfo,java.util.*, com.wjm.main.function.Time"%>
+<%
+	AccountInfo account = (AccountInfo)session.getAttribute("account");
+	List<ApplicantInfo> apply = (List<ApplicantInfo>)request.getAttribute("apply");
+	int cnt = 0;
+	
+	if(apply != null)
+		cnt = apply.size();
+	%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <!--[if IE 6]><html lang="ko" class="no-js old ie6"><![endif]-->
@@ -61,9 +70,9 @@
 					<div class="sidebar-nav">
 						<ul>
 							<li class="active"><a
-								href="/partners/manage/proposal/counselling/">지원 중</a></li>
+								href="/wjm/partners/manage/proposal/counselling/">지원 중</a></li>
 							<li class=""><a
-								href="/partners/manage/proposal/end-counselling/">지원 종료</a></li>
+								href="/wjm/partners/manage/proposal/end-counselling/">지원 종료</a></li>
 						</ul>
 					</div>
 				</div>
@@ -84,9 +93,139 @@
 							<div style="clear: both;"></div>
 						</div>
 						<section>
+						
+						<%
+							if(cnt == 0)
+							{
+						%>
 						<section>
 						<p class="text-muted">지원 중인 프로젝트가 없습니다.</p>
-						</section></section>
+						</section>
+						<%
+							}
+							else
+							{
+
+								String description;
+								for(int i =0;i<cnt;i++)
+								{
+									description = apply.get(i).getApplication_content();
+									description = description.replace("\r\n", "<br/>");
+						%>	
+						
+						<section class="proposal-unit">
+							<section class="proposal-unit-heading">
+							<h4 class="project-title">
+								<a href="/wjm/project/<%=apply.get(i).getName() %>/<%=apply.get(i).getProject_pk() %>/"><%=apply.get(i).getName() %></a> <a class="interest-list-action-btn"
+								 href="/wjm/partners/manage/interest/delete/<%=apply.get(i).getProject_pk() %>/" title="'관심 프로젝트'에서 삭제하기"></a>
+							</h4>
+							</section>
+						<section class="proposal-unit-body">
+							<ul class="interest-summary-info">
+								<li class="lg" style="*width: 180px;"><h5 class="label-item">
+										<i class="fa fa-clock-o"></i> 지원 일자
+									</h5>
+									<span class="project-term"><%=Time.toString3(apply.get(i).getReg_date())%></span>
+								</li>
+								<li class="sub-lg" style="*width: 135px;"><h5 class="label-item">
+										<i class="fa fa-won"></i> 지원 기간
+									</h5>
+									<span><%=apply.get(i).getApplication_period()%> 일</span></li>
+								<li class="sm"><h5 class="label-item">
+										<i class="fa fa-tags"></i> 지원 금액
+									</h5>
+									<span class="project-budget"><%=apply.get(i).getApplication_cost()%>원</span>
+								</li>
+							</ul>
+							<ul>
+								<li class="lg"><h5 class="label-item">
+										<i class="fa fa-map-marker"></i> 지원 내용
+									</h5>
+								</li>
+								<li>
+									<span><%=description %></span>
+								</li>
+							</ul>
+							<ul>
+								<li class="lg"><h5 class="label-item">
+										<i class="fa fa-map-marker"></i>포트폴리오
+									</h5>
+								</li>
+								<li>
+									<span><%if(apply.get(i).getHas_portfolio() == 0){ %>지원한 포트폴리오가 없습니다.<%}else{ %>지원한 포트폴리오가 있습니다.<%} %></span></li>
+							</ul>
+							<%
+							if(apply.get(i).getHas_portfolio() == 1){
+								int portfolio_pk = 0;
+								String portfolio_name = "";
+								
+								description = apply.get(i).getPortfolio_description();
+								description = description.replace("\r\n", "<br/>");
+							%>
+							<ul class="interest-summary-info">
+								<li class="lg" style="*width: 280px;"><h5 class="label-item">
+										<i class="fa fa-tags"></i> 포트폴리오1
+									</h5>
+									<span><%if(apply.get(i).getPortfolio1() != null) 
+											{
+											portfolio_pk = apply.get(i).getPortfolio1().getPk();
+											portfolio_name = apply.get(i).getPortfolio1().getName();
+											out.print("<a href='/wjm/partners/p/"+account.getId()+"/portfolio/"+portfolio_pk+"'>"+portfolio_name+"</a>");
+											}
+									else
+									{
+										out.print("없음");
+									}
+										%></span>
+								</li>
+								<li class="sub-lg" style="*width: 235px;"><h5 class="label-item">
+										<i class="fa fa-won"></i> 포트폴리오2
+									</h5>
+									<span><%if(apply.get(i).getPortfolio2() != null) 
+											{
+											portfolio_pk = apply.get(i).getPortfolio2().getPk();
+											portfolio_name = apply.get(i).getPortfolio2().getName();
+											out.print("<a href='/wjm/partners/p/"+account.getId()+"/portfolio/"+portfolio_pk+"'>"+portfolio_name+"</a>");
+											}
+									else
+									{
+										out.print("없음");
+									}
+										%></span></li>
+								<li class="sm"><h5 class="label-item">
+										<i class="fa fa-clock-o"></i> 포트폴리오3
+									</h5>
+									<span class="project-term"><%if(apply.get(i).getPortfolio3() != null) 
+											{
+											portfolio_pk = apply.get(i).getPortfolio3().getPk();
+											portfolio_name = apply.get(i).getPortfolio3().getName();
+											out.print("<a href='/wjm/partners/p/"+account.getId()+"/portfolio/"+portfolio_pk+"'>"+portfolio_name+"</a>");
+											}
+									else
+									{
+										out.print("없음");
+									}
+										%></span></li>
+							</ul>
+							<ul>
+								<li class="lg"><h5 class="label-item">
+										<i class="fa fa-map-marker"></i> 포트폴리오 설명
+									</h5>
+								</li>
+								<li>
+									<span><%=description %></span>
+								</li>
+							</ul>
+							<%
+							}
+							%>
+							</section>
+						</section>
+						<%
+								}
+							}
+						%>
+						</section>
 					</div>
 				</div>
 			</div>

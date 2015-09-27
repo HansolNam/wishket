@@ -17,6 +17,29 @@ public class ApplicantInfo {
 	private String status;
 	private Timestamp reg_date;
 	private String name;
+	
+	public PortfolioInfo getPortfolio1() {
+		return portfolio1;
+	}
+	public void setPortfolio1(PortfolioInfo portfolio1) {
+		this.portfolio1 = portfolio1;
+	}
+	public PortfolioInfo getPortfolio2() {
+		return portfolio2;
+	}
+	public void setPortfolio2(PortfolioInfo portfolio2) {
+		this.portfolio2 = portfolio2;
+	}
+	public PortfolioInfo getPortfolio3() {
+		return portfolio3;
+	}
+	public void setPortfolio3(PortfolioInfo portfolio3) {
+		this.portfolio3 = portfolio3;
+	}
+	private PortfolioInfo portfolio1;
+	private PortfolioInfo portfolio2;
+	private PortfolioInfo portfolio3;
+	
 	public ApplicantInfo(int pk, int project_pk, int account_pk, int application_cost, int application_period,
 			String application_content, int has_portfolio, int portfolio_pk1, int portfolio_pk2, int portfolio_pk3,
 			String portfolio_description, String status, Timestamp reg_date, String name) {

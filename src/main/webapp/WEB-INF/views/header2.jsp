@@ -97,7 +97,7 @@
 							style="color: #333; font-weight: 500 !important;">내 프로필</a></li>
 						<li class=""><a href="/wjm/partners/manage/interest/"
 							style="color: #333; font-weight: 500 !important;">관심 프로젝트</a></li>
-						<li class=""><a href="/wjm/partners/manage/proposal/"
+						<li class=""><a href="/wjm/partners/manage/proposal/counselling"
 							style="color: #333; font-weight: 500 !important;">지원 내역</a></li>
 						<li class=""><a
 							href="/wjm/partners/manage/contract-in-progress/"

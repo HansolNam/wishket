@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -24,6 +25,9 @@ public class ApplicantDao implements ApplicantIDao {
 	
 	private DataSource dataSource;
 	private JdbcTemplate jdbcTemplate;
+
+	@Autowired
+	private PortfolioDao portfolioDao;
 	
 	public void setDataSource(DataSource ds) {
 		dataSource = ds;
@@ -360,7 +364,7 @@ public class ApplicantDao implements ApplicantIDao {
 		    	new Object[] { account_pk, status },new RowMapper<ApplicantInfo>() {
 	    	public ApplicantInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{
-	    		return new ApplicantInfo(
+	    		ApplicantInfo applicant = new ApplicantInfo(
 	    				resultSet.getInt("pk")
 	    				, resultSet.getInt("project_pk")
 	    				, resultSet.getInt("account_pk")
@@ -375,6 +379,29 @@ public class ApplicantDao implements ApplicantIDao {
 	    				, resultSet.getString("status")
 	    				, resultSet.getTimestamp("reg_date")
 	    				, resultSet.getString("name"));
+	    		
+	    		if(applicant!=null)
+	    		{
+	    			if(applicant.getHas_portfolio() == 1)
+	    			{
+	    				if( applicant.getPortfolio_pk1() != 0 )
+	    					applicant.setPortfolio1(portfolioDao.select_portfolio(applicant.getPortfolio_pk1()));
+	    				else
+	    					applicant.setPortfolio1(null);
+
+	    				if( applicant.getPortfolio_pk2() != 0 )
+	    					applicant.setPortfolio2(portfolioDao.select_portfolio(applicant.getPortfolio_pk2()));
+	    				else
+	    					applicant.setPortfolio2(null);
+	    				
+	    				if( applicant.getPortfolio_pk3() != 0 )
+	    					applicant.setPortfolio3(portfolioDao.select_portfolio(applicant.getPortfolio_pk3()));
+	    				else
+	    					applicant.setPortfolio3(null);
+	    			}
+	    		}
+	    		
+	    		return applicant;
 	    	}
 	    });
 	}
