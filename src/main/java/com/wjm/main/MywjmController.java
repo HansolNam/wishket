@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.wjm.dao.AccountDao;
+import com.wjm.dao.ApplicantDao;
 import com.wjm.dao.ProjectDao;
 import com.wjm.models.AccountInfo;
 import com.wjm.models.ProjectInfo;
@@ -30,8 +31,11 @@ public class MywjmController {
 
 	@Autowired
 	private ProjectDao projectDao;
+
+	@Autowired
+	private ApplicantDao applicantDao;
 	/**
-	 * Ȩȭ��
+	 * 클라이언트 마이페이지
 	 */
 	@RequestMapping(value = "/mywjm/client", method = RequestMethod.GET)
 	public ModelAndView MywjmController_mywjm_client(HttpServletRequest request, ModelAndView mv) {
@@ -52,7 +56,7 @@ public class MywjmController {
 	}
 
 	/**
-	 * ������Ʈ ȭ��
+	 * 지원자 마이페이지
 	 */
 	@RequestMapping(value = "/mywjm/partners", method = RequestMethod.GET)
 	public String MywjmController_mywjm_partners(HttpServletRequest request) {

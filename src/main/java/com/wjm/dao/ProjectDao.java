@@ -558,7 +558,7 @@ public class ProjectDao implements ProjectIDao {
 	
 	public int getApplicantNum(int project_pk)
 	{
-		List<ApplicantInfo> applicantlist =  applicantDao.select(project_pk);
+		List<ApplicantInfo> applicantlist =  applicantDao.select_project(project_pk);
 		
 		return applicantlist.size();
 	}

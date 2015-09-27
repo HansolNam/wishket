@@ -10,7 +10,13 @@
 	AccountInfo account = (AccountInfo) session.getAttribute("account");
 	PortfolioInfo portfolio = (PortfolioInfo) request.getAttribute("portfolio");
 	String isSame = (String) request.getAttribute("isSame");
-
+	String description = "";
+	
+	if(portfolio != null && portfolio.getDescription() != null)
+		if(!portfolio.getDescription().isEmpty())
+		{
+			description = portfolio.getDescription().replaceAll("\r\n", "<br/>");
+		}
 %>
 <!DOCTYPE html>
 <html class="no-js modern" lang="ko">
@@ -22,37 +28,37 @@
 
 <title>외주몬(WJM) · 파트너스 정보 설정</title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
-<link href="/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
+<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
 	type="text/css" />
-<link href="/static/CACHE/css/aa41eeaffc60.css" rel="stylesheet"
+<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/aa41eeaffc60.css" rel="stylesheet"
 	type="text/css" />
-<link href="/static/CACHE/css/35066c295d92.css" rel="stylesheet"
+<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/35066c295d92.css" rel="stylesheet"
 	type="text/css" />
-<!--[if IE 7]><link rel="stylesheet" href="/static/CACHE/css/cc2b8202dedf.css" type="text/css" /><![endif]-->
-<!--[if IE 8]><link rel="stylesheet" href="/static/CACHE/css/0873b963b20a.css" type="text/css" /><![endif]-->
-<link href="/static/django_facebook/css/facebook.css" media="all"
+<!--[if IE 7]><link rel="stylesheet" href="${pageContext.request.contextPath}/resources/static/CACHE/css/cc2b8202dedf.css" type="text/css" /><![endif]-->
+<!--[if IE 8]><link rel="stylesheet" href="${pageContext.request.contextPath}/resources/static/CACHE/css/0873b963b20a.css" type="text/css" /><![endif]-->
+<link href="${pageContext.request.contextPath}/resources/static/django_facebook/css/facebook.css" media="all"
 	rel="stylesheet" />
 <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-<script src="/static/CACHE/js/a52a868564de.js" type="text/javascript"></script>
-<link href="/static/css/floating.css" rel="stylesheet" />
+<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/a52a868564de.js" type="text/javascript"></script>
+<link href="${pageContext.request.contextPath}/resources/static/css/floating.css" rel="stylesheet" />
 <script src="http://wcs.naver.net/wcslog.js" type="text/javascript"></script>
-<link href="/static/css/floating.css" rel="stylesheet" />
+<link href="${pageContext.request.contextPath}/resources/static/css/floating.css" rel="stylesheet" />
 <script src="http://wcs.naver.net/wcslog.js" type="text/javascript"></script>
 <style type="text/css">
 div.ui-tooltip {
 	max-width: 252px !important;
 }
 </style>
-<link href="/static/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-<link href="/static/favicon.ico" rel="icon" type="image/x-icon" />
-<link href="/static/touch-icon-ipad.png" rel="apple-touch-icon"
+<link href="${pageContext.request.contextPath}/resources/static/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+<link href="${pageContext.request.contextPath}/resources/static/favicon.ico" rel="icon" type="image/x-icon" />
+<link href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad.png" rel="apple-touch-icon"
 	sizes="76x76" />
-<link href="/static/touch-icon-iphone-retina.png" rel="apple-touch-icon"
+<link href="${pageContext.request.contextPath}/resources/static/touch-icon-iphone-retina.png" rel="apple-touch-icon"
 	sizes="120x120" />
-<link href="/static/touch-icon-ipad-retina.png" rel="apple-touch-icon"
+<link href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad-retina.png" rel="apple-touch-icon"
 	sizes="152x152" />
-<script src="/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
-<script src="/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
 </head>
 <body class="logged-in partners partners-setting">
 	<div id="wrap">
@@ -97,7 +103,7 @@ div.ui-tooltip {
 					<div class="content-inner"
 						style="padding-top: 15px; padding-bottom: 25px;">
 						<section class="p5-partition-title">
-							<h3 class="header-text" style="margin-bottom: 30px">ㅁㅁㅁ 수정</h3>
+							<h3 class="header-text" style="margin-bottom: 30px"><%=portfolio.getName()%> 수정</h3>
 						</section>
 						<section class="p5-section">
 							<form
@@ -117,7 +123,7 @@ div.ui-tooltip {
 									<div class="control-wrapper">
 										<input class="form-control p5-portfolio-form-title"
 											data-validation="required" id="p5-form-title" name="title"
-											required="required" type="text" value="ㅁㅁㅁ" />
+											required="required" type="text" value="<%=portfolio.getName()%>" />
 									</div>
 								</div>
 								<div class="form-group p5-portfolio-form-group">
@@ -127,8 +133,8 @@ div.ui-tooltip {
 										<select class="form-control" data-validation="required"
 											id="p5-form-category" name="categoryId"><option
 												selected="selected" value="">카테고리</option>
-											<option value="1">개발</option>
-											<option value="2">디자인</option></select><select class="form-control"
+											<option value="개발">개발</option>
+											<option value="디자인">디자인</option></select><select class="form-control"
 											data-validation="required" id="p5-form-subcategory"
 											name="subcategoryId"><option selected="selected"
 												value="">세부 카테고리</option></select>
@@ -139,7 +145,7 @@ div.ui-tooltip {
 									<div class="control-wrapper">
 										<textarea class="form-control p5-portfolio-description"
 											cols="80" data-validation="required" id="p5-form-description"
-											name="description" required="" rows="10">ㅁㄴㅇㄹ</textarea>
+											name="description" required="" rows="10"><%=description %></textarea>
 									</div>
 									<span class="p5-portfolio-information"
 										id="p5-form-description-information">한글 기준 5000자 미만</span>
@@ -204,15 +210,13 @@ div.ui-tooltip {
 											data-slider-max="100" data-slider-min="1"
 											data-slider-selection="before" data-slider-step="1"
 											id="p5-form-participation-rate" name="participationRate"
-											required="" type="text" value="50" /><span class="p5-percent">%</span>
+											required="" type="text" value="<%=portfolio.getParticipation_rate() %>" /><span class="p5-percent">%</span>
 									</div>
 									<span class="p5-portfolio-information"
 										id="p5-participation-rate-infomation">참여율은 1에서 100까지
 										정수로 입력할 수 있습니다.</span>
 								</div>
 								<div class="process-guide-box" style="margin-left: 150px;">
-									<img src="/static/img/process-guide-success.png"
-										style="float: left" />
 									<p class="process-guide-text" style="float: left">
 										<strong>[포트폴리오 수정 가이드]</strong><br /> 포트폴리오 이미지는 <strong>가로
 											632px</strong>로 변환되어 보여집니다.<br /> <strong>이미지 파일</strong>(.jpg, .jpeg,
@@ -226,7 +230,7 @@ div.ui-tooltip {
 										for="">대표 이미지</label>
 									<div class="p5-portfoilo-img-control-wrapper">
 										<div>
-											<span class="p5-img-name" id="p5-image-name-1"><%=this_account.getId()%>_7ef9ce629b0de7c34026.png</span>
+											<span class="p5-img-name" id="p5-image-name-1"><%=portfolio.getImg0() %></span>
 											<span class="p5-custom-file-type-input-wrapper"><button
 													class="btn btn-primary p5-custom-file-type-front"
 													type="button">
@@ -244,7 +248,7 @@ div.ui-tooltip {
 									<div class="control-wrapper">
 										<input class="form-control p5-form-comment"
 											id="p5-img1-description" name="caption1" type="text"
-											value="RAP" />
+											value="<% if(portfolio.getExplanation0() !=null) out.print(portfolio.getExplanation0()); %>" />
 									</div>
 									<span class="p5-portfolio-information"
 										id="p5-caption1-infomation">한글 기준 120자 미만</span>
@@ -254,7 +258,7 @@ div.ui-tooltip {
 										for="">이미지</label>
 									<div class="p5-portfoilo-img-control-wrapper">
 										<div>
-											<span class="p5-img-name" id="p5-image-name-2"><%=this_account.getId()%>_a3028d7d407abde59b18.png</span>
+											<span class="p5-img-name" id="p5-image-name-2"><%=portfolio.getImg1() %></span>
 											<span class="p5-custom-file-type-input-wrapper"><button
 													class="btn btn-primary p5-custom-file-type-front"
 													type="button">
@@ -272,7 +276,7 @@ div.ui-tooltip {
 									<div class="control-wrapper">
 										<input class="form-control p5-form-comment"
 											id="p5-img2-description" name="caption2" type="text"
-											value="sbsb" />
+											value="<% if(portfolio.getExplanation1() !=null) out.print(portfolio.getExplanation1()); %>" />
 									</div>
 									<span class="p5-portfolio-information"
 										id="p5-caption2-infomation">한글 기준 120자 미만</span>
@@ -282,8 +286,7 @@ div.ui-tooltip {
 										for="">이미지</label>
 									<div class="p5-portfoilo-img-control-wrapper">
 										<div>
-											<span class="p5-img-name" id="p5-image-name-3">이미지를
-												등록해주세요.</span> <span class="p5-custom-file-type-input-wrapper"><button
+											<span class="p5-img-name" id="p5-image-name-3"><%=portfolio.getImg2() %></span> <span class="p5-custom-file-type-input-wrapper"><button
 													class="btn btn-primary p5-custom-file-type-front"
 													type="button">
 													<i class="fa fa-plus"></i> 이미지 변경
@@ -299,7 +302,7 @@ div.ui-tooltip {
 										줄 설명</label>
 									<div class="control-wrapper">
 										<input class="form-control p5-form-comment" disabled=""
-											id="p5-img3-description" name="caption3" type="text" />
+											id="p5-img3-description" name="caption3" type="text" value="<% if(portfolio.getExplanation2() !=null) out.print(portfolio.getExplanation2()); %>" />
 									</div>
 									<span class="p5-portfolio-information"
 										id="p5-caption3-infomation">한글 기준 120자 미만</span>
@@ -407,15 +410,60 @@ $(document).ready( function() {
         }
     });
     
+    var img1_val = "<%if(portfolio.getImg0() != null) out.print(portfolio.getImg0());%>";
+    if(img1_val != ""){
+    	$('#p5-image-name-1').html(img1_val.split(/(\\|\/)/g).pop());
+        $('#p5-img1-description').attr('disabled',false); //캡션 비활성화
+    }
+    else
+    	{
+    	$('#p5-image-name-1').html('이미지를 등록해주세요.');
+        $('#p5-img1-description').attr('disabled',true); //캡션 비활성화
+    	}
+    var img2_val = "<%if(portfolio.getImg1() != null) out.print(portfolio.getImg1());%>";
+    if(img2_val != ""){
+    	$('#p5-image-name-2').html(img2_val.split(/(\\|\/)/g).pop());
+        $('#p5-im2-description').attr('disabled',false); //캡션 비활성화
+    }
+    else
+	{
+	$('#p5-image-name-2').html('이미지를 등록해주세요.');
+    $('#p5-img2-description').attr('disabled',true); //캡션 비활성화
+	}
+    var img3_val = "<%if(portfolio.getImg2() != null) out.print(portfolio.getImg2());%>";
+    if(img3_val != ""){
+    	$('#p5-image-name-3').html(img3_val.split(/(\\|\/)/g).pop());
+        $('#p5-img3-description').attr('disabled',false); //캡션 비활성화
+    }
+    else
+	{
+	$('#p5-image-name-3').html('이미지를 등록해주세요.');
+    $('#p5-img3-description').attr('disabled',true); //캡션 비활성화
+	}
     
     var tag = '';
     tagCnt = 1;
     
-        item = "HTML5";
+    <%
+    	String tag = "";
+    	if(portfolio.getTag() != null)
+    		if(!portfolio.getTag().isEmpty())
+    		{
+    			tag = portfolio.getTag();	
+    		}
+    	
+    	String taglist[] = tag.split(",");
+    	
+    	for(int i=0;i<taglist.length;i++)
+    	{
+    %>
+        item = "<%=taglist[i]%>";
         tag+= '<li>' +
         '<div class="p5-tag-form-unit">' +
         '<span class="p5-tag-form-unit-val">'+item.replace('"','').replace('"','')+'</span><a href="#" class="p5-form-tag-delete-btn">x</a></div><input type="hidden" name="tagList" value="'+item.replace('"','').replace('"','')+'"></li>';
-    
+    <%
+    	}
+    	%>
 
 
     $('.p5-tag-form-unit-group').prepend(tag);
@@ -691,8 +739,40 @@ $(document).ready( function() {
         $('input[name="isImage3Changed"]').val(image3);
 
         $('#p5-form-tag-input').remove();
+        
+		  var formData = new FormData($('#p5-fix-portfolio-form')[0]);
 
-        document.forms["p5-fix-portfolio-form"].submit();
+        $.ajax({
+		    type: "POST",
+		    url: "/wjm/partners/p/<%=account.getId()%>/portfolio/<%=portfolio.getPk()%>/update/edit",
+		    data: formData,  // 폼데이터 직렬화
+		    async: false,
+		    cache: false,
+		    contentType: false,
+		    processData: false,
+		    dataType: "json",   // 데이터타입을 JSON형식으로 지정
+		    success: function(data) { // data: 백엔드에서 requestBody 형식으로 보낸 데이터를 받는다.
+		        var messages = data.messages;
+
+		    	if(messages == "success")
+		        	{location.href="/wjm/partners/p/<%=account.getId()%>/portfolio/<%=portfolio.getPk()%>/update"; 
+		        	}
+		        else if(messages == "error")
+		        	{
+		        	location.href="/wjm/partners/p/<%=account.getId()%>/portfolio"; 
+		        	}
+		        else
+		        	{
+					$("#messages").html("<div class='alert alert-warning fade in'>"+messages+"</div>");
+
+		        	}
+		        
+		    },
+		    error: function(jqXHR, textStatus, errorThrown) {
+		        //에러코드
+		        alert('에러가 발생했습니다.');
+		    }
+		});
 
     });
 });
@@ -715,16 +795,15 @@ $(document).ready( function() {
         }
     }
 </script>
-	<script type="text/javascript">
-  $(function() {
+<script src="http://code.jquery.com/jquery-1.11.0.min.js">
+$(function() {
     wishket.init();
     
     svgeezy.init(false, 'png');
   });
 </script>
-	<script>
-
-$( document ).ready(function($) {
+<script src="http://code.jquery.com/jquery-1.11.0.min.js">
+$( document ).ready(function() {
     var p5TotalSubNavigationFlag = 0;
 
 

@@ -68,22 +68,34 @@ public class Time {
 		return timestamp;
 	}
 	
+	//분 단위
 	static public int remainDate(Timestamp deadline, Timestamp now)
 	{
-		long remain_long = (deadline.getTime() - now.getTime())/((long)1000*60*60*24);
+		long remain_long = (deadline.getTime() - now.getTime())/((long)1000*60);
 		
 		return (int)remain_long;
 	}
 	
-	static public String remainWeekDate(int remainDate)
+	static public String remainDate(int remainMinute)
 	{	
-		int week = remainDate / 7;
-		int day = remainDate % 7;
+		int hours = remainMinute/60;
+		int day = hours/24;
+		int week = day / 7;
 		
-		if(week == 0)
-			return day+"일";
+		if(week>0)
+		{
+			return week+"주 "+(day%7)+"일";
+		}
+		else if(day >0)
+		{
+			return day+"일 "+(hours%24)+"시간";
+		}
+		else if(hours >0)
+		{
+			return hours+"시간 "+(remainMinute%60)+"분";
+		}
 		else
-			return week+"주 "+day+"일";
+			return (remainMinute%60)+"분";
 	}
 	
 	static public String TimestampToString(Timestamp timestamp)

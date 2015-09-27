@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.wjm.idao.ApplicantIDao;
+import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
 import com.wjm.models.ApplicantInfo;
 
@@ -31,11 +32,34 @@ public class ApplicantDao implements ApplicantIDao {
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
 	}
 	
-	public void create(int project_pk, int account_pk,int application_cost,int application_period,String application_content,int portfolio_pk,String portfolio_description)
+	public void create(int project_pk, int account_pk,int application_cost,
+			int application_period,String application_content,
+			int has_portfolio, int portfolio_pk1, int portfolio_pk2,
+			int portfolio_pk3, String portfolio_description,
+			String status)
 	{
-		jdbcTemplate.update("insert into applicant (project_pk, account_pk, application_cost, application_period, application_content, portfolio_pk, portfolio_description) values (?, ?, ?,?,?,?,?)"
-				, new Object[] { project_pk, account_pk, application_cost, application_period, application_content, portfolio_pk, portfolio_description });
+		jdbcTemplate.update("insert into applicant (project_pk, account_pk, application_cost, "
+				+ "application_period, application_content, has_portfolio, portfolio_pk1, portfolio_pk2, portfolio_pk3, "
+				+ "portfolio_description, status) values (?, ?, ?,?,?,?,?,?,?,?,?)"
+				, new Object[] { project_pk, account_pk, application_cost, application_period,
+						application_content, has_portfolio, portfolio_pk1, portfolio_pk2, portfolio_pk3, 
+						portfolio_description, status });
 	}
+	
+	public void update(int pk,int application_cost,
+			int application_period,String application_content,
+			int has_portfolio, int portfolio_pk1, int portfolio_pk2,
+			int portfolio_pk3, String portfolio_description,
+			String status)
+	{
+		jdbcTemplate.update("update applicant set application_cost=?, application_period=?, application_content=?, "
+				+ "has_portfolio=?, portfolio_pk1=?, portfolio_pk2=? , portfolio_pk3=? "
+				+ ", portfolio_description=?, status=? where pk=?"
+				, new Object[] { application_cost, application_period, application_content, has_portfolio,
+						portfolio_pk1, portfolio_pk2, portfolio_pk3, portfolio_description, status, 
+						pk });
+	}
+	
 	public List<ApplicantInfo> selectAll()
 	{
 		return jdbcTemplate.query("select * from applicant",new RowMapper<ApplicantInfo>() {
@@ -48,12 +72,17 @@ public class ApplicantDao implements ApplicantIDao {
 	    				, resultSet.getInt("application_cost")
 	    				, resultSet.getInt("application_period")
 	    				, resultSet.getString("application_content")
-	    				, resultSet.getInt("portfolio_pk")
-	    				, resultSet.getString("portfolio_description"));
+	    				, resultSet.getInt("has_portfolio")
+	    				, resultSet.getInt("portfolio_pk1")
+	    				, resultSet.getInt("portfolio_pk2")
+	    				, resultSet.getInt("portfolio_pk3")
+	    				, resultSet.getString("portfolio_description")
+	    				, resultSet.getString("status")
+	    				, resultSet.getTimestamp("reg_date"));
 	    	}
 	    });
 	}
-	public List<ApplicantInfo> select(int project_pk)
+	public List<ApplicantInfo> select_project(int project_pk)
 	{
 		return jdbcTemplate.query("select * from applicant where project_pk = ?",
 		    	new Object[] { project_pk },new RowMapper<ApplicantInfo>() {
@@ -66,15 +95,20 @@ public class ApplicantDao implements ApplicantIDao {
 	    				, resultSet.getInt("application_cost")
 	    				, resultSet.getInt("application_period")
 	    				, resultSet.getString("application_content")
-	    				, resultSet.getInt("portfolio_pk")
-	    				, resultSet.getString("portfolio_description"));
+	    				, resultSet.getInt("has_portfolio")
+	    				, resultSet.getInt("portfolio_pk1")
+	    				, resultSet.getInt("portfolio_pk2")
+	    				, resultSet.getInt("portfolio_pk3")
+	    				, resultSet.getString("portfolio_description")
+	    				, resultSet.getString("status")
+	    				, resultSet.getTimestamp("reg_date"));
 	    	}
 	    });
 	}
-	public List<ApplicantInfo> select(int project_pk, int account_pk)
+	public List<ApplicantInfo> select_applicant(int account_pk)
 	{
-		return jdbcTemplate.query("select * from applicant where project_pk = ? and account_pk = ?",
-		    	new Object[] { project_pk, account_pk },new RowMapper<ApplicantInfo>() {
+		return jdbcTemplate.query("select * from applicant where account_pk = ?",
+		    	new Object[] { account_pk },new RowMapper<ApplicantInfo>() {
 	    	public ApplicantInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{
 	    		return new ApplicantInfo(
@@ -84,10 +118,188 @@ public class ApplicantDao implements ApplicantIDao {
 	    				, resultSet.getInt("application_cost")
 	    				, resultSet.getInt("application_period")
 	    				, resultSet.getString("application_content")
-	    				, resultSet.getInt("portfolio_pk")
-	    				, resultSet.getString("portfolio_description"));
+	    				, resultSet.getInt("has_portfolio")
+	    				, resultSet.getInt("portfolio_pk1")
+	    				, resultSet.getInt("portfolio_pk2")
+	    				, resultSet.getInt("portfolio_pk3")
+	    				, resultSet.getString("portfolio_description")
+	    				, resultSet.getString("status")
+	    				, resultSet.getTimestamp("reg_date"));
 	    	}
 	    });
+	}
+	public ApplicantInfo select(int account_pk, int project_pk)
+	{
+		List<ApplicantInfo> list = jdbcTemplate.query("select * from applicant where account_pk = ? and project_pk = ?",
+		    	new Object[] { account_pk, project_pk },new RowMapper<ApplicantInfo>() {
+	    	public ApplicantInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+	    	{
+	    		return new ApplicantInfo(
+	    				resultSet.getInt("pk")
+	    				, resultSet.getInt("project_pk")
+	    				, resultSet.getInt("account_pk")
+	    				, resultSet.getInt("application_cost")
+	    				, resultSet.getInt("application_period")
+	    				, resultSet.getString("application_content")
+	    				, resultSet.getInt("has_portfolio")
+	    				, resultSet.getInt("portfolio_pk1")
+	    				, resultSet.getInt("portfolio_pk2")
+	    				, resultSet.getInt("portfolio_pk3")
+	    				, resultSet.getString("portfolio_description")
+	    				, resultSet.getString("status")
+	    				, resultSet.getTimestamp("reg_date"));
+	    	}
+	    });
+		
+		if(list != null)
+		{
+			if(list.size() == 0)
+				return null;
+			else if(list.size() > 1)
+				return null;
+			else
+				return list.get(0);
+		}
+		else
+			return null;
+	}
+	
+	public String createApplicant(int account_pk,int project_pk,String name,String estimated_budget,
+			String estimated_term,String body,String has_related_portfolio,String[] related_portfolio,String related_description)
+	{
+		if(!Validator.hasValue(name))
+		{
+			return "URL에 프로젝트명이 존재하지 않습니다.";
+		}
+		else
+		{
+			logger.info("프로젝트명 : "+name);
+		}
+		
+		int budget = 0;
+		if(!Validator.hasValue(estimated_budget))
+		{
+			return "지원금액을 입력해주세요.";
+		}
+		else
+		{
+			estimated_budget = estimated_budget.replace(",", "");
+			if(!Validator.isValidLength(estimated_budget, 1, 10))
+				return "지원금액이 너무 큽니다.";
+			else if(!Validator.isDigit(estimated_budget)){
+				return "지원금액은 숫자만 입력가능합니다.";
+			}
+			else
+			{
+				logger.info("estimated_budget : "+estimated_budget);
+				budget = Integer.parseInt(estimated_budget);
+			}
+		}
+		
+		int term = 0;
+		
+		if(!Validator.hasValue(estimated_term))
+		{
+			return "지원기간을 입력해주세요.";
+		}
+		else if(!Validator.isValidLength(estimated_term, 1, 3))
+		{
+			return "지원 기간은 최대 3자리까지 가능합니다.";
+		}
+		else if(!Validator.isDigit(estimated_term))
+		{
+			return "지원 기간은 숫자만 입력 가능합니다.";
+		}
+		else
+		{
+			logger.info("지원기간 : "+estimated_term);
+			term = Integer.parseInt(estimated_term);
+		}
+		
+		if(!Validator.hasValue(body))
+		{
+			return "지원내용을 입력해주세요.";
+		}
+		else if(!Validator.isValidLength(body, 1, 5000))
+		{
+			return "지원내용은 최대 5000자리까지 가능합니다.";
+		}
+		else
+		{
+			logger.info("지원내용 : "+body);
+		}
+		
+		int hasPortfolio = 0;
+		
+		if(has_related_portfolio.equals("True"))
+			hasPortfolio = 1;
+		
+		int[] portfolio = new int[related_portfolio.length];
+		
+		if(hasPortfolio == 0)
+		{
+			for(int i=0;i<related_portfolio.length;i++)
+			{
+				portfolio[i] = 0;
+			}
+		}
+		else
+		{
+			for(int i =0;i<related_portfolio.length;i++)
+			{
+				if(Validator.hasValue(related_portfolio[i]) && Validator.isDigit(related_portfolio[i]))
+				{
+					portfolio[i] = Integer.parseInt(related_portfolio[i]);
+				}
+				else
+					portfolio[i] = 0;
+				
+				logger.info(i+" : "+portfolio[i]);
+			}
+			if(!Validator.hasValue(related_description))
+			{
+				return "포트폴리오 설명을 입력해주세요.";
+			}
+			else if(!Validator.isValidLength(related_description, 1, 5000))
+			{
+				return "포트폴리오 설명은 최대 5000자리까지 가능합니다.";
+			}
+			else
+			{
+				logger.info("포트폴리오 설명 : "+related_description);
+			}
+		}
+
+		ApplicantInfo applicant = select(account_pk,project_pk);
+		
+		if(applicant == null)
+			create(project_pk, account_pk,budget,term,body,
+					hasPortfolio, portfolio[0], portfolio[1],
+					portfolio[2], related_description,"지원중");
+		else
+		{/*
+			1. 관심프로젝트
+			2. 지원중
+			3. 지원종료
+			4. 계약진행중
+			5. 진행중
+			6. 평가대기중
+			7. 완료한프로젝트
+			*/
+			if(applicant.getStatus().equals("지원중"))
+			{
+				return "이미 지원하셨습니다.";
+			}
+			else if(applicant.getStatus().equals("지원종료"))
+			{
+				return "프로젝트가 종료되었습니다.";
+			}
+			update(applicant.getPk(),budget,term,body,
+					hasPortfolio, portfolio[0], portfolio[1],
+					portfolio[2], related_description,"지원중");
+		}
+		
+		return "성공";
 	}
 	public void deleteAll()
 	{

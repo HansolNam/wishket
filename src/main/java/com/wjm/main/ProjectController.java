@@ -16,16 +16,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.wjm.dao.AccountDao;
 import com.wjm.dao.AccountInformationDao;
+import com.wjm.dao.ApplicantDao;
 import com.wjm.dao.AreaDetailDao;
+import com.wjm.dao.PortfolioDao;
 import com.wjm.dao.ProjectDao;
 import com.wjm.main.function.Time;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
 import com.wjm.models.AccountInformationInfo;
+import com.wjm.models.ApplicantInfo;
+import com.wjm.models.PortfolioInfo;
 import com.wjm.models.ProjectInfo;
 
 import net.sf.json.JSONObject;
@@ -44,6 +49,11 @@ public class ProjectController {
 	private ProjectDao projectDao;
 	@Autowired
 	private AccountDao accountDao;
+	@Autowired
+	private ApplicantDao applicantDao;
+	@Autowired
+	private PortfolioDao portfolioDao;
+
 
 	@Autowired
 	private AccountInformationDao accountInformationDao;
@@ -681,26 +691,26 @@ public class ProjectController {
 		JSONObject jObject = new JSONObject();
 		List<String> categoryMlist = new ArrayList<String>();
 
-		if(categoryL.equals("develop"))
+		if(categoryL.equals("개발"))
 		{
 			categoryMlist.add("웹");
 			categoryMlist.add("애플리케이션");
 			categoryMlist.add("워드프레스");
 			categoryMlist.add("퍼블리싱");
 			categoryMlist.add("일반소프트웨어");
-			categoryMlist.add("커머스&쇼핑몰");
+			categoryMlist.add("커머스_쇼핑몰");
 			categoryMlist.add("게임");
 			categoryMlist.add("임베디드");
 			categoryMlist.add("기타");
 		}
-		else if(categoryL.equals("design"))
+		else if(categoryL.equals("디자인"))
 		{
 			categoryMlist.add("웹");
 			categoryMlist.add("애플리케이션");
 			categoryMlist.add("제품");
 			categoryMlist.add("프레젠테이션");
 			categoryMlist.add("인쇄물");
-			categoryMlist.add("커머스&쇼핑몰");
+			categoryMlist.add("커머스_쇼핑몰");
 			categoryMlist.add("로고");
 			categoryMlist.add("그래픽");
 			categoryMlist.add("영상");
@@ -790,35 +800,167 @@ public class ProjectController {
 	 * 프로젝트 찾기에서 클릭
 	 */
 
-	@RequestMapping(value = "/project/about/{name}/{pk}", method = RequestMethod.GET)
-	public ModelAndView ProjectController_project_about(HttpServletRequest request, @PathVariable("pk") int pk, @PathVariable("name") String name, ModelAndView mv) {
+	@RequestMapping(value = "/project/{name}/{pk}", method = RequestMethod.GET)
+	public ModelAndView ProjectController_project_about(HttpServletRequest request, 
+			@PathVariable("pk") String pk, 
+			@PathVariable("name") String name, ModelAndView mv) {
 		logger.info("project about get Page");
 		
-		mv.addObject("pk",pk);
-		mv.addObject("name",name);
+		if(!Validator.hasValue(name))
+		{
+			mv.setViewName("/project");
+			return mv;
+		}
 		
-		mv.setViewName("redirect:/project/about");
+		if(!Validator.isDigit(pk))
+		{
+			mv.setViewName("/project");
+			return mv;
+		}
+		
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null)
+		{
+			mv.setViewName("/accounts/login");
+			return mv;
+		}
+		
+		AccountInformationInfo accountinformation = accountInformationDao.select(account.getPk());
+		
+		mv.addObject("accountinfo",accountinformation);
+				
+		ProjectInfo project = projectDao.select(Integer.parseInt(pk), name);
+		if(project!=null)
+			mv.addObject("project",project);
+		else
+		{
+			mv.setViewName("/project");
+			return mv;
+		}
+		
+		List<ApplicantInfo> applicantlist = applicantDao.select_project(Integer.parseInt(pk));
+		if(applicantlist == null)
+			mv.addObject("applicantnum", 0);
+		else
+			mv.addObject("applicantnum", applicantlist.size());
+		mv.setViewName("/project/about");
 		return mv;
 	}
 
 	/**
-	 * 프로젝트 추가
+	 * 프로젝트 지원하기 클릭
 	 */
-	@RequestMapping(value = "/project/about", method = RequestMethod.GET)
-	public ModelAndView ProjectController_about(HttpServletRequest request
-			,@RequestParam("pk") int pk
-			,@RequestParam("name") String name
-			, ModelAndView mv
-			) {
-		logger.info("project about Page");
+
+	@RequestMapping(value = "/project/{name}/{pk}/proposal/apply", method = RequestMethod.GET)
+	public ModelAndView ProjectController_project_proposalapply(HttpServletRequest request, 
+			@PathVariable("pk") String pk, 
+			@PathVariable("name") String name, ModelAndView mv) {
+		logger.info("project proposal apply get Page");
 		
-		ProjectInfo project = projectDao.select(pk, name);
+		if(!Validator.hasValue(name))
+		{
+			mv.setViewName("/project");
+			return mv;
+		}
 		
+		if(!Validator.isDigit(pk))
+		{
+			mv.setViewName("/project");
+			return mv;
+		}
+		
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null)
+		{
+			mv.setViewName("/accounts/login");
+			return mv;
+		}
+				
+		ProjectInfo project = projectDao.select(Integer.parseInt(pk), name);
 		if(project!=null)
 			mv.addObject("project",project);
 		else
-			logger.info("project 없음 에러!");
+		{
+			mv.setViewName("/project");
+			return mv;
+		}
+		
+		List<PortfolioInfo> portfolio = portfolioDao.select(account.getPk());
+		
+		if(portfolio != null && portfolio.isEmpty())
+			portfolio = null;
+		mv.addObject("portfolio", portfolio);
+		mv.setViewName("/project/proposal/apply");
 		
 		return mv;
+	}
+	//estimated_budget
+	//estimated_term
+	//body
+	//has_related_portfolio(True, False)
+	//related_portfolio
+	//related_description
+	
+
+	/**
+	 * 프로젝트 지원하기 처리
+	 */
+	@RequestMapping(value = "/project/{name}/{pk}/proposal/apply", method = RequestMethod.POST, produces = "text/json; charset=utf8")
+	@ResponseBody
+	public String ProjectController_project_proposalapply_post(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable("name") String name, 
+			@PathVariable("pk") String pk, 
+			@RequestParam("estimated_budget") String estimated_budget,
+			@RequestParam("estimated_term") String estimated_term, 
+			@RequestParam("body") String body,
+			@RequestParam("has_related_portfolio") String has_related_portfolio,
+			@RequestParam(value = "related_portfolio", required = false) String[] related_portfolio,
+			@RequestParam(value = "related_description", required = false, defaultValue = "") String related_description
+			) {
+
+		logger.info("/partners/p/{id}/portfolio/update/edit Post Page");
+		
+
+		logger.info("name = " + name);
+		logger.info("pk = " + pk);
+		logger.info("estimated_budget = " + estimated_budget);
+		logger.info("estimated_term = " + estimated_term);
+		logger.info("body = " + body);
+		logger.info("has_related_portfolio = " + has_related_portfolio);
+		if(related_portfolio != null)
+			for(int i=0;i<related_portfolio.length;i++)
+				logger.info(i+" : "+related_portfolio[i]);
+		logger.info("related_description = " + related_description);
+		
+		JSONObject jObject = new JSONObject();
+
+		AccountInfo account = (AccountInfo) request.getSession().getAttribute("account");
+		
+		if (!Validator.isDigit(pk)) {
+			jObject.put("messages", "error");
+			logger.info("jobject = " + jObject.toString());
+			return jObject.toString();
+		}
+
+		String result = "";
+
+		try {
+			result = applicantDao.createApplicant(account.getPk(),Integer.parseInt(pk),name,estimated_budget,
+					estimated_term,body,has_related_portfolio,related_portfolio,related_description);
+			
+		} catch (Exception e) {
+			logger.info(e.toString());
+			jObject.put("messages", "error");
+			logger.info("jobject = " + jObject.toString());
+			return jObject.toString();
+		}
+		logger.info("result = " + result);
+		if (result.equals("성공"))
+			jObject.put("messages", "success");
+		else {
+			jObject.put("messages", result);
+		}
+
+		return jObject.toString();
 	}
 }

@@ -27,7 +27,7 @@
 <section class="become-close project-unit" >
  	<div class="project_unit-heading" style="">
  		<h4 class="project-title">
-	 		<a href="/wjm/project/about/<%=projectlist.get(i).getName()%>/<%=projectlist.get(i).getPk() %>">
+	 		<a href="/wjm/project/<%=projectlist.get(i).getName()%>/<%=projectlist.get(i).getPk() %>">
 	 			<%=projectlist.get(i).getName() + "(" + projectlist.get(i).getStatus() + ")" %>
 	 		</a>
  		</h4>
@@ -59,7 +59,7 @@
  					
  					<% 
  					int remain = Time.remainDate(projectlist.get(i).getDeadline(), now);
- 					if(remain>=0) out.println("마감 "+Time.remainWeekDate(remain)+" 전");
+ 					if(remain>=0) out.println("마감 "+Time.remainDate(remain)+" 전");
  					else out.println("모집 마감");
  					%>
  					</strong>

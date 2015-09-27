@@ -32,34 +32,53 @@
 	name="naver-site-verification" />
 <title>위시켓(Wishket) · 마이위시켓</title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
-<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
-	type="text/css" />
-<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/aa41eeaffc60.css" rel="stylesheet"
-	type="text/css" />
-<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/35066c295d92.css" rel="stylesheet"
-	type="text/css" />
+<link
+	href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css"
+	rel="stylesheet" type="text/css" />
+<link
+	href="${pageContext.request.contextPath}/resources/static/CACHE/css/aa41eeaffc60.css"
+	rel="stylesheet" type="text/css" />
+<link
+	href="${pageContext.request.contextPath}/resources/static/CACHE/css/35066c295d92.css"
+	rel="stylesheet" type="text/css" />
 <!--[if IE 7]><link rel="stylesheet" href="${pageContext.request.contextPath}/resources/static/CACHE/css/cc2b8202dedf.css" type="text/css" /><![endif]-->
 <!--[if IE 8]><link rel="stylesheet" href="${pageContext.request.contextPath}/resources/static/CACHE/css/0873b963b20a.css" type="text/css" /><![endif]-->
-<link href="${pageContext.request.contextPath}/resources/static/django_facebook/css/facebook.css" media="all"
-	rel="stylesheet" />
+<link
+	href="${pageContext.request.contextPath}/resources/static/django_facebook/css/facebook.css"
+	media="all" rel="stylesheet" />
 <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/a52a868564de.js" type="text/javascript"></script>
-<link href="${pageContext.request.contextPath}/resources/static/css/floating.css" rel="stylesheet" />
+<script
+	src="${pageContext.request.contextPath}/resources/static/CACHE/js/a52a868564de.js"
+	type="text/javascript"></script>
+<link
+	href="${pageContext.request.contextPath}/resources/static/css/floating.css"
+	rel="stylesheet" />
 <script src="http://wcs.naver.net/wcslog.js" type="text/javascript"></script>
-<link href="${pageContext.request.contextPath}/resources/static/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-<link href="${pageContext.request.contextPath}/resources/static/favicon.ico" rel="icon" type="image/x-icon" />
-<link href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad.png" rel="apple-touch-icon"
-	sizes="76x76" />
-<link href="${pageContext.request.contextPath}/resources/static/touch-icon-iphone-retina.png" rel="apple-touch-icon"
-	sizes="120x120" />
-<link href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad-retina.png" rel="apple-touch-icon"
-	sizes="152x152" />
-<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
-<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
+<link
+	href="${pageContext.request.contextPath}/resources/static/favicon.ico"
+	rel="shortcut icon" type="image/x-icon" />
+<link
+	href="${pageContext.request.contextPath}/resources/static/favicon.ico"
+	rel="icon" type="image/x-icon" />
+<link
+	href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad.png"
+	rel="apple-touch-icon" sizes="76x76" />
+<link
+	href="${pageContext.request.contextPath}/resources/static/touch-icon-iphone-retina.png"
+	rel="apple-touch-icon" sizes="120x120" />
+<link
+	href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad-retina.png"
+	rel="apple-touch-icon" sizes="152x152" />
+<script
+	src="${pageContext.request.contextPath}/resources/static/CACHE/js/cb793deb7347.js"
+	type="text/javascript"></script>
+<script
+	src="${pageContext.request.contextPath}/resources/static/CACHE/js/c3617c8217d0.js"
+	type="text/javascript"></script>
 </head>
 <body class="logged-in partners mywishket">
 	<div id="wrap">
-	<jsp:include page="../header2.jsp" flush="false" />
+		<jsp:include page="../header2.jsp" flush="false" />
 		<div class="container">
 			<div id="messages"></div>
 		</div>
@@ -108,6 +127,32 @@
 								<tbody>
 									<tr>
 										<td class="text-muted" colspan="5">관심 프로젝트가 없습니다.</td>
+									</tr>
+								</tbody>
+							</table>
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th class="interest-project-title">프로젝트 제목</th>
+										<th class="interest-project-budget">예상금액</th>
+										<th class="interest-project-term">예상기간</th>
+										<th class="interest-created-date">마감일자</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td><a
+											href="/project/%EA%B3%A0%EA%B0%9D%EC%84%9C%EB%B9%84%EC%8A%A4%EC%9A%A9-%EB%AA%A8%EB%B0%94%EC%9D%BC%EC%95%B1-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8-%EA%B0%9C%EB%B0%9C_4982/"
+											style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">고객서비스용
+												모바일앱 클라이언트 개발</a></td>
+										<td>6,000,000원</td>
+										<td>30일</td>
+										<td>2015년 9월 25일</td>
+										<td><a
+											href="/partners/manage/interest/delete/4982/?redirect=mywishket"
+											onclick="delete_interest()" title="'관심 프로젝트'에서 삭제하기"><img
+												src="/static/img/interest-selected.png"></a></td>
 									</tr>
 								</tbody>
 							</table>
@@ -225,56 +270,70 @@
 	<jsp:include page="../footer.jsp" flush="false" />
 
 	<script type="text/javascript">
-  $(function() {
-    wishket.init();
-    
-    svgeezy.init(false, 'png');
-  });
-</script>
+		$(function() {
+			wishket.init();
+
+			svgeezy.init(false, 'png');
+		});
+	</script>
 	<script>
+		$(document).ready(
+				function($) {
+					var p5TotalSubNavigationFlag = 0;
 
-$( document ).ready(function($) {
-    var p5TotalSubNavigationFlag = 0;
+					if ($(window).width() >= 1200) {
+						$('.p5-side-nav-deactive').css('display', 'none');
+					} else {
+						$('.p5-side-nav-active').css('display', 'none');
+						$('.p5-side-nav-deactive').css('display', 'block');
+					}
 
+					$('.content-inner')
+							.on(
+									'click',
+									'.p5-side-nav-active-btn',
+									function() {
+										$('.p5-side-nav-active').css('display',
+												'none');
+										$('.p5-side-nav-deactive').css(
+												'display', 'block');
+									});
 
-	if ( $( window ).width() >= 1200 ) {
-		$( '.p5-side-nav-deactive' ).css( 'display', 'none' );
-	} else  {
-		$( '.p5-side-nav-active' ).css( 'display', 'none' );
-		$( '.p5-side-nav-deactive' ).css( 'display', 'block');
-	}
+					$('.content-inner').on(
+							'click',
+							'.p5-side-nav-deactive-btn',
+							function() {
+								$('.p5-side-nav-active')
+										.css('display', 'block');
+								$('.p5-side-nav-deactive').css('display',
+										'none');
+							});
 
-	$('.content-inner').on('click', '.p5-side-nav-active-btn', function () {
-		$('.p5-side-nav-active').css( 'display', 'none' );
-		$('.p5-side-nav-deactive').css('display','block');
-	});
+					$(window).scroll(
+							function() {
+								if ($(window).scrollTop() > 87
+										&& p5TotalSubNavigationFlag === 0) {
+									setTimeout(function() {
+										$('#p5-total-sub-navigation-wrapper')
+												.removeClass('hide fadeOut');
+										$('#p5-total-sub-navigation-wrapper')
+												.addClass('fadeInDown');
+									}, 200);
+									flag = 1;
 
-	$('.content-inner').on('click', '.p5-side-nav-deactive-btn', function () {
-		$('.p5-side-nav-active').css( 'display', 'block' );
-		$('.p5-side-nav-deactive').css('display','none');
-	});
-
-
-    $( window ).scroll ( function () {
-		if ( $(window).scrollTop() > 87 && p5TotalSubNavigationFlag === 0) {
-			setTimeout(function() {
-				$('#p5-total-sub-navigation-wrapper').removeClass('hide fadeOut');
-				$('#p5-total-sub-navigation-wrapper').addClass('fadeInDown');
-			}, 200 );
-			flag = 1;
-
-
-		} else if ( $(window).scrollTop() <= 87 ){
-			p5TotalSubNavigationFlag = 0;
-			$('#p5-total-sub-navigation-wrapper').removeClass('fadeInDown');
-			$('#p5-total-sub-navigation-wrapper').addClass('fadeOut');
-			setTimeout(function() {
-				$('#p5-total-sub-navigation-wrapper').addClass('hide');
-			}, 200 );
-		}
-	});
-});
-
-</script>
+								} else if ($(window).scrollTop() <= 87) {
+									p5TotalSubNavigationFlag = 0;
+									$('#p5-total-sub-navigation-wrapper')
+											.removeClass('fadeInDown');
+									$('#p5-total-sub-navigation-wrapper')
+											.addClass('fadeOut');
+									setTimeout(function() {
+										$('#p5-total-sub-navigation-wrapper')
+												.addClass('hide');
+									}, 200);
+								}
+							});
+				});
+	</script>
 </body>
 </html>

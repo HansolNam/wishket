@@ -404,7 +404,7 @@ public class PartnersController {
 
 		// 자기 자신이 아닌데 업데이트에 접근하는 경우
 		if (isSame == null) {
-			mv.setViewName("redirect:/partners/p/" + id + "/portfolio");
+			mv.setViewName("redirect:/partners/p/portfolio");
 			return mv;
 		}
 
@@ -445,19 +445,19 @@ public class PartnersController {
 
 		if(!Validator.isDigit(pk))
 		{
-			mv.setViewName("/partners/p/"+id+"/portfolio");
+			mv.setViewName("/partners/p/portfolio");
 			return mv;
 		}
 		if(isSame == null)
 		{
-			mv.setViewName("/partners/p/"+id+"/portfolio/"+pk);
+			mv.setViewName("/partners/p/portfolio");
 			return mv;
 		}
 		PortfolioInfo portfolio = portfolioDao.select_portfolio(Integer.parseInt(pk));
 		
 		if(portfolio == null)
 		{
-			mv.setViewName("/partners/p/"+id+"/portfolio");
+			mv.setViewName("/partners/p/portfolio");
 			return mv;
 		}
 		mv.addObject("portfolio", portfolio);
@@ -487,7 +487,7 @@ public class PartnersController {
 
 		// 자기 자신이 아닌데 업데이트에 접근하는 경우
 		if (isSame == null) {
-			mv.setViewName("redirect:/partners/p/" + id + "/");
+			mv.setViewName("redirect:/partners/p/portfolio");
 			return mv;
 		}
 
@@ -561,7 +561,7 @@ public class PartnersController {
 		String result;
 
 		try {
-			result = portfolioDao.createPortfolio(this_account.getPk(), title, categoryId, subcategoryId, description,
+			result = portfolioDao.createPortfolio(this_account.getPk(), this_account.getId(), title, categoryId, subcategoryId, description,
 					participationBeginYear, participationBeginMonth, participationEndYear, participationEndMonth,
 					participationRate, image1, caption1, image2, caption2, image3, caption3, tagList,
 					request.getRealPath("") + "\\");
@@ -581,6 +581,149 @@ public class PartnersController {
 		return jObject.toString();
 	}
 
+	/**
+	 * 포트폴리오 수정
+	 */
+	@RequestMapping(value = "/partners/p/{id}/portfolio/{portfolio_pk}/update/edit", method = RequestMethod.GET)
+	public ModelAndView PartnersController_portfolioupdateedit(HttpServletRequest request, ModelAndView mv,
+			@PathVariable("id") String id, 
+			@PathVariable("portfolio_pk") String portfolio_pk) {
+		logger.info("/partners/p/{id}/portfolio/update/edit/{portfolio_pk} Page");
+
+		AccountInfo account = (AccountInfo) request.getSession().getAttribute("account");
+		AccountInfo this_account = accountDao.select(id);
+
+		if (this_account == null) {
+			mv.setViewName("redirect:/partners/");
+			return mv;
+		}
+		mv.addObject("this_account", this_account);
+
+		String isSame = isSame(account, this_account);
+		mv.addObject("isSame", isSame);
+
+		// 자기 자신이 아닌데 업데이트에 접근하는 경우
+		if (isSame == null) {
+			mv.setViewName("redirect:/partners/p/" + id + "/");
+			return mv;
+		}
+
+		// skill_pk가 숫자가 아니라면 반환
+		if (!Validator.isDigit(portfolio_pk)) {
+			mv.setViewName("redirect:/partners/p/" + id + "/");
+			return mv;
+		}
+
+		PortfolioInfo portfolio = portfolioDao.select_portfolio(Integer.parseInt(portfolio_pk));
+		mv.addObject("portfolio", portfolio);
+		
+		mv.setViewName("partners/p/portfolio/update/edit");
+
+		return mv;
+	}
+
+	/**
+	 * 포트폴리오 수정 처리
+	 */
+	@RequestMapping(value = "/partners/p/{id}/portfolio/{portfolio_pk}/update/edit", method = RequestMethod.POST, produces = "text/json; charset=utf8")
+	@ResponseBody
+	public String PartnersController_portfolioupdateedit_post(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable("id") String id, 
+			@PathVariable("portfolio_pk") String portfolio_pk, 
+			@RequestParam("title") String title,
+			@RequestParam("categoryId") String categoryId, 
+			@RequestParam("subcategoryId") String subcategoryId,
+			@RequestParam("description") String description,
+			@RequestParam("participationBeginYear") String participationBeginYear,
+			@RequestParam("participationBeginMonth") String participationBeginMonth,
+			@RequestParam("participationEndYear") String participationEndYear,
+			@RequestParam("participationEndMonth") String participationEndMonth,
+			@RequestParam("participationRate") String participationRate, @RequestParam("image1") MultipartFile image1,
+			@RequestParam(value = "caption1", required = false, defaultValue = "") String caption1,
+			@RequestParam("image2") MultipartFile image2,
+			@RequestParam(value = "caption2", required = false, defaultValue = "") String caption2,
+			@RequestParam("image3") MultipartFile image3,
+			@RequestParam(value = "caption3", required = false, defaultValue = "") String caption3,
+			@RequestParam(value = "tagList", required = false, defaultValue = "") String tagList,
+			@RequestParam(value = "isImage1Changed", required = false, defaultValue = "") String isImage1Changed,
+			@RequestParam(value = "isImage2Changed", required = false, defaultValue = "") String isImage2Changed,
+			@RequestParam(value = "isImage3Changed", required = false, defaultValue = "") String isImage3Changed
+			) {
+
+		logger.info("/partners/p/{id}/portfolio/update/edit Post Page");
+		
+
+		logger.info("id = " + id);
+		logger.info("title = " + title);
+		logger.info("categoryId = " + categoryId);
+		logger.info("subcategoryId = " + subcategoryId);
+		logger.info("description = " + description);
+		logger.info("participationBeginYear = " + participationBeginYear);
+		logger.info("participationBeginMonth = " + participationBeginMonth);
+		logger.info("participationEndYear = " + participationEndYear);
+		logger.info("participationEndMonth = " + participationEndMonth);
+		logger.info("participationRate = " + participationRate);
+		logger.info("image1 getOriginalFilename : " + image1.getOriginalFilename());
+		logger.info("caption1 = " + caption1);
+		logger.info("image2 getOriginalFilename : " + image2.getOriginalFilename());
+		logger.info("caption2 = " + caption2);
+		logger.info("image3 getOriginalFilename : " + image3.getOriginalFilename());
+		logger.info("caption3 = " + caption3);
+		logger.info("tagList = " + tagList);
+		logger.info("isImage1Changed = " + isImage1Changed);
+		logger.info("isImage2Changed = " + isImage2Changed);
+		logger.info("isImage3Changed = " + isImage3Changed);
+		
+		JSONObject jObject = new JSONObject();
+
+		AccountInfo account = (AccountInfo) request.getSession().getAttribute("account");
+		AccountInfo this_account = accountDao.select(id);
+
+		if (this_account == null) {
+			jObject.put("messages", "error");
+			logger.info("jobject = " + jObject.toString());
+			return jObject.toString();
+		}
+
+		String isSame = isSame(account, this_account);
+
+		// 자기 자신이 아닌데 업데이트에 접근하는 경우
+		if (isSame == null) {
+			jObject.put("messages", "error");
+			logger.info("jobject = " + jObject.toString());
+			return jObject.toString();
+		}
+
+		if (!Validator.isDigit(portfolio_pk)) {
+			jObject.put("messages", "error");
+			logger.info("jobject = " + jObject.toString());
+			return jObject.toString();
+		}
+
+		logger.info("request.getRealPath : " + request.getRealPath("") + "\\");
+
+		String result;
+
+		try {
+			result = portfolioDao.updatePortfolio(Integer.parseInt(portfolio_pk), this_account.getId(), title, categoryId, subcategoryId, description,
+					participationBeginYear, participationBeginMonth, participationEndYear, participationEndMonth,
+					participationRate, image1, caption1, image2, caption2, image3, caption3, tagList,
+					request.getRealPath("") + "\\", isImage1Changed, isImage2Changed, isImage3Changed);
+		} catch (Exception e) {
+			logger.info(e.toString());
+			jObject.put("messages", "error");
+			logger.info("jobject = " + jObject.toString());
+			return jObject.toString();
+		}
+		logger.info("result = " + result);
+		if (result.equals("성공"))
+			jObject.put("messages", "success");
+		else {
+			jObject.put("messages", result);
+		}
+
+		return jObject.toString();
+	}
 	/**
 	 * 대표 포트폴리오 설정
 	 */

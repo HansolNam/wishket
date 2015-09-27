@@ -4,6 +4,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Random;
 
 import org.apache.commons.fileupload.FileUploadException;
 import org.slf4j.Logger;
@@ -32,7 +33,7 @@ public class Fileupload {
 		}
 
 	}
-	static public String upload_portfolio(String realPath, MultipartFile image, int pk)
+	static public String upload_portfolio(String realPath, MultipartFile image, String id)
 			 throws IOException, FileUploadException{
 		
 		// \wjm\ + 
@@ -51,8 +52,8 @@ public class Fileupload {
 		try{
 			byte[] bytes = image.getBytes();
 			
-			String now = Time.toString4(Time.getCurrentTimestamp());
-			FinalFileName = now+"_"+pk+"_"+fileName;
+			String random = RandomSring(10);
+			FinalFileName = random+"_"+id+"_"+fileName;
 			
 			rootPath = savePath+FinalFileName;
 			logger.info("rootPath = "+rootPath);
@@ -63,7 +64,7 @@ public class Fileupload {
 			stream.write(bytes);
 			stream.close();
 
-			logger.info("img path = "+now+pk+fileName);
+			logger.info("img path = "+random+"_"+id+"_"+fileName);
 			return FinalFileName;
 		}
 		catch(Exception e){
@@ -199,5 +200,21 @@ public class Fileupload {
 		
 		return true;
 		
+	}
+	
+	static public String RandomSring(int length)
+	{
+		Random rnd =new Random();
+		StringBuffer buf =new StringBuffer();
+		 
+		for(int i=0;i<length;i++){
+		    if(rnd.nextBoolean()){
+		        buf.append((char)((int)(rnd.nextInt(26))+97));
+		    }else{
+		        buf.append((rnd.nextInt(10))); 
+		    }
+		}
+		
+		return buf.toString();
 	}
 }
