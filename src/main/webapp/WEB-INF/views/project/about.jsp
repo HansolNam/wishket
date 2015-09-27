@@ -1,11 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page
-	import="com.wjm.models.ProjectInfo, com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo, com.wjm.main.function.Time, java.sql.Timestamp"%>
+	import="java.util.List, com.wjm.models.ProjectInfo, com.wjm.models.AccountInfo, com.wjm.models.CommentInfo, com.wjm.models.AccountInformationInfo, com.wjm.main.function.Time, java.sql.Timestamp"%>
 <%
 	AccountInfo account = (AccountInfo) session.getAttribute("account");
 	AccountInformationInfo accountinfo = (AccountInformationInfo) request.getAttribute("accountinfo");
 	ProjectInfo project = (ProjectInfo) request.getAttribute("project");
+	List<CommentInfo> comment = (List<CommentInfo> ) request.getAttribute("comment");
 	Integer applicantnum = (Integer) request.getAttribute("applicantnum");
 	long now_time = System.currentTimeMillis();
 	Timestamp now = new Timestamp(now_time);
@@ -207,12 +208,41 @@
 				<div class="content-inner" style="margin-top: 5px;">
 					<div class="project-comment">
 						<h4 class="project-comment-title">프로젝트 문의</h4>
+						<%
+						if(comment != null)
+						{
+
+							for(int i=0;i<comment.size();i++)
+							{
+								remain = Time.remainDate(now, comment.get(i).getReg_date());
+
+								%>
+								
+								
+						<div class="media" id="comment_<%=comment.get(i).getPk()%>">
+							<a class="pull-left" href="/wjm/partners/p/<%=comment.get(i).getId() %>"><img
+								alt="프로필 이미지" class="media-object"
+								src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=comment.get(i).getImg() %>"></a>
+							<div class="media-body">
+								<div class="media-heading">
+									<a href="/wjm/partners/p/<%=comment.get(i).getId() %>/"><%=comment.get(i).getId() %></a> <small
+										class="comment-timestamp"><%=Time.remainDate(remain) %> 전</small>
+								</div>
+								<p><%=comment.get(i).getContent() %></p>
+							</div>
+						</div>
+								
+								<%
+								
+							}
+						}
+						%>
 						<div class="media">
 							<a class="pull-left" href="#"><img
 								alt="<%=account.getId() %>의 프로필 이미지" class="media-object"
 								src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=accountinfo.getProfile_img() %>" /></a>
 							<div class="media-body">
-								<form action="." method="POST">
+								<form action="/wjm/project/<%=project.getName()%>/<%=project.getPk() %>" method="POST">
 									<input name="csrfmiddlewaretoken" type="hidden"
 										value="ea0aZfFjzqhmsqlZpktFMN7yDYNwZToQ" />
 									<div class="">
@@ -287,13 +317,14 @@
 					<div class="project-action-btn-group">
 						<a
 							class="btn btn-large btn-partners btn-project-application btn-block"
-							href="/wjm/project/<%=project.getName() %>/<%=project.getPk() %>/proposal/apply/">프로젝트 지원하기</a>
+							href="/wjm/project/<%=project.getName()%>/<%=project.getPk()%>/proposal/apply/">프로젝트
+							지원하기</a>
 						<hr>
 						<a
 							class="btn btn-large btn-project-application btn-black btn-block"
 							href="#" onclick="toggle_interest(this);"
-							style="margin-bottom: 0;"><span
-							id="interest_action_text">관심 프로젝트 추가하기</span></a>
+							style="margin-bottom: 0;"><span id="interest_action_text">관심
+								프로젝트 추가하기</span></a>
 					</div>
 					<%
 						}
@@ -399,12 +430,15 @@
 			}
 		}
 		function toggle_interest(obj) {
-			var project_id = '<%=project.getPk()%>';
+			var project_id = '<%=project.getPk()%>
+		';
 			$
 					.ajax({
-						url : "/wjm/partners/toggle_interest/" + project_id + "/",
+						url : "/wjm/partners/manage/interest/toggle/"
+								+ project_id + "/",
+						dataType : "json", // 데이터타입을 JSON형식으로 지정
 						success : function(data) {
-							if (data.interest == 'false') {
+							if (data.messages == 'false') {
 								obj.className = 'btn btn-large btn-project-application btn-black btn-block';
 								$('#interest_action_text').html('관심 프로젝트 추가하기');
 								$(obj)
@@ -412,7 +446,7 @@
 										.attr(
 												'src',
 												'${pageContext.request.contextPath}/resources/static/img/no-interested-project-default.png');
-							} else {
+							} else if (data.messages == 'true') {
 								obj.className = 'btn btn-large btn-project-application btn-default btn-block';
 								$('#interest_action_text').html('관심 프로젝트 삭제하기');
 								$(obj)
@@ -420,6 +454,8 @@
 										.attr(
 												'src',
 												'${pageContext.request.contextPath}/resources/static/img/interested-project-default.png');
+							} else {
+								alert(data.messages);
 							}
 						},
 						error : function(data) {

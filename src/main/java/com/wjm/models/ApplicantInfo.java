@@ -16,9 +16,10 @@ public class ApplicantInfo {
 	private String portfolio_description;
 	private String status;
 	private Timestamp reg_date;
+	private String name;
 	public ApplicantInfo(int pk, int project_pk, int account_pk, int application_cost, int application_period,
 			String application_content, int has_portfolio, int portfolio_pk1, int portfolio_pk2, int portfolio_pk3,
-			String portfolio_description, String status, Timestamp reg_date) {
+			String portfolio_description, String status, Timestamp reg_date, String name) {
 		super();
 		this.pk = pk;
 		this.project_pk = project_pk;
@@ -33,6 +34,7 @@ public class ApplicantInfo {
 		this.portfolio_description = portfolio_description;
 		this.status = status;
 		this.reg_date = reg_date;
+		this.name = name;
 	}
 	public int getPk() {
 		return pk;
@@ -112,6 +114,12 @@ public class ApplicantInfo {
 	public void setReg_date(Timestamp reg_date) {
 		this.reg_date = reg_date;
 	}
-
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 	
 }

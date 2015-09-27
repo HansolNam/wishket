@@ -68,6 +68,12 @@
 	href="${pageContext.request.contextPath}/resources/static/css/floating.css"
 	rel="stylesheet" />
 <script src="http://wcs.naver.net/wcslog.js" type="text/javascript"></script>
+<script
+		src="${pageContext.request.contextPath}/resources/static/js/Chart.js"></script>
+	<script
+		src="${pageContext.request.contextPath}/resources/static/js/excanvas.js"
+		type="text/javascript"></script>
+	
 <style type="text/css">
 div.ui-tooltip {
 	max-width: 252px !important;
@@ -184,8 +190,7 @@ div.ui-tooltip {
 						<div class="profile-info-inner">
 							<div class="profile-activity-summary-info">
 								<span class="p5-2spanRight"><h5>활동 요약 정보</h5>
-									<div class="star-ultra p5-averageScore-star star-ultra-0"
-										style="width: 161px;"></div>
+									<div class="star-ultra p5-averageScore-star star-ultra-0" style=" width: 161px; "></div>
 									<div>
 										평균평점 <span class="pull-right p5-average-review-title"><span
 											class="p5-averageScore p5-">0.0</span> <span
@@ -602,11 +607,6 @@ div.ui-tooltip {
 		href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css"
 		rel="stylesheet" />
 	<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
-	<script
-		src="${pageContext.request.contextPath}/resources/static/js/Chart.js"></script>
-	<script
-		src="${pageContext.request.contextPath}/resources/static/js/excanvas.js"
-		type="text/javascript"></script>
 	<script>
     $(document).ready(function() {
         $('.content-inner').on('click','.p5-review-show-btn', function(e) {
@@ -628,6 +628,8 @@ div.ui-tooltip {
             $(this).parent().parent().siblings('.p5-review-specific-info').addClass('p5-hidden-component');
             $(this).removeClass('p5-review-hide-btn').addClass('p5-review-show-btn');
         });
+        
+
     });
 
     $(function(){
@@ -671,7 +673,6 @@ div.ui-tooltip {
         else if(cnt===7){
             marginTop="4px"
         }
-
         $(".doughnut-legend").css({
             "margin-top" : marginTop
         })

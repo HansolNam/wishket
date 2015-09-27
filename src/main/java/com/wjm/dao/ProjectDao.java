@@ -66,6 +66,7 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getString("categoryL")
 	    				, resultSet.getString("categoryM")
 	    				, resultSet.getInt("another")
+	    				, resultSet.getInt("applicantnum")
 	    				, resultSet.getString("name")
 	    				, resultSet.getInt("period")
 	    				, resultSet.getString("budget")
@@ -99,6 +100,7 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getString("categoryL")
 	    				, resultSet.getString("categoryM")
 	    				, resultSet.getInt("another")
+	    				, resultSet.getInt("applicantnum")
 	    				, resultSet.getString("name")
 	    				, resultSet.getInt("period")
 	    				, resultSet.getString("budget")
@@ -130,6 +132,7 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getString("categoryL")
 	    				, resultSet.getString("categoryM")
 	    				, resultSet.getInt("another")
+	    				, resultSet.getInt("applicantnum")
 	    				, resultSet.getString("name")
 	    				, resultSet.getInt("period")
 	    				, resultSet.getString("budget")
@@ -162,6 +165,7 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getString("categoryL")
 	    				, resultSet.getString("categoryM")
 	    				, resultSet.getInt("another")
+	    				, resultSet.getInt("applicantnum")
 	    				, resultSet.getString("name")
 	    				, resultSet.getInt("period")
 	    				, resultSet.getString("budget")
@@ -195,6 +199,7 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getString("categoryL")
 	    				, resultSet.getString("categoryM")
 	    				, resultSet.getInt("another")
+	    				, resultSet.getInt("applicantnum")
 	    				, resultSet.getString("name")
 	    				, resultSet.getInt("period")
 	    				, resultSet.getString("budget")
@@ -223,6 +228,7 @@ public class ProjectDao implements ProjectIDao {
 			return projectlist.get(0);
 		
 	}
+	
 	public List<ProjectInfo> selectCondition(String q, String dev, String design, String addr,String sort)
 	{
 		///////////////////////////////////////////////////////
@@ -434,6 +440,7 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getString("categoryL")
 	    				, resultSet.getString("categoryM")
 	    				, resultSet.getInt("another")
+	    				, resultSet.getInt("applicantnum")
 	    				, resultSet.getString("name")
 	    				, resultSet.getInt("period")
 	    				, resultSet.getString("budget")
@@ -466,6 +473,7 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getString("categoryL")
 	    				, resultSet.getString("categoryM")
 	    				, resultSet.getInt("another")
+	    				, resultSet.getInt("applicantnum")
 	    				, resultSet.getString("name")
 	    				, resultSet.getInt("period")
 	    				, resultSet.getString("budget")

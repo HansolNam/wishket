@@ -14,8 +14,8 @@ import org.springframework.stereotype.Repository;
 
 import com.wjm.idao.ApplicantIDao;
 import com.wjm.main.function.Validator;
-import com.wjm.models.AccountInfo;
 import com.wjm.models.ApplicantInfo;
+import com.wjm.models.ProjectInfo;
 
 @Repository
 public class ApplicantDao implements ApplicantIDao {
@@ -36,27 +36,27 @@ public class ApplicantDao implements ApplicantIDao {
 			int application_period,String application_content,
 			int has_portfolio, int portfolio_pk1, int portfolio_pk2,
 			int portfolio_pk3, String portfolio_description,
-			String status)
+			String status,String name)
 	{
 		jdbcTemplate.update("insert into applicant (project_pk, account_pk, application_cost, "
 				+ "application_period, application_content, has_portfolio, portfolio_pk1, portfolio_pk2, portfolio_pk3, "
-				+ "portfolio_description, status) values (?, ?, ?,?,?,?,?,?,?,?,?)"
+				+ "portfolio_description, status, name) values (?, ?, ?,?,?,?,?,?,?,?,?,?)"
 				, new Object[] { project_pk, account_pk, application_cost, application_period,
 						application_content, has_portfolio, portfolio_pk1, portfolio_pk2, portfolio_pk3, 
-						portfolio_description, status });
+						portfolio_description, status,name });
 	}
 	
 	public void update(int pk,int application_cost,
 			int application_period,String application_content,
 			int has_portfolio, int portfolio_pk1, int portfolio_pk2,
 			int portfolio_pk3, String portfolio_description,
-			String status)
+			String status, String name)
 	{
 		jdbcTemplate.update("update applicant set application_cost=?, application_period=?, application_content=?, "
 				+ "has_portfolio=?, portfolio_pk1=?, portfolio_pk2=? , portfolio_pk3=? "
-				+ ", portfolio_description=?, status=? where pk=?"
+				+ ", portfolio_description=?, status=?, name=? where pk=?"
 				, new Object[] { application_cost, application_period, application_content, has_portfolio,
-						portfolio_pk1, portfolio_pk2, portfolio_pk3, portfolio_description, status, 
+						portfolio_pk1, portfolio_pk2, portfolio_pk3, portfolio_description, status, name,
 						pk });
 	}
 	
@@ -78,7 +78,8 @@ public class ApplicantDao implements ApplicantIDao {
 	    				, resultSet.getInt("portfolio_pk3")
 	    				, resultSet.getString("portfolio_description")
 	    				, resultSet.getString("status")
-	    				, resultSet.getTimestamp("reg_date"));
+	    				, resultSet.getTimestamp("reg_date")
+	    				, resultSet.getString("name"));
 	    	}
 	    });
 	}
@@ -101,7 +102,9 @@ public class ApplicantDao implements ApplicantIDao {
 	    				, resultSet.getInt("portfolio_pk3")
 	    				, resultSet.getString("portfolio_description")
 	    				, resultSet.getString("status")
-	    				, resultSet.getTimestamp("reg_date"));
+	    				, resultSet.getTimestamp("reg_date")
+	    				, resultSet.getString("name")
+	    				);
 	    	}
 	    });
 	}
@@ -124,7 +127,8 @@ public class ApplicantDao implements ApplicantIDao {
 	    				, resultSet.getInt("portfolio_pk3")
 	    				, resultSet.getString("portfolio_description")
 	    				, resultSet.getString("status")
-	    				, resultSet.getTimestamp("reg_date"));
+	    				, resultSet.getTimestamp("reg_date")
+	    				, resultSet.getString("name"));
 	    	}
 	    });
 	}
@@ -147,7 +151,8 @@ public class ApplicantDao implements ApplicantIDao {
 	    				, resultSet.getInt("portfolio_pk3")
 	    				, resultSet.getString("portfolio_description")
 	    				, resultSet.getString("status")
-	    				, resultSet.getTimestamp("reg_date"));
+	    				, resultSet.getTimestamp("reg_date")
+	    				, resultSet.getString("name"));
 	    	}
 	    });
 		
@@ -273,9 +278,15 @@ public class ApplicantDao implements ApplicantIDao {
 		ApplicantInfo applicant = select(account_pk,project_pk);
 		
 		if(applicant == null)
+		{
 			create(project_pk, account_pk,budget,term,body,
 					hasPortfolio, portfolio[0], portfolio[1],
-					portfolio[2], related_description,"지원중");
+					portfolio[2], related_description,"지원중",name);
+			
+			//지원자수 증가
+			jdbcTemplate.update("update project set applicantnum=(applicantnum+1) where pk=?"
+					, new Object[] { project_pk });
+		}
 		else
 		{/*
 			1. 관심프로젝트
@@ -294,12 +305,95 @@ public class ApplicantDao implements ApplicantIDao {
 			{
 				return "프로젝트가 종료되었습니다.";
 			}
+			else if(applicant.getStatus().equals("관심프로젝트"))
+			{
+				//지원자수 증가
+				jdbcTemplate.update("update project set applicantnum=(applicantnum+1) where pk=?"
+						, new Object[] { project_pk });
+			}
 			update(applicant.getPk(),budget,term,body,
 					hasPortfolio, portfolio[0], portfolio[1],
-					portfolio[2], related_description,"지원중");
+					portfolio[2], related_description,"지원중",name);
+			
+			
 		}
 		
 		return "성공";
+	}
+	
+	public List<ProjectInfo> getInterestProject(int account_pk)
+	{
+		 return jdbcTemplate.query("select * from project where pk = (select project_pk from applicant where account_pk = ? and status = ?)",
+		    	new Object[] { account_pk,"관심프로젝트" }, new RowMapper<ProjectInfo>() {
+	    	public ProjectInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+	    	{
+	    		return new ProjectInfo(
+	    				resultSet.getInt("pk")
+	    				, resultSet.getInt("account_pk")
+	    				, resultSet.getString("categoryL")
+	    				, resultSet.getString("categoryM")
+	    				, resultSet.getInt("another")
+	    				, resultSet.getInt("applicantnum")
+	    				, resultSet.getString("name")
+	    				, resultSet.getInt("period")
+	    				, resultSet.getString("budget")
+	    				, resultSet.getString("plan_status")
+	    				, resultSet.getString("description")
+	    				, resultSet.getString("technique")
+	    				, resultSet.getTimestamp("deadline")
+	    				, resultSet.getString("meeting_type")
+	    				, resultSet.getString("meeting_area")
+	    				, resultSet.getString("meeting_area_detail")
+	    				, resultSet.getTimestamp("start_date")
+	    				, resultSet.getInt("managing")
+	    				, resultSet.getString("partner_type")
+	    				, resultSet.getString("purpose")
+	    				, resultSet.getString("status")
+	    				, resultSet.getTimestamp("reg_date"));
+	    	}
+	    });
+		
+	}
+	public List<ApplicantInfo> select_applicant(int account_pk, String status)
+	{
+		return jdbcTemplate.query("select * from applicant where account_pk = ? and status = ?",
+		    	new Object[] { account_pk, status },new RowMapper<ApplicantInfo>() {
+	    	public ApplicantInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+	    	{
+	    		return new ApplicantInfo(
+	    				resultSet.getInt("pk")
+	    				, resultSet.getInt("project_pk")
+	    				, resultSet.getInt("account_pk")
+	    				, resultSet.getInt("application_cost")
+	    				, resultSet.getInt("application_period")
+	    				, resultSet.getString("application_content")
+	    				, resultSet.getInt("has_portfolio")
+	    				, resultSet.getInt("portfolio_pk1")
+	    				, resultSet.getInt("portfolio_pk2")
+	    				, resultSet.getInt("portfolio_pk3")
+	    				, resultSet.getString("portfolio_description")
+	    				, resultSet.getString("status")
+	    				, resultSet.getTimestamp("reg_date")
+	    				, resultSet.getString("name"));
+	    	}
+	    });
+	}
+	
+	public String toggleInterest(int account_pk,int project_pk)
+	{
+		ApplicantInfo applicant = select(account_pk, project_pk);
+		
+		if(applicant == null)
+		{
+			jdbcTemplate.update("insert into applicant (project_pk, account_pk, status) values (?, ?, ?)"
+					, new Object[] { project_pk, account_pk, "관심프로젝트" });
+			return "true";
+		}
+		else
+		{
+			jdbcTemplate.update("delete from applicant where account_pk = ? and project_pk = ?", new Object[] { account_pk, project_pk });
+			return "false";
+		}
 	}
 	public void deleteAll()
 	{

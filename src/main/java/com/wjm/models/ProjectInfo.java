@@ -8,6 +8,7 @@ public class ProjectInfo {
 	private String categoryL;
 	private String categoryM;
 	private int another;
+	private int applicantnum;
 	private String name;
 	private int period;
 	private String budget;
@@ -24,16 +25,18 @@ public class ProjectInfo {
 	private String purpose;
 	private String status;
 	private Timestamp reg_date;
-	public ProjectInfo(int pk, int account_pk, String categoryL, String categoryM, int another, String name, int period,
-			String budget, String plan_status, String description, String technique, Timestamp deadline,
-			String meeting_type, String meeting_area, String meeting_area_detail, Timestamp start_date, int managing,
-			String partner_type, String purpose, String status, Timestamp reg_date) {
+	public ProjectInfo(int pk, int account_pk, String categoryL, String categoryM, int another, int applicantnum,
+			String name, int period, String budget, String plan_status, String description, String technique,
+			Timestamp deadline, String meeting_type, String meeting_area, String meeting_area_detail,
+			Timestamp start_date, int managing, String partner_type, String purpose, String status,
+			Timestamp reg_date) {
 		super();
 		this.pk = pk;
 		this.account_pk = account_pk;
 		this.categoryL = categoryL;
 		this.categoryM = categoryM;
 		this.another = another;
+		this.applicantnum = applicantnum;
 		this.name = name;
 		this.period = period;
 		this.budget = budget;
@@ -80,6 +83,12 @@ public class ProjectInfo {
 	}
 	public void setAnother(int another) {
 		this.another = another;
+	}
+	public int getApplicantnum() {
+		return applicantnum;
+	}
+	public void setApplicantnum(int applicantnum) {
+		this.applicantnum = applicantnum;
 	}
 	public String getName() {
 		return name;
@@ -178,6 +187,4 @@ public class ProjectInfo {
 		this.reg_date = reg_date;
 	}
 	
-	
-
 }

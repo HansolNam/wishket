@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.wjm.dao.AccountDao;
 import com.wjm.dao.AccountInformationDao;
+import com.wjm.dao.ApplicantDao;
 import com.wjm.dao.AssessmentDao;
 import com.wjm.dao.CareerDao;
 import com.wjm.dao.EducationDao;
@@ -75,6 +76,9 @@ public class PartnersController {
 
 	@Autowired
 	private Partners_infoDao partners_infoDao;
+	
+	@Autowired
+	private ApplicantDao applicantDao;
 
 	public String isSame(AccountInfo account, AccountInfo this_account) {
 		if (account == null)
@@ -2269,6 +2273,68 @@ public class PartnersController {
 		logger.info("/partners/manage/past/completed-contract Page");
 
 		return mv;
+	}
+
+
+	/**
+	 * 관심 프로젝트에서 삭제
+	 */
+	@RequestMapping(value = "/partners/manage/interest/delete/{project_pk}", method = RequestMethod.GET)
+	public ModelAndView PartnersController_manage_interestdelete(HttpServletRequest request, ModelAndView mv,
+			@PathVariable("project_pk") int project_pk) {
+		logger.info("/partners/p/{id}/introduction Page");
+
+		AccountInfo account = (AccountInfo) request.getSession().getAttribute("account");
+		
+		if(account == null)
+		{
+			mv.setViewName("/accounts/login");
+			return mv;
+		}
+		else if(!account.getAccount_type().equals("partners"))
+		{
+			mv.setViewName("/accounts/login");
+			return mv;
+		}
+
+		String result = applicantDao.toggleInterest(account.getPk(),project_pk);
+		logger.info("result : "+result);
+		mv.setViewName("redirect:/mywjm/partners");
+
+		return mv;
+	}
+	
+	/**
+	 * 관심 프로젝트에서 추가 및 제거
+	 */
+	@RequestMapping(value = "/partners/manage/interest/toggle/{project_pk}", method = RequestMethod.GET, produces = "text/json; charset=utf8")
+	@ResponseBody
+	public String PartnersController_manage_interesttoggle(HttpServletRequest request,
+			@PathVariable("project_pk") int project_pk) {
+		logger.info("/partners/manage/interest/toggle/{project_pk}");
+
+		AccountInfo account = (AccountInfo) request.getSession().getAttribute("account");
+		JSONObject jObject = new JSONObject();
+
+		if (account == null) {
+			jObject.put("messages", "로그인해주세요.");
+			logger.info("jobject = " + jObject.toString());
+			return jObject.toString();
+		}
+		else if(!account.getAccount_type().equals("partners"))
+		{
+			jObject.put("messages", "파트너스만 관심프로젝트를 등록 가능합니다.");
+			logger.info("jobject = " + jObject.toString());
+			return jObject.toString();
+		}
+
+		String result = applicantDao.toggleInterest(account.getPk(),project_pk);
+		logger.info("result : "+result);
+		
+		jObject.put("messages", result);
+		
+		logger.info(jObject.toString());
+		return jObject.toString();
 	}
 
 }

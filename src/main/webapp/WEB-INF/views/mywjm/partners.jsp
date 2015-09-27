@@ -1,36 +1,37 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+	<%@ page
+	import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo, java.util.List"%>
+<%@ page
+	import="com.wjm.main.function.Time, java.sql.Timestamp, com.wjm.models.ProjectInfo, com.wjm.models.ApplicantInfo"%>
+<%@ page
+	import="com.wjm.models.ContractInfo"%>
 
-<!--[if IE 6]><html lang="ko" class="no-js old ie6"><![endif]-->
-<!--[if IE 7]><html lang="ko" class="no-js old ie7"><![endif]-->
-<!--[if IE 8]><html lang="ko" class="no-js old ie8"><![endif]-->
+<%
+	AccountInfo account = (AccountInfo) session.getAttribute("account");
+	List<ProjectInfo> interest = (List<ProjectInfo>)request.getAttribute("interest");
+	List<ApplicantInfo> apply = (List<ApplicantInfo>)request.getAttribute("apply");
+	List<ContractInfo> contract = (List<ContractInfo>)request.getAttribute("contract");
+	
+	if(interest != null)
+		if(interest.size() == 0)
+			interest = null;
+	if(apply != null)
+		if(apply.size() == 0)
+			apply = null;
+	if(contract != null)
+		if(contract.size() == 0)
+			contract = null;
+%>
+<!DOCTYPE html>
+
 <html class="no-js modern" lang="ko">
 <head
 	prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#">
 <meta charset="utf-8" />
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
-<meta content="Wishket Inc,." name="author" />
-<meta
-	content="위시켓은 기업의 프로젝트와 개발자 &amp; 디자이너를 연결해주는 온라인 아웃소싱 서비스 입니다.
-더 이상 지인을 수소문하지 마세요, 위시켓에서 3시간이면 충분합니다."
-	name="description" />
-<meta content="593258114025512" property="fb:app_id" />
-<meta content="website" property="og:type" />
-<meta content="http://www.wishket.com" property="og:url" />
-<meta content="Wishket" property="og:title" />
-<meta content="http://www.wishket.com/static/img/wishket_logo_256.png"
-	property="og:image" />
-<meta
-	content="위시켓은 기업의 프로젝트와 개발자 &amp; 디자이너를 연결해주는 온라인 아웃소싱 서비스 입니다.
-더 이상 지인을 수소문하지 마세요, 위시켓에서 3시간이면 충분합니다."
-	property="og:description" />
-<meta content="k6UITCIVaYG0YtRsN8g4GF2T4qg7Z3M6JD2mLJte_n4"
-	name="google-site-verification" />
-<meta content="d2c8672ef81fcd9ceb62f51232d13aada8512a64"
-	name="naver-site-verification" />
-<title>위시켓(Wishket) · 마이위시켓</title>
+<title>외주몬(WJM) · 마이위시켓</title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
 <link
 	href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css"
@@ -86,7 +87,7 @@
 			<div class="content">
 				<div class="content-header">
 					<h3 class="header-text">
-						마이위시켓 <small class="small-text"><a href="/partners-use/">처음
+						마이위시켓 <small class="small-text"><a href="/wjm/partners-use/">처음
 								오셨나요? 이용방법을 확인하세요 <i class="fa fa-chevron-right"></i>
 						</a></small>
 					</h3>
@@ -112,7 +113,7 @@
 						<h4 class="mywishket-project-heading">내 프로젝트</h4>
 						<div class="interest-project">
 							<h5 class="proposal-project-heading">
-								<a href="/partners/manage/interest/">관심 프로젝트</a>
+								<a href="/wjm/partners/manage/interest/">관심 프로젝트</a>
 							</h5>
 							<table class="table table-hover">
 								<thead>
@@ -125,39 +126,42 @@
 									</tr>
 								</thead>
 								<tbody>
+								<%
+									if(interest == null)
+									{
+								%>
 									<tr>
 										<td class="text-muted" colspan="5">관심 프로젝트가 없습니다.</td>
 									</tr>
-								</tbody>
-							</table>
-							<table class="table table-hover">
-								<thead>
-									<tr>
-										<th class="interest-project-title">프로젝트 제목</th>
-										<th class="interest-project-budget">예상금액</th>
-										<th class="interest-project-term">예상기간</th>
-										<th class="interest-created-date">마감일자</th>
-										<th></th>
-									</tr>
-								</thead>
-								<tbody>
+								<%
+									}
+									else{
+										for(int i=0;i<interest.size();i++)
+										{
+								
+								%>
+								
 									<tr>
 										<td><a
-											href="/project/%EA%B3%A0%EA%B0%9D%EC%84%9C%EB%B9%84%EC%8A%A4%EC%9A%A9-%EB%AA%A8%EB%B0%94%EC%9D%BC%EC%95%B1-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8-%EA%B0%9C%EB%B0%9C_4982/"
-											style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">고객서비스용
-												모바일앱 클라이언트 개발</a></td>
-										<td>6,000,000원</td>
-										<td>30일</td>
-										<td>2015년 9월 25일</td>
+											href="/wjm/project/<%=interest.get(i).getName() %>/<%=interest.get(i).getPk() %>/"
+											style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden;"><%=interest.get(i).getName() %></a></td>
+										<td><%=interest.get(i).getBudget() %>원</td>
+										<td><%=interest.get(i).getPeriod() %>일</td>
+										<td><%=Time.toString3(interest.get(i).getDeadline())%></td>
 										<td><a
-											href="/partners/manage/interest/delete/4982/?redirect=mywishket"
-											onclick="delete_interest()" title="'관심 프로젝트'에서 삭제하기"><img
+											href="/wjm/partners/manage/interest/delete/<%=interest.get(i).getPk() %>"
+											title="'관심 프로젝트'에서 삭제하기"><img
 												src="/static/img/interest-selected.png"></a></td>
 									</tr>
+	
+								<%
+										}
+									}
+								%>
 								</tbody>
 							</table>
 							<p class="text-right">
-								<a class="more" href="/partners/manage/interest/">더 자세히 보기 <i
+								<a class="more" href="/wjm/partners/manage/interest/">더 자세히 보기 <i
 									class="fa fa-chevron-right"></i></a>
 							</p>
 						</div>
@@ -175,9 +179,32 @@
 									</tr>
 								</thead>
 								<tbody>
+								<%
+									if(apply == null)
+									{
+								%>
 									<tr>
 										<td class="text-muted" colspan="4">지원 중인 프로젝트가 없습니다.</td>
 									</tr>
+								<%
+									}
+									else
+									{
+										for(int i=0;i<apply.size();i++)
+										{
+								%>
+									<tr>
+										<td><a
+											href="/wjm/project/<%=apply.get(i).getName() %>/<%=apply.get(i).getProject_pk() %>/"
+											style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden;"><%=apply.get(i).getName() %></a></td>
+										<td><%=apply.get(i).getApplication_cost() %>원</td>
+										<td><%=apply.get(i).getApplication_period() %>일</td>
+										<td><%=Time.toString3(apply.get(i).getReg_date())%></td>
+									</tr>
+								<%
+										}
+									}
+								%>
 								</tbody>
 							</table>
 							<p class="text-right">

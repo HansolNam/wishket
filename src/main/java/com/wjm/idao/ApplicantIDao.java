@@ -13,7 +13,7 @@ public interface ApplicantIDao {
 			int application_period,String application_content,
 			int has_portfolio, int portfolio_pk1, int portfolio_pk2,
 			int portfolio_pk3, String portfolio_description,
-			String status);
+			String status, String name);
 	List<ApplicantInfo> selectAll();
 	List<ApplicantInfo> select_project(int project_pk);
 	List<ApplicantInfo> select_applicant(int applicant_pk);

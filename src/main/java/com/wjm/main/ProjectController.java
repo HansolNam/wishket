@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.wjm.dao.AccountDao;
 import com.wjm.dao.AccountInformationDao;
 import com.wjm.dao.ApplicantDao;
 import com.wjm.dao.AreaDetailDao;
+import com.wjm.dao.CommentDao;
 import com.wjm.dao.PortfolioDao;
 import com.wjm.dao.ProjectDao;
 import com.wjm.main.function.Time;
@@ -30,6 +30,7 @@ import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
 import com.wjm.models.AccountInformationInfo;
 import com.wjm.models.ApplicantInfo;
+import com.wjm.models.CommentInfo;
 import com.wjm.models.PortfolioInfo;
 import com.wjm.models.ProjectInfo;
 
@@ -54,6 +55,8 @@ public class ProjectController {
 	@Autowired
 	private PortfolioDao portfolioDao;
 
+	@Autowired
+	private CommentDao commentDao;
 
 	@Autowired
 	private AccountInformationDao accountInformationDao;
@@ -838,6 +841,9 @@ public class ProjectController {
 			return mv;
 		}
 		
+		List<CommentInfo> comment = commentDao.select(Integer.parseInt(pk));
+		mv.addObject("comment",comment);
+		
 		List<ApplicantInfo> applicantlist = applicantDao.select_project(Integer.parseInt(pk));
 		if(applicantlist == null)
 			mv.addObject("applicantnum", 0);
@@ -962,5 +968,61 @@ public class ProjectController {
 		}
 
 		return jObject.toString();
+	}
+	
+	/**
+	 * 댓글 달기 처리 페이지
+	 */
+	@RequestMapping(value = "/project/{name}/{pk}", method = RequestMethod.POST)
+	public ModelAndView ProjectController_comment_post(HttpServletRequest request,
+ 			HttpServletResponse response,
+ 			ModelAndView mv,
+ 			@PathVariable("name") String name,
+ 			@PathVariable("pk") int project_pk,
+ 			@RequestParam("body") String body) {
+		logger.info("comment POST Page");
+		
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		
+		if(account == null)
+		{
+			mv.setViewName("/accounts/login");
+			return mv;
+		}
+		
+		if(!Validator.hasValue(body))
+			mv.addObject("messages","댓글을 입력해주세요");
+		else if(!Validator.isValidLength(body, 1, 250))
+			mv.addObject("messages","댓글은 최대 250자입니다.");
+		else
+		{
+			commentDao.create(account.getPk(), project_pk, body);
+		}
+
+		AccountInformationInfo accountinformation = accountInformationDao.select(account.getPk());
+		
+		mv.addObject("accountinfo",accountinformation);
+				
+		ProjectInfo project = projectDao.select(project_pk, name);
+		if(project!=null)
+			mv.addObject("project",project);
+		else
+		{
+			mv.setViewName("/project");
+			return mv;
+		}
+		
+		List<CommentInfo> comment = commentDao.select(project_pk);
+		mv.addObject("comment",comment);
+		
+		List<ApplicantInfo> applicantlist = applicantDao.select_project(project_pk);
+		if(applicantlist == null)
+			mv.addObject("applicantnum", 0);
+		else
+			mv.addObject("applicantnum", applicantlist.size());
+		mv.setViewName("/project/about");
+		
+		return mv;
+		
 	}
 }

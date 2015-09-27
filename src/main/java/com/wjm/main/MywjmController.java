@@ -16,6 +16,8 @@ import com.wjm.dao.AccountDao;
 import com.wjm.dao.ApplicantDao;
 import com.wjm.dao.ProjectDao;
 import com.wjm.models.AccountInfo;
+import com.wjm.models.ApplicantInfo;
+import com.wjm.models.ContractInfo;
 import com.wjm.models.ProjectInfo;
 
 /**
@@ -59,10 +61,33 @@ public class MywjmController {
 	 * 지원자 마이페이지
 	 */
 	@RequestMapping(value = "/mywjm/partners", method = RequestMethod.GET)
-	public String MywjmController_mywjm_partners(HttpServletRequest request) {
+	public ModelAndView MywjmController_mywjm_partners(HttpServletRequest request,
+			ModelAndView mv) {
 		logger.info("mywjm partners Page");
 		
-		return "/mywjm/partners";
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		
+		if(account == null)
+		{
+			mv.setViewName("/accounts/login");
+			return mv;
+		}
+		else if(!account.getAccount_type().equals("partners"))
+		{
+			mv.setViewName("/accounts/login");
+			return mv;
+		}
+		
+		List<ProjectInfo> interest = applicantDao.getInterestProject(account.getPk());
+		List<ApplicantInfo> apply = applicantDao.select_applicant(account.getPk(), "지원중");
+		List<ContractInfo> contract = null;
+
+		mv.setViewName("/mywjm/partners");
+		mv.addObject("interest",interest);
+		mv.addObject("apply",apply);
+		mv.addObject("contract",contract);
+		
+		return mv;
 	}
 	
 }
