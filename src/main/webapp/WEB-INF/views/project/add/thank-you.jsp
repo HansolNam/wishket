@@ -68,7 +68,7 @@
 							<p>내부 검수 후에 지원자 모집이 시작됩니다.</p>
 							<p>검수에는 최대 24시간이 소요됩니다.</p>
 							<p>
-								<a class="btn btn-default btn-lg" href="/wjm/mywjm/<%=type%>">마이위시켓으로
+								<a class="btn btn-default btn-lg" href="/wjm/mywjm/<%=type%>">마이외주몬으로
 									가기</a>
 							</p>
 							<hr>
@@ -82,10 +82,6 @@
 							</p>
 						</div>
 					</section>
-					<aside class="project-add-complete-aside">
-						<img alt="프로젝트를 등록해주셔서 감사합니다" class="aside-img"
-							src="${pageContext.request.contextPath}/resources/static/img/project_add_thank_you.png">
-					</aside>
 				</div>
 			</div>
 		</div>

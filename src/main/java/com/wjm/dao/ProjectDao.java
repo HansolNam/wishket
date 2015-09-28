@@ -152,7 +152,50 @@ public class ProjectDao implements ProjectIDao {
 	    	}
 	    });
 	}
-	
+	public ProjectInfo select_project(int pk)
+	{
+		List<ProjectInfo> list =  jdbcTemplate.query("select * from project where pk = ?",
+		    	new Object[] { pk }, new RowMapper<ProjectInfo>() {
+	    	public ProjectInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+	    	{
+	    		return new ProjectInfo(
+	    				resultSet.getInt("pk")
+	    				, resultSet.getInt("account_pk")
+	    				, resultSet.getString("categoryL")
+	    				, resultSet.getString("categoryM")
+	    				, resultSet.getInt("another")
+	    				, resultSet.getInt("applicantnum")
+	    				, resultSet.getString("name")
+	    				, resultSet.getInt("period")
+	    				, resultSet.getString("budget")
+	    				, resultSet.getString("plan_status")
+	    				, resultSet.getString("description")
+	    				, resultSet.getString("technique")
+	    				, resultSet.getTimestamp("deadline")
+	    				, resultSet.getString("meeting_type")
+	    				, resultSet.getString("meeting_area")
+	    				, resultSet.getString("meeting_area_detail")
+	    				, resultSet.getTimestamp("start_date")
+	    				, resultSet.getInt("managing")
+	    				, resultSet.getString("partner_type")
+	    				, resultSet.getString("purpose")
+	    				, resultSet.getString("status")
+	    				, resultSet.getTimestamp("reg_date"));
+	    	}
+	    });
+		
+		if(list != null)
+		{
+			if(list.size()>1)
+				return null;
+			else if(list.size() == 0)
+				return null;
+			else
+				return list.get(0);
+		}
+		else 
+			return null;
+	}
 	public List<ProjectInfo> selectStatus(int account_pk,String status)
 	{
 		return jdbcTemplate.query("select * from project where account_pk = ? and status = ?",
@@ -189,8 +232,8 @@ public class ProjectDao implements ProjectIDao {
 
 	public ProjectInfo select(int pk,String name)
 	{
-		List<ProjectInfo> projectlist = jdbcTemplate.query("select * from project where pk = ? and name = ?",
-		    	new Object[] { pk,name }, new RowMapper<ProjectInfo>() {
+		List<ProjectInfo> projectlist = jdbcTemplate.query("select * from project where pk=?",
+		    	new Object[] { pk }, new RowMapper<ProjectInfo>() {
 	    	public ProjectInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{
 	    		return new ProjectInfo(
@@ -219,14 +262,19 @@ public class ProjectDao implements ProjectIDao {
 	    	}
 	    });
 		
-		if(projectlist.size() > 1 || projectlist.size() ==0)
+		if(projectlist != null)
 		{
-			logger.info("프로젝트 pk와 이름에 해당하는 프로젝트가 0개,혹은 그이상 에러");
-			return null;
+			for(int i=0;i<projectlist.size();i++)
+				logger.info(i + " : name "+projectlist.get(i).getName()+" , pk = "+projectlist.get(i).getPk());
+			if(projectlist.size() > 1 || projectlist.size() ==0)
+			{
+				logger.info("프로젝트 pk와 이름에 해당하는 프로젝트가 0개,혹은 그이상 에러");
+				return null;
+			}
+			else
+				return projectlist.get(0);
 		}
-		else
-			return projectlist.get(0);
-		
+		return null;
 	}
 	
 	public List<ProjectInfo> selectCondition(String q, String dev, String design, String addr,String sort)
@@ -511,11 +559,40 @@ public class ProjectDao implements ProjectIDao {
 			another = 1;
 		else
 			another = 0;
-		
+
 		create(account_pk, categoryL, categoryM, another, name, period, budget,
 				plan_status, description, technique, deadline, meeting_type,
 				meeting_area, meeting_area_detail, start_date, managing_int, partner_type,
 				purpose, status);
+
+	}
+	
+	public void Update(int project_pk, int account_pk, String categoryL,String categoryM,String is_turnkey, String name,
+			int period, String budget, String plan_status, String description, String technique,
+			Timestamp deadline, String meeting_type, String meeting_area, String meeting_area_detail,
+			Timestamp start_date, String managing,String partner_type, String purpose, String status)
+	{
+		int managing_int = 0;
+		if(managing.equals("true"))
+			managing_int = 1;
+		else
+			managing_int = 0;
+		
+		int another = 0;
+		if(is_turnkey.equals("true"))
+			another = 1;
+		else
+			another = 0;
+
+		jdbcTemplate.update("update project set account_pk=?, categoryL=?, categoryM=?,"
+				+ " another=?, name=?, period=?, budget=?, plan_status=?, description=?,"
+				+ " technique=?, deadline=?, meeting_type=?, meeting_area=?, meeting_area_detail=?,"
+				+ " start_date=?, managing=?, partner_type=?, purpose=?, status=? where pk=?"
+				, new Object[] {account_pk, categoryL, categoryM, another, name, period, budget,
+						plan_status, description, technique, deadline, meeting_type,
+						meeting_area, meeting_area_detail, start_date, managing_int, partner_type,
+						purpose, status, project_pk });
+		
 		
 	}
 	

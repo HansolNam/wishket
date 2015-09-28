@@ -2345,6 +2345,25 @@ public class PartnersController {
 	public ModelAndView PartnersController_manage_contractinprogress(HttpServletRequest request, ModelAndView mv) {
 		logger.info("/partners/manage/contract-in-progress Page");
 
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		
+		if(account == null)
+		{
+			mv.setViewName("/accounts/login");
+			return mv;
+		}
+		else if(!account.getAccount_type().equals("partners"))
+		{
+			mv.setViewName("/accounts/login");
+			return mv;
+		}
+
+		List<ContractInfo> contract = null;
+
+		mv.addObject("contract",contract);
+		
+		mv.setViewName("/partners/manage/contract-in-progress");
+		
 		return mv;
 	}
 
@@ -2355,6 +2374,24 @@ public class PartnersController {
 	public ModelAndView PartnersController_manage_reviewcontract(HttpServletRequest request, ModelAndView mv) {
 		logger.info("/partners/manage/past/review-contract Page");
 
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		
+		if(account == null)
+		{
+			mv.setViewName("/accounts/login");
+			return mv;
+		}
+		else if(!account.getAccount_type().equals("partners"))
+		{
+			mv.setViewName("/accounts/login");
+			return mv;
+		}
+
+		List<ContractInfo> contract = null;
+
+		mv.addObject("contract",contract);
+		
+		mv.setViewName("/partners/manage/past/review-contract");
 		return mv;
 	}
 
@@ -2365,6 +2402,24 @@ public class PartnersController {
 	public ModelAndView PartnersController_manage_completedcontract(HttpServletRequest request, ModelAndView mv) {
 		logger.info("/partners/manage/past/completed-contract Page");
 
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		
+		if(account == null)
+		{
+			mv.setViewName("/accounts/login");
+			return mv;
+		}
+		else if(!account.getAccount_type().equals("partners"))
+		{
+			mv.setViewName("/accounts/login");
+			return mv;
+		}
+
+		List<ContractInfo> contract = null;
+
+		mv.addObject("contract",contract);
+		
+		mv.setViewName("/partners/manage/past/completed-contract");
 		return mv;
 	}
 

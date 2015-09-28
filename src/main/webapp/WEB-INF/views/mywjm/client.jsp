@@ -119,9 +119,16 @@
 										{
 											if(projectlist.get(i).getStatus().equals("검수중"))
 											{
-												out.print("<tbody><tr><td>"+projectlist.get(i).getName()+"</td>");
-												out.print("<td>"+Time.toString3(projectlist.get(i).getReg_date())+"</td>");
-												out.println("<td><a class='btn btn-sm btn-client' href='/wjm/project/preview/"+projectlist.get(i).getName()+"/"+projectlist.get(i).getPk()+"/'>미리보기</a></td></tr></tbody>");
+								%>
+								<tbody>
+									<tr>
+										<td><%= projectlist.get(i).getName()%></td>
+										<td><%= Time.toString3(projectlist.get(i).getReg_date())%></td>
+										<td><a class='btn btn-sm btn-client' href='/wjm/project/preview/<%=projectlist.get(i).getName()%>/<%= projectlist.get(i).getPk()%>/'>미리보기</a>
+										</td>
+									</tr>
+								</tbody>
+								<%
 											}
 										}
 									}
@@ -222,8 +229,8 @@
 					<div class="user-name-tag">
 						<h3 class="user-name-tag-heading">클라이언트</h3>
 						<div class="user-name-tag-body">
-							<img alt="gksthf1611 사진" class="img-circle user-img"
-								src="${pageContext.request.contextPath}/resources/static/img/default_avatar.png" />
+							<img alt="<%=account.getId() %> 사진" class="img-circle user-img"
+								src="${pageContext.request.contextPath}/resources/upload/profile_img/${profile}" />
 							<h4 class="username"><%=account.getId() %></h4>
 							<a class="profile-setting" href="/wjm/accounts/settings/profile/">기본
 								정보 수정</a>

@@ -1,11 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	<%@ page import="com.wjm.models.ProjectInfo, com.wjm.main.function.Time, java.sql.Timestamp"%>
+	<%@ page import="com.wjm.models.AccountInformationInfo,com.wjm.models.AccountInfo,com.wjm.models.ProjectInfo, com.wjm.main.function.Time, java.sql.Timestamp"%>
 <%
 	ProjectInfo project = (ProjectInfo)request.getAttribute("project");
+	AccountInformationInfo this_accountinfo = (AccountInformationInfo)request.getAttribute("this_accountinfo");
+	AccountInfo this_account = (AccountInfo)request.getAttribute("this_account");
 
-	if(project != null)
-	{
+	String description = "";
+	description = project.getDescription().replaceAll("\r\n","<br/>");
 
 	long now_time = System.currentTimeMillis();
 	Timestamp now = new Timestamp(now_time);
@@ -168,7 +170,7 @@
 						</div>
 						<div class="project-desc">
 							<div class="project-desc-title">프로젝트 내용</div>
-								<%=project.getDescription() %>
+								<%=description %>
 						</div>
 						<div class="project-skill-required">
 							<div class="skill-required-title">관련 기술</div>
@@ -192,8 +194,8 @@
 						<h3 class="client-name-tag-heading">클라이언트</h3>
 						<div class="client-name-tag-body">
 							<img alt="gksthf1611 사진" class="client-img-lg"
-								src="${pageContext.request.contextPath}/resources/static/img/default_avatar.jpg" />
-							<div class="client-company-info">ㅎㅎㅎ</div>
+								src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=this_accountinfo.getProfile_img() %>" />
+							<div class="client-company-info"><%=this_accountinfo.getIntroduction() %></div>
 							<div class="client-evaluation-body"
 								onclick="expand_rating(this);">
 								<div class="rating star-md star-md-0"></div>
@@ -327,6 +329,3 @@ $( document ).ready(function($) {
 </script>
 </body>
 </html>
-<%
-}
-%>

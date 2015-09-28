@@ -16,6 +16,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.wjm.idao.AccountIDao;
+import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
 
 @Repository
@@ -53,6 +54,69 @@ public class AccountDao implements AccountIDao {
 		    				, resultSet.getTimestamp("reg_date"));
 		    	}
 		    });
+	}
+
+	public int getPartnersCount()
+	{
+		List<Integer> list = jdbcTemplate.query("select count(*) from account where account_type = 'partners'"
+				,new RowMapper<Integer>() {
+		    	public Integer mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new Integer(
+		    				resultSet.getInt("count"));
+		    	}
+		    });
+		
+		if(list!=null)
+		{
+			if(list.isEmpty())
+				return 0;
+			else
+				return list.get(0).intValue();
+		}
+		else
+			return 0;
+	}
+	
+	public List<AccountInfo> selectPartners(String page, String q, String job)
+	{
+		List<AccountInfo> accountlist;
+		if(!Validator.hasValue(q))
+		{
+			if(!Validator.hasValue(job))
+			{
+				
+			}
+			else
+			{
+				
+			}
+
+			accountlist = jdbcTemplate.query("select * from account where account_type = 'partners'",
+		    	new Object[] { account_type }, new RowMapper<AccountInfo>() {
+		    	public AccountInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new AccountInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getString("email")
+		    				, resultSet.getString("id")
+		    				, resultSet.getString("password")
+		    				, resultSet.getString("account_type")
+		    				, resultSet.getInt("authorized")
+		    				, resultSet.getString("authorization_key")
+		    				, resultSet.getTimestamp("reg_date"));
+		    	}
+		    });
+		}
+		else
+		{
+			
+		}
+		
+		if(accountlist == null)
+			return 0;
+		else
+			return accountlist.size();
 	}
 	
 	public int select_account(String account_type)

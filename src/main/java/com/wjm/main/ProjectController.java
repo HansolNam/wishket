@@ -274,27 +274,43 @@ public class ProjectController {
 		return mv;
 	}
 	/**
-	 * 프로젝트 추가 페이지
+	 * 프로젝트 수정 페이지
 	 */
-	@RequestMapping(value = "/project/add/detail", method = RequestMethod.GET)
-	public ModelAndView ProjectController_add_detail(HttpServletRequest request, ModelAndView mv) {
-		logger.info("add detail Page");
+	@RequestMapping(value = "/project/add/edit/{project_pk}", method = RequestMethod.GET)
+	public ModelAndView ProjectController_edit(HttpServletRequest request, ModelAndView mv,
+			@PathVariable("project_pk") int project_pk) {
+		logger.info("/project/edit/{project_pk} Page");
 		
 		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
 
 		if(account == null) {mv.setViewName("redirect:/accounts/login");return mv;}
 		
+		ProjectInfo project = projectDao.select_project(project_pk);
+		
+		if(project == null)
+		{
+			mv.setViewName("/error");
+			return mv;
+		}
+		else
+		{
+			mv.setViewName("/project/add/edit");
+			mv.addObject("project",project);
+		}
+		
+		
 		return mv;
 	}
-	
+
 	/**
-	 * 프로젝트 추가 페이지
+	 * 프로젝트 수정 처리 페이지
 	 * @throws ParseException 
 	 * @throws NumberFormatException 
 	 */
-	@RequestMapping(value = "/project/add/detail", method = RequestMethod.POST, produces = "text/plain; charset=utf8")
-	public ModelAndView ProjectController_add_detail_post(HttpServletRequest request,
+	@RequestMapping(value = "/project/add/edit/{project_pk}", method = RequestMethod.POST, produces = "text/plain; charset=utf8")
+	public ModelAndView ProjectController_add_edit_post(HttpServletRequest request,
  			HttpServletResponse response,
+			@PathVariable("project_pk") int project_pk, 
 			 @RequestParam(value = "category", required = false, defaultValue = "") String category,
 			 @RequestParam(value = "sub_category", required = false, defaultValue = "") String sub_category,
 			 @RequestParam(value = "is_turnkey", required = false, defaultValue = "") String is_turnkey,
@@ -321,7 +337,7 @@ public class ProjectController {
 		
 		//모델앤뷰 생성
 		ModelAndView mv = new ModelAndView();
-		String return_val = "/project/add/detail";
+		String return_val = "/project/add/edit";
 		mv.setViewName(return_val);
 		
 		
@@ -353,7 +369,7 @@ public class ProjectController {
 			isAvailable = false;
 			mv.addObject("category_msg","이 항목은 필수입니다.");
 		}
-		else if(!category.equals("develop")&&!category.equals("design"))
+		else if(!category.equals("개발")&&!category.equals("디자인"))
 		{
 			logger.info("category!!!!");
 			isAvailable = false;
@@ -389,7 +405,7 @@ public class ProjectController {
 		{
 			logger.info("is_turnkey!!!!");
 			isAvailable = false;
-			mv.addObject("is_turnkey_msg","이 항목은 필수입니다.");
+			mv.addObject("is_turnkey_msg","디자인 혹은 개발도 필요하신지 선택해주세요.");
 		}
 		else
 		{
@@ -468,24 +484,21 @@ public class ProjectController {
 			mv.addObject("description_val",description);
 		}	
 		
-		//skill_required 체크
-		if(skill_required.isEmpty())
+		//skill_required 체크(필수 X)
+		if(!skill_required.isEmpty())
 		{
-			logger.info("skill_required!!!!");
-			isAvailable = false;
-			mv.addObject("skill_required_msg","이 항목은 필수입니다.");
+			if(!Validator.isValidLength(skill_required, 1, 100))
+			{
+				logger.info("skill_required!!!!");
+				isAvailable = false;
+				mv.addObject("skill_required_msg","관련 기술이 너무 깁니다");
+			}
+			else
+			{
+				logger.info("skill_required_val = "+skill_required);
+				mv.addObject("skill_required_val",skill_required);
+			}	
 		}
-		else if(!Validator.isValidLength(skill_required, 1, 100))
-		{
-			logger.info("skill_required!!!!");
-			isAvailable = false;
-			mv.addObject("skill_required_msg","관련 기술이 너무 깁니다");
-		}
-		else
-		{
-			logger.info("skill_required_val = "+skill_required);
-			mv.addObject("skill_required_val",skill_required);
-		}	
 		
 		//deadline 체크
 		if(deadline.isEmpty())
@@ -561,43 +574,396 @@ public class ProjectController {
 			mv.addObject("has_manage_experience_val",has_manage_experience);
 		}
 		
-		//prefer_partner
-		if(prefer_partner.isEmpty())
+		//prefer_partner(필수X)
+		if(!prefer_partner.isEmpty())
 		{
-			logger.info("prefer_partner!!!!");
-			isAvailable = false;
-			mv.addObject("prefer_partner_msg","이 항목은 필수입니다.");
+			if(!prefer_partner.equals("whatever")&&!prefer_partner.equals("corporate_business")
+					&&!prefer_partner.equals("individual_business")&&!prefer_partner.equals("team")
+					&&!prefer_partner.equals("individual"))
+			{
+				isAvailable = false;
+				logger.info("prefer_partner!!!!");
+				mv.addObject("prefer_partner_msg","선호하는 파트너를 올바르게 선택해주세요.");
+			}
+			else
+			{
+				logger.info("prefer_partner_val = "+prefer_partner);
+				mv.addObject("prefer_partner_val",prefer_partner);
+			}
 		}
-		else if(!prefer_partner.equals("whatever")&&!prefer_partner.equals("corporate_business")
-				&&!prefer_partner.equals("individual_business")&&!prefer_partner.equals("team")
-				&&!prefer_partner.equals("individual"))
+		
+		//submit_purpose(필수 X)
+		if(!submit_purpose.isEmpty())
 		{
+			if(!submit_purpose.equals("request")&&!submit_purpose.equals("inquire"))
+			{
+				logger.info("submit_purpose!!!!");
+				isAvailable = false;
+				mv.addObject("submit_purpose_msg","프로젝트 의뢰 목적를 올바르게 선택해주세요.");
+			}
+			else
+			{
+				logger.info("submit_purpose_val = "+submit_purpose);
+				mv.addObject("submit_purpose_val",submit_purpose);
+			}
+		}
+
+		String status = "";
+		if(!post_a_job.isEmpty())
+		{	
+			status = "검수중";
+		}
+		else if(!save_for_later.isEmpty())
+			status = "임시저장";
+		
+		
+		if(isAvailable)
+		{
+			logger.info("추가 가능");
+			AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+
+			if(account!=null)
+			{
+				projectDao.Update(project_pk,account.getPk(),category,sub_category,is_turnkey,title,Integer.parseInt(project_term),
+						budget_maximum,planning_status,description,skill_required,Time.dateToTimestamp(deadline),
+						method_pre_interview, address_sido, sigungu, Time.dateToTimestamp(date_expected_kick_off), has_manage_experience,
+						prefer_partner, submit_purpose, status);
+				if(status.equals("임시저장"))
+				{
+					mv = new ModelAndView();
+					return_val = "redirect:/client/manage/project/saved/";
+				}
+				else if(status.equals("검수중")){
+					////////////////////알림 & 히스토리 업데이트
+					mv = new ModelAndView();
+					return_val = "redirect:/project/add/thank-you";
+				}
+				mv.setViewName(return_val);
+			}
+			else
+			{
+				mv.setViewName("redirect:/accounts/login");
+			}
+		}
+		return mv;
+	}
+	/**
+	 * 프로젝트 수정 페이지
+	 */
+	@RequestMapping(value = "/project/add/detail", method = RequestMethod.GET)
+	public ModelAndView ProjectController_add_detail(HttpServletRequest request, ModelAndView mv) {
+		logger.info("add detail Page");
+		
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+
+		if(account == null) {mv.setViewName("redirect:/accounts/login");return mv;}
+		
+		return mv;
+	}
+	
+	/**
+	 * 프로젝트 추가 페이지
+	 * @throws ParseException 
+	 * @throws NumberFormatException 
+	 */
+	@RequestMapping(value = "/project/add/detail", method = RequestMethod.POST, produces = "text/plain; charset=utf8")
+	public ModelAndView ProjectController_add_detail_post(HttpServletRequest request,
+ 			HttpServletResponse response,
+			 @RequestParam(value = "category", required = false, defaultValue = "") String category,
+			 @RequestParam(value = "sub_category", required = false, defaultValue = "") String sub_category,
+			 @RequestParam(value = "is_turnkey", required = false, defaultValue = "") String is_turnkey,
+			 @RequestParam(value = "title", required = false, defaultValue = "") String title,
+			 @RequestParam(value = "project_term", required = false, defaultValue = "") String project_term,
+			 @RequestParam(value = "budget_maximum", required = false, defaultValue = "") String budget_maximum,
+			 @RequestParam(value = "planning_status", required = false, defaultValue = "") String planning_status,
+			 @RequestParam(value = "description", required = false, defaultValue = "") String description,
+			 @RequestParam(value = "skill_required", required = false, defaultValue = "") String skill_required,
+			 @RequestParam(value = "deadline", required = false, defaultValue = "") String deadline,
+			 @RequestParam(value = "method_pre_interview", required = false, defaultValue = "") String method_pre_interview,
+			 @RequestParam(value = "address_sido", required = false, defaultValue = "") String address_sido,
+			 @RequestParam(value = "sigungu", required = false, defaultValue = "") String sigungu,
+			 @RequestParam(value = "date_expected_kick_off", required = false, defaultValue = "") String date_expected_kick_off,
+			 @RequestParam(value = "has_manage_experience", required = false, defaultValue = "") String has_manage_experience,
+			 @RequestParam(value = "prefer_partner", required = false, defaultValue = "") String prefer_partner,
+			 @RequestParam(value = "submit_purpose", required = false, defaultValue = "") String submit_purpose,
+			 @RequestParam(value = "post_a_job", required = false, defaultValue = "") String post_a_job,
+			 @RequestParam(value ="save_for_later", required = false, defaultValue = "") String save_for_later
+			 ) throws NumberFormatException, ParseException {
+		logger.info("프로젝트 추가 처리");
+		
+		boolean isAvailable = true;
+		
+		//모델앤뷰 생성
+		ModelAndView mv = new ModelAndView();
+		String return_val = "/project/add/detail";
+		mv.setViewName(return_val);
+		
+		
+		
+		//title 체크
+		if(title.isEmpty())
+		{
+			logger.info("title!!!!");
 			isAvailable = false;
-			logger.info("prefer_partner!!!!");
-			mv.addObject("prefer_partner_msg","선호하는 파트너를 올바르게 선택해주세요.");
+			mv.addObject("title_msg","이 항목은 필수입니다.");
+		}
+		else if(!Validator.isValidLength(title, 1, 30))
+		{
+			logger.info("title!!!!");
+			isAvailable = false;
+			mv.addObject("title_msg","프로젝트 제목을 올바르게 입력해주세요");
 		}
 		else
 		{
-			logger.info("prefer_partner_val = "+prefer_partner);
-			mv.addObject("prefer_partner_val",prefer_partner);
+			logger.info("title = "+title);
+			mv.addObject("title_val",title);
 		}
-		//submit_purpose
-		if(submit_purpose.isEmpty())
+		
+		
+		//category 체크
+		if(category.isEmpty())
 		{
-			logger.info("submit_purpose!!!!");
+			logger.info("category!!!!");
 			isAvailable = false;
-			mv.addObject("submit_purpose_msg","이 항목은 필수입니다.");
+			mv.addObject("category_msg","이 항목은 필수입니다.");
 		}
-		else if(!submit_purpose.equals("request")&&!submit_purpose.equals("inquire"))
+		else if(!category.equals("개발")&&!category.equals("디자인"))
 		{
-			logger.info("submit_purpose!!!!");
+			logger.info("category!!!!");
 			isAvailable = false;
-			mv.addObject("submit_purpose_msg","프로젝트 의뢰 목적를 올바르게 선택해주세요.");
+			mv.addObject("category_msg","카테고리를 올바르게 선택해주세요");
 		}
 		else
 		{
-			logger.info("submit_purpose_val = "+submit_purpose);
-			mv.addObject("submit_purpose_val",submit_purpose);
+			logger.info("category_val = "+category);
+			mv.addObject("category_val",category);
+		}
+
+		//sub category 체크
+		if(sub_category.isEmpty())
+		{
+			logger.info("sub_category!!!!");
+			isAvailable = false;
+			mv.addObject("category_msg","이 항목은 필수입니다.");
+		}
+		else if(!Validator.isProjectCategory(category, sub_category))
+		{
+			logger.info("sub_category!!!!");
+			isAvailable = false;
+			mv.addObject("category_msg","카테고리를 올바르게 선택해주세요");
+		}
+		else
+		{
+			logger.info("sub_category_val = "+sub_category);
+			mv.addObject("sub_category_val",sub_category);
+		}
+		
+		//is_turnkey 체크
+		if(is_turnkey.isEmpty())
+		{
+			logger.info("is_turnkey!!!!");
+			isAvailable = false;
+			mv.addObject("is_turnkey_msg","디자인 혹은 개발도 필요하신지 선택해주세요.");
+		}
+		else
+		{
+			logger.info("is_turnkey_val = "+is_turnkey);
+			mv.addObject("is_turnkey_val",is_turnkey);
+		}
+		
+		//project_term 체크
+		if(project_term.isEmpty())
+		{
+			logger.info("project_term!!!!");
+			isAvailable = false;
+			mv.addObject("project_term_msg","이 항목은 필수입니다.");
+		}
+		else if(!Validator.isDigit(project_term)||!Validator.isValidLength(project_term, 1, 3))
+		{
+			logger.info("project_term!!!!");
+			isAvailable = false;
+			mv.addObject("project_term_msg","프로젝트 진행기간을 올바르게 입력해주세요");
+		}
+		else
+		{
+			logger.info("project_term_val = "+project_term);
+			mv.addObject("project_term_val",project_term);
+		}
+		
+		//budget_maximum 체크
+		if(budget_maximum.isEmpty())
+		{
+			logger.info("budget_maximum!!!!");
+			isAvailable = false;
+			mv.addObject("budget_maximum_msg","이 항목은 필수입니다.");
+		}
+		else
+		{
+			logger.info("budget_maximum_val = "+budget_maximum);
+			mv.addObject("budget_maximum_val",budget_maximum);
+		}	
+		
+		//planning_status 체크
+		if(planning_status.isEmpty())
+		{
+			logger.info("planning_status!!!!");
+			isAvailable = false;
+			mv.addObject("planning_status_msg","이 항목은 필수입니다.");
+		}
+		else if(!Validator.isPlanStatus(planning_status))
+		{
+			logger.info("planning_status!!!!");
+			isAvailable = false;
+			mv.addObject("planning_status_msg","프로젝트 기획상태를 올바르게 입력해주세요");
+		}
+		else
+		{
+			logger.info("planning_status_val = "+planning_status);
+			mv.addObject("planning_status_val",planning_status);
+		}	
+		
+		//description 체크
+		if(description.isEmpty())
+		{
+			logger.info("description!!!!");
+			isAvailable = false;
+			mv.addObject("description_msg","이 항목은 필수입니다.");
+		}
+		else if(!Validator.isValidLength(description, 1, 5000))
+		{
+			logger.info("description!!!!");
+			isAvailable = false;
+			mv.addObject("description_msg","프로젝트 내용이 너무 깁니다.");
+		}
+		else
+		{
+			description.replace("\n", "<br/>");
+			logger.info("description_val = "+description);
+			mv.addObject("description_val",description);
+		}	
+		
+		//skill_required 체크(필수 X)
+		if(!skill_required.isEmpty())
+		{
+			if(!Validator.isValidLength(skill_required, 1, 100))
+			{
+				logger.info("skill_required!!!!");
+				isAvailable = false;
+				mv.addObject("skill_required_msg","관련 기술이 너무 깁니다");
+			}
+			else
+			{
+				logger.info("skill_required_val = "+skill_required);
+				mv.addObject("skill_required_val",skill_required);
+			}	
+		}
+		
+		//deadline 체크
+		if(deadline.isEmpty())
+		{
+			logger.info("deadline!!!!");
+			isAvailable = false;
+			mv.addObject("deadline_msg","이 항목은 필수입니다.");
+		}
+		else
+		{
+			logger.info("deadline_val = "+deadline);
+			mv.addObject("deadline_val",deadline);
+		}
+		
+		//method_pre_interview 체크
+		if(method_pre_interview.isEmpty())
+		{
+			logger.info("method_pre_interview!!!!");
+			isAvailable = false;
+			mv.addObject("method_pre_interview_msg","이 항목은 필수입니다.");
+		}
+		else if(!method_pre_interview.equals("OFFLINE")&&!method_pre_interview.equals("ONLINE"))
+		{
+			logger.info("method_pre_interview!!!!");
+			isAvailable = false;
+			mv.addObject("method_pre_interview_msg","사전 미팅을 올바르게 선택해주세요.");
+		}
+		else
+		{
+			logger.info("method_pre_interview_val = "+method_pre_interview);
+			mv.addObject("method_pre_interview_val",method_pre_interview);
+		}
+		
+		//시,도 군 체크
+		if(address_sido.isEmpty() ||sigungu.isEmpty() )
+		{
+			logger.info("address_sido||sigungu!!!!");
+			isAvailable = false;
+			mv.addObject("address_msg","이 항목은 필수입니다.");
+		}
+		else
+		{
+			logger.info("address_sido_val = "+address_sido);
+			logger.info("sigungu_val = "+sigungu);
+			mv.addObject("address_sido_val",address_sido);
+			mv.addObject("sigungu_val",sigungu);
+		}
+		
+		
+		//date_expected_kick_off
+		if(date_expected_kick_off.isEmpty() )
+		{
+			logger.info("date_expected_kick_off!!!!");
+			isAvailable = false;
+			mv.addObject("date_expected_kick_off_msg","이 항목은 필수입니다.");
+		}
+		else
+		{
+			logger.info("date_expected_kick_off_val = "+date_expected_kick_off);
+			mv.addObject("date_expected_kick_off_val",date_expected_kick_off);
+		}
+		
+		//has_manage_experience
+		if(has_manage_experience.isEmpty())
+		{
+			logger.info("has_manage_experience!!!!");
+			isAvailable = false;
+			mv.addObject("has_manage_experience_msg","이 항목은 필수입니다.");
+		}
+		else
+		{
+			logger.info("has_manage_experience_val = "+has_manage_experience);
+			mv.addObject("has_manage_experience_val",has_manage_experience);
+		}
+		
+		//prefer_partner(필수X)
+		if(!prefer_partner.isEmpty())
+		{
+			if(!prefer_partner.equals("whatever")&&!prefer_partner.equals("corporate_business")
+					&&!prefer_partner.equals("individual_business")&&!prefer_partner.equals("team")
+					&&!prefer_partner.equals("individual"))
+			{
+				isAvailable = false;
+				logger.info("prefer_partner!!!!");
+				mv.addObject("prefer_partner_msg","선호하는 파트너를 올바르게 선택해주세요.");
+			}
+			else
+			{
+				logger.info("prefer_partner_val = "+prefer_partner);
+				mv.addObject("prefer_partner_val",prefer_partner);
+			}
+		}
+		
+		//submit_purpose(필수 X)
+		if(!submit_purpose.isEmpty())
+		{
+			if(!submit_purpose.equals("request")&&!submit_purpose.equals("inquire"))
+			{
+				logger.info("submit_purpose!!!!");
+				isAvailable = false;
+				mv.addObject("submit_purpose_msg","프로젝트 의뢰 목적를 올바르게 선택해주세요.");
+			}
+			else
+			{
+				logger.info("submit_purpose_val = "+submit_purpose);
+				mv.addObject("submit_purpose_val",submit_purpose);
+			}
 		}
 
 		String status = "";
@@ -619,9 +985,14 @@ public class ProjectController {
 						method_pre_interview, address_sido, sigungu, Time.dateToTimestamp(date_expected_kick_off), has_manage_experience,
 						prefer_partner, submit_purpose, status);
 				if(status.equals("임시저장"))
-					return_val = "redirect:/mywjm/client";
-				else if(status.equals("검수중"))
+				{
+					mv = new ModelAndView();
+					return_val = "redirect:/client/manage/project/saved/";
+				}
+				else if(status.equals("검수중")){
+					mv = new ModelAndView();
 					return_val = "redirect:/project/add/thank-you";
+				}
 				mv.setViewName(return_val);
 			}
 		}
@@ -647,39 +1018,34 @@ public class ProjectController {
 		
 		
 		
-		return "redirect:/project/faq";
+		return "/project/faq";
 	}
 	/**
 	 * 프로젝트 미리보기
 	 */
 	@RequestMapping(value = "/project/preview/{name}/{pk}", method = RequestMethod.GET)
 	public ModelAndView ProjectController_preview_name_pk(HttpServletRequest request,
-			@PathVariable("pk") int pk, @PathVariable("name") String name, ModelAndView mv) {
+			@PathVariable("pk") int pk, 
+			@PathVariable("name") String name, 
+			ModelAndView mv) {
 		logger.info("project preview Page");
 		
-		mv.addObject("pk",pk);
-		mv.addObject("name",name);
-		
-		mv.setViewName("redirect:/project/preview");
-		return mv;
-	}
-	/**
-	 * 프로젝트 미리보기
-	 */
-	@RequestMapping(value = "/project/preview", method = RequestMethod.GET)
-	public ModelAndView ProjectController_preview(HttpServletRequest request
-			,@RequestParam("pk") int pk
-			,@RequestParam("name") String name
-			, ModelAndView mv
-			) {
-		logger.info("project preview Page");
+		logger.info("name = "+name);
+		logger.info("pk = "+pk);
 
 		ProjectInfo project = projectDao.select(pk, name);
+		if(project == null)
+			mv.setViewName("/error");
 		
-		if(project!=null)
+		AccountInformationInfo this_accountinfo = accountInformationDao.select(project.getAccount_pk());
+		AccountInfo this_account = accountDao.select(project.getPk());
+		
+		logger.info("description : "+project.getDescription());
 			mv.addObject("project",project);
-		else
-			logger.info("project 없음 에러!");
+			mv.addObject("this_accountinfo",this_accountinfo);
+			mv.addObject("this_account",this_account);
+			mv.setViewName("/project/preview");
+		
 		
 		return mv;
 	}
@@ -924,7 +1290,7 @@ public class ProjectController {
 			@RequestParam(value = "related_description", required = false, defaultValue = "") String related_description
 			) {
 
-		logger.info("/partners/p/{id}/portfolio/update/edit Post Page");
+		logger.info("/project/{name}/{pk}/proposal/apply Post Page");
 		
 
 		logger.info("name = " + name);

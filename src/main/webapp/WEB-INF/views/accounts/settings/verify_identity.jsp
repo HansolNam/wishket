@@ -1,17 +1,23 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="com.wjm.models.AccountInfo,com.wjm.models.AccountInformationInfo, com.wjm.models.AuthenticationInfo"%>
+<%@ page import="com.wjm.main.function.Validator, com.wjm.models.AccountInfo,com.wjm.models.AccountInformationInfo, com.wjm.models.AuthenticationInfo"%>
 <%
 	AccountInfo account = (AccountInfo) session.getAttribute("account");
-	AccountInformationInfo accountinfo;
+	AccountInformationInfo accountinfo = (AccountInformationInfo)request.getAttribute("accountinfo");
 	AuthenticationInfo authenticationinfo = (AuthenticationInfo)request.getAttribute("authenticatoninfo");
 	
-	String name = "";
-	String id = "";
-	String img_path = "";
-	String form = "";
-	boolean hasBasicInfo = false;
-	boolean hasAuthentication = false;
+	String hasBasicInfo = (String)request.getAttribute("hasBasicInfo");
+	String hasAuthentication = (String)request.getAttribute("hasAuthentication");
+	
+	String img_path = accountinfo.getProfile_img();
+	if(img_path!= null)
+		{
+			if(img_path.isEmpty())
+				img_path = "default_avatar.png";
+		}
+	else
+		img_path = "default_avatar.png";
+	
 	
 	String user_type = "";
 	String identity_doc = "";
@@ -21,48 +27,30 @@
 	String identify_number = "";
 	String company_name = "";
 	
-	if(account == null) response.sendRedirect("/wjm/accounts/login");
-	else
-	{
-		accountinfo = (AccountInformationInfo)request.getAttribute("accountinfo");
+	String name = accountinfo.getName();
+	String id = account.getId();
+	String form = accountinfo.getForm();
+	
+	if(!Validator.hasValue(name))
+		name = "";
+	if(!Validator.hasValue(id))
+		id = "";
+	if(hasAuthentication != null)
+	{	
+		user_type = authenticationinfo.getUser_type();
+		identity_doc = authenticationinfo.getIdentity_doc();
+		representer_name = authenticationinfo.getRepresenter_name();
+		address_detail = authenticationinfo.getAddress_detail();
+		email_for_tax = authenticationinfo.getEmail_for_tax();
+		identify_number = authenticationinfo.getIdentify_number();
+		company_name = authenticationinfo.getCompany_name();
+	}
+	if(form.equals("individual")) form = "개인";
+	else if(form.equals("team")) form = "팀";
+	else if(form.equals("individual_business")) form = "개인 사업자";
+	else if(form.equals("corporate_business")) form = "법인 사업자";
+	else form = "";
 		
-		if(accountinfo == null) response.sendRedirect("/wjm/accounts/login");
-		else
-		{
-			name = accountinfo.getName();
-			id = account.getId();
-			img_path = accountinfo.getProfile_img() ;
-			form = accountinfo.getForm();
-			
-			if(img_path == null)
-				img_path = "resources/static/img/default_avatar.png";
-			if(img_path.isEmpty())
-				img_path = "resources/static/img/default_avatar.png";
-			if(id == null)
-				id = "";
-			if(name == null)
-				name = "";
-			if("true".equals((String)request.getAttribute("hasBasicInfo")))
-				hasBasicInfo = true;
-			if("true".equals((String)request.getAttribute("hasAuthentication")))
-				hasAuthentication = true;
-			if(authenticationinfo != null)
-			{	
-				user_type = authenticationinfo.getUser_type();
-				identity_doc = authenticationinfo.getIdentity_doc();
-				representer_name = authenticationinfo.getRepresenter_name();
-				address_detail = authenticationinfo.getAddress_detail();
-				email_for_tax = authenticationinfo.getEmail_for_tax();
-				identify_number = authenticationinfo.getIdentify_number();
-				company_name = authenticationinfo.getCompany_name();
-			}
-			if(form.equals("individual")) form = "개인";
-			else if(form.equals("team")) form = "팀";
-			else if(form.equals("individual_business")) form = "개인 사업자";
-			else if(form.equals("corporate_business")) form = "법인 사업자";
-			else hasBasicInfo = false;
-		}
-	}	
 	
 %>
 <html class="no-js modern" lang="ko">
@@ -112,8 +100,8 @@
 						<h3 class="user-name-tag-heading">클라이언트</h3>
 						<div class="user-name-tag-body">
 							<img alt="<%=id %> 사진" class="img-circle user-img"
-								src="${pageContext.request.contextPath}/<%=img_path %>" />
-							<h4 class="username"><%=id %></h4>
+								src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=img_path %>" />
+							<h4 class="username"><%= id %></h4>
 							<a class="profile-setting" href="/wjm/accounts/settings/profile/">기본
 								정보 수정</a>
 						</div>
@@ -204,7 +192,7 @@
 							</div>
 						</div>
 						<%
-							if(!hasBasicInfo)
+							if(hasBasicInfo == null)
 							{
 						%>
 						<h4>인증 서류 제출</h4>
@@ -243,7 +231,7 @@
 								<label class="control-label required" for="form_of_business"><span>*</span>
 									개인 사업자 형태</label>
 								<div class="control-wrapper">
-									<select class="form-control" id="user_type" name="user_type" <%if(hasAuthentication) out.print("disabled=''"); %>
+									<select class="form-control" id="user_type" name="user_type"
 										required="required"><option selected="" value="1">일반
 											과세자</option>
 										<option value="3">간이 과세자</option>
@@ -258,33 +246,19 @@
 									<div class="control-wrapper">
 										<span class="p5-img-name" id="p5-image-name"
 											style="margin-top: 8px;">
-											<%
-												if(identity_doc.isEmpty())
-												{
-													out.println("제출된 '<strong>인증 서류</strong>'가 없습니다.");
-												}
-												else
-												{
-													if(hasAuthentication)
-														out.println("'<strong>"+identity_doc+"</strong>'");
-													else
-														out.println("제출된 '<strong>인증 서류</strong>'가 없습니다.");
-												}
-											%>
-											
 										</span> 
 										<span class="p5-custom-file-type-input-wrapper"><button
 												class="btn btn-primary p5-custom-file-type-front"
 												style="cursor: pointer; left: 0; margin-left: 0"
-												type="button"  <%if(hasAuthentication) out.print("disabled=''"); %>>
+												type="button">
 												<i class="fa fa-plus"></i> 이미지 변경
 											</button>
 											<input accept="image/*" class="p5-custom-file-type-input"
 											id="p5-file-btn" name="image"
 											style="cursor: pointer; left: 0px; margin-left: 0"
-											type="file" <%if(hasAuthentication) out.print("disabled=''"); %> />
+											type="file" />
 										<button class="btn btn-cancel p5-img-del-btn"
-												style="left: 120px;" type="button" <%if(hasAuthentication) out.print("disabled=''"); %>>삭제</button></span> <span
+												style="left: 120px;" type="button" id="image-del_btn">삭제</button></span> <span
 											class="help-block" style="position: relative; top: 85px">이미지
 											파일(.jpg, .jpeg, .png, .gif 등)만 업로드할 수 있습니다.</span>
 									</div>
@@ -295,14 +269,14 @@
 									<label class="control-label required"><span>*</span> 성명</label>
 									<div class="control-wrapper">
 										<input class="form-control" name="representer_name" id="representer_name1" 
-											type="text" value="<%=representer_name %>" <%if(hasAuthentication) out.print("disabled=''"); %> />
+											type="text" value="" />
 									</div>
 								</div>
 								<div class="form-group ">
 									<label class="control-label required"><span>*</span> 주소</label>
 									<div class="control-wrapper">
 										<input class="form-control" name="address_detail" type="text"  id="address_detail1" 
-											value="<%=address_detail %>" <%if(hasAuthentication) out.print("disabled=''"); %>/>
+											value="" />
 									</div>
 								</div>
 								<div class="form-group ">
@@ -310,7 +284,7 @@
 										style="padding-left: 60px; *padding-left: 70px; *width: 180px;"><span>*</span>
 										세금계산서용 이메일 주소</label>
 									<div class="control-wrapper">
-										<input class="form-control" name="email_for_tax"  id="email_for_tax1" type="email" value="<%=email_for_tax %>" <%if(hasAuthentication) out.print("disabled=''"); %> /><span
+										<input class="form-control" name="email_for_tax"  id="email_for_tax1" type="email" value="" /><span
 											class="help-block">계약서, 세금계산서 등을 받아볼 이메일 주소를 입력해 주세요.</span>
 									</div>
 								</div>
@@ -320,8 +294,8 @@
 									<label class="control-label required"><span>*</span>
 										사업자 등록 번호</label>
 									<div class="control-wrapper">
-										<input class="form-control" name="identify_number"  id="identify_number" type="text" value="<%=identify_number %>" 
-										<%if(hasAuthentication) out.print("disabled=''"); %> /><span
+										<input class="form-control" name="identify_number"  id="identify_number" type="text" value="" 
+										/><span
 											class="help-block">'-'를 제외하고 입력해주세요. (10자리)</span>
 									</div>
 								</div>
@@ -330,7 +304,7 @@
 										법인명 (단체명)</label>
 									<div class="control-wrapper">
 										<input class="form-control" name="company_name" type="text"  id="company_name"
-											value="<%=company_name %>" <%if(hasAuthentication) out.print("disabled=''"); %>/>
+											value="" />
 									</div>
 								</div>
 								<div class="form-group ">
@@ -338,7 +312,7 @@
 										대표자명</label>
 									<div class="control-wrapper">
 										<input class="form-control" name="representer_name"  id="representer_name2"
-											type="text" value="<%=representer_name %>" <%if(hasAuthentication) out.print("disabled=''"); %>/>
+											type="text" value="" />
 									</div>
 								</div>
 								<div class="form-group ">
@@ -346,7 +320,7 @@
 										사업장 소재지</label>
 									<div class="control-wrapper">
 										<input class="form-control" name="address_detail" type="text"  id="address_detail2"
-											value="<%=address_detail %>" <%if(hasAuthentication) out.print("disabled=''"); %>/>
+											value=""/>
 									</div>
 								</div>
 								<div class="form-group ">
@@ -355,7 +329,7 @@
 										세금계산서용 이메일 주소</label>
 									<div class="control-wrapper" style="width: 380px;">
 										<input class="form-control" name="email_for_tax"  id="email_for_tax2"
-											style="width: 340px;" type="email" value="<%=email_for_tax %>" <%if(hasAuthentication) out.print("disabled=''"); %>/>
+											style="width: 340px;" type="email" value=""/>
 											<span class="help-block">계약서,
 											세금계산서 등을 받아볼 이메일 주소를 입력해 주세요.</span>
 									</div>
@@ -363,7 +337,7 @@
 							</section>
 							
 							<%
-							if(!hasAuthentication){
+							if(hasAuthentication==null){
 							%>
 							<div class="form-group last-form-group"
 								style="padding-top: 15px;">
@@ -389,44 +363,61 @@
 	<script>
     $(document).ready(function(){
 
-    	var user_type = "${user_type}";
-    	var representer_name = "${representer_name}";
-    	var address_detail = "${address_detail}";
-    	var email_for_tax = "${email_for_tax}";
-    	var identify_number = "${identify_number}";
-    	var company_name = "${company_name}";
+    	var identity_doc = "<%=identity_doc%>";
+    	var user_type = "<%=user_type%>";
+    	var representer_name = "<%=representer_name%>";
+    	var address_detail = "<%=address_detail%>";
+    	var email_for_tax = "<%=email_for_tax%>";
+    	var identify_number = "<%=identify_number%>";
+    	var company_name = "<%=company_name%>";
     	
     	var messages = "${messages}";
 
+    	if(identity_doc != null && identity_doc != "")
+   		{
+   			$("#p5-image-name").html(identity_doc);
+			$( "#p5-file-btn" ).prop( "disabled", true );
+			$( "#image-del_btn" ).prop( "disabled", true );
+			
+   		}
     	if(messages != null && messages != "")
     		$("#messages").html("<div class='alert alert-warning fade in'>"+messages+"</div>");
 
     	if(user_type != null && user_type != "")
 		{///
-			document.getElementById("user_type").value = "${user_type}";
+			document.getElementById("user_type").value = user_type;
+			$( "#user_type" ).prop( "disabled", true );
 		}
     	if(representer_name != null && representer_name != "")
 		{
-			document.getElementById("representer_name1").value = "${representer_name}";
-			document.getElementById("representer_name2").value = "${representer_name}";
+			document.getElementById("representer_name1").value = representer_name;
+			document.getElementById("representer_name2").value = representer_name;
+			$( "#representer_name1" ).prop( "disabled", true );
+			$( "#representer_name2" ).prop( "disabled", true );
 		}
     	if(address_detail != null && address_detail != "")
 		{
-			document.getElementById("address_detail1").value = "${address_detail}";
-			document.getElementById("address_detail2").value = "${address_detail}";
+			document.getElementById("address_detail1").value = address_detail;
+			document.getElementById("address_detail2").value = address_detail;
+			$( "#address_detail1" ).prop( "disabled", true );
+			$( "#address_detail2" ).prop( "disabled", true );
 		}
     	if(email_for_tax != null && email_for_tax != "")
 		{
-			document.getElementById("email_for_tax1").value = "${email_for_tax}";
-			document.getElementById("email_for_tax2").value = "${email_for_tax}";
+			document.getElementById("email_for_tax1").value = email_for_tax;
+			document.getElementById("email_for_tax2").value = email_for_tax;
+			$( "#email_for_tax1" ).prop( "disabled", true );
+			$( "#email_for_tax2" ).prop( "disabled", true );
 		}
     	if(identify_number != null && identify_number != "")
 		{
-			document.getElementById("identify_number").value = "${identify_number}";
+			document.getElementById("identify_number").value = identify_number;
+			$( "#identify_number" ).prop( "disabled", true );
 		}
     	if(company_name != null && company_name != "")
 		{
-			document.getElementById("company_name").value = "${company_name}";
+			document.getElementById("company_name").value = company_name;
+			$( "#company_name" ).prop( "disabled", true );
 		}
     	
         var type = '<%=form%>';

@@ -24,6 +24,8 @@
 		}
 	}
 	
+	
+	
 	%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -72,7 +74,7 @@
 						<h3 class="user-name-tag-heading">클라이언트</h3>
 						<div class="user-name-tag-body">
 							<img alt="<%=id %> 사진" class="img-circle user-img"
-								src="${pageContext.request.contextPath}/resources/static/img/default_avatar.jpg" />
+								src="${pageContext.request.contextPath}/resources/upload/profile_img/${profile}" />
 							<h4 class="username"><%=id %></h4>
 							<a class="profile-setting" href="/wjm/accounts/settings/profile/">기본
 								정보 수정</a>
@@ -302,7 +304,7 @@
         $('#show_bank_form').css('display', 'none');
         $('#cancel_edit').css('display', 'block');
         $('#do_edit').css('display', 'none');
-        $('#bank_account_submit_btn').val('수정하기');
+        $('#bank_account_submit_btn').val('등록하기');
     }
     function cancel_edit(){
     	$('#sub_title').html("등록 계좌<input class='btn btn-default' id='do_edit'"+

@@ -3,7 +3,14 @@
 	<%@ page import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo, com.wjm.main.function.Time"%>
 <%
 	AccountInfo account = (AccountInfo)session.getAttribute("account");
-
+	String img_path = (String)request.getAttribute("img_path");
+	if(img_path != null)
+		{
+			if(img_path.isEmpty())
+			{
+				img_path = "default_avatar.png";
+			}
+		}
 	if(account == null) response.sendRedirect("/wjm/accounts/login");
 	
 	boolean hasBasicInfo=false, hasPhoneNum=false, hasEmail=false;
@@ -67,7 +74,7 @@
 						<h3 class="user-name-tag-heading">클라이언트</h3>
 						<div class="user-name-tag-body">
 							<img alt="<%=account.getId() %> 사진" class="img-circle user-img"
-								src="${pageContext.request.contextPath}/${img_path}" />
+								src="${pageContext.request.contextPath}/resources/upload/profile_img/${img_path}" />
 							<h4 class="username"><%=account.getId() %></h4>
 							<a class="profile-setting" href="/wjm/accounts/settings/profile/">기본
 								정보 수정</a>
@@ -97,7 +104,8 @@
 						<h4>
 							기본 정보 입력
 							<button class="btn btn-default" id="show_base_button"
-								onclick="show_base_form()" style="float: right">수정하기</button>
+								onclick="show_base_form()" style="<%if(!hasBasicInfo) out.print("display:none; ");%>float: right">수정하기</button>
+								
 						</h4>
 						<form action="/wjm/accounts/settings/profile/" class="form-horizontal"
 							enctype="multipart/form-data" id="base_show_form" method="POST"
@@ -109,7 +117,7 @@
 									사진</label>
 								<div class="control-wrapper" style="padding-top: 7px;">
 									<img alt="<%=account.getId() %> 사진" class="partners-img"
-										src="${pageContext.request.contextPath}/${ img_path }"
+										src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=img_path %>"
 										style="border-radius: 10%; border: 1px solid #dedede; width: 220px; height: 220px;" />
 								</div>
 							</div>
@@ -188,8 +196,8 @@
 									style="height: 110px;">
 									<div class="control-wrapper">
 										<span class="p5-img-name" id="p5-image-name"
-											style="margin-top: 8px;">제출된 '<strong>프로필 이미지</strong>'가
-											없습니다.
+											style="margin-top: 8px;"><%if(img_path == null){ %>제출된 '<strong>프로필 이미지</strong>'가
+											없습니다.<%}else{ %><%=img_path %> <%} %>
 										</span> <span class="p5-custom-file-type-input-wrapper"><button
 												class="btn btn-primary p5-custom-file-type-front"
 												style="cursor: pointer; left: 0; margin-left: 0"
@@ -266,6 +274,7 @@
 								<div class="control-wrapper">
 									<select class="form-control" id="id_date_of_birth_year"
 										name="date_of_birth_year">
+										<option value=''>---</option>
 										</select><select class="form-control"
 										id="id_date_of_birth_month" name="date_of_birth_month"><option
 											value="">---</option>
@@ -381,7 +390,7 @@
 								<label class="control-label required"><span>*</span> 핸드폰
 									번호</label>
 								<div class="control-wrapper">
-									<input disabled="" name="cell_phone_number"
+									<input disabled="" name="cell_phone_number" id="cell_phone_number2"
 										style="border: none; width: 100%; margin-top: 5px;"
 										type="text" value="${cell_phone_number_code }${cell_phone_number_middle }${cell_phone_number_end }" />
 								</div>
@@ -389,7 +398,7 @@
 							<div class="form-group">
 								<label class="control-label">전화번호</label>
 								<div class="control-wrapper">
-								<input disabled="" name="phone_number"
+								<input disabled="" name="phone_number" id="phone_number2"
 										style="border: none; width: 100%; margin-top: 5px;"
 										type="text" value="${phone_number_code }${phone_number_entered}" />
 								</div>
@@ -397,7 +406,7 @@
 							<div class="form-group">
 								<label class="control-label">팩스 번호</label>
 								<div class="control-wrapper">
-									<input disabled="" name="fax_number"
+									<input disabled="" name="fax_number" id="fax_number2"
 										style="border: none; width: 100%; margin-top: 5px;"
 										type="text" value="${fax_number }" />
 								</div>
@@ -491,7 +500,7 @@
 									<div class="checkbox">
 										<label class="" for="email_subscription"><input
 											checked="checked" id="email_subscription"
-											name="email_subscription" value="true" type="checkbox" />위시켓의 프로젝트 소식을
+											name="email_subscription" value="true" type="checkbox" />외주몬의 프로젝트 소식을
 											구독합니다.</label>
 									</div>
 								</div>
@@ -618,6 +627,7 @@
 			        	cell_phone_number_code = res[0];
 			        	cell_phone_number_middle = res[1];
 			        	cell_phone_number_end = res[2];
+			        	$("#cell_phone_number2").val(str);
 			        	}
 			        
 			        str = accountinfo.telephone_num;
@@ -632,9 +642,11 @@
 				        var res = str.split("-");
 				        phone_number_code = res[0];
 				        phone_number_entered = res[1];
+			        	$("#phone_number2").val(str);
 			        	}
 			        
 			        var fax_number = accountinfo.fax_num;
+		        	$("#fax_number2").val(fax_number);
 			        
 			        updateConnectInfo(cell_phone_number_code,cell_phone_number_middle,cell_phone_number_end,
 			    			phone_number_code,phone_number_entered, fax_number);
@@ -885,6 +897,14 @@
 	}
 	
     $(document).ready( function() {
+    	
+    	var d = new Date();
+        for(var i=0;i < 70; i++) {
+            var temp = '<option value="'+(parseInt(d.getFullYear())-i)+'">'+
+                    (parseInt(d.getFullYear())-i)+'</option>';
+            $('#id_date_of_birth_year').append(temp);
+        }
+    	
         var email_type = '';
 
         var img_path = "${img_path}";
@@ -1085,7 +1105,7 @@
         }
     }
     $(function () {
-        var $sido, sido_val, getSigungu;
+        var $sido, sido_val;
 
         $sido = $('#address_sido');
         sido_val = $sido.val();

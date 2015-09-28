@@ -1,12 +1,14 @@
 package com.wjm.dao;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.fileupload.FileUploadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -107,7 +109,8 @@ public class AuthenticationDao implements AuthenticationIDao {
 		jdbcTemplate.update("delete from authentication where account_pk = ?", new Object[] { account_pk });
 	}
 
-	public String updateIdentity_authentication(String form,String user_type,MultipartFile image,String real_path,String representer_name,String address_detail,String email_for_tax,String identify_number,String company_name,int account_pk)
+	public String updateIdentity_authentication(String form,String user_type,MultipartFile image,String real_path,
+			String id,String representer_name,String address_detail,String email_for_tax,String identify_number,String company_name,int account_pk) throws IOException, FileUploadException
 	{
 		AuthenticationInfo authentication = select(account_pk);
 		
@@ -176,6 +179,7 @@ public class AuthenticationDao implements AuthenticationIDao {
 			else
 				logger.info("address_detail = "+address_detail);
 			
+			boolean imagecheck = false;
 			String image_path = "";
 			//image
 			if(image == null) 
@@ -190,21 +194,26 @@ public class AuthenticationDao implements AuthenticationIDao {
 			}
 			else
 			{
-				try{
-					image_path = Fileupload.upload_doc(real_path, image);
-					
-					if(image_path.equals("error"))
-						return "이미지 제목은 40 글자까지 가능하고, 최대 용량은 3MB입니다.";
-				}
-				catch(Exception e)
+
+				if(!Fileupload.isImage(image))
+					return "이미지는 jpg, jpeg, png, gif 등 이미지 파일만 업로드 가능합니다.";
+				else if(!Fileupload.isValidFileSize(image, 5))
+					return "이미지는 최대 5MB까지 업로드 가능합니다.";
+				else if(!Validator.isValidLength(image.getOriginalFilename(), 1, 30) )
+					return "이미지명은 최대 30자까지 가능합니다. ";
+				else
 				{
-					return "이미지 업로드 중 에러가 발생했습니다.";
+					imagecheck = true;
 				}
 			}
+					
 			logger.info("representer_name = "+representer_name);
 			logger.info("address_detail = "+address_detail);
 			logger.info("email_for_tax = "+email_for_tax);
 			logger.info("account_pk = "+account_pk);
+			
+			image_path = Fileupload.upload_doc(real_path, image,id);
+			
 			logger.info("img_path = "+image_path);
 			jdbcTemplate.update("update authentication set identity_doc=?, representer_name=?, address_detail=?, email_for_tax=? where account_pk=?"
 					, new Object[] { image_path, representer_name, address_detail,email_for_tax, account_pk });
@@ -327,7 +336,7 @@ public class AuthenticationDao implements AuthenticationIDao {
 			else
 				logger.info("address_detail = "+address_detail);
 			
-
+			boolean imagecheck = false;
 			String image_path = "";
 			//image
 			if(image == null) 
@@ -342,17 +351,22 @@ public class AuthenticationDao implements AuthenticationIDao {
 			}
 			else
 			{
-				try{
-					image_path = Fileupload.upload_doc(real_path, image);
-					
-					if(image_path.equals("error"))
-						return "이미지 제목은 40 글자까지 가능하고, 최대 용량은 3MB입니다.";
-				}
-				catch(Exception e)
+
+				if(!Fileupload.isImage(image))
+					return "이미지는 jpg, jpeg, png, gif 등 이미지 파일만 업로드 가능합니다.";
+				else if(!Fileupload.isValidFileSize(image, 5))
+					return "이미지는 최대 5MB까지 업로드 가능합니다.";
+				else if(!Validator.isValidLength(image.getOriginalFilename(), 1, 30) )
+					return "이미지명은 최대 30자까지 가능합니다. ";
+				else
 				{
-					return "이미지 업로드 중 에러가 발생했습니다.";
+					imagecheck = true;
 				}
 			}
+
+			image_path = Fileupload.upload_doc(real_path, image,id);
+			
+			logger.info("img_path = "+image_path);
 			
 			jdbcTemplate.update("update authentication set user_type=?, identity_doc=?, identify_number=?,company_name=?,representer_name=?, address_detail=?, email_for_tax=? where account_pk=?"
 					, new Object[] { user_type, image_path, identify_number, company_name, representer_name, address_detail,email_for_tax, account_pk });

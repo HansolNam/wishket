@@ -1,5 +1,7 @@
 package com.wjm.main;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -8,10 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.wjm.dao.AccountDao;
 import com.wjm.dao.ProjectDao;
+import com.wjm.main.function.Validator;
 
 /**
  * Handles requests for the application home page.
@@ -64,10 +68,39 @@ public class MainController {
 	 * ��Ʈ�ʽ� ȭ��
 	 */
 	@RequestMapping(value = "/partners", method = RequestMethod.GET)
-	public String MainController_partners(HttpServletRequest request) {
+	public ModelAndView MainController_partners(HttpServletRequest request, ModelAndView mv,
+			@RequestParam(value = "page", required = false, defaultValue ="1") String page,
+			@RequestParam(value = "q", required = false, defaultValue ="") String q,
+			@RequestParam(value = "job", required = false, defaultValue ="") String job
+			) {
 		logger.info("partners Page");
 		
-		return "partners";
+		logger.info("page = "+page);
+		logger.info("q = "+q);
+		logger.info("job = "+job);
+		
+		mv.setViewName("/partners");
+
+		if(!Validator.isDigit(page))
+		{
+			mv.addObject("messages","페이지 번호는 숫자만 가능합니다.");
+			return mv;
+		}
+		
+		Integer partnersnum = accountDao.getPartnersCount();
+		
+		//List<AccountInfo> partnerslist = accountDao.get
+		
+		return mv;
+	}
+	/**
+	 * ���� �Ұ� ȭ��
+	 */
+	@RequestMapping(value = "/error", method = RequestMethod.GET)
+	public String MainController_error(HttpServletRequest request) {
+		logger.info("error Page");
+		
+		return "error";
 	}
 
 	/**

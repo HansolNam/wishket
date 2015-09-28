@@ -104,7 +104,7 @@
 								<section class="project-unit-heading">
 									<h4 class="project-title"><%=projectlist.get(i).getName() %></h4>
 									<div class="management-tools">
-										<a class="btn btn-sm btn-default" href="/wjm/project/edit/<%=projectlist.get(i).getPk() %>/">수정</a>
+										<a class="btn btn-sm btn-default" href="/wjm/project/add/edit/<%=projectlist.get(i).getPk() %>/">수정</a>
 										<a class="btn btn-sm btn-cancel" data-toggle="modal"
 											href="#saved-project-delete-modal-4870" role="button">삭제</a>
 									</div>

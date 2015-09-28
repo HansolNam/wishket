@@ -24,6 +24,7 @@
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<beans:property name="prefix" value="/WEB-INF/views/" />
 		<beans:property name="suffix" value=".jsp" />
+		<beans:property name="contentType" value="text/html; charset=UTF-8" />
 	</beans:bean>
 
 	<beans:bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -132,7 +133,7 @@
            <mapping path="/partners/p/portfolio/update/*"/>
            <mapping path="/partners/p/skill/*"/>
            <mapping path="/partners/p/skill/update/*"/>
-           <mapping path="/project/add/*"/>
+           <mapping path="/project/**"/>
                 <beans:bean class="com.wjm.interceptor.Interceptor"/>
         </interceptor>
         

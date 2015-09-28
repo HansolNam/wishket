@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.wjm.dao.AccountDao;
+import com.wjm.dao.AccountInformationDao;
 import com.wjm.dao.ApplicantDao;
 import com.wjm.dao.ProjectDao;
 import com.wjm.models.AccountInfo;
@@ -36,6 +37,9 @@ public class MywjmController {
 
 	@Autowired
 	private ApplicantDao applicantDao;
+	
+	@Autowired
+	private AccountInformationDao accountInformationDao;
 	/**
 	 * 클라이언트 마이페이지
 	 */
@@ -50,8 +54,12 @@ public class MywjmController {
 		if(account != null)
 			projectlist = projectDao.select(account.getPk());
 		else
-			projectlist = null;
-		
+		{
+			mv.setViewName("redirect:/accounts/login");
+			return mv;
+		}
+		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
+
 		mv.addObject("projectlist",projectlist);
 		
 		return mv;
@@ -77,7 +85,8 @@ public class MywjmController {
 			mv.setViewName("/accounts/login");
 			return mv;
 		}
-		
+		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
+
 		List<ProjectInfo> interest = applicantDao.getInterestProject(account.getPk());
 		List<ApplicantInfo> apply = applicantDao.select_applicant(account.getPk(), "지원중");
 		List<ContractInfo> contract = null;

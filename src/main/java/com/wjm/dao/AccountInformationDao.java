@@ -1,22 +1,24 @@
 package com.wjm.dao;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.fileupload.FileUploadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.wjm.idao.AccountInformationIDao;
-import com.wjm.main.function.Time;
+import com.wjm.main.function.Fileupload;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInformationInfo;
 
@@ -118,6 +120,60 @@ public class AccountInformationDao implements AccountInformationIDao {
 		}
 		else
 			return accountinfolist.get(0);
+	}
+	public String getProfileImg(int account_pk)
+	{
+		List<AccountInformationInfo> accountinfolist = jdbcTemplate.query("select * from account_information where account_pk = ?",
+		    	new Object[] { account_pk }, new RowMapper<AccountInformationInfo>() {
+		    	public AccountInformationInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new AccountInformationInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getInt("account_pk")
+		    				, resultSet.getString("profile_img")
+		    				, resultSet.getString("form")
+		    				, resultSet.getString("company_name")
+		    				, resultSet.getString("company_representative")
+		    				, resultSet.getString("name")
+		    				, resultSet.getString("sex")
+		    				, resultSet.getString("birth_date")
+		    				, resultSet.getString("regionl")
+		    				, resultSet.getString("regionM")
+		    				, resultSet.getString("regionR")
+		    				, resultSet.getString("cellphone_num")
+		    				, resultSet.getString("telephone_num")
+		    				, resultSet.getString("fax_num")
+		    				, resultSet.getInt("subscription")
+		    				, resultSet.getString("identity_authentication")
+		    				, resultSet.getString("bank_name")
+		    				, resultSet.getString("account_holder")
+		    				, resultSet.getString("account_number")
+		    				, resultSet.getString("introduction"));
+		    	}
+		    });
+		
+		if(accountinfolist.size()>1)
+		{
+			logger.info("기본정보가 2개, 에러");
+			return "default_avatar.png";
+		}
+		else if(accountinfolist.size() == 0)
+		{
+			create(account_pk);
+			AccountInformationInfo accountinfo =  select(account_pk);
+			if(Validator.hasValue(accountinfo.getProfile_img()))
+				return accountinfo.getProfile_img();
+			else
+				return "default_avatar.png";
+		}
+		else
+		{
+			AccountInformationInfo accountinfo =accountinfolist.get(0);
+			if(Validator.hasValue(accountinfo.getProfile_img()))
+					return accountinfo.getProfile_img();
+				else
+					return "default_avatar.png";
+		}
 	}	
 	public List<AccountInformationInfo> select(String id)
 	{
@@ -195,58 +251,56 @@ public class AccountInformationDao implements AccountInformationIDao {
 		if(accountinfo==null)
 		{
 			create(account_pk);
-			return false;
+			accountinfo = select(account_pk);
 		}
 		//정보가 있어도 내용이 없는 경우
-		else
+		
+		String profile = accountinfo.getProfile_img();
+		String form = accountinfo.getForm();
+		String name = accountinfo.getName();
+		String sex = accountinfo.getSex();
+		String company_name = accountinfo.getCompany_name();
+		String representative = accountinfo.getCompany_representative();
+		String birth = accountinfo.getBirth_date();
+		String regionl = accountinfo.getRegionl();
+		String regionM = accountinfo.getRegionm();
+		String regionR = accountinfo.getRegionr();
+		
+		if(form == null)
 		{
-			String profile = accountinfo.getProfile_img();
-			String form = accountinfo.getForm();
-			String name = accountinfo.getName();
-			String sex = accountinfo.getSex();
-			String company_name = accountinfo.getCompany_name();
-			String representative = accountinfo.getCompany_representative();
-			String birth = accountinfo.getBirth_date();
-			String regionl = accountinfo.getRegionl();
-			String regionM = accountinfo.getRegionm();
-			String regionR = accountinfo.getRegionr();
-			
-			if(form == null)
-			{
+			return false;
+		}
+		else if(form.equals("individual"))
+		{
+			//하나라도 없으면 기본정보 없음
+			if(profile == null || form == null || name == null || sex==null ||birth == null
+					|| regionl == null || regionM == null || regionR == null)
 				return false;
-			}
-			else if(form.equals("individual"))
-			{
-				//하나라도 없으면 기본정보 없음
-				if(profile == null || form == null || name == null || sex==null ||birth == null
-						|| regionl == null || regionM == null || regionR == null)
-					return false;
-				else
-				{
-					if(profile.isEmpty() || form.isEmpty() || name.isEmpty() || sex.isEmpty()
-							|| regionl.isEmpty() || regionM.isEmpty() || regionR.isEmpty())
-						return false;
-				}
-			}
 			else
 			{
-				//하나라도 없으면 기본정보 없음
-				if(profile == null || form == null || name == null || company_name == null || representative == null ||birth == null
-						|| regionl == null || regionM == null || regionR == null)
+				if(profile.isEmpty() || form.isEmpty() || name.isEmpty() || sex.isEmpty()
+						|| regionl.isEmpty() || regionM.isEmpty() || regionR.isEmpty())
 					return false;
 				else
-				{
-					if(profile.isEmpty() || form.isEmpty() || name.isEmpty() ||company_name.isEmpty()|| representative.isEmpty() ||
-							 regionl.isEmpty() || regionM.isEmpty() || regionR.isEmpty())
-						return false;
-				}
+					return true;
 			}
-			
-			
 		}
-		
-		//기본정보를 가지고 있음
-		return true;
+		else
+		{
+			//하나라도 없으면 기본정보 없음
+			if(profile == null || form == null || name == null || company_name == null || representative == null ||birth == null
+					|| regionl == null || regionM == null || regionR == null)
+				return false;
+			else
+			{
+				if(profile.isEmpty() || form.isEmpty() || name.isEmpty() ||company_name.isEmpty()|| representative.isEmpty() ||
+						 regionl.isEmpty() || regionM.isEmpty() || regionR.isEmpty())
+					return false;
+				else
+					return true;
+			}
+		}
+			
 	}
 	public boolean hasContactInfo(int account_pk)
 	{
@@ -256,28 +310,37 @@ public class AccountInformationDao implements AccountInformationIDao {
 		if(accountinfo==null)
 		{
 			create(account_pk);
-			return false;
-		}
-		//정보가 있어도 내용이 없는 경우
-		else
-		{
-			String name = accountinfo.getName();
-			String phone_num = accountinfo.getCellphone_num();
-			String form = accountinfo.getForm();
-			String company_name = accountinfo.getCompany_name();
-			String introduction = accountinfo.getIntroduction();
-			
-			if(name == null || phone_num == null || form == null || company_name==null || introduction == null)
-				return false;
-			else
-			{
-				if(name.isEmpty() || phone_num.isEmpty() || form.isEmpty() || company_name==null ||introduction.isEmpty())
-					return false;
-			}
+			accountinfo = select(account_pk);
 		}
 		
-		//기본정보를 가지고 있음
-		return true;
+		//정보가 있어도 내용이 없는 경우
+		String name = accountinfo.getName();
+		String phone_num = accountinfo.getCellphone_num();
+		String form = accountinfo.getForm();
+		String company_name = accountinfo.getCompany_name();
+		String representative = accountinfo.getCompany_representative();
+		String introduction = accountinfo.getIntroduction();
+		
+		if(form == null)
+			return false;
+		else if(form.equals("team") || form.equals("individual"))
+		{
+			if(!Validator.hasValue(name) || !Validator.hasValue(phone_num) ||!Validator.hasValue(introduction))
+				return false;
+			else 
+				return true;
+		}
+		else if(form.equals("individual_business") || form.equals("corporate_business"))
+		{
+			if(!Validator.hasValue(name) || !Validator.hasValue(phone_num) ||!Validator.hasValue(introduction)
+					 ||!Validator.hasValue(company_name) ||!Validator.hasValue(representative))
+				return false;
+			else 
+				return true;
+		}
+		else
+			return false;
+
 	}
 	
 	public boolean hasAccount(int account_pk)
@@ -324,10 +387,11 @@ public class AccountInformationDao implements AccountInformationIDao {
 				, new Object[] { identity_authentication, account_pk });
 	}
 
-	public String updateBase(String image,String form_of_business,String full_name
+	public String updateBase(MultipartFile image,String pre_img_path, String form_of_business,String full_name
 			,String company_name,String representative, String gender,
 			String date_of_birth_year,String date_of_birth_month,String date_of_birth_day,
-			String address_sido,String sigungu,String address_detail, int pk) throws ParseException
+			String address_sido,String sigungu,String address_detail, int pk,
+			String real_path, String id)  throws IOException, FileUploadException, ParseException
 	{
 		
 		//회사 형태
@@ -407,7 +471,6 @@ public class AccountInformationDao implements AccountInformationIDao {
 			}
 			else
 			{
-				address_sido = areaDao.select(address_sido);
 				logger.info("address_sido = "+address_sido);
 			}
 		}
@@ -432,7 +495,28 @@ public class AccountInformationDao implements AccountInformationIDao {
 
 		logger.info("address_detail = "+address_detail);
 		logger.info("pk = "+pk);
-		logger.info("image = "+image);
+
+		boolean imagecheck = false, imageEmpty = false;
+		if(image.isEmpty())
+			{
+				if(!Validator.hasValue(pre_img_path))
+					return "이미지를 등록해주세요.";
+				else
+					imageEmpty=true;
+			}
+		else
+		{
+			if(!Fileupload.isImage(image))
+				return "이미지는 jpg, jpeg, png, gif 등 이미지 파일만 업로드 가능합니다.";
+			else if(!Fileupload.isValidFileSize(image, 5))
+				return "이미지는 최대 5MB까지 업로드 가능합니다.";
+			else if(!Validator.isValidLength(image.getOriginalFilename(), 1, 30) )
+				return "이미지명은 최대 30자까지 가능합니다. ";
+			else
+			{
+				imagecheck = true;
+			}
+		}
 		
 		if(form_of_business.equals("individual"))
 		{
@@ -456,8 +540,30 @@ public class AccountInformationDao implements AccountInformationIDao {
 			
 			logger.info("birth_date : "+birth_date);
 			
-			jdbcTemplate.update("update account_information set profile_img=?,form=?,name=?,sex=?,birth_date=?,regionl=?,regionM=?,regionR=? where pk=?", 
-					new Object[] { image, form_of_business, full_name,gender, birth_date,address_sido,sigungu,address_detail,pk  });			
+			String image_name;
+			//프로필 이미 등록 했고, 다시 추가 안한경우
+			if(imageEmpty == true)
+			{
+				logger.info("프로필이 이미 존재하는 경우");
+				jdbcTemplate.update("update account_information set form=?,name=?,sex=?,birth_date=?,regionl=?,regionM=?,regionR=? where pk=?", 
+						new Object[] { form_of_business, full_name,gender, birth_date,address_sido,sigungu,address_detail,pk  });			
+				
+			}
+			else
+			{
+			
+				//이미지가 변했고 이전 값이 존재하는 경우 > 수정
+				if(!image.getOriginalFilename().equals(pre_img_path)&&Validator.hasValue(pre_img_path))
+				{
+					String result = Fileupload.delete_profile(real_path, pre_img_path);
+					logger.info("이미지 삭제 : "+result);
+				}
+				image_name = Fileupload.upload_profile(real_path, image, id);
+				
+				jdbcTemplate.update("update account_information set profile_img=?,form=?,name=?,sex=?,birth_date=?,regionl=?,regionM=?,regionR=? where pk=?", 
+						new Object[] { image_name, form_of_business, full_name,gender, birth_date,address_sido,sigungu,address_detail,pk  });			
+				
+			}
 			
 			return "성공";
 		}
@@ -495,11 +601,34 @@ public class AccountInformationDao implements AccountInformationIDao {
 			{
 				logger.info("대표명 : "+representative);
 			}
+
+			String image_name;
+			//프로필 이미 등록 했고, 다시 추가 안한경우
+			if(imageEmpty == true)
+			{
+				logger.info("프로필이 이미 존재하는 경우");
+				jdbcTemplate.update("update account_information set form=?,name=?,company_name=?,company_representative=?,birth_date=?,regionl=?,regionM=?,regionR=? where pk=?", 
+						new Object[] { form_of_business, full_name, company_name, representative,
+								birth_date,address_sido,sigungu,address_detail,pk  });
+
+			}
+			else
+			{
+			
+
+				//이미지가 변했고 이전 값이 존재하는 경우 > 수정
+				if(!image.getOriginalFilename().equals(pre_img_path)&&Validator.hasValue(pre_img_path))
+				{
+					String result = Fileupload.delete_profile(real_path, pre_img_path);
+					logger.info("이미지 삭제 : "+result);
+				}
+				image_name = Fileupload.upload_profile(real_path, image, id);
+
 			
 			jdbcTemplate.update("update account_information set profile_img=?,form=?,name=?,company_name=?,company_representative=?,birth_date=?,regionl=?,regionM=?,regionR=? where pk=?", 
-					new Object[] { image, form_of_business, full_name, company_name, representative,
+					new Object[] { image_name, form_of_business, full_name, company_name, representative,
 							birth_date,address_sido,sigungu,address_detail,pk  });
-
+			}
 			return "성공";
 		}
 		
@@ -625,7 +754,7 @@ public class AccountInformationDao implements AccountInformationIDao {
 			return "올바른 전화 번호가 아닙니다.";
 		}
 		else
-			telephone_num = phone_number_code+phone_number_entered;
+			telephone_num = phone_number_code+"-"+phone_number_entered;
 		
 		if(fax_number == null)
 		{

@@ -33,6 +33,46 @@ public class Fileupload {
 		}
 
 	}
+
+	static public String delete_profile(String realPath, String filename)
+	{
+		realPath += "resources\\upload\\profile_img\\";
+		String savePath = realPath.replace('\\','/');
+		
+		File file = new File(savePath+filename);
+		
+		if(file.delete())
+		{
+			logger.info("성공적으로 삭제");
+			return "성공";
+		}
+		else
+		{
+			logger.info("삭제 실패");
+			return "error";
+		}
+
+	}
+
+	static public String delete_doc(String realPath, String filename)
+	{
+		realPath += "resources\\upload\\doc\\";
+		String savePath = realPath.replace('\\','/');
+		
+		File file = new File(savePath+filename);
+		
+		if(file.delete())
+		{
+			logger.info("성공적으로 삭제");
+			return "성공";
+		}
+		else
+		{
+			logger.info("삭제 실패");
+			return "error";
+		}
+
+	}
 	static public String upload_portfolio(String realPath, MultipartFile image, String id)
 			 throws IOException, FileUploadException{
 		
@@ -73,106 +113,91 @@ public class Fileupload {
 		}
 		
 	}
-	static public String upload(String tempSavePath, MultipartFile image)
+	
+
+	static public String upload_profile(String realPath, MultipartFile image, String id)
 			 throws IOException, FileUploadException{
-		String now = Time.toString4(Time.getCurrentTimestamp());
-		String saveDir = "";
 		
-		tempSavePath += "resources\\upload\\profile_img\\"; 
-		String savePath = tempSavePath.replace('\\', '/'); 
-		//logger.info("savePath = "+savePath);
+		// \wjm\ + 
+		realPath += "resources\\upload\\profile_img\\";
+		String savePath = realPath.replace('\\','/');
 		
 		File targetDir = new File(savePath);
-	      if (!targetDir.exists()) {
+		if (!targetDir.exists()) {
 	         targetDir.mkdirs();
 	      }
-	      saveDir = savePath;
-	      String fileLocation = image.getOriginalFilename();
-	      
-	      //logger.info("filelocation = "+fileLocation);
-	      logger.info("파일명 길이 : "+fileLocation.length());
-	      if(fileLocation.length() >40)
-	      {
-		      logger.info("파일명 길이가 너무 깁니다");
-	    	  return "error";
-	      }
-	      
-			String rootPath;
-			try{
-				byte[] bytes = image.getBytes();
-				
-				if(((double)bytes.length/(double)(1024*1024)) > 5.0)
-			      {
-				      logger.info("파일 용량 : "+((double)bytes.length/(double)(1024*1024)));
-			    	  return "error";
-			      }
-				
-				rootPath = saveDir+now+fileLocation;
-				File serverFile = new File(rootPath);
-				BufferedOutputStream stream = new BufferedOutputStream(
-						new FileOutputStream(serverFile));
-				stream.write(bytes);
-				stream.close();
-
-				logger.info("img path = "+"resources/upload/profile_img/"+now+fileLocation);
-				return "resources/upload/profile_img/"+now+fileLocation;
-			}
-			catch(Exception e){
-				logger.info("Exception = "+e.toString());
-				return "error";
-			}
-	}
-	static public String upload_doc(String tempSavePath, MultipartFile image)
-			 throws IOException, FileUploadException{
-		String now = Time.toString4(Time.getCurrentTimestamp());
-		String saveDir = "";
 		
-		tempSavePath += "resources\\upload\\doc\\"; 
-		String savePath = tempSavePath.replace('\\', '/'); 
-		//logger.info("savePath = "+savePath);
+		String fileName =  image.getOriginalFilename();
+		//if(!Validator.isValidLength(fileName, 1, 50))
+
+		String rootPath, FinalFileName;
+		try{
+			byte[] bytes = image.getBytes();
+			
+			String random = RandomSring(10);
+			FinalFileName = random+"_"+id+"_"+fileName;
+			
+			rootPath = savePath+FinalFileName;
+			logger.info("rootPath = "+rootPath);
+			
+			File serverFile = new File(rootPath);
+			BufferedOutputStream stream = new BufferedOutputStream(
+					new FileOutputStream(serverFile));
+			stream.write(bytes);
+			stream.close();
+
+			logger.info("img path = "+random+"_"+id+"_"+fileName);
+			return FinalFileName;
+		}
+		catch(Exception e){
+			logger.info("Exception = "+e.toString());
+			return "error";
+		}
+		
+	}
+
+
+	static public String upload_doc(String realPath, MultipartFile image, String id)
+			 throws IOException, FileUploadException{
+		
+		// \wjm\ + 
+		realPath += "resources\\upload\\doc\\";
+		String savePath = realPath.replace('\\','/');
 		
 		File targetDir = new File(savePath);
-	      if (!targetDir.exists()) {
+		if (!targetDir.exists()) {
 	         targetDir.mkdirs();
 	      }
-	      saveDir = savePath;
-	      String fileLocation = image.getOriginalFilename();
-	      
-	      //logger.info("filelocation = "+fileLocation);
-	      logger.info("파일명 길이 : "+fileLocation.length());
-	      if(fileLocation.length() >40)
-	      {
-		      logger.info("파일명 길이가 너무 깁니다");
-	    	  return "error";
-	      }
-	      
-			String rootPath;
-			try{
-				byte[] bytes = image.getBytes();
-				
-				if(((double)bytes.length/(double)(1024*1024)) > 5.0)
-			      {
-				      logger.info("파일 용량 : "+((double)bytes.length/(double)(1024*1024)));
-			    	  return "error";
-			      }
-				
-				rootPath = saveDir+now+fileLocation;
-				File serverFile = new File(rootPath);
-				BufferedOutputStream stream = new BufferedOutputStream(
-						new FileOutputStream(serverFile));
-				stream.write(bytes);
-				stream.close();
-				
-				logger.info("img path = "+"resources/upload/doc/"+now+fileLocation);
-				
-				return "resources/upload/doc/"+now+fileLocation;
-			}
-			catch(Exception e){
-				logger.info("Exception = "+e.toString());
-				return "error";
-			}
-	}
+		
+		String fileName =  image.getOriginalFilename();
+		//if(!Validator.isValidLength(fileName, 1, 50))
 
+		String rootPath, FinalFileName;
+		try{
+			byte[] bytes = image.getBytes();
+			
+			String random = RandomSring(10);
+			FinalFileName = random+"_"+id+"_"+fileName;
+			
+			rootPath = savePath+FinalFileName;
+			logger.info("rootPath = "+rootPath);
+			
+			File serverFile = new File(rootPath);
+			BufferedOutputStream stream = new BufferedOutputStream(
+					new FileOutputStream(serverFile));
+			stream.write(bytes);
+			stream.close();
+
+			logger.info("img path = "+random+"_"+id+"_"+fileName);
+			return FinalFileName;
+		}
+		catch(Exception e){
+			logger.info("Exception = "+e.toString());
+			return "error";
+		}
+		
+	}
+	
 	
 	static public boolean isImage(MultipartFile image)
 	{

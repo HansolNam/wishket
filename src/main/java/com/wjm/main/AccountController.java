@@ -463,6 +463,9 @@ public class AccountController {
 	
 		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
 		if(account == null){mv.setViewName("redirect:/accounts/login");return mv;}
+		
+		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
+
 		//패스워드 체크
 		if(password == null)
 		{
@@ -534,6 +537,8 @@ public class AccountController {
 		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
 		if(account == null){mv.setViewName("redirect:/accounts/login");return mv;}
 		
+		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
+		
 		if(accountInformationDao.hasAccount(account.getPk()))
 		{
 			mv.addObject("hasAccount","true");
@@ -577,7 +582,8 @@ public class AccountController {
 		String bank_name = "";
 		
 		if(account == null){mv.setViewName("redirect:/accounts/login");return mv;}
-		
+		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
+
 		//은행명
 		if(bank == null)
 		{
@@ -804,47 +810,29 @@ public class AccountController {
 		}
 		if(submit_type.equals("base"))
 		{
-			if(image == null)
-			{
-				jObject.put("msg", "이미지를 등록해주세요");
-				return jObject.toString();
-			}
-			if(image.isEmpty())
-			{
-				jObject.put("msg", "이미지를 등록해주세요");
-				return jObject.toString();
-			}
-			
-			String image_path = Fileupload.upload(request.getRealPath(File.separator), image);
-			
-			if(image_path.equals("error"))
-			{
-				jObject.put("msg", "이미지 제목은 20 글자까지 가능하고, 최대 용량은 3MB입니다.");
-				return jObject.toString();
-			}
-			else
-			{
-				try{
-				String msg = accountInformationDao.updateBase(image_path,form_of_business,full_name,
-						company_name,representative,gender,date_of_birth_year,date_of_birth_month,
-						date_of_birth_day,address_sido,sigungu,address_detail,accountinfo.getPk());
-					if(msg.equals("성공"))
-					{
-						jObject.put("msg","success");
-
-					}
-					else
-					{
-						jObject.put("msg",msg);
-						return jObject.toString();
-					}
-				}
-				catch(Exception e)
+			try{
+				String pre_img_path = accountinfo.getProfile_img();
+			String msg = accountInformationDao.updateBase(image,pre_img_path,form_of_business,full_name,
+					company_name,representative,gender,date_of_birth_year,date_of_birth_month,
+					date_of_birth_day,address_sido,sigungu,address_detail,accountinfo.getPk(),
+					request.getRealPath("") + "\\", account.getId());
+				if(msg.equals("성공"))
 				{
-					jObject.put("msg","에러가 발생했습니다.");
+					jObject.put("msg","success");
+
+				}
+				else
+				{
+					jObject.put("msg",msg);
 					return jObject.toString();
 				}
 			}
+			catch(Exception e)
+			{
+				jObject.put("msg","에러가 발생했습니다.");
+				return jObject.toString();
+			}
+			
 		}
 		else
 		{
@@ -1087,35 +1075,38 @@ public class AccountController {
 		if(accountInformationDao.hasBasicInfo(account.getPk()))
 		{
 			logger.info("기본정보 가지고 있음");
+			mv.addObject("hasBasicInfo","true");
 			
 			//신원 인증 정보 가져옴
 			AuthenticationInfo authenticaitoninfo = authenticationDao.select(account.getPk());
 			
 			logger.info("email_for_tax : "+ authenticaitoninfo.getEmail_for_tax() );
 			
-			mv.addObject("authenticatoninfo",authenticaitoninfo);
-			mv.addObject("hasBasicInfo","true");
-			
-			if(accountinfo.getIdentity_authentication().equals("검수중") )
+			if(authenticaitoninfo.getIdentity_doc() != null)
 			{
-				logger.info("인증 상태 : 검수중");
-				mv.addObject("hasAuthentication","true");
-				mv.addObject("messages","신원 인증 처리중입니다.");
-			}
-			else if(accountinfo.getIdentity_authentication().equals("인증완료") )
-			{
-				logger.info("인증 상태 : 인증완료");
-				mv.addObject("hasAuthentication","true");
-				mv.addObject("messages","신원 인증이 완료되었습니다.");
-			}
-			else if(accountinfo.getIdentity_authentication().equals("인증실패") )
-			{
-				logger.info("인증 상태 : 인증실패");
-				mv.addObject("messages","신원 인증에 실패했습니다. 올바른 정보를 입력해주세요.");
-			}
-			else
-			{
-				logger.info("인증 상태 : 미인증");
+				mv.addObject("authenticatoninfo",authenticaitoninfo);
+				
+				if(accountinfo.getIdentity_authentication().equals("검수중") )
+				{
+					logger.info("인증 상태 : 검수중");
+					mv.addObject("hasAuthentication","true");
+					mv.addObject("messages","신원 인증 처리중입니다.");
+				}
+				else if(accountinfo.getIdentity_authentication().equals("인증완료") )
+				{
+					logger.info("인증 상태 : 인증완료");
+					mv.addObject("hasAuthentication","true");
+					mv.addObject("messages","신원 인증이 완료되었습니다.");
+				}
+				else if(accountinfo.getIdentity_authentication().equals("인증실패") )
+				{
+					logger.info("인증 상태 : 인증실패");
+					mv.addObject("messages","신원 인증에 실패했습니다. 관리자에게 문의해주세요.");
+				}
+				else
+				{
+					logger.info("인증 상태 : 미인증");
+				}
 			}
 				
 		}
@@ -1161,7 +1152,7 @@ public class AccountController {
 		String real_path = request.getRealPath(File.separator);
 
 		try{
-		String msg = authenticationDao.updateIdentity_authentication(form,user_type,image,real_path,representer_name,address_detail,email_for_tax,identify_number,company_name,account.getPk());
+			String msg = authenticationDao.updateIdentity_authentication(form,user_type,image,real_path,account.getId(),representer_name,address_detail,email_for_tax,identify_number,company_name,account.getPk());
 			if(msg.equals("성공"))
 			{
 
