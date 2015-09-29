@@ -23,8 +23,10 @@ import com.wjm.dao.AccountInformationDao;
 import com.wjm.dao.ApplicantDao;
 import com.wjm.dao.AreaDetailDao;
 import com.wjm.dao.CommentDao;
+import com.wjm.dao.Partners_infoDao;
 import com.wjm.dao.PortfolioDao;
 import com.wjm.dao.ProjectDao;
+import com.wjm.dao.TechniqueDao;
 import com.wjm.main.function.Time;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
@@ -53,9 +55,6 @@ public class ProjectController {
 	@Autowired
 	private ApplicantDao applicantDao;
 	@Autowired
-	private PortfolioDao portfolioDao;
-
-	@Autowired
 	private CommentDao commentDao;
 
 	@Autowired
@@ -63,6 +62,16 @@ public class ProjectController {
 	
 	@Autowired
 	private AreaDetailDao areaDetailDao;
+	
+	@Autowired
+	private Partners_infoDao partners_infoDao;
+	
+
+	@Autowired
+	private PortfolioDao portfolioDao;
+
+	@Autowired
+	private TechniqueDao techniqueDao;
 	/**
 	 * 프로젝트 추가
 	 */
@@ -441,8 +450,19 @@ public class ProjectController {
 		}
 		else
 		{
+			budget_maximum = budget_maximum.replace(",", "");
+			
+			if(!Validator.isDigit(budget_maximum))
+			{
+				logger.info("budget_maximum!!!!");
+				isAvailable = false;
+				mv.addObject("budget_maximum_msg","숫자만 입력 가능합니다.");
+			}
+			else
+			{
 			logger.info("budget_maximum_val = "+budget_maximum);
 			mv.addObject("budget_maximum_val",budget_maximum);
+			}
 		}	
 		
 		//planning_status 체크
@@ -625,7 +645,7 @@ public class ProjectController {
 			if(account!=null)
 			{
 				projectDao.Update(project_pk,account.getPk(),category,sub_category,is_turnkey,title,Integer.parseInt(project_term),
-						budget_maximum,planning_status,description,skill_required,Time.dateToTimestamp(deadline),
+						Integer.parseInt(budget_maximum),planning_status,description,skill_required,Time.dateToTimestamp(deadline),
 						method_pre_interview, address_sido, sigungu, Time.dateToTimestamp(date_expected_kick_off), has_manage_experience,
 						prefer_partner, submit_purpose, status);
 				if(status.equals("임시저장"))
@@ -799,8 +819,19 @@ public class ProjectController {
 		}
 		else
 		{
+			budget_maximum = budget_maximum.replace(",", "");
+			
+			if(!Validator.isDigit(budget_maximum))
+			{
+				logger.info("budget_maximum!!!!");
+				isAvailable = false;
+				mv.addObject("budget_maximum_msg","숫자만 입력 가능합니다.");
+			}
+			else
+			{
 			logger.info("budget_maximum_val = "+budget_maximum);
 			mv.addObject("budget_maximum_val",budget_maximum);
+			}
 		}	
 		
 		//planning_status 체크
@@ -981,7 +1012,7 @@ public class ProjectController {
 			if(account!=null)
 			{
 				projectDao.Save(account.getPk(),category,sub_category,is_turnkey,title,Integer.parseInt(project_term),
-						budget_maximum,planning_status,description,skill_required,Time.dateToTimestamp(deadline),
+						Integer.parseInt(budget_maximum),planning_status,description,skill_required,Time.dateToTimestamp(deadline),
 						method_pre_interview, address_sido, sigungu, Time.dateToTimestamp(date_expected_kick_off), has_manage_experience,
 						prefer_partner, submit_purpose, status);
 				if(status.equals("임시저장"))
@@ -1160,6 +1191,11 @@ public class ProjectController {
 		mv.setViewName(return_val);
 		
 		List<ProjectInfo> projectlist = projectDao.selectCondition(q,cat_dev,cat_design,addr,sort);
+		
+		for(int i=0;i<projectlist.size();i++)
+		{
+			logger.info(i + " : "+projectlist.get(i).getName());
+		}
 		mv.addObject("projectlist",projectlist);
 		
 		return mv;
@@ -1190,17 +1226,53 @@ public class ProjectController {
 		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
 		if(account == null)
 		{
-			mv.setViewName("/accounts/login");
+			mv.setViewName("redirect:/accounts/login");
 			return mv;
 		}
-		
-		AccountInformationInfo accountinformation = accountInformationDao.select(account.getPk());
-		
-		mv.addObject("accountinfo",accountinformation);
+		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
+
 				
 		ProjectInfo project = projectDao.select(Integer.parseInt(pk), name);
 		if(project!=null)
+		{
+			AccountInfo project_account = accountDao.select(project.getAccount_pk());
+			project.setAccount(project_account);
+			
 			mv.addObject("project",project);
+
+			mv.addObject("applicantnum", project.getApplicantnum());
+			AccountInformationInfo accountinformation = accountInformationDao.select(project.getAccount_pk());
+			mv.addObject("accountinfo",accountinformation);
+			
+			if(account.getAccount_type().equals("partners"))
+			{
+				boolean hasInfo, hasIntro, hasSkill, hasPortfolio, not_end, already_apply;
+				
+				hasInfo = partners_infoDao.hasPartnersInfo(account.getPk());
+				hasIntro = accountInformationDao.hasIntroduction(account.getPk());
+				hasSkill = techniqueDao.hasSkill(account.getPk());
+				hasPortfolio = portfolioDao.hasPortfolio(account.getPk());
+				
+				if(Time.remainDate(project.getDeadline(),Time.getCurrentTimestamp())>=0)
+				{
+					not_end = true;
+				}
+				else
+					not_end = false;
+				
+				ApplicantInfo applicant = applicantDao.select(account.getPk(),project.getPk());
+				if(applicant == null)
+					already_apply = false;
+				else
+					already_apply = true;
+				
+				if(hasInfo && hasIntro && hasSkill && hasPortfolio && not_end && !already_apply)
+					{
+						mv.addObject("available", "true");
+					}
+			}
+			
+		}
 		else
 		{
 			mv.setViewName("/project");
@@ -1210,11 +1282,6 @@ public class ProjectController {
 		List<CommentInfo> comment = commentDao.select(Integer.parseInt(pk));
 		mv.addObject("comment",comment);
 		
-		List<ApplicantInfo> applicantlist = applicantDao.select_project(Integer.parseInt(pk));
-		if(applicantlist == null)
-			mv.addObject("applicantnum", 0);
-		else
-			mv.addObject("applicantnum", applicantlist.size());
 		mv.setViewName("/project/about");
 		return mv;
 	}

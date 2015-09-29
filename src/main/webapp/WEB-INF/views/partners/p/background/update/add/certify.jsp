@@ -55,7 +55,7 @@ div.ui-tooltip {
 <body class="logged-in partners partners-setting">
 	<div id="wrap">
 		
-		<jsp:include page="../../../../../header2.jsp" flush="false" />
+		<jsp:include page="../../../../../header.jsp" flush="false" />
 		<div class="page">
 			<div class="container">
 				<div id="messages"></div>

@@ -1,15 +1,25 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page
-	import="java.util.List, com.wjm.models.ProjectInfo, com.wjm.models.AccountInfo, com.wjm.models.CommentInfo, com.wjm.models.AccountInformationInfo, com.wjm.main.function.Time, java.sql.Timestamp"%>
+	import="com.wjm.main.function.Validator,java.util.List, com.wjm.models.ProjectInfo, com.wjm.models.AccountInfo, com.wjm.models.CommentInfo, com.wjm.models.AccountInformationInfo, com.wjm.main.function.Time, java.sql.Timestamp"%>
 <%
 	AccountInfo account = (AccountInfo) session.getAttribute("account");
+	String profile = (String)request.getAttribute("profile");
 	AccountInformationInfo accountinfo = (AccountInformationInfo) request.getAttribute("accountinfo");
 	ProjectInfo project = (ProjectInfo) request.getAttribute("project");
 	List<CommentInfo> comment = (List<CommentInfo> ) request.getAttribute("comment");
 	Integer applicantnum = (Integer) request.getAttribute("applicantnum");
 	long now_time = System.currentTimeMillis();
 	Timestamp now = new Timestamp(now_time);
+	
+	String available = (String)request.getAttribute("available");
+	
+	String introduction = "";
+	if(accountinfo != null)
+	{
+		if(Validator.hasValue(accountinfo.getIntroduction()))
+			introduction = accountinfo.getIntroduction().replaceAll("\r\n","<br/>");
+	}
 %>
 <!DOCTYPE html>
 <html class="no-js modern" lang="ko">
@@ -78,19 +88,17 @@
 					<div class="header-text project-detail-header">
 						<span><%=project.getName()%></span> <span
 							class="label label-sm label-partners-availability possible pull-right"
-							style="*margin-top: -17px;"><%=project.getName()%></span>
-					</div>
-					<div class="project-detail-category"><%=project.getCategoryL()%>
-						<span class="applicant-count pull-right"><img
-							src="${pageContext.request.contextPath}/resources/static/img/proposal.png"
-							style="margin-right: 5px;" />총 <span class="applicant-num"><%=applicantnum.intValue()%>명</span>
-							지원 <%
+							style="*margin-top: -17px;"><%
 							int remain = Time.remainDate(project.getDeadline(), now);
 							if (remain >= 0)
-								out.println("(모집 " + Time.remainDate(remain) + " 전)");
+								out.println("모집 " + Time.remainDate(remain) + " 전");
 							else
-								out.println("(모집 마감)");
-						%> </span>
+								out.println("모집 마감");
+						%></span>
+					</div>
+					<div class="project-detail-category"><% if(project.getCategoryL().equals("design")) out.print("디자인"); else out.print("개발");%>
+						<span class="applicant-count pull-right">총 <span class="applicant-num"><%=applicantnum.intValue()%>명</span>
+							지원  </span>
 					</div>
 					<div class="summary">
 						<div class="project-detail-basic-info">
@@ -240,7 +248,7 @@
 						<div class="media">
 							<a class="pull-left" href="#"><img
 								alt="<%=account.getId() %>의 프로필 이미지" class="media-object"
-								src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=accountinfo.getProfile_img() %>" /></a>
+								src="${pageContext.request.contextPath}/resources/upload/profile_img/<%if(!Validator.hasValue(profile)) out.print("default_avatar.png"); else out.print(profile); %>" /></a>
 							<div class="media-body">
 								<form action="/wjm/project/<%=project.getName()%>/<%=project.getPk() %>" method="POST">
 									<input name="csrfmiddlewaretoken" type="hidden"
@@ -261,47 +269,13 @@
 						</p>
 					</div>
 				</div>
-				<div class="content-inner" style="margin-top: 5px;">
-					<div class="similar-project">
-						<h4 class="similar-project-title">유사 프로젝트</h4>
-						<p class="similar-project-instance">
-							<a class="similar-project-instance-title"
-								href="/project/%EA%B8%80%EB%A1%9C%EB%B2%8C-%EC%86%8C%EC%85%9C%EC%BB%A4%EB%A8%B8%EC%8A%A4-%EB%AA%A8%EB%B0%94%EC%9D%BC-%EC%9B%B9_4874/">글로벌
-								소셜커머스 모바일 웹</a> &lt;프로젝트 진행 방식&gt; 단기간 집중력있게 해줄 수 있는 팀 또는 개인 원합니다.
-							진행방식은 협의합니다. &lt;프로젝트의 현재 상황&gt; 현재 서비스 중이며,...
-						</p>
-						<p class="similar-project-instance">
-							<a class="similar-project-instance-title"
-								href="/project/%EC%8B%AC%EB%A6%AC-%EC%83%81%EB%8B%B4-%EC%A0%84%ED%99%94%EC%9A%A9-%EC%9B%B9-%EB%94%94%EC%9E%90%EC%9D%B8%EA%B0%9C%EB%B0%9C_4889/">심리
-								상담 전화용 웹 디자인/개발</a> &lt;프로젝트 진행 방식&gt; 시작시점에서 협의하여 진행합니다. &lt;프로젝트의
-							현재 상황&gt; 365전화심리상담센터 홈페이지를 만들고자 합니다. 전화번호를 제공해주는...
-						</p>
-						<p class="similar-project-instance">
-							<a class="similar-project-instance-title"
-								href="/project/%EB%82%B4%EB%B6%80-%EA%B0%9C%EB%B0%9C-%ED%8C%80%EC%97%90-%EA%B8%B0%EC%88%A0-%EC%A7%80%EC%9B%90-%EC%9E%91%EC%97%85_4876/">내부
-								개발 팀에 기술 지원 작업</a> &lt;프로젝트 진행 방식&gt; 미팅후 예제 코드제공 혹은 안내 &lt;프로젝트의 현재
-							상황&gt; 현재 내부에서 개발 진행중인 프로젝트가 있습니다. &lt;상세한 업무 내...
-						</p>
-						<p class="similar-project-instance">
-							<a class="similar-project-instance-title"
-								href="/project/%EC%A6%9D%EA%B6%8C-%EC%B0%A8%ED%8A%B8%EC%99%80-%EC%9C%A0%EC%82%AC%ED%95%9C-ui-%EB%AA%A8%EB%93%88-%EA%B0%9C%EB%B0%9C_4864/">증권
-								차트와 유사한 UI 모듈 개발</a> &lt;프로젝트 진행 방식&gt; 시작시점에 미팅, 주 1회 미팅 &lt;프로젝트의
-							현재 상황&gt; 현재 ASP로 구축된 홈페이지가 있는 상황입니다. 해외 업체에 서비스중에...
-						</p>
-						<p class="similar-project-instance">
-							<a class="similar-project-instance-title"
-								href="/project/%EB%B0%98%EC%9D%91%ED%98%95-%EC%9B%B9%ED%88%B0-%ED%94%8C%EB%9E%AB%ED%8F%BC-%EA%B0%9C%EB%B0%9C_4861/">반응형
-								웹툰 플랫폼 개발</a> &lt;프로젝트 진행 방식&gt; 시작 시점 미팅 후, 주 1회 미팅 형태로 진행하고자 합니다.
-							&lt;프로젝트의 현재 상황&gt; 디자인은 완료되어 있으며, 기획은 확실하게...
-						</p>
-					</div>
-				</div>
 			</div>
 			<div class="sidebar">
 				<div class="inner">
 					<%
 						if (account.getAccount_type().equals("partners")) {
-							//if()
+							if(available == null)
+							{
 					%>
 					<div class="project-action-btn-group">
 						<a
@@ -314,6 +288,11 @@
 							<span>관심 프로젝트 추가불가</span>
 						</div>
 					</div>
+					
+					<%
+							}
+							else{
+					%>
 					<div class="project-action-btn-group">
 						<a
 							class="btn btn-large btn-partners btn-project-application btn-block"
@@ -327,15 +306,15 @@
 								프로젝트 추가하기</span></a>
 					</div>
 					<%
+							}
 						}
 					%>
 					<div class="client-info-box">
 						<h3 class="client-name-tag-heading">클라이언트</h3>
 						<div class="client-name-tag-body">
-							<img alt="lnkcomm 사진" class="client-img-lg"
-								src="${pageContext.request.contextPath}/resources/static/img/default_avatar.png" />
-							<div class="client-company-info">문화컨텐츠기획 회사입니다. 현재 오프라인에서
-								운영하는 문화공간과 앱서비스를 연동, 서비스를 추가하고자 준비중에 있습니다.</div>
+							<img alt="<%=project.getAccount().getId() %> 사진" class="client-img-lg"
+								src="${pageContext.request.contextPath}/resources/upload/profile_img/<% if(!Validator.hasValue(accountinfo.getProfile_img())) out.print("default_avatar.png"); else out.print(accountinfo.getProfile_img()); %>" />
+							<div class="client-company-info"><%=introduction %></div>
 							<div class="client-evaluation-body"
 								onclick="expand_rating(this);">
 								<div class="rating star-md star-md-0"></div>
@@ -430,10 +409,8 @@
 			}
 		}
 		function toggle_interest(obj) {
-			var project_id = '<%=project.getPk()%>
-		';
-			$
-					.ajax({
+			var project_id = '<%=project.getPk()%>';
+			$.ajax({
 						url : "/wjm/partners/manage/interest/toggle/"
 								+ project_id + "/",
 						dataType : "json", // 데이터타입을 JSON형식으로 지정

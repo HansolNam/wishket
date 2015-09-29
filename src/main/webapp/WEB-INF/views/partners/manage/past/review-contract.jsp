@@ -42,7 +42,7 @@
 <body
 	class="logged-in partners partners-management contract-management ">
 	<div id="wrap">
-	<jsp:include page="../../../header2.jsp" flush="false" />
+	<jsp:include page="../../../header.jsp" flush="false" />
 		<div class="container">
 			<div id="messages"></div>
 		</div>
@@ -55,16 +55,16 @@
 							<img alt="gksthf16112 사진" class="img-circle user-img"
 								src="${pageContext.request.contextPath}/resources/static/img/default_avatar.jpg" />
 							<h4 class="username">gksthf16112</h4>
-							<a class="profile-setting" href="/accounts/settings/profile/">기본
+							<a class="profile-setting" href="/wjm/accounts/settings/profile/">기본
 								정보 수정</a>
 						</div>
 					</div>
 					<div class="sidebar-nav">
 						<ul>
 							<li class="active"><a
-								href="/partners/manage/past/review-contract/">평가 대기 중</a></li>
+								href="/wjm/partners/manage/past/review-contract/">평가 대기 중</a></li>
 							<li class=""><a
-								href="/partners/manage/past/completed-contract/">완료한 프로젝트</a></li>
+								href="/wjm/partners/manage/past/completed-contract/">완료한 프로젝트</a></li>
 						</ul>
 					</div>
 				</div>

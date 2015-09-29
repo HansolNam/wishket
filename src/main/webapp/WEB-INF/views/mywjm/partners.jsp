@@ -5,7 +5,7 @@
 <%@ page
 	import="com.wjm.main.function.Time, java.sql.Timestamp, com.wjm.models.ProjectInfo, com.wjm.models.ApplicantInfo"%>
 <%@ page
-	import="com.wjm.models.ContractInfo"%>
+	import="com.wjm.main.function.Validator, com.wjm.models.ContractInfo"%>
 
 <%
 	AccountInfo account = (AccountInfo) session.getAttribute("account");
@@ -22,6 +22,11 @@
 	if(contract != null)
 		if(contract.size() == 0)
 			contract = null;
+
+	String profile = (String)request.getAttribute("profile");
+	
+	if(!Validator.hasValue(profile))
+		profile = "default_avatar.png";
 %>
 <!DOCTYPE html>
 
@@ -79,7 +84,7 @@
 </head>
 <body class="logged-in partners mywishket">
 	<div id="wrap">
-		<jsp:include page="../header2.jsp" flush="false" />
+		<jsp:include page="../header.jsp" flush="false" />
 		<div class="container">
 			<div id="messages"></div>
 		</div>
@@ -167,7 +172,7 @@
 						</div>
 						<div class="proposal-project">
 							<h5 class="proposal-project-heading">
-								<a href="/partners/manage/proposal/counselling/">지원한 프로젝트</a>
+								<a href="/wjm/partners/manage/proposal/counselling/">지원한 프로젝트</a>
 							</h5>
 							<table class="table table-hover">
 								<thead>
@@ -208,14 +213,14 @@
 								</tbody>
 							</table>
 							<p class="text-right">
-								<a class="more" href="/partners/manage/proposal/counselling/">더
+								<a class="more" href="/wjm/partners/manage/proposal/counselling/">더
 									자세히 보기 <i class="fa fa-chevron-right"></i>
 								</a>
 							</p>
 						</div>
 						<div class="contract-project">
 							<h5 class="contract-project-heading">
-								<a href="/partners/manage/contract-in-progress/">진행 중인 프로젝트</a>
+								<a href="/wjm/partners/manage/contract-in-progress/">진행 중인 프로젝트</a>
 							</h5>
 							<table class="table table-hover">
 								<thead>
@@ -234,7 +239,7 @@
 								</tbody>
 							</table>
 							<p class="text-right">
-								<a class="more" href="/partners/manage/contract-in-progress/">더
+								<a class="more" href="/wjm/partners/manage/contract-in-progress/">더
 									자세히 보기 <i class="fa fa-chevron-right"></i>
 								</a>
 							</p>
@@ -248,9 +253,9 @@
 						<h3 class="user-name-tag-heading">파트너스</h3>
 						<div class="user-name-tag-body">
 							<img alt="gksthf16112 사진" class="img-circle user-img"
-								src="${pageContext.request.contextPath}/resources/static/img/default_avatar.jpg" />
+								src="${pageContext.request.contextPath}/resources/upload/profile_img/${profile}" />
 							<h4 class="username">gksthf16112</h4>
-							<a class="profile-setting" href="/accounts/settings/profile/">기본
+							<a class="profile-setting" href="/wjm/accounts/settings/profile/">기본
 								정보 수정</a>
 						</div>
 					</div>

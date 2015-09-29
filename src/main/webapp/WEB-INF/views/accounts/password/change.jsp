@@ -1,15 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="com.wjm.models.AccountInfo"%>
+<%@ page import="com.wjm.main.function.Validator,com.wjm.models.AccountInfo"%>
 <%
 	AccountInfo account = (AccountInfo) session.getAttribute("account");
 	String id = "";
 	
-	if(account == null) response.sendRedirect("/accounts/login");
-	else
-	{
-		id = account.getId();
-	}
+	id = account.getId();
+	String profile = (String)request.getAttribute("profile");
+	
+	if(!Validator.hasValue(profile))
+		profile = "default_avatar.png";
 	
 	%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -60,7 +60,7 @@
 						<h3 class="user-name-tag-heading">클라이언트</h3>
 						<div class="user-name-tag-body">
 							<img alt="<%=id %> 사진" class="img-circle user-img"
-								src="${pageContext.request.contextPath}/resources/static/img/default_avatar.jpg" />
+								src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=profile %>" />
 							<h4 class="username"><%=id %></h4>
 							<a class="profile-setting" href="/wjm/accounts/settings/profile/">기본
 								정보 수정</a>
@@ -132,7 +132,7 @@
 		</div>
 		<div id="push"></div>
 	</div>
-	<jsp:include page="../../header.jsp" flush="false" />
+	<jsp:include page="../../footer.jsp" flush="false" />
 	<script type="text/javascript">
   $(function() {
     wishket.init();

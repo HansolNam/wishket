@@ -83,6 +83,16 @@ public class PartnersController {
 	@Autowired
 	private ApplicantDao applicantDao;
 
+	public boolean AccountCheck(AccountInfo account)
+	{
+		if(account.getAccount_type() == null)
+			return false;
+		else if(account.getAccount_type().equals("partners"))
+			return true;
+		else
+			return false;
+		
+	}
 	public String isSame(AccountInfo account, AccountInfo this_account) {
 		if (account == null)
 			return null;
@@ -104,6 +114,13 @@ public class PartnersController {
 		logger.info("/partners/p/{id} Page");
 
 		AccountInfo account = (AccountInfo) request.getSession().getAttribute("account");
+		
+		if(account == null)
+		{
+			mv.setViewName("redirect:/accounts/login");
+			return mv;
+		}
+		
 		AccountInfo this_account = accountDao.select(id);
 
 		if (this_account == null) {
@@ -119,8 +136,7 @@ public class PartnersController {
 		
 		if(info != null)
 		{
-			if (Validator.hasValue(info.getJob()) || Validator.hasValue(info.getJob_subcategory_develop())
-					|| Validator.hasValue(info.getJob_subcategory_design()) || Validator.hasValue(info.getAvailability())) {
+			if (Validator.hasValue(info.getJob()) && Validator.hasValue(info.getAvailability())) {
 				logger.info("파트너스 정보 있음");
 				mv.addObject("hasInfo", "true");
 			}		
@@ -131,6 +147,8 @@ public class PartnersController {
 		{
 			if(portfolio.size()>0)
 			{
+				logger.info("포트폴리오 정보 있음");
+
 				mv.addObject("portfolio",portfolio);
 				mv.addObject("hasPortfolio","true");
 			}
@@ -155,6 +173,8 @@ public class PartnersController {
 			{
 			mv.addObject("introduction", this_accountinfo.getIntroduction());
 			mv.addObject("hasIntro","true");
+			logger.info("자기소개 정보 있음");
+
 			}
 
 		// 보유 기술
@@ -184,6 +204,12 @@ public class PartnersController {
 		logger.info("/partners/p/{id}/introduction Page");
 
 		AccountInfo account = (AccountInfo) request.getSession().getAttribute("account");
+		
+		if(account == null)
+		{
+			mv.setViewName("redirect:/accounts/login");
+			return mv;
+		}
 		AccountInfo this_account = accountDao.select(id);
 
 		if (this_account == null) {
@@ -220,6 +246,16 @@ public class PartnersController {
 		logger.info("/partners/p/{id}/introduction/update Page");
 
 		AccountInfo account = (AccountInfo) request.getSession().getAttribute("account");
+		if(account == null)
+		{
+			mv.setViewName("redirect:/accounts/login");
+			return mv;
+		}
+		if(!AccountCheck(account))
+		{
+			mv.setViewName("redirect:/error");
+			return mv;
+		}
 		AccountInfo this_account = accountDao.select(id);
 
 		if (this_account == null) {
@@ -256,6 +292,16 @@ public class PartnersController {
 		logger.info("/partners/p/{id}/introduction/update/add Page");
 
 		AccountInfo account = (AccountInfo) request.getSession().getAttribute("account");
+		if(account == null)
+		{
+			mv.setViewName("redirect:/accounts/login");
+			return mv;
+		}
+		if(!AccountCheck(account))
+		{
+			mv.setViewName("redirect:/error");
+			return mv;
+		}
 		AccountInfo this_account = accountDao.select(id);
 
 		if (this_account == null) {
@@ -295,6 +341,7 @@ public class PartnersController {
 		JSONObject jObject = new JSONObject();
 
 		AccountInfo account = (AccountInfo) request.getSession().getAttribute("account");
+		
 		AccountInfo this_account = accountDao.select(id);
 
 		if (this_account == null) {
@@ -307,6 +354,12 @@ public class PartnersController {
 
 		// 자기 자신이 아닌데 접근하는 경우
 		if (isSame == null) {
+			jObject.put("messages", "잘못된 접근 입니다.");
+			logger.info("jobject = " + jObject.toString());
+			return jObject.toString();
+		}
+		if(!AccountCheck(account))
+		{
 			jObject.put("messages", "잘못된 접근 입니다.");
 			logger.info("jobject = " + jObject.toString());
 			return jObject.toString();
@@ -335,6 +388,11 @@ public class PartnersController {
 		logger.info("/partners/p/{id}/portfolio Page");
 
 		AccountInfo account = (AccountInfo) request.getSession().getAttribute("account");
+		if(account == null)
+		{
+			mv.setViewName("redirect:/accounts/login");
+			return mv;
+		}
 		AccountInfo this_account = accountDao.select(id);
 
 		if (this_account == null) {
@@ -347,6 +405,7 @@ public class PartnersController {
 
 		// url 아이디의 account 가져옴
 		mv.addObject("this_account", this_account);
+		mv.addObject("profile",accountInformationDao.getProfileImg(this_account.getPk()));
 
 		List<PortfolioInfo> portfolio = portfolioDao.select(this_account.getPk());
 		mv.addObject("portfolio", portfolio);
@@ -365,6 +424,11 @@ public class PartnersController {
 		logger.info("/partners/p/{id}/portfolio/{pk} Page");
 
 		AccountInfo account = (AccountInfo) request.getSession().getAttribute("account");
+		if(account == null)
+		{
+			mv.setViewName("redirect:/accounts/login");
+			return mv;
+		}
 		AccountInfo this_account = accountDao.select(id);
 
 		if (this_account == null) {
@@ -398,6 +462,16 @@ public class PartnersController {
 		logger.info("/partners/p/{id}/portfolio/update Page");
 
 		AccountInfo account = (AccountInfo) request.getSession().getAttribute("account");
+		if(account == null)
+		{
+			mv.setViewName("redirect:/accounts/login");
+			return mv;
+		}
+		if(!AccountCheck(account))
+		{
+			mv.setViewName("redirect:/error");
+			return mv;
+		}
 		AccountInfo this_account = accountDao.select(id);
 
 		if (this_account == null) {
@@ -411,17 +485,19 @@ public class PartnersController {
 
 		// 자기 자신이 아닌데 업데이트에 접근하는 경우
 		if (isSame == null) {
-			mv.setViewName("redirect:/partners/p/portfolio");
+			mv.setViewName("redirect:/partners/p/"+id);
 			return mv;
 		}
 
 		List<PortfolioInfo> portfolio = portfolioDao.select(this_account.getPk());
 		mv.addObject("portfolio", portfolio);
 
-		for (int i = 0; i < portfolio.size(); i++) {
-			logger.info("portfolioname : " + portfolio.get(i).getName());
+		if(portfolio != null)
+		{
+			for (int i = 0; i < portfolio.size(); i++) {
+				logger.info("portfolioname : " + portfolio.get(i).getName());
+			}
 		}
-
 		mv.setViewName("/partners/p/portfolio/update");
 
 		return mv;
@@ -437,6 +513,16 @@ public class PartnersController {
 		logger.info("/partners/p/{id}/portfolio/{pk}/update Page");
 
 		AccountInfo account = (AccountInfo) request.getSession().getAttribute("account");
+		if(account == null)
+		{
+			mv.setViewName("redirect:/accounts/login");
+			return mv;
+		}
+		if(!AccountCheck(account))
+		{
+			mv.setViewName("redirect:/error");
+			return mv;
+		}
 		AccountInfo this_account = accountDao.select(id);
 
 		if (this_account == null) {
@@ -481,6 +567,16 @@ public class PartnersController {
 		logger.info("/partners/p/{id}/portfolio/update/add Page");
 
 		AccountInfo account = (AccountInfo) request.getSession().getAttribute("account");
+		if(account == null)
+		{
+			mv.setViewName("redirect:/accounts/login");
+			return mv;
+		}
+		if(!AccountCheck(account))
+		{
+			mv.setViewName("redirect:/error");
+			return mv;
+		}
 		AccountInfo this_account = accountDao.select(id);
 
 		if (this_account == null) {
@@ -2031,7 +2127,22 @@ public class PartnersController {
 	@RequestMapping(value = "/partners/p/{id}/evaluation", method = RequestMethod.GET)
 	public ModelAndView PartnersController_p_evaluation(HttpServletRequest request, ModelAndView mv,
 			@PathVariable("id") String id) {
-		logger.info("index Page");
+		logger.info("/partners/p/{id}/evaluation Page");
+
+		AccountInfo account = (AccountInfo) request.getSession().getAttribute("account");
+		AccountInfo this_account = accountDao.select(id);
+
+		if (this_account == null) {
+			mv.setViewName("/partners");
+			return mv;
+		}
+		mv.addObject("this_account", this_account);
+
+		AccountInformationInfo this_accountinfo = accountInformationDao.select(this_account.getPk());
+		mv.addObject("this_accountinfo", this_accountinfo);
+
+		String isSame = isSame(account, this_account);
+		mv.addObject("isSame", isSame);
 
 		mv.setViewName("/partners/p/evaluation");
 
@@ -2044,9 +2155,53 @@ public class PartnersController {
 	@RequestMapping(value = "/partners/p/{id}/history", method = RequestMethod.GET)
 	public ModelAndView PartnersController_p_history(HttpServletRequest request, ModelAndView mv,
 			@PathVariable("id") String id) {
-		logger.info("index Page");
+		logger.info("/partners/p/{id}/history Page");
+
+		AccountInfo account = (AccountInfo) request.getSession().getAttribute("account");
+		AccountInfo this_account = accountDao.select(id);
+
+		if (this_account == null) {
+			mv.setViewName("/partners");
+			return mv;
+		}
+		mv.addObject("this_account", this_account);
+
+		AccountInformationInfo this_accountinfo = accountInformationDao.select(this_account.getPk());
+		mv.addObject("this_accountinfo", this_accountinfo);
+
+		String isSame = isSame(account, this_account);
+		mv.addObject("isSame", isSame);
 
 		mv.setViewName("/partners/p/history");
+
+		return mv;
+	}
+	
+
+	/**
+	 * history 업데이트
+	 */
+	@RequestMapping(value = "/partners/p/{id}/history/update", method = RequestMethod.GET)
+	public ModelAndView PartnersController_p_history_update(HttpServletRequest request, ModelAndView mv,
+			@PathVariable("id") String id) {
+		logger.info("/partners/p/{id}/history/update Page");
+
+		AccountInfo account = (AccountInfo) request.getSession().getAttribute("account");
+		AccountInfo this_account = accountDao.select(id);
+
+		if (this_account == null) {
+			mv.setViewName("/partners");
+			return mv;
+		}
+		mv.addObject("this_account", this_account);
+
+		AccountInformationInfo this_accountinfo = accountInformationDao.select(this_account.getPk());
+		mv.addObject("this_accountinfo", this_accountinfo);
+
+		String isSame = isSame(account, this_account);
+		mv.addObject("isSame", isSame);
+
+		mv.setViewName("/partners/p/history/update");
 
 		return mv;
 	}
@@ -2212,6 +2367,23 @@ public class PartnersController {
 			@PathVariable("id") String id) {
 		logger.info("/partners/p/{id}/evaluation/update Page");
 
+		AccountInfo account = (AccountInfo) request.getSession().getAttribute("account");
+		AccountInfo this_account = accountDao.select(id);
+
+		if (this_account == null) {
+			mv.setViewName("/partners");
+			return mv;
+		}
+		mv.addObject("this_account", this_account);
+
+		AccountInformationInfo this_accountinfo = accountInformationDao.select(this_account.getPk());
+		mv.addObject("this_accountinfo", this_accountinfo);
+
+		String isSame = isSame(account, this_account);
+		mv.addObject("isSame", isSame);
+
+		mv.setViewName("/partners/p/evaluation/update");
+
 		return mv;
 	}
 
@@ -2273,7 +2445,8 @@ public class PartnersController {
 			mv.setViewName("/accounts/login");
 			return mv;
 		}
-		
+		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
+
 		List<ProjectInfo> interest = applicantDao.getInterestProject(account.getPk());
 		mv.setViewName("/partners/manage/interest");
 		mv.addObject("interest",interest);

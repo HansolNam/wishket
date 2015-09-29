@@ -89,22 +89,10 @@ div.ui-tooltip {
 <body class="logged-in partners partners-setting">
 	<div id="wrap">
 
-		<jsp:include page="../../../header2.jsp" flush="false" />
+		<jsp:include page="../../../header.jsp" flush="false" />
 		<div class="page">
 			<div class="container">
-				<div id="messages">
-					<div class="alert alert-safe alert-warning fade in">
-						프로젝트 지원을 위해 <a ,="" class="alert-link"
-							href="/wjm/partners/p/<%=this_account.getId()%>/info/update/">'파트너스
-							정보'</a>, <a class="alert-link"
-							href="/wjm/partners/p/<%=this_account.getId()%>/introduction/update/">'자기
-							소개'</a>, <a class="alert-link"
-							href="/wjm/partners/p/<%=this_account.getId()%>/skill/update/">'보유
-							기술'</a>, <a class="alert-link"
-							href="/wjm/partners/p/<%=this_account.getId()%>/portfolio/update/">'포트폴리오'</a>을(를)
-						입력해주세요.
-					</div>
-				</div>
+				<div id="messages"></div>
 			</div>
 			<div class="page">
 				<div class="container">

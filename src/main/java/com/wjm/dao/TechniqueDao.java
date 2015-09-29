@@ -232,4 +232,13 @@ public class TechniqueDao implements TechniqueIDao {
 		jdbcTemplate.update("delete from technique where pk = ?", new Object[] { pk });
 		return "성공";
 	}
+	
+	public boolean hasSkill(int account_pk)
+	{
+		List<TechniqueInfo> list = select(account_pk);
+		if(list != null)
+			return true;
+		else
+			return false;
+	}
 }

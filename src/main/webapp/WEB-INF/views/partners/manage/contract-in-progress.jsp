@@ -49,7 +49,7 @@
 <body
 	class="logged-in partners partners-management contract-management ">
 	<div id="wrap">
-			<jsp:include page="../../header2.jsp" flush="false" />
+			<jsp:include page="../../header.jsp" flush="false" />
 
 		<div class="container">
 			<div id="messages"></div>

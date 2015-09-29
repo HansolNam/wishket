@@ -40,6 +40,17 @@ public class ClientController {
 	private AccountInformationDao accountInformationDao;
 	@Autowired
 	private ApplicantDao applicantDao;
+	
+	public boolean AccountCheck(AccountInfo account)
+	{
+		if(account.getAccount_type() == null)
+			return false;
+		else if(account.getAccount_type().equals("client"))
+			return true;
+		else
+			return false;
+		
+	}
 	/**
 	 * 취소한 프로젝트
 	 */
@@ -53,6 +64,12 @@ public class ClientController {
 			mv.setViewName("redirect:/accounts/login");
 			return mv;
 		}
+		if(!AccountCheck(account))
+		{
+			mv.setViewName("redirect:/error");
+			return mv;
+		}
+		
 		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
 
 
@@ -81,6 +98,11 @@ public class ClientController {
 			mv.setViewName("redirect:/accounts/login");
 			return mv;
 		}
+		if(!AccountCheck(account))
+		{
+			mv.setViewName("redirect:/error");
+			return mv;
+		}
 		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
 
 		List<ProjectInfo> projectlist = projectDao.selectStatus(account.getPk(),"평가대기중");
@@ -105,6 +127,11 @@ public class ClientController {
 		if(account == null)
 		{
 			mv.setViewName("redirect:/accounts/login");
+			return mv;
+		}
+		if(!AccountCheck(account))
+		{
+			mv.setViewName("redirect:/error");
 			return mv;
 		}
 		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
@@ -133,6 +160,11 @@ public class ClientController {
 			mv.setViewName("redirect:/accounts/login");
 			return mv;
 		}
+		if(!AccountCheck(account))
+		{
+			mv.setViewName("redirect:/error");
+			return mv;
+		}
 		
 		List<ProjectInfo> projectlist = projectDao.selectStatus(account.getPk(),"검수중");
 		mv.addObject("projectlist",projectlist);
@@ -153,9 +185,20 @@ public class ClientController {
 			mv.setViewName("redirect:/accounts/login");
 			return mv;
 		}
+		if(!AccountCheck(account))
+		{
+			mv.setViewName("redirect:/error");
+			return mv;
+		}
 		List<ProjectInfo> projectlist = projectDao.selectStatus(account.getPk(),"임시저장");
 		mv.addObject("projectlist",projectlist);
-				
+		
+		if(projectlist!= null)
+		{
+			for(int i=0;i<projectlist.size();i++)
+				logger.info("project budget : "+projectlist.get(i).getBudget());
+		}
+		
 		return mv;
 	}
 	/**
@@ -170,6 +213,11 @@ public class ClientController {
 		if(account == null)
 		{
 			mv.setViewName("redirect:/accounts/login");
+			return mv;
+		}
+		if(!AccountCheck(account))
+		{
+			mv.setViewName("redirect:/error");
 			return mv;
 		}
 		List<ProjectInfo> projectlist = projectDao.selectStatus(account.getPk(),"등록실패");
@@ -189,6 +237,11 @@ public class ClientController {
 		if(account == null)
 		{
 			mv.setViewName("redirect:/accounts/login");
+			return mv;
+		}
+		if(!AccountCheck(account))
+		{
+			mv.setViewName("redirect:/error");
 			return mv;
 		}
 		
@@ -211,6 +264,15 @@ public class ClientController {
 			mv.setViewName("redirect:/accounts/login");
 			return mv;
 		}
+		if(!AccountCheck(account))
+		{
+			mv.setViewName("redirect:/error");
+			return mv;
+		}
+		
+		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
+
+		
 		List<ProjectInfo> projectlist = projectDao.selectStatus(account.getPk(),"진행중");
 		mv.addObject("projectlist",projectlist);
 		
@@ -240,7 +302,13 @@ public class ClientController {
 			mv.setViewName("/accounts/login");
 			return mv;
 		}
-				
+		if(!AccountCheck(account))
+		{
+			mv.setViewName("redirect:/error");
+			return mv;
+		}
+		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
+
 		ProjectInfo project = projectDao.select_project(pk);
 		if(project!=null)
 		{

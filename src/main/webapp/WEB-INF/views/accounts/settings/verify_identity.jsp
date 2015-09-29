@@ -35,6 +35,8 @@
 		name = "";
 	if(!Validator.hasValue(id))
 		id = "";
+	if(!Validator.hasValue(form))
+		form = "";
 	if(hasAuthentication != null)
 	{	
 		user_type = authenticationinfo.getUser_type();

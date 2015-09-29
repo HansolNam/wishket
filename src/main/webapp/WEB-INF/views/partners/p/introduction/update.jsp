@@ -4,7 +4,10 @@
 <%
 	AccountInfo account = (AccountInfo)session.getAttribute("account");
 	String introduction = (String)request.getAttribute("introduction");
-	introduction = introduction.replaceAll("\r\n","<br/>");
+	if(introduction != null && !introduction.isEmpty())
+		introduction = introduction.replaceAll("\r\n","<br/>");
+	else
+		introduction = "";
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -53,21 +56,10 @@ div.ui-tooltip {
 </head>
 <body class="logged-in partners partners-setting">
 	<div id="wrap">
-		<jsp:include page="../../../header2.jsp" flush="false" />
+		<jsp:include page="../../../header.jsp" flush="false" />
 		<div class="page">
 			<div class="container">
 				<div id="messages">
-					<div class="alert alert-safe alert-warning fade in">
-						프로젝트 지원을 위해 <a class="alert-link"
-							href="/wjm/partners/p/<%=account.getId() %>/info/update/">'파트너스 정보'</a>, <a
-							class="alert-link"
-							href="/wjm/partners/p/<%=account.getId() %>/introduction/update/">'자기 소개'</a>,
-						<a class="alert-link"
-							href="/wjm/partners/p/<%=account.getId() %>/skill/update/">'보유 기술'</a>, <a
-							class="alert-link"
-							href="/wjm/partners/p/<%=account.getId() %>/portfolio/update/">'포트폴리오'</a>을(를)
-						입력해주세요.
-					</div>
 				</div>
 			</div>
 			<div class="page">

@@ -2,13 +2,18 @@
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ page
-	import="java.util.List, com.wjm.models.ProjectInfo, com.wjm.models.AccountInfo, com.wjm.main.function.Time, java.sql.Timestamp"%>
+	import="com.wjm.main.function.Validator,java.util.List, com.wjm.models.ProjectInfo, com.wjm.models.AccountInfo, com.wjm.main.function.Time, java.sql.Timestamp"%>
 <%
 	AccountInfo account = (AccountInfo) session.getAttribute("account");
 	List<ProjectInfo> interest = (List<ProjectInfo>) request.getAttribute("interest");
 
 	long now_time = System.currentTimeMillis();
 	Timestamp now = new Timestamp(now_time);
+	
+	String profile = (String) request.getAttribute("profile");
+
+	if(!Validator.hasValue(profile))
+		profile = "default_avatar.png";
 %>
 <!--[if IE 6]><html lang="ko" class="no-js old ie6"><![endif]-->
 <!--[if IE 7]><html lang="ko" class="no-js old ie7"><![endif]-->
@@ -67,7 +72,7 @@
 </head>
 <body class="logged-in partners partners-management proposal-management">
 	<div id="wrap">
-		<jsp:include page="../../header2.jsp" flush="false" />
+		<jsp:include page="../../header.jsp" flush="false" />
 		<div class="container">
 			<div id="messages"></div>
 		</div>
@@ -78,7 +83,7 @@
 						<h3 class="user-name-tag-heading">파트너스</h3>
 						<div class="user-name-tag-body">
 							<img alt="<%= account.getId()%> 사진" class="img-circle user-img"
-								src="${pageContext.request.contextPath}/resources/static/img/default_avatar.jpg" />
+								src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=profile %>" />
 							<h4 class="username"><%=account.getId()%></h4>
 							<a class="profile-setting" href="/wjm/accounts/settings/profile/">기본
 								정보 수정</a>

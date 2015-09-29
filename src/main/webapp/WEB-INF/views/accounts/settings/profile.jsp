@@ -1,17 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	<%@ page import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo, com.wjm.main.function.Time"%>
+	<%@ page import="com.wjm.main.function.Validator,com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo, com.wjm.main.function.Time"%>
 <%
 	AccountInfo account = (AccountInfo)session.getAttribute("account");
 	String img_path = (String)request.getAttribute("img_path");
-	if(img_path != null)
-		{
-			if(img_path.isEmpty())
-			{
-				img_path = "default_avatar.png";
-			}
-		}
-	if(account == null) response.sendRedirect("/wjm/accounts/login");
+	
+	if(!Validator.hasValue(img_path))
+		img_path = "";
 	
 	boolean hasBasicInfo=false, hasPhoneNum=false, hasEmail=false;
 	
@@ -63,7 +58,6 @@
 <body class="logged-in client account-setting profile">
 	<div id="wrap">
 	<jsp:include page="../../header.jsp" flush="false" />
-
 		<div class="container">
 			<div id="messages">${msg}</div>
 		</div>
@@ -71,10 +65,10 @@
 			<div class="page-inner">
 				<div class="sidebar">
 					<div class="user-name-tag">
-						<h3 class="user-name-tag-heading">클라이언트</h3>
+						<h3 class="user-name-tag-heading"><%if(account.getAccount_type().equals("client")) out.print("클라이언트"); else out.print("파트너스"); %></h3>
 						<div class="user-name-tag-body">
 							<img alt="<%=account.getId() %> 사진" class="img-circle user-img"
-								src="${pageContext.request.contextPath}/resources/upload/profile_img/${img_path}" />
+								src="${pageContext.request.contextPath}/resources/upload/profile_img/<%if(!Validator.hasValue(img_path)) out.print("default_avatar.png"); else out.print(img_path); %>" />
 							<h4 class="username"><%=account.getId() %></h4>
 							<a class="profile-setting" href="/wjm/accounts/settings/profile/">기본
 								정보 수정</a>
@@ -117,7 +111,7 @@
 									사진</label>
 								<div class="control-wrapper" style="padding-top: 7px;">
 									<img alt="<%=account.getId() %> 사진" class="partners-img"
-										src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=img_path %>"
+										src="${pageContext.request.contextPath}/resources/upload/profile_img/<%if(!Validator.hasValue(img_path)) out.print("default_avatar.png"); else out.print(img_path); %>"
 										style="border-radius: 10%; border: 1px solid #dedede; width: 220px; height: 220px;" />
 								</div>
 							</div>
@@ -196,7 +190,7 @@
 									style="height: 110px;">
 									<div class="control-wrapper">
 										<span class="p5-img-name" id="p5-image-name"
-											style="margin-top: 8px;"><%if(img_path == null){ %>제출된 '<strong>프로필 이미지</strong>'가
+											style="margin-top: 8px;"><%if(!Validator.hasValue((String)request.getAttribute("img_path"))){ %>제출된 '<strong>프로필 이미지</strong>'가
 											없습니다.<%}else{ %><%=img_path %> <%} %>
 										</span> <span class="p5-custom-file-type-input-wrapper"><button
 												class="btn btn-primary p5-custom-file-type-front"
@@ -383,7 +377,7 @@
 						<form action="/wjm/accounts/settings/profile/" class="form-horizontal"
 							enctype="multipart/form-data" id="connect_show_form"
 							method="POST"
-							style="border-bottom: 1px dashed #dedede; padding-bottom: 25px; margin-bottom: 30px;">
+							style="<%if(!hasPhoneNum) out.print("display:none; ");%>border-bottom: 1px dashed #dedede; padding-bottom: 25px; margin-bottom: 30px;">
 							<input name="csrfmiddlewaretoken" type="hidden"
 								value="7YCuiuWVSyxVfH1qjb8JOSXcBvfKqQBY" />
 							<div class="form-group">
@@ -531,47 +525,7 @@
 
 			    if(messages == "success")
 	        	{
-			    	var accountinfo = data.accountinfo;
-			    	
-			    	if(data.hasBasicInfo == "true")
-		        	{
-        			edit_base_form();
-		        	}
-			        else
-		        	{
-	        		show_base_form();
-		        	}
-			    	
-			    	var img_path = accountinfo.profile_img;
-			    	var form_of_business = accountinfo.form;
-			    	var full_name = accountinfo.name;
-			    	var company_name = accountinfo.company_name;
-			    	var representative = accountinfo.company_name;
-			    	var gender = accountinfo.company_name;
-			    	
-			    	var str = accountinfo.birth_date;
-			    	var date_of_birth_year, date_of_birth_month, date_of_birth_day;
-			    	
-			    	if(str == "")
-			    		{
-				    	date_of_birth_year = "";
-				    	date_of_birth_month = "";
-				    	date_of_birth_day = "";
-			    		}
-			    	else
-			    		{
-			    		var res = str.split("-");
-				    	date_of_birth_year = res[0];
-				    	date_of_birth_month = res[1];
-				    	date_of_birth_day = res[2];
-			    		}
-			    	
-			    	var address_sido = accountinfo.regionl;
-			    	var sigungu = accountinfo.regionm;
-			    	var address_detail = accountinfo.regionr;
-			    	updateBasicInfo(img_path, form_of_business, full_name, company_name, representative,
-			    			gender,date_of_birth_year ,date_of_birth_month,date_of_birth_day,address_sido,
-			    			sigungu,address_detail);
+			    	location.href='/wjm/accounts/settings/profile';
 			    	$("#messages").html("<div class='alert alert-success fade in'>기본 정보 등록을 완료했습니다.</div>");
 
 	        	}
@@ -602,54 +556,7 @@
 
 		    if(messages == "success")
 		        	{
-			        var accountinfo = data.accountinfo;
-			        
-			        if(data.hasPhoneNum == "true")
-			        	{
-	        			edit_connect_form();
-			        	}
-			        else
-			        	{
-		        		show_connect_form();
-			        	}
-			        
-			        var str = accountinfo.cellphone_num;
-			        var cell_phone_number_code,cell_phone_number_middle,cell_phone_number_end;
-			        if(str == "")
-			        	{
-			        	cell_phone_number_code = "";
-			        	cell_phone_number_middle = "";
-			        	cell_phone_number_end = "";
-			        	}
-			        else
-			        	{
-				        var res = str.split("-");
-			        	cell_phone_number_code = res[0];
-			        	cell_phone_number_middle = res[1];
-			        	cell_phone_number_end = res[2];
-			        	$("#cell_phone_number2").val(str);
-			        	}
-			        
-			        str = accountinfo.telephone_num;
-			        var phone_number_code,phone_number_entered;
-			        if(str == "")
-		        	{
-			        	phone_number_code = "";
-			        	phone_number_entered = "";
-		        	}
-			        else
-			        	{
-				        var res = str.split("-");
-				        phone_number_code = res[0];
-				        phone_number_entered = res[1];
-			        	$("#phone_number2").val(str);
-			        	}
-			        
-			        var fax_number = accountinfo.fax_num;
-		        	$("#fax_number2").val(fax_number);
-			        
-			        updateConnectInfo(cell_phone_number_code,cell_phone_number_middle,cell_phone_number_end,
-			    			phone_number_code,phone_number_entered, fax_number);
+		    		location.href='/wjm/accounts/settings/profile';
 					$("#messages").html("<div class='alert alert-success fade in'>연락처 정보 등록을 완료했습니다.</div>");
 
 		        	}
@@ -680,16 +587,7 @@
 
 		    if(messages == "success")
         	{
-		        var accountinfo = data.accountinfo;
-		        
-		        if(accountinfo.subscription == 1){
-					document.getElementById("email_subscription").checked = true;
-					$("#messages").html("<div class='alert alert-success fade in'>이메일 구독 신청을 완료했습니다.</div>");
-		        }
-				else{
-					document.getElementById("email_subscription").checked = false;
-					$("#messages").html("<div class='alert alert-success fade in'>이메일 구독 신청을 취소했습니다.</div>");
-		        }
+		    	location.href='/wjm/accounts/settings/profile';
 	        	}
 	        else
 	        	{

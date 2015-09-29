@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="com.wjm.models.AccountInfo, com.wjm.models.ProjectInfo, java.util.*, com.wjm.main.function.Time"%>
+<%@ page import="com.wjm.main.function.Validator, com.wjm.models.AccountInfo, com.wjm.models.ProjectInfo, java.util.*, com.wjm.main.function.Time"%>
 <%
 	AccountInfo account = (AccountInfo)session.getAttribute("account");
 	List<ProjectInfo> projectlist = (List<ProjectInfo>)request.getAttribute("projectlist");
@@ -31,6 +31,11 @@
 			}
 		}
 	}
+	
+	String profile = (String)request.getAttribute("profile");
+	
+	if(!Validator.hasValue(profile))
+		profile = "default_avatar.png";
 	
 	%>
 <!DOCTYPE html>

@@ -40,7 +40,7 @@ public class ProjectDao implements ProjectIDao {
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
 	}
 
-	public void create(int account_pk, String categoryL, String categoryM, int another , String name, int period, String budget,
+	public void create(int account_pk, String categoryL, String categoryM, int another , String name, int period, int budget,
 			String plan_status, String description, String technique, Timestamp deadline, String meeting_type,
 			String meeting_area, String meeting_area_detail, Timestamp start_date, int managing, String partner_type,
 			String purpose, String status)
@@ -91,7 +91,7 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getInt("applicantnum")
 	    				, resultSet.getString("name")
 	    				, resultSet.getInt("period")
-	    				, resultSet.getString("budget")
+	    				, resultSet.getInt("budget")
 	    				, resultSet.getString("plan_status")
 	    				, resultSet.getString("description")
 	    				, resultSet.getString("technique")
@@ -123,7 +123,7 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getInt("applicantnum")
 	    				, resultSet.getString("name")
 	    				, resultSet.getInt("period")
-	    				, resultSet.getString("budget")
+	    				, resultSet.getInt("budget")
 	    				, resultSet.getString("plan_status")
 	    				, resultSet.getString("description")
 	    				, resultSet.getString("technique")
@@ -155,7 +155,7 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getInt("applicantnum")
 	    				, resultSet.getString("name")
 	    				, resultSet.getInt("period")
-	    				, resultSet.getString("budget")
+	    				, resultSet.getInt("budget")
 	    				, resultSet.getString("plan_status")
 	    				, resultSet.getString("description")
 	    				, resultSet.getString("technique")
@@ -200,7 +200,7 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getInt("applicantnum")
 	    				, resultSet.getString("name")
 	    				, resultSet.getInt("period")
-	    				, resultSet.getString("budget")
+	    				, resultSet.getInt("budget")
 	    				, resultSet.getString("plan_status")
 	    				, resultSet.getString("description")
 	    				, resultSet.getString("technique")
@@ -241,7 +241,7 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getInt("applicantnum")
 	    				, resultSet.getString("name")
 	    				, resultSet.getInt("period")
-	    				, resultSet.getString("budget")
+	    				, resultSet.getInt("budget")
 	    				, resultSet.getString("plan_status")
 	    				, resultSet.getString("description")
 	    				, resultSet.getString("technique")
@@ -283,7 +283,7 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getInt("applicantnum")
 	    				, resultSet.getString("name")
 	    				, resultSet.getInt("period")
-	    				, resultSet.getString("budget")
+	    				, resultSet.getInt("budget")
 	    				, resultSet.getString("plan_status")
 	    				, resultSet.getString("description")
 	    				, resultSet.getString("technique")
@@ -490,19 +490,19 @@ public class ProjectDao implements ProjectIDao {
 		}
 		else if(sort.equals("1"))
 		{
-			sort_sql += " order by budget";
+			sort_sql += " order by budget desc";
 		}
 		else if(sort.equals("2"))
 		{
-			sort_sql += " order by budget desc";
+			sort_sql += " order by budget";
 		}
 		else if(sort.equals("3"))
 		{
-			sort_sql += " order by reg_date";
+			sort_sql += " order by reg_date desc";
 		}
 		else if(sort.equals("4"))
 		{
-			
+			sort_sql += " order by (deadline-CURRENT_TIMESTAMP)";
 		}
 		//status : 
 		
@@ -510,17 +510,23 @@ public class ProjectDao implements ProjectIDao {
 		
 		String q_sql = "";
 		if(!q.equals("None"))
-			q_sql = " name LIKE '%"+q+"%'";
+			q_sql = " (name LIKE '%"+q+"%' or description LIKE '%"+q+"%' or technique LIKE '%"+q+"%')";
 
-		String status_sql = "(status = '지원자모집중')";
-		String sql = getSQL(dev_sql, design_sql, addr_sql, status_sql, sort_sql, q_sql);
-		logger.info("sql1 > "+sql);
+		String status_sql = "(status = '지원자모집중' and deadline > CURRENT_TIMESTAMP)";
+		String sql1 = getSQL(dev_sql, design_sql, addr_sql, status_sql, sort_sql, q_sql);
+
+		status_sql = "((status = '진행중' or status = '평가대기중' or status = '완료한프로젝트') or (status = '지원자모집중' and deadline <= CURRENT_TIMESTAMP))";
+		String sql2 = getSQL(dev_sql, design_sql, addr_sql, status_sql, sort_sql, q_sql);
 		
+		logger.info("sql1 > "+sql1);
+		logger.info("sql2 > "+sql2);
+		
+		logger.info("sql1 + sql2 > "+ "select * from ("+sql1 + ") As a union all select * from (" + sql2 + ") As b");
 		//진행중인 프로젝트
-		List<ProjectInfo> projectlist1 = jdbcTemplate.query(sql,new RowMapper<ProjectInfo>() {
+		List<ProjectInfo> projectlist1 = jdbcTemplate.query("select * from ("+sql1 + ") As a union all select * from (" + sql2 + ") As b",new RowMapper<ProjectInfo>() {
 	    	public ProjectInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{
-	    		return new ProjectInfo(
+	    		ProjectInfo project =  new ProjectInfo(
 	    				resultSet.getInt("pk")
 	    				, resultSet.getInt("account_pk")
 	    				, resultSet.getString("categoryL")
@@ -529,7 +535,7 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getInt("applicantnum")
 	    				, resultSet.getString("name")
 	    				, resultSet.getInt("period")
-	    				, resultSet.getString("budget")
+	    				, resultSet.getInt("budget")
 	    				, resultSet.getString("plan_status")
 	    				, resultSet.getString("description")
 	    				, resultSet.getString("technique")
@@ -543,46 +549,14 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getString("purpose")
 	    				, resultSet.getString("status")
 	    				, resultSet.getTimestamp("reg_date"));
+	    		logger.info("project name "+ project.getName());
+	    		return project;
 	    	}
 	    });
-		
-		status_sql = "(status = '진행중' or status = '평가대기중' or status = '완료한프로젝트')";
-		sql = getSQL(dev_sql, design_sql, addr_sql, status_sql, sort_sql, q_sql);
-		logger.info("sql2 > "+sql);
-		
-		projectlist1.addAll(jdbcTemplate.query(sql,new RowMapper<ProjectInfo>() {
-	    	public ProjectInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
-	    	{
-	    		return new ProjectInfo(
-	    				resultSet.getInt("pk")
-	    				, resultSet.getInt("account_pk")
-	    				, resultSet.getString("categoryL")
-	    				, resultSet.getString("categoryM")
-	    				, resultSet.getInt("another")
-	    				, resultSet.getInt("applicantnum")
-	    				, resultSet.getString("name")
-	    				, resultSet.getInt("period")
-	    				, resultSet.getString("budget")
-	    				, resultSet.getString("plan_status")
-	    				, resultSet.getString("description")
-	    				, resultSet.getString("technique")
-	    				, resultSet.getTimestamp("deadline")
-	    				, resultSet.getString("meeting_type")
-	    				, resultSet.getString("meeting_area")
-	    				, resultSet.getString("meeting_area_detail")
-	    				, resultSet.getTimestamp("start_date")
-	    				, resultSet.getInt("managing")
-	    				, resultSet.getString("partner_type")
-	    				, resultSet.getString("purpose")
-	    				, resultSet.getString("status")
-	    				, resultSet.getTimestamp("reg_date"));
-	    	}
-	    }));
-		
 		return projectlist1;
 	}
 	public void Save(int account_pk, String categoryL,String categoryM,String is_turnkey, String name,
-			int period, String budget, String plan_status, String description, String technique,
+			int period, int budget, String plan_status, String description, String technique,
 			Timestamp deadline, String meeting_type, String meeting_area, String meeting_area_detail,
 			Timestamp start_date, String managing,String partner_type, String purpose, String status)
 	{
@@ -606,7 +580,7 @@ public class ProjectDao implements ProjectIDao {
 	}
 	
 	public void Update(int project_pk, int account_pk, String categoryL,String categoryM,String is_turnkey, String name,
-			int period, String budget, String plan_status, String description, String technique,
+			int period, int budget, String plan_status, String description, String technique,
 			Timestamp deadline, String meeting_type, String meeting_area, String meeting_area_detail,
 			Timestamp start_date, String managing,String partner_type, String purpose, String status)
 	{

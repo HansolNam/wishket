@@ -82,9 +82,12 @@ public class MywjmController {
 		}
 		else if(!account.getAccount_type().equals("partners"))
 		{
-			mv.setViewName("/accounts/login");
+			mv.setViewName("/error");
 			return mv;
 		}
+		
+		
+		
 		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
 
 		List<ProjectInfo> interest = applicantDao.getInterestProject(account.getPk());

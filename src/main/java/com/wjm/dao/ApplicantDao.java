@@ -377,7 +377,7 @@ public class ApplicantDao implements ApplicantIDao {
 	    				, resultSet.getInt("applicantnum")
 	    				, resultSet.getString("name")
 	    				, resultSet.getInt("period")
-	    				, resultSet.getString("budget")
+	    				, resultSet.getInt("budget")
 	    				, resultSet.getString("plan_status")
 	    				, resultSet.getString("description")
 	    				, resultSet.getString("technique")

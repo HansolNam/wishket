@@ -11,7 +11,7 @@ public class ProjectInfo {
 	private int applicantnum;
 	private String name;
 	private int period;
-	private String budget;
+	private int budget;
 	private String plan_status;
 	private String description;
 	private String technique;
@@ -25,8 +25,17 @@ public class ProjectInfo {
 	private String purpose;
 	private String status;
 	private Timestamp reg_date;
+	
+	public AccountInfo getAccount() {
+		return account;
+	}
+	public void setAccount(AccountInfo account) {
+		this.account = account;
+	}
+	private AccountInfo account;
+
 	public ProjectInfo(int pk, int account_pk, String categoryL, String categoryM, int another, int applicantnum,
-			String name, int period, String budget, String plan_status, String description, String technique,
+			String name, int period, int budget, String plan_status, String description, String technique,
 			Timestamp deadline, String meeting_type, String meeting_area, String meeting_area_detail,
 			Timestamp start_date, int managing, String partner_type, String purpose, String status,
 			Timestamp reg_date) {
@@ -102,10 +111,10 @@ public class ProjectInfo {
 	public void setPeriod(int period) {
 		this.period = period;
 	}
-	public String getBudget() {
+	public int getBudget() {
 		return budget;
 	}
-	public void setBudget(String budget) {
+	public void setBudget(int budget) {
 		this.budget = budget;
 	}
 	public String getPlan_status() {
@@ -186,5 +195,6 @@ public class ProjectInfo {
 	public void setReg_date(Timestamp reg_date) {
 		this.reg_date = reg_date;
 	}
+	
 	
 }

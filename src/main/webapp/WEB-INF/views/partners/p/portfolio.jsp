@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page
-	import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo, com.wjm.models.PortfolioInfo, java.util.List"%>
+	import="com.wjm.main.function.Validator,com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo, com.wjm.models.PortfolioInfo, java.util.List"%>
 <%
 	AccountInfo this_account = (AccountInfo) request.getAttribute("this_account");
 	AccountInfo account = (AccountInfo) session.getAttribute("account");
@@ -19,6 +19,12 @@
 				representative++;
 		}
 	}
+	
+
+	String profile = (String)request.getAttribute("profile");
+	
+	if(!Validator.hasValue(profile))
+		profile = "default_avatar.png";
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -88,7 +94,7 @@ div.ui-tooltip {
 </head>
 <body class="logged-in partners partners-setting">
 	<div id="wrap">
-		<jsp:include page="../../header2.jsp" flush="false" />
+		<jsp:include page="../../header.jsp" flush="false" />
 		<div class="page">
 			<div class="container">
 				<div id="messages"></div>
@@ -100,7 +106,7 @@ div.ui-tooltip {
 						<div class="partners-name-tag-body">
 							<img alt="<%=this_account.getId() %> 사진"
 								class="p5-partners-img-lg"
-								src="${pageContext.request.contextPath}/resources/static/img/default_avatar.jpg" />
+								src="${pageContext.request.contextPath}/resources/static/img/<%=profile %>" />
 							<h4 class="partners-username-bottom"><%=this_account.getId()%></h4>
 						</div>
 					</div>
@@ -122,7 +128,7 @@ div.ui-tooltip {
 								href="/wjm/partners/p/<%=this_account.getId()%>/evaluation/">클라이언트의
 									평가</a></li>
 							<li class=""><a
-								href="/wjm/partners/p/<%=this_account.getId()%>/history/">위시켓에서
+								href="/wjm/partners/p/<%=this_account.getId()%>/history/">외주몬에서
 									진행한 프로젝트</a></li>
 						</ul>
 					</div>
@@ -161,12 +167,15 @@ div.ui-tooltip {
 									{
 										if(portfolio.get(i).getRepresentative() == 1)
 										{
+											String img = "";
+											if(Validator.hasValue(portfolio.get(i).getImg0()))
+												img = portfolio.get(i).getImg0();
 									
 							%>
 							<span category-id="<%=portfolio.get(i).getCategoryL()%>"
 								subcategory-id="<%=portfolio.get(i).getCategoryM()%>"
 								style="margin-right: 34px; margin-bottom: 20px;"><img
-								src="https://wishket.blob.core.windows.net/thumbnail/gksthf16112_7ef9ce629b0de7c34026.png"><a
+								src="${pageContext.request.contextPath}/resources/upload/portfolio/<%=img%>"><a
 								href="/wjm/partners/p/<%=this_account.getId()%>/portfolio/<%=portfolio.get(i).getPk()%>/"><span
 									class="p5-img-info"><div class="p5-img-brief-info">
 											<div class="p5-img-title text-right"><%=portfolio.get(i).getName()%></div>
@@ -244,7 +253,7 @@ div.ui-tooltip {
 							%>
 							<span category-id="<%=portfolio.get(i).getCategoryL()%>"
 								subcategory-id="<%=portfolio.get(i).getCategoryM()%>"><img
-								src="/resources/upload/portfolio/<%=portfolio.get(i).getImg0()%>"><a
+								src="${pageContext.request.contextPath}/resources/upload/portfolio/<%=portfolio.get(i).getImg0()%>"><a
 								href="/wjm/partners/p/<%=this_account.getId()%>/portfolio/<%=portfolio.get(i).getPk()%>/"><span
 									class="p5-img-info"><div class="p5-img-brief-info">
 											<div class="p5-img-title text-right"><%=portfolio.get(i).getName()%></div>

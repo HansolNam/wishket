@@ -76,6 +76,15 @@ public class AccountController {
 	@RequestMapping(value = "/accounts/password/reset", method = RequestMethod.GET)
 	public String MainController_password_reset_get(HttpServletRequest request) {
 		logger.info("password_reset_get Page");
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		
+		if(account != null)
+		{
+			if(account.getAccount_type().equals("client"))
+				return "redirect:/mywjm/client";
+			else 
+				return "redirect:/mywjm/partners";
+		}
 		
 		return "/accounts/password/reset";
 	}
@@ -108,7 +117,7 @@ public class AccountController {
 			else
 				mv.addObject("messages","임시 비밀번호를 발송에 실패하였습니다.");
 			
-			mv.setViewName("/accounts/login");
+			mv.setViewName("redirect:/accounts/login");
 			return mv;
 		}
 		
@@ -690,14 +699,17 @@ public class AccountController {
 				logger.info("accountinfo 존재");
 				if(accountInformationDao.hasBasicInfo(account.getPk()))
 				{
+					logger.info("기본정보존재");
 					mv.addObject("hasBasicInfo","true");
 				}
 				if(accountInformationDao.hasPhoneNum(account.getPk()))
 				{
+					logger.info("연락처정보존재");
 					mv.addObject("hasPhoneNum","true");
 				}
 				if(account.getEmail()!=null)
 				{
+					logger.info("이메일존재");
 					mv.addObject("hasEmail","true");
 				}
 				
@@ -750,7 +762,7 @@ public class AccountController {
 		else
 		{
 			accountinfo = null;
-			mv.setViewName("/accounts/login");
+			mv.setViewName("redirect:/accounts/login");
 		}
 			
 		
@@ -1085,7 +1097,7 @@ public class AccountController {
 			if(authenticaitoninfo.getIdentity_doc() != null)
 			{
 				mv.addObject("authenticatoninfo",authenticaitoninfo);
-				
+				logger.info("인증 정보 가지고 잇음");
 				if(accountinfo.getIdentity_authentication().equals("검수중") )
 				{
 					logger.info("인증 상태 : 검수중");
@@ -1192,7 +1204,7 @@ public class AccountController {
 		request.getSession().invalidate();
 		
 		mv.addObject("messages", "로그아웃 되었습니다.");
-		mv.setViewName("/accounts/login");
+		mv.setViewName("redirect:/accounts/login");
 		
 		return mv;
 	}

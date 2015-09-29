@@ -4,6 +4,10 @@
 <%
 	AccountInfo account = (AccountInfo)session.getAttribute("account");
 	String introduction = (String)request.getAttribute("introduction");
+	if(introduction != null && !introduction.isEmpty())
+		introduction = introduction.replaceAll("\r\n","<br/>");
+	else
+		introduction = "";
 	
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -55,7 +59,7 @@ div.ui-tooltip {
 <body class="logged-in partners partners-setting">
 	<div id="wrap">
 		
-		<jsp:include page="../../../../header2.jsp" flush="false" />
+		<jsp:include page="../../../../header.jsp" flush="false" />
 		<div class="page">
 			<div class="container">
 				<div id="messages"></div>

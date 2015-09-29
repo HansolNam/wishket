@@ -3,7 +3,7 @@
 <%@ page
 	import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo, com.wjm.models.TechniqueInfo, java.util.List"%>
 <%@ page
-	import="com.wjm.models.LicenseInfo, com.wjm.models.EducationInfo, com.wjm.models.CareerInfo, com.wjm.models.Partners_infoInfo, com.wjm.models.PortfolioInfo"%>
+	import="com.wjm.main.function.Validator,com.wjm.models.LicenseInfo, com.wjm.models.EducationInfo, com.wjm.models.CareerInfo, com.wjm.models.Partners_infoInfo, com.wjm.models.PortfolioInfo"%>
 
 <%
 	AccountInfo this_account = (AccountInfo) request.getAttribute("this_account");
@@ -26,7 +26,36 @@
 	if (license != null && license.size() == 0)
 		license = null;
 	String isSame = (String) request.getAttribute("isSame");
-	introduction = introduction.replaceAll("\r\n", "<br/>");
+	
+	if(Validator.hasValue(introduction))
+		introduction = introduction.replaceAll("\r\n", "<br/>");
+	
+	String hasInfo = (String) request.getAttribute("hasInfo");
+	String hasSkill = (String) request.getAttribute("hasSkill");
+	String hasPortfolio = (String) request.getAttribute("hasPortfolio");
+	String hasIntro = (String) request.getAttribute("hasIntro");
+
+	String msg = "";
+	if(hasInfo == null || hasIntro == null || hasSkill == null || hasPortfolio == null)
+	{
+		msg = "프로젝트 지원을 위해 ";
+		if(hasInfo == null)
+			msg += "<a class='alert-link' href='/wjm/partners/p/"+this_account.getId()+"/info/update/'>"+"'파트너스 정보'</a>";
+		if(hasIntro == null)
+			msg += "<a class='alert-link' href='/wjm/partners/p/"+this_account.getId()+"/introduction/update/'>"+"'자기 소개'</a>";
+		if(hasSkill == null)
+			msg += "<a class='alert-link' href='/wjm/partners/p/"+this_account.getId()+"/skill/update/'>"+"'보유 기술'</a>";		
+		if(hasPortfolio == null)
+			msg += "<a class='alert-link' href='/wjm/partners/p/"+this_account.getId()+"/portfolio/update/'>"+"'포트폴리오'</a>";
+
+    	msg += " 를 입력해주세요.";
+	}
+	
+
+	String profile = this_accountinfo.getProfile_img();
+	
+	if(!Validator.hasValue(profile))
+		profile = "default_avatar.png";
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -104,7 +133,7 @@ div.ui-tooltip {
 <body class="logged-in partners partners-setting">
 	<div id="wrap">
 
-		<jsp:include page="../header2.jsp" flush="false" />
+		<jsp:include page="../header.jsp" flush="false" />
 		<div class="page">
 			<div class="container">
 				<div id="messages"></div>
@@ -116,7 +145,7 @@ div.ui-tooltip {
 						<div class="partners-name-tag-body">
 							<img alt="<%=this_account.getId() %> 사진"
 								class="p5-partners-img-lg"
-								src="${pageContext.request.contextPath}/<%=this_accountinfo.getProfile_img() %>" />
+								src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=this_accountinfo.getProfile_img() %>" />
 							<h4 class="partners-username-bottom"><%=this_account.getId()%>
 							</h4>
 						</div>
@@ -140,7 +169,7 @@ div.ui-tooltip {
 								href="/wjm/partners/p/<%=this_account.getId()%> /evaluation/">클라이언트의
 									평가</a></li>
 							<li class=""><a
-								href="/wjm/partners/p/<%=this_account.getId()%>/history/">위시켓에서
+								href="/wjm/partners/p/<%=this_account.getId()%>/history/">외주몬에서
 									진행한 프로젝트</a></li>
 						</ul>
 					</div>
@@ -178,11 +207,48 @@ div.ui-tooltip {
 										else
 											out.print(info.getJob());
 									%>
-							</span><span class="p5-basic-info-seperator">|</span></span> <span> <span>개인</span><span
+							</span><span class="p5-basic-info-seperator">|</span></span> <span> <span>
+									<%
+										if (this_accountinfo == null)
+											out.print("회사형태 미입력");
+										else if(!Validator.hasValue(this_accountinfo.getForm()))
+											out.print("회사형태 미입력");
+										else
+										{
+											if(this_accountinfo.getForm().equals("individual"))
+												out.print("개인");
+											else if(this_accountinfo.getForm().equals("team"))
+												out.print("팀");
+											else if(this_accountinfo.getForm().equals("individual_business"))
+												out.print("개인 사업자");
+											else if(this_accountinfo.getForm().equals("corporate_business"))
+												out.print("법인 사업자");
+										}
+									%></span><span
 								class="p5-basic-info-seperator">|</span></span> <span
-								class="text-muted"><span>신원 미인증</span><span
+								class="text-muted"><span><%
+										if (this_accountinfo == null)
+											out.print("신원 미인증");
+										else if(!Validator.hasValue(this_accountinfo.getIdentity_authentication()))
+											out.print("신원 미인증");
+										else
+										{
+											if(this_accountinfo.getIdentity_authentication().equals("미인증"))
+												out.print("신원 미인증");
+											else if(this_accountinfo.getIdentity_authentication().equals("검수중"))
+												out.print("신원 미인증");
+											else if(this_accountinfo.getIdentity_authentication().equals("미인증"))
+												out.print("신원 인증");
+										} %></span><span
 								class="p5-basic-info-seperator">|</span></span> <span
-								class="text-muted"> <span>연락처 미등록</span></span>
+								class="text-muted"> <span><%
+										if (this_accountinfo == null)
+											out.print("연락처 미등록");
+										else if(!Validator.hasValue(this_accountinfo.getCellphone_num()))
+											out.print("연락처 미등록");
+										else
+										{	out.print("연락처 등록");
+										} %></span></span>
 						</h5>
 						</section>
 						<section class="profile-info"
@@ -214,7 +280,7 @@ div.ui-tooltip {
 								<div style="clear: right"></div>
 							</div>
 							<div id="myChart_rader_tooltip" style="float: left"
-								title="파트너님은 위시켓에서 진행한 프로젝트가 없습니다.">
+								title="파트너님은 외주몬에서 진행한 프로젝트가 없습니다.">
 								<div class="profile-detail-evaluation">
 									<h5>세부 항목 평가</h5>
 									<canvas id="myChart_rader"></canvas>
@@ -222,7 +288,7 @@ div.ui-tooltip {
 								</div>
 							</div>
 							<div id="myChart_tooltip" style="float: left"
-								title="파트너님은 위시켓에서 진행한 프로젝트가 없습니다.">
+								title="파트너님은 외주몬에서 진행한 프로젝트가 없습니다.">
 								<div class="profile-main-category">
 									<h5>진행한 카테고리</h5>
 									<div>
@@ -328,7 +394,7 @@ div.ui-tooltip {
 									{
 								%>
 								<span category-id="<%=portfolio.get(i).getCategoryL() %>" subcategory-id="<%=portfolio.get(i).getCategoryM() %>" style="width:210px"><img
-									src="/resources/upload/portfolio/<%=portfolio.get(i).getImg0() %>"><a
+									src="${pageContext.request.contextPath}/resources/upload/portfolio/<%=portfolio.get(i).getImg0() %>"><a
 									href="/wjm/partners/p/<%=this_account.getId() %>/portfolio/<%=portfolio.get(i).getPk() %>/update/"><span
 										class="p5-img-info"><div class="p5-img-brief-info">
 												<div class="p5-img-title text-right"><%=portfolio.get(i).getName() %></div>
@@ -629,6 +695,11 @@ div.ui-tooltip {
             $(this).removeClass('p5-review-hide-btn').addClass('p5-review-show-btn');
         });
         
+        
+        var messages = "<%=msg%>";
+        if(messages != "")
+			$("#messages").html("<div class='alert alert-warning fade in'>"+messages+"</div>");
+
 
     });
 
@@ -801,40 +872,5 @@ $( document ).ready(function($) {
 });
 
 </script>
-	<script type="text/javascript">
-        var TRS_AIDX = 9287;
-        var TRS_PROTOCOL = document.location.protocol;
-        document.writeln();
-        var TRS_URL = TRS_PROTOCOL + '//' + ((TRS_PROTOCOL=='https:')?'analysis.adinsight.co.kr':'adlog.adinsight.co.kr') +  '/emnet/trs_esc.js';
-        document.writeln("<scr"+"ipt language='javascript' src='" + TRS_URL + "'></scr"+"ipt>");
-        </script>
-	<script type="text/javascript">
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-        ga('create', 'UA-31427125-2', 'wishket.com');
-        var ga_now = new Date();
-        var dimension4Value = "Y" + ga_now.getFullYear()
-                              + "M" + (ga_now.getMonth()+1)
-                              + "D" + (ga_now.getDate())
-                              + "H" + (ga_now.getHours())
-                              + "I" + (ga_now.getMinutes())
-                              + "W" + (ga_now.getDay());
-        ga('require', 'displayfeatures');
-        ga('set', '&uid', '28338');
-        ga('send', 'pageview', {
-          'dimension1': 'user',
-          'dimension2': 'partners',
-          'dimension3': '28338',
-          'dimension4': dimension4Value
-        });
-      </script>
-	<script type="text/javascript">(function(e,b){if(!b.__SV){var a,f,i,g;window.mixpanel=b;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===e.location.protocol?"https:":"http:")+'//cdn.mxpnl.com/libs/mixpanel-2.2.min.js';f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f);b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==
-typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.set_once people.increment people.append people.track_charge people.clear_charges people.delete_user".split(" ");for(g=0;g<i.length;g++)f(c,i[g]);
-b._i.push([a,e,d])};b.__SV=1.2}})(document,window.mixpanel||[]);
-mixpanel.init("c7b742deb9d00b4f1c0e1e9e8c5c3115");</script>
-	<script type="text/javascript"> if (!wcs_add) var wcs_add={}; wcs_add["wa"] = "s_3225afd5bb50";if (!_nasa) var _nasa={};wcs.inflow();wcs_do(_nasa);</script>
 </body>
 </html>

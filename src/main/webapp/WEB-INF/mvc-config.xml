@@ -119,6 +119,10 @@
            <mapping path="/client/manage/past/*"/>
            <mapping path="/client/manage/project/*"/>
            <mapping path="/mywjm/*"/>
+           <mapping path="/partners/manage/**"/>
+           <mapping path="/partners/p/**"/>
+           <mapping path="/partners/p"/>
+           <!-- 
            <mapping path="/partners/manage/*"/>
            <mapping path="/partners/manage/past/*"/>
            <mapping path="/partners/manage/proposal/*"/>
@@ -133,7 +137,12 @@
            <mapping path="/partners/p/portfolio/update/*"/>
            <mapping path="/partners/p/skill/*"/>
            <mapping path="/partners/p/skill/update/*"/>
-           <mapping path="/project/**"/>
+            -->
+           <mapping path="/project/add/**"/>
+           <mapping path="/project/proposal/**"/>
+           <mapping path="/project/about"/>
+           <mapping path="/project/faq"/>
+           <mapping path="/project/preview"/>
                 <beans:bean class="com.wjm.interceptor.Interceptor"/>
         </interceptor>
         

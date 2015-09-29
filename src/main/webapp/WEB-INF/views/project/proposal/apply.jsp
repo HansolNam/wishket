@@ -50,7 +50,7 @@
 <script src="${pageContext.request.contextPath}/resources/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
 </head>
 <body class="logged-in partners proposal-applicant  proposal-applicant ">
-	<jsp:include page="../../header2.jsp" flush="false" />
+	<jsp:include page="../../header.jsp" flush="false" />
 	<div id="wrap">
 		<div class="container">
 			<div id="messages"></div>

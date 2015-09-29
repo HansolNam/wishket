@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page
-	import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo, com.wjm.models.LicenseInfo, com.wjm.models.EducationInfo, com.wjm.models.CareerInfo, java.util.List"%>
+	import="com.wjm.main.function.Validator,com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo, com.wjm.models.LicenseInfo, com.wjm.models.EducationInfo, com.wjm.models.CareerInfo, java.util.List"%>
 <%
 	AccountInfo this_account = (AccountInfo) request.getAttribute("this_account");
 	AccountInformationInfo this_accountinfo = (AccountInformationInfo) request.getAttribute("this_accountinfo");
@@ -13,6 +13,12 @@
 	List<LicenseInfo> license = (List<LicenseInfo>) request.getAttribute("license");
 	if(license!= null && license.size() == 0) license = null;
 	String isSame = (String) request.getAttribute("isSame");
+	
+
+	String profile = (String)request.getAttribute("profile");
+	
+	if(!Validator.hasValue(profile))
+		profile = "default_avatar.png";
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -24,7 +30,7 @@
 	prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#">
 <meta charset="utf-8" />
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<title>위시켓(Wishket) · 파트너스 - <%=this_account.getId()%></title>
+<title>외주몬(WJM) · 파트너스 - <%=this_account.getId()%></title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
 <link
 	href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css"
@@ -82,7 +88,7 @@ div.ui-tooltip {
 <body class="logged-in partners partners-setting">
 	<div id="wrap">
 
-		<jsp:include page="../../header2.jsp" flush="false" />
+		<jsp:include page="../../header.jsp" flush="false" />
 
 		<div class="page">
 			<div class="container">
@@ -95,7 +101,7 @@ div.ui-tooltip {
 						<div class="partners-name-tag-body">
 							<img alt="<%=this_account.getId() %> 사진"
 								class="p5-partners-img-lg"
-								src="${pageContext.request.contextPath}/<%=this_accountinfo.getProfile_img() %>" />
+								src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=profile %>" />
 							<h4 class="partners-username-bottom"><%=this_account.getId()%></h4>
 						</div>
 					</div>
@@ -118,7 +124,7 @@ div.ui-tooltip {
 								href="/wjm/partners/p/<%=this_account.getId()%>/evaluation/">클라이언트의
 									평가</a></li>
 							<li class=""><a
-								href="/wjm/partners/p/<%=this_account.getId()%>/history/">위시켓에서
+								href="/wjm/partners/p/<%=this_account.getId()%>/history/">외주몬에서
 									진행한 프로젝트</a></li>
 						</ul>
 					</div>

@@ -1,7 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-
+	<%@ page
+	import="com.wjm.main.function.Validator,com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo, com.wjm.models.LicenseInfo, com.wjm.models.EducationInfo, com.wjm.models.CareerInfo, java.util.List"%>
+<%
+	AccountInfo this_account = (AccountInfo) request.getAttribute("this_account");
+	AccountInformationInfo this_accountinfo = (AccountInformationInfo) request.getAttribute("this_accountinfo");
+	AccountInfo account = (AccountInfo) session.getAttribute("account");
+	
+	String isSame = (String) request.getAttribute("isSame");
+	
+	String profile = this_accountinfo.getProfile_img();
+	
+	if(!Validator.hasValue(profile))
+		profile = "default_avatar.png";
+%>
 <!--[if IE 6]><html lang="ko" class="no-js old ie6"><![endif]-->
 <!--[if IE 7]><html lang="ko" class="no-js old ie7"><![endif]-->
 <!--[if IE 8]><html lang="ko" class="no-js old ie8"><![endif]-->
@@ -48,7 +61,7 @@ div.ui-tooltip {
 </head>
 <body class="logged-in partners partners-setting">
 	<div id="wrap">
-		<jsp:include page="../../header2.jsp" flush="false" />
+		<jsp:include page="../../header.jsp" flush="false" />
 		<div class="page">
 			<div class="container">
 				<div id="messages"></div>
@@ -59,24 +72,24 @@ div.ui-tooltip {
 						<h3 class="partners-name-tag-heading">파트너스</h3>
 						<div class="partners-name-tag-body">
 							<img alt="<%=this_account.getId() %> 사진" class="p5-partners-img-lg"
-								src="${pageContext.request.contextPath}/resources/static/img/default_avatar.jpg" />
+								src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=profile %>" />
 							<h4 class="partners-username-bottom"><%=this_account.getId() %></h4>
 						</div>
 					</div>
 					<div class="sidebar-nav">
 						<ul>
-							<li class=""><a href="/partners/p/<%=this_account.getId() %>/">전체보기</a></li>
-							<li class=""><a href="/partners/p/<%=this_account.getId() %>/introduction/">자기
+							<li class=""><a href="/wjm/partners/p/<%=this_account.getId() %>/">전체보기</a></li>
+							<li class=""><a href="/wjm/partners/p/<%=this_account.getId() %>/introduction/">자기
 									소개</a></li>
-							<li class=""><a href="/partners/p/<%=this_account.getId() %>/portfolio/">포트폴리오</a></li>
-							<li class=""><a href="/partners/p/<%=this_account.getId() %>/skill/">보유
+							<li class=""><a href="/wjm/partners/p/<%=this_account.getId() %>/portfolio/">포트폴리오</a></li>
+							<li class=""><a href="/wjm/partners/p/<%=this_account.getId() %>/skill/">보유
 									기술</a></li>
-							<li class=""><a href="/partners/p/<%=this_account.getId() %>/background/">경력,
+							<li class=""><a href="/wjm/partners/p/<%=this_account.getId() %>/background/">경력,
 									학력, 자격증</a></li>
 							<li class="" style="border-top: 1px dashed #dedede"><a
-								href="/partners/p/<%=this_account.getId() %>/evaluation/">클라이언트의 평가</a></li>
+								href="/wjm/partners/p/<%=this_account.getId() %>/evaluation/">클라이언트의 평가</a></li>
 							<li class="active"><a
-								href="/partners/p/<%=this_account.getId() %>/history/">위시켓에서 진행한 프로젝트</a></li>
+								href="/wjm/partners/p/<%=this_account.getId() %>/history/">외주몬에서 진행한 프로젝트</a></li>
 						</ul>
 					</div>
 				</div>
@@ -84,7 +97,7 @@ div.ui-tooltip {
 					<div class="content-inner" style="padding-top: 15px;">
 						<section>
 						<div class="project-history-head">
-							<h3 class="p5-profile-head">위시켓에서 진행한 프로젝트</h3>
+							<h3 class="p5-profile-head">외주몬에서 진행한 프로젝트</h3>
 							<div class="w-profile-head-content-inner">
 								<div class="contract-project-table">
 									<div class="contract-project-count">
@@ -155,7 +168,7 @@ div.ui-tooltip {
 						</div>
 						</section>
 						<section>
-						<h4 style="padding-top: 15px;">위시켓에서 진행한 프로젝트</h4>
+						<h4 style="padding-top: 15px;">외주몬에서 진행한 프로젝트</h4>
 						</section>
 						<section class="p5-evaluation-list">
 						<div class="p5-empty-component-lg">

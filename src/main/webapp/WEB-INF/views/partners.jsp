@@ -45,7 +45,7 @@
 </head>
 <body class=" partners-list">
 	<div id="wrap">
-		<jsp:include page="header2.jsp" flush="false" />
+		<jsp:include page="header.jsp" flush="false" />
 		<div class="container">
 			<div id="messages"></div>
 		</div>

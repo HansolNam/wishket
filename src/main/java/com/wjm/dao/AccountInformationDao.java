@@ -224,23 +224,15 @@ public class AccountInformationDao implements AccountInformationIDao {
 		if(accountinfo==null)
 		{
 			create(account_pk);
-			return false;
+			accountinfo = select(account_pk);
 		}
 		//정보가 있어도 내용이 없는 경우
-		else
-		{
-			String phone_num = accountinfo.getCellphone_num();
-			
-			//하나라도 없으면 연락처 정보 없음
-			if(phone_num == null)
-				return false;
-			else
-			{
-				if(phone_num.isEmpty())
-					return false;
-			}
-		}
+		String phone_num = accountinfo.getCellphone_num();
 		
+		//하나라도 없으면 연락처 정보 없음
+		if(!Validator.hasValue(phone_num))
+			return false;
+	
 		//기본정보를 가지고 있음
 		return true;
 	}
@@ -800,6 +792,10 @@ public class AccountInformationDao implements AccountInformationIDao {
 		{
 			logger.info("올바른 전화 번호가 아닙니다.");
 			return "올바른 전화 번호가 아닙니다.";
+		}
+		else if(phone_number_code.isEmpty() && phone_number_entered.isEmpty())
+		{
+			telephone_num = "";
 		}
 		else
 			telephone_num = phone_number_code+"-"+phone_number_entered;

@@ -212,7 +212,7 @@
 										required="required">
 										
 										<%
-										for(int i=0;i<14;i++)
+										for(int i=1;i<=14;i++)
 										{
 											String result = "<option value="+Time.toString1(Time.nextDate(i))
 													+">"+Time.toString2(Time.nextDate(i))+"</option>";
@@ -278,7 +278,7 @@
 										required="required">
 										
 										<%
-										for(int i=0;i<21;i++)
+										for(int i=1;i<=21;i++)
 										{
 											String result = "<option value="+Time.toString1(Time.nextDate(i))
 													+">"+Time.toString2(Time.nextDate(i))+"</option>";
