@@ -28,6 +28,9 @@ public class ApplicantDao implements ApplicantIDao {
 
 	@Autowired
 	private PortfolioDao portfolioDao;
+
+	@Autowired
+	private AccountDao accountDao;
 	
 	public void setDataSource(DataSource ds) {
 		dataSource = ds;
@@ -89,11 +92,11 @@ public class ApplicantDao implements ApplicantIDao {
 	}
 	public List<ApplicantInfo> select_project(int project_pk)
 	{
-		return jdbcTemplate.query("select * from applicant where project_pk = ?",
+		List<ApplicantInfo> list =  jdbcTemplate.query("select * from applicant where project_pk = ?",
 		    	new Object[] { project_pk },new RowMapper<ApplicantInfo>() {
 	    	public ApplicantInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{
-	    		return new ApplicantInfo(
+	    		ApplicantInfo applicant =  new ApplicantInfo(
 	    				resultSet.getInt("pk")
 	    				, resultSet.getInt("project_pk")
 	    				, resultSet.getInt("account_pk")
@@ -109,8 +112,40 @@ public class ApplicantDao implements ApplicantIDao {
 	    				, resultSet.getTimestamp("reg_date")
 	    				, resultSet.getString("name")
 	    				);
+	    		
+
+	    		if(applicant!=null)
+	    		{
+		    		applicant.setAccount(accountDao.select(applicant.getAccount_pk()));
+		    		
+		    		logger.info("applicant : "+applicant.getAccount().getId());
+	    			if(applicant.getHas_portfolio() == 1)
+	    			{
+	    				if( applicant.getPortfolio_pk1() != 0 )
+	    					applicant.setPortfolio1(portfolioDao.select_portfolio(applicant.getPortfolio_pk1()));
+	    				else
+	    					applicant.setPortfolio1(null);
+
+	    				if( applicant.getPortfolio_pk2() != 0 )
+	    					applicant.setPortfolio2(portfolioDao.select_portfolio(applicant.getPortfolio_pk2()));
+	    				else
+	    					applicant.setPortfolio2(null);
+	    				
+	    				if( applicant.getPortfolio_pk3() != 0 )
+	    					applicant.setPortfolio3(portfolioDao.select_portfolio(applicant.getPortfolio_pk3()));
+	    				else
+	    					applicant.setPortfolio3(null);
+	    			}
+	    		}
+	    		
+	    		return applicant;
 	    	}
 	    });
+		
+		if(list!=null && list.size() == 0)
+			return null;
+		else
+			return list;
 	}
 	public List<ApplicantInfo> select_applicant(int account_pk)
 	{
@@ -287,6 +322,7 @@ public class ApplicantDao implements ApplicantIDao {
 					hasPortfolio, portfolio[0], portfolio[1],
 					portfolio[2], related_description,"지원중",name);
 			
+			logger.info("지원자수 1 증가");
 			//지원자수 증가
 			jdbcTemplate.update("update project set applicantnum=(applicantnum+1) where pk=?"
 					, new Object[] { project_pk });
@@ -311,6 +347,7 @@ public class ApplicantDao implements ApplicantIDao {
 			}
 			else if(applicant.getStatus().equals("관심프로젝트"))
 			{
+				logger.info("지원자수 1 증가");
 				//지원자수 증가
 				jdbcTemplate.update("update project set applicantnum=(applicantnum+1) where pk=?"
 						, new Object[] { project_pk });

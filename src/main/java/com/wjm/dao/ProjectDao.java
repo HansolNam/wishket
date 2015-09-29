@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.wjm.idao.ProjectIDao;
+import com.wjm.main.function.Time;
 import com.wjm.models.ApplicantInfo;
 import com.wjm.models.ProjectInfo;
 
@@ -57,36 +58,23 @@ public class ProjectDao implements ProjectIDao {
 
 	public int countAll()
 	{
-		List<ProjectInfo> projectlist = jdbcTemplate.query("select * from project",new RowMapper<ProjectInfo>() {
-	    	public ProjectInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		List<Integer> projectlist = jdbcTemplate.query("select count(*) from project",new RowMapper<Integer>() {
+	    	public Integer mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{
-	    		return new ProjectInfo(
-	    				resultSet.getInt("pk")
-	    				, resultSet.getInt("account_pk")
-	    				, resultSet.getString("categoryL")
-	    				, resultSet.getString("categoryM")
-	    				, resultSet.getInt("another")
-	    				, resultSet.getInt("applicantnum")
-	    				, resultSet.getString("name")
-	    				, resultSet.getInt("period")
-	    				, resultSet.getString("budget")
-	    				, resultSet.getString("plan_status")
-	    				, resultSet.getString("description")
-	    				, resultSet.getString("technique")
-	    				, resultSet.getTimestamp("deadline")
-	    				, resultSet.getString("meeting_type")
-	    				, resultSet.getString("meeting_area")
-	    				, resultSet.getString("meeting_area_detail")
-	    				, resultSet.getTimestamp("start_date")
-	    				, resultSet.getInt("managing")
-	    				, resultSet.getString("partner_type")
-	    				, resultSet.getString("purpose")
-	    				, resultSet.getString("status")
-	    				, resultSet.getTimestamp("reg_date"));
+	    		return new Integer(
+	    				resultSet.getInt("count"));
 	    	}
 	    });
 		
-		return projectlist.size();
+		if(projectlist == null)
+			return 0;
+		if(projectlist.size()>1 || projectlist.size() == 0)
+		{
+			logger.info("프로젝트개수 리스트가 1 초과거나 0");
+			return 0;
+		}
+		else
+			return projectlist.get(0);
 	}
 	
 	public List<ProjectInfo> selectAll()
@@ -196,6 +184,48 @@ public class ProjectDao implements ProjectIDao {
 		else 
 			return null;
 	}
+	
+	public List<ProjectInfo> selectStatusAdmin(String status)
+	{
+		List<ProjectInfo> projectlist = jdbcTemplate.query("select * from project where status = ?",
+		    	new Object[] { status }, new RowMapper<ProjectInfo>() {
+	    	public ProjectInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+	    	{
+	    		return new ProjectInfo(
+	    				resultSet.getInt("pk")
+	    				, resultSet.getInt("account_pk")
+	    				, resultSet.getString("categoryL")
+	    				, resultSet.getString("categoryM")
+	    				, resultSet.getInt("another")
+	    				, resultSet.getInt("applicantnum")
+	    				, resultSet.getString("name")
+	    				, resultSet.getInt("period")
+	    				, resultSet.getString("budget")
+	    				, resultSet.getString("plan_status")
+	    				, resultSet.getString("description")
+	    				, resultSet.getString("technique")
+	    				, resultSet.getTimestamp("deadline")
+	    				, resultSet.getString("meeting_type")
+	    				, resultSet.getString("meeting_area")
+	    				, resultSet.getString("meeting_area_detail")
+	    				, resultSet.getTimestamp("start_date")
+	    				, resultSet.getInt("managing")
+	    				, resultSet.getString("partner_type")
+	    				, resultSet.getString("purpose")
+	    				, resultSet.getString("status")
+	    				, resultSet.getTimestamp("reg_date"));
+	    	}
+	    });
+		
+		if(projectlist == null)
+			return null;
+		if(projectlist != null && projectlist.size() == 0)
+			return null;
+		else
+			return projectlist;
+		
+	}
+	
 	public List<ProjectInfo> selectStatus(int account_pk,String status)
 	{
 		return jdbcTemplate.query("select * from project where account_pk = ? and status = ?",
@@ -227,6 +257,14 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getTimestamp("reg_date"));
 	    	}
 	    });
+		
+	}
+	
+	public void updateStatus(int project_pk, String status)
+	{
+
+		jdbcTemplate.update("update project set status=? where pk=?"
+				, new Object[] {status, project_pk });
 		
 	}
 
@@ -651,6 +689,32 @@ public class ProjectDao implements ProjectIDao {
 	public void deleteAll()
 	{
 		jdbcTemplate.update("delete from project");
+	}
+	
+	public String delete_project(int pk)
+	{
+		ProjectInfo project = select_project(pk);
+		
+		if(project.getStatus().equals("임시저장"))
+		{
+			logger.info("임시저장이므로 완전 삭제");
+			delete(pk);
+		}
+		else if(project.getStatus().equals("검수중"))
+		{
+			logger.info("검수중이므로 취소 프로젝트로 변경");
+			jdbcTemplate.update("update project set status='취소한프로젝트', reg_date=? where pk=?"
+					, new Object[] {Time.getCurrentTimestamp(),pk });
+		}
+		else if(project.getStatus().equals("지원자모집중"))
+		{
+			logger.info("검수중이므로 취소 프로젝트로 변경");
+			jdbcTemplate.update("update project set status='취소한프로젝트' where pk=?"
+					, new Object[] {pk });
+		}
+		
+		return "성공";
+		
 	}
 	public void delete(int pk)
 	{

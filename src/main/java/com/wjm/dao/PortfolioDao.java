@@ -74,7 +74,7 @@ public class PortfolioDao implements PortfolioIDao {
 	}
 	public List<PortfolioInfo> select(int account_pk)
 	{
-		return jdbcTemplate.query("select * from portfolio where account_pk = ?",
+		List<PortfolioInfo> list = jdbcTemplate.query("select * from portfolio where account_pk = ?",
 		    	new Object[] { account_pk }, new RowMapper<PortfolioInfo>() {
 	    	public PortfolioInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{
@@ -99,6 +99,16 @@ public class PortfolioDao implements PortfolioIDao {
 	    				, resultSet.getTimestamp("reg_date"));
 	    	}
 	    });
+		
+		if(list!=null)
+		{
+			if(list.size() == 0)
+				return null;
+			else
+				return list;
+		}
+		else
+			return list;
 	}
 
 	public PortfolioInfo select_portfolio(int pk)
@@ -660,5 +670,14 @@ public class PortfolioDao implements PortfolioIDao {
 		jdbcTemplate.update("delete from portfolio where pk = ?", new Object[] { pk });
 		return "성공";
 
+	}
+	
+	public boolean hasPortfolio(int account_pk)
+	{
+		List<PortfolioInfo> portfoliolist =  select(account_pk);
+		if(portfoliolist == null)
+			return false;
+		else 
+			return true;
 	}
 }

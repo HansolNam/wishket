@@ -1,7 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-
+<%@ page import="com.wjm.models.AccountInfo, com.wjm.models.ProjectInfo, java.util.*, com.wjm.main.function.Time"%>
+<%
+	AccountInfo account = (AccountInfo)session.getAttribute("account");
+	List<ProjectInfo> projectlist = (List<ProjectInfo>)request.getAttribute("projectlist");
+	int projectCnt = 0;
+	
+	Integer completednum = (Integer)request.getAttribute("completednum");
+	
+	Integer reviewnum = (Integer)request.getAttribute("reviewnum");
+	
+	if(projectlist != null)
+		projectCnt = projectlist.size();
+	%>
 <html class="no-js modern" lang="ko">
 <meta charset="utf-8" />
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
@@ -46,21 +58,21 @@
 						<h3 class="user-name-tag-heading">클라이언트</h3>
 						<div class="user-name-tag-body">
 							<img alt="gksthf16111 사진" class="img-circle user-img"
-								src="${pageContext.request.contextPath}/resources/static/img/default_avatar.jpg" />
-							<h4 class="username">gksthf16111</h4>
+								src="${pageContext.request.contextPath}/resources/upload/profile_img/${profile}" />
+							<h4 class="username"><%=account.getId() %></h4>
 							<a class="profile-setting" href="/wjm/accounts/settings/profile/">기본
 								정보 수정</a>
 						</div>
 					</div>
 					<div class="sidebar-nav">
 						<ul>
-							<li class=""><a href="/wjm/client/manage/past/review-contract/">평가
+							<li class=""><a href="/wjm/client/manage/past/review-contract/"><%if(reviewnum.intValue() != 0 ) out.print("<span class='badge badge-info pull-right'>"+reviewnum+"</span> "); %>평가
 									대기 중</a></li>
 							<li class=""><a
-								href="/wjm/client/manage/past/completed-contract/">완료한 프로젝트</a></li>
+								href="/wjm/client/manage/past/completed-contract/"><%if(completednum.intValue() != 0 ) out.print("<span class='badge badge-info pull-right'>"+completednum+"</span> "); %>완료한 프로젝트</a></li>
 							<li class="active"><a
 								href="/wjm/client/manage/past/cancelled-project/"><span
-									class="badge badge-info pull-right">1</span> 취소한 프로젝트</a></li>
+									class="badge badge-info pull-right"><%if(projectCnt != 0) out.print(projectCnt); %></span> 취소한 프로젝트</a></li>
 						</ul>
 					</div>
 				</div>
@@ -83,10 +95,18 @@
 							<div style="clear: both;"></div>
 						</div>
 						<section>
+						<%
+						
+							if(projectCnt != 0)
+							{
+								for(int i=0;i<projectCnt;i++)
+								{
+								
+						%>
 						<section class="project-unit">
 						<section class="project-unit-heading">
 						<h4 class="project-title">
-							<a href="/project/test_4659/">test</a>
+							<a ><%=projectlist.get(i).getName() %></a>
 						</h4>
 						</section>
 						<section class="project-unit-body">
@@ -95,19 +115,33 @@
 									style="min-width: 80px !important;">
 									<i class="fa fa-won"></i> 예상비용
 								</h5>
-								<span>100,000,000원</span></li>
+								<span><%=projectlist.get(i).getBudget() %>원</span></li>
 							<li><h5 class="label-item"
 									style="min-width: 80px !important;">
 									<i class="fa fa-clock-o"></i> 예상기간
 								</h5>
-								<span>333일</span></li>
+								<span><%=projectlist.get(i).getPeriod() %>일</span></li>
 							<li><h5 class="label-item"
 									style="min-width: 80px !important;">
 									<i class="fa fa-calendar-o"></i> 취소일자
 								</h5>
-								<span>2015년 8월 28일</span></li>
+								<span><%=Time.toString3(projectlist.get(i).getReg_date()) %></span></li>
 						</ul>
-						</section></section></section>
+						</section></section>
+						
+							<%	
+								}
+							}
+							else
+							{
+							%>
+						<section>
+						<p class="text-muted">취소한 프로젝트가 없습니다.</p>
+						</section>
+							<%
+							}
+							%>
+						</section>
 					</div>
 				</div>
 			</div>

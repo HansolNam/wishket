@@ -108,8 +108,8 @@
 								<section class="project-unit-heading">
 									<h4 class="project-title"><%=projectlist.get(i).getName() %></h4>
 									<div class="management-tools">
-										<a class="btn btn-sm btn-cancel" data-toggle="modal"
-											href="#saved-project-delete-modal-4870" role="button">삭제</a>
+										<a class="btn btn-sm btn-cancel project-cancel-btn" data-toggle="modal"
+											href="#saved-project-delete-modal" project-title="<%=projectlist.get(i).getName() %>" project-pk="<%=projectlist.get(i).getPk() %>" role="button">삭제</a>
 									</div>
 								</section>
 								<section class="project-unit-body">
@@ -152,6 +152,36 @@
 		<div id="push"></div>
 	</div>
 	<jsp:include page="../../../footer.jsp" flush="false" />
+	<div aria-hidden="true"
+		aria-labelledby="saved-project-delete-modal-4989-label"
+		class="modal fade" id="saved-project-delete-modal" role="dialog"
+		tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header modal-header-delete">
+					<button aria-hidden="true" class="close" data-dismiss="modal"
+						type="button">×</button>
+					<h4 class="modal-title">저장된 프로젝트 삭제</h4>
+				</div>
+				<div class="modal-body">
+					<form action="/project/delete/" class="form-horizontal"
+						enctype="multipart/form-data" id="saved-project-delete-form"
+						method="POST">
+						<input name="delete_project_id" type="hidden"
+							value="" />
+						<p id="p5-haveskill-name">aaaa을(를) 정말 삭제하시겠습니까?</p>
+						<div class="form-group">
+							<div class="btn-wrapper-right">
+								<input class="btn btn-warning btn-submit" type="button" id="project-delete-btn"
+									value="예" /><a aria-hidden="true" class="btn btn-cancel"
+									data-dismiss="modal">아니오</a>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 	<script type="text/javascript">
   $(function() {
     wishket.init();
@@ -164,6 +194,46 @@
 $( document ).ready(function($) {
     var p5TotalSubNavigationFlag = 0;
 
+    $('.content-inner').on('click', '.project-cancel-btn', function(event) {
+        event.preventDefault();
+        projectPK = $(this).attr('project-pk');
+        $('[name="delete_project_id"]').val(projectPK);
+        $('#p5-haveskill-name').html('"'+$(this).attr('project-title')+'"'+'을(를) 정말 삭제하시겠습니까?');
+    });
+    
+    $("#project-delete-btn").click(function(event){
+    	event.preventDefault();
+
+        $.ajax({
+		    type: "POST",
+		    url: "/wjm/project/delete",
+		    data: $('#saved-project-delete-form').serialize(),  // 폼데이터 직렬화
+		    dataType: "json",   // 데이터타입을 JSON형식으로 지정
+		    contentType: "application/x-www-form-urlencoded; charset=utf-8",
+		    success: function(data) { // data: 백엔드에서 requestBody 형식으로 보낸 데이터를 받는다.
+		        var messages = data.messages;
+
+		    	if(messages == "success")
+		        	{
+		    		location.href="/wjm/client/manage/project/submitted/"; 
+		        	}
+		        else if(messages == "error")
+		        	{
+		        	location.href="/wjm/mywjm/client"; 
+		        	}
+		        else
+		        	{
+					$("#messages").html("<div class='alert alert-warning fade in'>"+messages+"</div>");
+		        	}
+		        
+		    },
+		    error: function(jqXHR, textStatus, errorThrown) 
+		    {
+		        //에러코드
+		        alert('에러가 발생했습니다.');
+		    }
+		});
+    });
 
 	if ( $( window ).width() >= 1200 ) {
 		$( '.p5-side-nav-deactive' ).css( 'display', 'none' );

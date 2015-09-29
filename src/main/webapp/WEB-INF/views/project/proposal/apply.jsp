@@ -197,7 +197,7 @@
 							<span
 								style="font-size: 24px; color: #555; font-weight: bold; line-height: 24px;">'<%=project.getName()%>'의 지원서 작성</span>
 						</div>
-						<form action="." class="form-horizontal" method="POST">
+						<form action="." id="apply-form" class="form-horizontal" method="POST">
 							<input name="csrfmiddlewaretoken" type="hidden"
 								value="UrfEdIo7bkTF44xh4WtL6MveRrufwODk" /><span
 								class="help-block"></span>
@@ -335,9 +335,9 @@
 							</div>
 							<div class="form-group" style="margin-bottom: 0;">
 								<div class="btn-block-wrapper">
-									<input class="btn btn-partners btn-submit" name="apply"
-										type="submit" value="프로젝트 지원" /><a class="btn btn-cancel"
-										href="/project/%EA%B3%A0%EA%B0%9D%EC%84%9C%EB%B9%84%EC%8A%A4%EC%9A%A9-%EB%AA%A8%EB%B0%94%EC%9D%BC%EC%95%B1-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8-%EA%B0%9C%EB%B0%9C_4982/">취소</a>
+									<input class="btn btn-partners btn-submit" name="apply" id="apply"
+										type="button" value="프로젝트 지원" /><a class="btn btn-cancel"
+										href="/wjm/project/<%=project.getName() %>/<%=project.getPk() %>/">취소</a>
 								</div>
 							</div>
 						</form>
@@ -500,6 +500,40 @@
                 centsLimit: ""
             })
         });
+        
+        $('.content-inner').on('click', "#apply", function(event){
+        	 event.preventDefault();
+             
+             $.ajax({
+     		    type: "POST",
+     		    url: "/wjm/project/<%=project.getName() %>/<%=project.getPk() %>/proposal/apply",
+     		    data: $('#apply-form').serialize(),  // 폼데이터 직렬화
+     		    dataType: "json",   // 데이터타입을 JSON형식으로 지정
+     		    contentType: "application/x-www-form-urlencoded; charset=utf-8",
+     		    success: function(data) { // data: 백엔드에서 requestBody 형식으로 보낸 데이터를 받는다.
+     		        var messages = data.messages;
+
+     		    	if(messages == "success")
+     		        	{
+     		    		location.href="/wjm/partners/manage/proposal/counselling"; 
+     		        	}
+     		        else if(messages == "error")
+     		        	{
+     		        	location.href="/wjm/mywjm/partners"; 
+     		        	}
+     		        else
+     		        	{
+     		        	alert(messages);
+     		        	}
+     		        
+     		    },
+     		    error: function(jqXHR, textStatus, errorThrown) 
+     		    {
+     		        //에러코드
+     		        alert('에러가 발생했습니다.');
+     		    }
+     		});
+        })
         
         $('.content-inner').on('change','#estimated_term', function() {
             if($('#estimated_term').val().length > 3) {            	

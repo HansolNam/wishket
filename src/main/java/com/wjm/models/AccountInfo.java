@@ -11,7 +11,21 @@ public class AccountInfo {
 	private int authorized;
 	private String authorization_key;
 	private Timestamp reg_date;
+	private AccountInformationInfo accountinfo;
+	private AuthenticationInfo authenticationinfo;
 	
+	public AccountInformationInfo getAccountinfo() {
+		return accountinfo;
+	}
+	public void setAccountinfo(AccountInformationInfo accountinfo) {
+		this.accountinfo = accountinfo;
+	}
+	public AuthenticationInfo getAuthenticationinfo() {
+		return authenticationinfo;
+	}
+	public void setAuthenticationinfo(AuthenticationInfo authenticationinfo) {
+		this.authenticationinfo = authenticationinfo;
+	}
 	public AccountInfo(int pk, String email, String id, String password, String account_type, int authorized,
 			String authorization_key, Timestamp reg_date) {
 		super();

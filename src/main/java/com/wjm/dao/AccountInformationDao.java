@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.wjm.idao.AccountInformationIDao;
 import com.wjm.main.function.Fileupload;
 import com.wjm.main.function.Validator;
+import com.wjm.models.AccountInfo;
 import com.wjm.models.AccountInformationInfo;
 
 @Repository
@@ -386,7 +387,54 @@ public class AccountInformationDao implements AccountInformationIDao {
 		jdbcTemplate.update("update account_information set identity_authentication=? where account_pk=?"
 				, new Object[] { identity_authentication, account_pk });
 	}
+	public List<AccountInfo> selecIdentity_authenticationt(String status)
+	{
+		List<AccountInfo> list = jdbcTemplate.query("select account.* from account_information,account where identity_authentication = ? and account_information.account_pk = account.pk;",
+		    	new Object[] { status }, new RowMapper<AccountInfo>() {
+		    	public AccountInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new AccountInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getString("email")
+		    				, resultSet.getString("id")
+		    				, resultSet.getString("password")
+		    				, resultSet.getString("account_type")
+		    				, resultSet.getInt("authorized")
+		    				, resultSet.getString("authorization_key")
+		    				, resultSet.getTimestamp("reg_date"));
+		    	}
+		    });
+		
+		if(list != null && list.size() == 0)
+			return null;
+		else
+			return list;
+	}
+	public AccountInfo selecIdentity_authenticationt(int account_pk,String status)
+	{
+		List<AccountInfo> list = jdbcTemplate.query("select account.* from account_information,account where identity_authentication = ? and account_information.account_pk =? and account_information.account_pk = account.pk",
+		    	new Object[] { status, account_pk }, new RowMapper<AccountInfo>() {
+		    	public AccountInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new AccountInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getString("email")
+		    				, resultSet.getString("id")
+		    				, resultSet.getString("password")
+		    				, resultSet.getString("account_type")
+		    				, resultSet.getInt("authorized")
+		    				, resultSet.getString("authorization_key")
+		    				, resultSet.getTimestamp("reg_date"));
 
+		    	}
+		    });
+		
+		if(list != null && list.size() == 0)
+			return null;
+		else
+			return list.get(0);
+	}	
+	
 	public String updateBase(MultipartFile image,String pre_img_path, String form_of_business,String full_name
 			,String company_name,String representative, String gender,
 			String date_of_birth_year,String date_of_birth_month,String date_of_birth_day,
@@ -782,5 +830,21 @@ public class AccountInformationDao implements AccountInformationIDao {
 	public void updateIntroduction(int account_pk, String introduction)
 	{
 		jdbcTemplate.update("update account_information set introduction=? where account_pk=?", new Object[] { introduction, account_pk });
+	}
+	
+	public boolean hasIntroduction(int account_pk)
+	{
+		AccountInformationInfo accountinfo = select(account_pk);
+		if(accountinfo == null)
+			return false;
+		else
+		{
+			if(!Validator.hasValue(accountinfo.getIntroduction()))
+			{
+				return false;
+			}
+			else
+				return true;
+		}
 	}
 }

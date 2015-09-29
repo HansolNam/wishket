@@ -111,9 +111,7 @@ public class AuthenticationDao implements AuthenticationIDao {
 
 	public String updateIdentity_authentication(String form,String user_type,MultipartFile image,String real_path,
 			String id,String representer_name,String address_detail,String email_for_tax,String identify_number,String company_name,int account_pk) throws IOException, FileUploadException
-	{
-		AuthenticationInfo authentication = select(account_pk);
-		
+	{		
 		//email_for_tax
 		if(email_for_tax == null) 
 		{

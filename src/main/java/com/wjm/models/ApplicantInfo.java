@@ -17,7 +17,22 @@ public class ApplicantInfo {
 	private String status;
 	private Timestamp reg_date;
 	private String name;
+	private ContractInfo contract;
+
+	public ContractInfo getContract() {
+		return contract;
+	}
+	public void setContract(ContractInfo contract) {
+		this.contract = contract;
+	}
+	private AccountInfo account;
 	
+	public AccountInfo getAccount() {
+		return account;
+	}
+	public void setAccount(AccountInfo account) {
+		this.account = account;
+	}
 	public PortfolioInfo getPortfolio1() {
 		return portfolio1;
 	}

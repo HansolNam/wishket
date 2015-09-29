@@ -1391,4 +1391,46 @@ public class ProjectController {
 		return mv;
 		
 	}
+	
+
+
+	/**
+	 * 프로젝트 삭제
+	 */
+	@RequestMapping(value = "/project/delete", method = RequestMethod.POST, produces = "text/json; charset=utf8")
+	@ResponseBody
+	public String ProjectController_projectdelete_post(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("delete_project_id") String delete_project_id) {
+
+		logger.info("/project/delete Post Page");
+		logger.info("delete_project_id = " + delete_project_id);
+
+		JSONObject jObject = new JSONObject();
+
+		AccountInfo account = (AccountInfo) request.getSession().getAttribute("account");
+		
+		if (account == null) {
+			jObject.put("messages", "error");
+			logger.info("jobject = " + jObject.toString());
+			return jObject.toString();
+		}
+		
+
+		if (!Validator.isDigit(delete_project_id)) {
+			jObject.put("messages", "error");
+			logger.info("jobject = " + jObject.toString());
+			return jObject.toString();
+		}
+
+		String result = projectDao.delete_project(Integer.parseInt(delete_project_id));
+
+		logger.info("result = " + result);
+		if (result.equals("성공"))
+			jObject.put("messages", "success");
+		else {
+			jObject.put("messages", result);
+		}
+
+		return jObject.toString();
+	}
 }

@@ -6,6 +6,10 @@
 	List<ProjectInfo> projectlist = (List<ProjectInfo>)request.getAttribute("projectlist");
 	int projectCnt = 0;
 	
+	Integer completednum = (Integer)request.getAttribute("completednum");
+	
+	Integer cancellednum = (Integer)request.getAttribute("cancellednum");
+	
 	if(projectlist != null)
 		projectCnt = projectlist.size();
 	%>
@@ -54,23 +58,22 @@
 					<div class="user-name-tag">
 						<h3 class="user-name-tag-heading">클라이언트</h3>
 						<div class="user-name-tag-body">
-							<img alt="gksthf16111 사진" class="img-circle user-img"
-								src="${pageContext.request.contextPath}/resources/static/img/default_avatar.jpg" />
+							<img alt="<%=account.getId() %> 사진" class="img-circle user-img"
+								src="${pageContext.request.contextPath}/resources/upload/profile_img/${profile}" />
 							<h4 class="username"><%=account.getId() %></h4>
-							<a class="profile-setting" href="/accounts/settings/profile/">기본
+							<a class="profile-setting" href="/wjm/accounts/settings/profile/">기본
 								정보 수정</a>
 						</div>
 					</div>
 					<div class="sidebar-nav">
 						<ul>
 							<li class="active"><a
-								href="/client/manage/past/review-contract/"><span
-									class="badge badge-info pull-right"><%=projectCnt %></span>평가 대기 중</a></li>
+								href="/wjm/client/manage/past/review-contract/"><span
+									class="badge badge-info pull-right"><%=if(projectCnt != 0) out.print(projectCnt); %></span>평가 대기 중</a></li>
 							<li class=""><a
-								href="/client/manage/past/completed-contract/">완료한 프로젝트</a></li>
+								href="/wjm/client/manage/past/completed-contract/"><%if(completednum.intValue() != 0 ) out.print("<span class='badge badge-info pull-right'>"+completednum+"</span> "); %>완료한 프로젝트</a></li>
 							<li class=""><a
-								href="/client/manage/past/cancelled-project/"><span
-									class="badge badge-info pull-right">1</span> 취소한 프로젝트</a></li>
+								href="/wjm/client/manage/past/cancelled-project/"> <%if(cancellednum.intValue() != 0 ) out.print("<span class='badge badge-info pull-right'>"+cancellednum+"</span> "); %>취소한 프로젝트</a></li>
 						</ul>
 					</div>
 				</div>

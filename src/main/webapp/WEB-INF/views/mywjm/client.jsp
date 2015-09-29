@@ -165,8 +165,8 @@
 											{
 												out.print("<tbody><tr><td>"+projectlist.get(i).getName()+"</td>");
 												out.print("<td>"+Time.toString3(projectlist.get(i).getDeadline())+"</td>");
-												out.print("<td>  </td>");
-												out.println("<td><a class='btn btn-sm btn-client' href='/wjm/project/preview/"+projectlist.get(i).getName()+"/"+projectlist.get(i).getPk()+"/'>미리보기</a></td></tr></tbody>");
+												out.print("<td>"+projectlist.get(i).getApplicantnum()+"</td>");
+												out.println("<td><a class='btn btn-sm btn-client' href='/wjm/client/manage/project/"+projectlist.get(i).getName()+"/"+projectlist.get(i).getPk()+"/applicant'>지원자 목록</a></td></tr></tbody>");
 											}
 										}
 									}

@@ -76,6 +76,19 @@ public class Partners_infoDao implements Partners_infoIDao {
 		}
 	}
 	
+	public boolean hasPartnersInfo(int account_pk)
+	{
+		Partners_infoInfo partnersinfo = select(account_pk);
+		if(partnersinfo == null)
+			return false;
+		else
+		{
+			if(!Validator.hasValue(partnersinfo.getJob())||!Validator.hasValue(partnersinfo.getAvailability()))
+				return false;
+			else
+				return true;
+		}
+	}
 
 	public String update(int account_pk, String job, String[] job_subcategory_develop, String[] job_subcategory_design,
 			String availability)

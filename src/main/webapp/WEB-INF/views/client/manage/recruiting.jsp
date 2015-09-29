@@ -104,8 +104,7 @@
 								<section class="project-unit-heading">
 									<h4 class="project-title"><%=projectlist.get(i).getName() %></h4>
 									<div class="management-tools">
-										<!-- 지원자 목록 -->
-										<a class="btn btn-sm btn-default" href="/wjm/project/edit/<%=projectlist.get(i).getPk() %>/">지원자 목록</a>
+										<a class='btn btn-sm btn-client' href='/wjm/client/manage/project/<%=projectlist.get(i).getName() %>/<%=projectlist.get(i).getPk() %>/applicant'>지원자 목록</a>
 									</div>
 								</section>
 								<section class="project-unit-body">
