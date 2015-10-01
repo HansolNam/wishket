@@ -237,7 +237,7 @@ div.ui-tooltip {
 												out.print("신원 미인증");
 											else if(this_accountinfo.getIdentity_authentication().equals("검수중"))
 												out.print("신원 미인증");
-											else if(this_accountinfo.getIdentity_authentication().equals("미인증"))
+											else if(this_accountinfo.getIdentity_authentication().equals("인증완료"))
 												out.print("신원 인증");
 										} %></span><span
 								class="p5-basic-info-seperator">|</span></span> <span

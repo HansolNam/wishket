@@ -1,17 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="com.wjm.models.AccountInfo, com.wjm.models.ProjectInfo, java.util.*, com.wjm.main.function.Time"%>
+<%@ page import="com.wjm.models.AccountInfo, com.wjm.models.ContractInfo, java.util.*, com.wjm.main.function.Time"%>
 <%
 	AccountInfo account = (AccountInfo)session.getAttribute("account");
-	List<ProjectInfo> projectlist = (List<ProjectInfo>)request.getAttribute("projectlist");
-	int projectCnt = 0;
+	List<ContractInfo> reviewlist = (List<ContractInfo>)request.getAttribute("reviewlist");
+	int reviewCnt = 0;
+
+	Integer cancellednum = 0;
+	if((Integer) request.getAttribute("cancellednum") != null)
+		cancellednum = (Integer) request.getAttribute("cancellednum");
+
+	Integer completednum = 0;
+	if((Integer) request.getAttribute("completednum") != null)
+		completednum = (Integer) request.getAttribute("completednum");
 	
-	Integer completednum = (Integer)request.getAttribute("completednum");
-	
-	Integer cancellednum = (Integer)request.getAttribute("cancellednum");
-	
-	if(projectlist != null)
-		projectCnt = projectlist.size();
+	if(reviewlist != null)
+		reviewCnt = reviewlist.size();
 	%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -69,11 +73,11 @@
 						<ul>
 							<li class="active"><a
 								href="/wjm/client/manage/past/review-contract/"><span
-									class="badge badge-info pull-right"><%=if(projectCnt != 0) out.print(projectCnt); %></span>평가 대기 중</a></li>
+									class="badge badge-info pull-right"><%if(reviewCnt != 0) out.print(reviewCnt); %></span>평가 대기 중</a></li>
 							<li class=""><a
-								href="/wjm/client/manage/past/completed-contract/"><%if(completednum.intValue() != 0 ) out.print("<span class='badge badge-info pull-right'>"+completednum+"</span> "); %>완료한 프로젝트</a></li>
+								href="/wjm/client/manage/past/completed-contract/"><%if(completednum != null && completednum.intValue() != 0 ) out.print("<span class='badge badge-info pull-right'>"+completednum+"</span> "); %>완료한 프로젝트</a></li>
 							<li class=""><a
-								href="/wjm/client/manage/past/cancelled-project/"> <%if(cancellednum.intValue() != 0 ) out.print("<span class='badge badge-info pull-right'>"+cancellednum+"</span> "); %>취소한 프로젝트</a></li>
+								href="/wjm/client/manage/past/cancelled-project/"> <%if(cancellednum != null && cancellednum.intValue() != 0 ) out.print("<span class='badge badge-info pull-right'>"+cancellednum+"</span> "); %>취소한 프로젝트</a></li>
 						</ul>
 					</div>
 				</div>
@@ -97,38 +101,37 @@
 						<section>
 						<%
 						
-							if(projectCnt != 0)
+							if(reviewCnt != 0)
 							{
-								for(int i=0;i<projectCnt;i++)
+								for(int i=0;i<reviewCnt;i++)
 								{
 								
 						%>
 							<section class="project-unit">
 								<section class="project-unit-heading">
-									<h4 class="project-title"><%=projectlist.get(i).getName() %></h4>
+									<h4 class="project-title"><%=reviewlist.get(i).getName() %></h4>
 									<div class="management-tools">
-										<a class="btn btn-sm btn-default" href="/wjm/project/edit/<%=projectlist.get(i).getPk() %>/">수정</a>
-										<a class="btn btn-sm btn-cancel" data-toggle="modal"
-											href="#saved-project-delete-modal-4870" role="button">삭제</a>
+										<a class="btn btn-sm btn-default" 
+										href="/wjm/client/manage/review/<%=reviewlist.get(i).getProject_pk() %>/<%=reviewlist.get(i).getClient_pk()%>/<%=reviewlist.get(i).getPartners_pk()%>">평가하기</a>
 									</div>
 								</section>
 								<section class="project-unit-body">
 									<ul class="project-info list-item-narrow">
 										<li><h5 class="label-item"
 												style="min-width: 80px !important;">
-												<i class="fa fa-won"></i> 예상비용
+												<i class="fa fa-won"></i> 파트너스
 											</h5>
-											<span><%=projectlist.get(i).getBudget() %>원</span></li>
+											<span><%=reviewlist.get(i).getPartners_id() %></span></li>
 										<li><h5 class="label-item"
 												style="min-width: 80px !important;">
-												<i class="fa fa-clock-o"></i> 예상기간
+												<i class="fa fa-clock-o"></i> 비용
 											</h5>
-											<span><%=projectlist.get(i).getPeriod() %>일</span></li>
+											<span><%=reviewlist.get(i).getBudget() %>원</span></li>
 										<li><h5 class="label-item"
 												style="min-width: 80px !important;">
-												<i class="fa fa-calendar-o"></i> 저장일자
+												<i class="fa fa-calendar-o"></i> 종료일자
 											</h5>
-											<span><%=Time.toString3(projectlist.get(i).getReg_date()) %></span></li>
+											<span><%=Time.toString3(reviewlist.get(i).getProject().getReg_date()) %></span></li>
 									</ul>
 								</section>
 							</section>

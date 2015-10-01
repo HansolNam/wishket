@@ -1,8 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	<%@ page import="java.util.List,com.wjm.models.AccountInformationInfo,com.wjm.models.AccountInfo,com.wjm.models.ApplicantInfo, com.wjm.main.function.Time, java.sql.Timestamp"%>
+	<%@ page import="com.wjm.models.ProjectInfo, java.util.List,com.wjm.models.AccountInformationInfo,com.wjm.models.AccountInfo,com.wjm.models.ApplicantInfo, com.wjm.main.function.Time, java.sql.Timestamp"%>
 <%
 	List<ApplicantInfo> applicant = (List<ApplicantInfo>)request.getAttribute("applicant");
+	ProjectInfo project = (ProjectInfo)request.getAttribute("project");
 	
 	long now_time = System.currentTimeMillis();
 	Timestamp now = new Timestamp(now_time);
@@ -100,7 +101,22 @@
 							class="proposal-unit-heading">
 						<h4 class="project-title">
 							<a href="/wjm/partners/p/<%=applicant.get(i).getAccount().getId() %>/"><%=applicant.get(i).getAccount().getId() %></a>
-							<button class="btn btn-sm btn-client pull-right" id="meeting-btn" value="1">미팅 신청하기</button>
+							<%
+								if(applicant.get(i).getContract() == null)
+								{
+							%>
+							<button class="btn btn-sm btn-client pull-right meeting-btn" project-pk="<%=applicant.get(i).getProject_pk() %>"
+							applicant-pk="<%=applicant.get(i).getAccount_pk() %>" value="1">미팅 신청하기</button>
+							<%
+								}
+								else
+								{
+							%>
+							<button class="btn btn-sm btn-client pull-right meeting-btn" disabled>미팅 신청 완료</button>
+							
+							<%
+								}
+							%>
 						</h4>
 						</section> <section class="proposal-unit-body">
 						<ul class="interest-summary-info">
@@ -192,6 +208,12 @@
 			</div>
 		</div>
 		<div id="push"></div>
+		
+		<form id="meeting_form" method="POST"
+			style="display: none">
+				<input name="applicant_pk" type="hidden" value="" />
+				<input name="project_pk" type="hidden" value="" />
+		</form>
 	</div>
 	<jsp:include page="../../../footer.jsp" flush="false" />
 
@@ -208,6 +230,45 @@
 $( document ).ready(function($) {
     var p5TotalSubNavigationFlag = 0;
 
+
+    $('.content-inner').on('click', '.meeting-btn', function(event) {
+        event.preventDefault();
+        var applicantPk = $(this).attr('applicant-pk');
+        var projectPk = $(this).attr('project-pk');
+        
+        $('[name="applicant_pk"]').val(applicantPk);
+        $('[name="project_pk"]').val(projectPk);
+        
+        $.ajax({
+		    type: "POST",
+		    url: "/wjm/client/manage/project/meeting",
+		    data: $('#meeting_form').serialize(),  // 폼데이터 직렬화
+		    dataType: "json",   // 데이터타입을 JSON형식으로 지정
+		    contentType: "application/x-www-form-urlencoded; charset=utf-8",
+		    success: function(data) { // data: 백엔드에서 requestBody 형식으로 보낸 데이터를 받는다.
+		        var messages = data.messages;
+
+		    	if(messages == "success")
+		        	{
+		    		location.href="/wjm/client/manage/project/<%=project.getName()%>/<%=project.getPk()%>/applicant"; 
+		        	}
+		        else if(messages == "error")
+		        	{
+		        	location.href="/wjm/error"; 
+		        	}
+		        else
+		        	{
+					$("#messages").html("<div class='alert alert-warning fade in'>"+messages+"</div>");
+		        	}
+		        
+		    },
+		    error: function(jqXHR, textStatus, errorThrown) 
+		    {
+		        //에러코드
+		        alert('에러가 발생했습니다.');
+		    }
+		});
+    });
 
 	if ( $( window ).width() >= 1200 ) {
 		$( '.p5-side-nav-deactive' ).css( 'display', 'none' );

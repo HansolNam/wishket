@@ -31,9 +31,10 @@ public class AssessmentDao implements AssessmentIDao {
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
 	}
 
-	public void create(int project_pk,int account_pk,int professionalism,int satisfaction,int schedule_observance, int activeness, int communication, String recommendation)
+	public void create(int project_pk,int assessing_pk,int assessed_pk,int professionalism,int satisfaction,int schedule_observance, int activeness, int communication, String recommendation)
 	{
-		jdbcTemplate.update("insert into assessment (project_pk, account_pk, professionalism, satisfaction, schedule_observance, activeness, communication, recommendation) values (?, ?, ?,?,?, ?, ?,?)", new Object[] { project_pk, account_pk, professionalism, satisfaction, schedule_observance, activeness, communication, recommendation });
+		jdbcTemplate.update("insert into assessment (project_pk, assessing_pk, assessed_pk,professionalism, satisfaction, schedule_observance, activeness, communication, recommendation) values (?,?, ?, ?,?,?, ?, ?,?)"
+				, new Object[] { project_pk, assessing_pk, assessed_pk, professionalism, satisfaction, schedule_observance, activeness, communication, recommendation });
 	}
 	
 	public List<AssessmentInfo> selectAll()
@@ -44,7 +45,8 @@ public class AssessmentDao implements AssessmentIDao {
 	    		return new AssessmentInfo(
 	    				resultSet.getInt("pk")
 	    				, resultSet.getInt("project_pk")
-	    				, resultSet.getInt("account_pk")
+	    				, resultSet.getInt("assessing_pk")
+	    				, resultSet.getInt("assessed_pk")
 	    				, resultSet.getInt("professionalism")
 	    				, resultSet.getInt("satisfaction")
 	    				, resultSet.getInt("schedule_observance")
@@ -54,16 +56,17 @@ public class AssessmentDao implements AssessmentIDao {
 	    	}
 	    });
 	}
-	public List<AssessmentInfo> select(int project_pk, int account_pk)
+	public AssessmentInfo select_assessing(int project_pk, int assessing_pk)
 	{
-		return jdbcTemplate.query("select * from assessment where project_pk = ? and account_pk = ?",
-		    	new Object[] { project_pk, account_pk }, new RowMapper<AssessmentInfo>() {
+		List<AssessmentInfo> list = jdbcTemplate.query("select * from assessment where project_pk = ? and assessing_pk = ?",
+		    	new Object[] { project_pk, assessing_pk }, new RowMapper<AssessmentInfo>() {
 	    	public AssessmentInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{
 	    		return new AssessmentInfo(
 	    				resultSet.getInt("pk")
 	    				, resultSet.getInt("project_pk")
-	    				, resultSet.getInt("account_pk")
+	    				, resultSet.getInt("assessing_pk")
+	    				, resultSet.getInt("assessed_pk")
 	    				, resultSet.getInt("professionalism")
 	    				, resultSet.getInt("satisfaction")
 	    				, resultSet.getInt("schedule_observance")
@@ -72,7 +75,66 @@ public class AssessmentDao implements AssessmentIDao {
 	    				, resultSet.getString("recommendation"));
 	    	}
 	    });
+		
+		if(list != null)
+		{
+			if(list.size() == 0)
+			{
+				logger.info("평가 없음");
+				return null;
+			}
+			else if(list.size() > 1)
+			{
+				logger.info("평가 2개이상 존재");
+				return null;
+			}
+			else
+				return list.get(0);
+		}
+		else
+			return null;
 	}
+	
+
+	public AssessmentInfo select_assessed(int project_pk, int assessed_pk)
+	{
+		List<AssessmentInfo> list = jdbcTemplate.query("select * from assessment where project_pk = ? and assessed_pk = ?",
+		    	new Object[] { project_pk, assessed_pk }, new RowMapper<AssessmentInfo>() {
+	    	public AssessmentInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+	    	{
+	    		return new AssessmentInfo(
+	    				resultSet.getInt("pk")
+	    				, resultSet.getInt("project_pk")
+	    				, resultSet.getInt("assessing_pk")
+	    				, resultSet.getInt("assessed_pk")
+	    				, resultSet.getInt("professionalism")
+	    				, resultSet.getInt("satisfaction")
+	    				, resultSet.getInt("schedule_observance")
+	    				, resultSet.getInt("activeness")
+	    				, resultSet.getInt("communication")
+	    				, resultSet.getString("recommendation"));
+	    	}
+	    });
+		
+		if(list != null)
+		{
+			if(list.size() == 0)
+			{
+				logger.info("평가 없음");
+				return null;
+			}
+			else if(list.size() > 1)
+			{
+				logger.info("평가 2개이상 존재");
+				return null;
+			}
+			else
+				return list.get(0);
+		}
+		else
+			return null;
+	}
+	
 	public void deleteAll()
 	{
 		jdbcTemplate.update("delete from assessment");

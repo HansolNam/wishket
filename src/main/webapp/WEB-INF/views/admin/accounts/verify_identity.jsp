@@ -114,22 +114,20 @@
 			<div class="page-inner">
 				<div class="sidebar">
 					<div class="user-name-tag">
-						<h3 class="user-name-tag-heading">클라이언트</h3>
+						<h3 class="user-name-tag-heading"><%=this_account.getAccount_type() %></h3>
 						<div class="user-name-tag-body">
 							<img alt="<%=id %> 사진" class="img-circle user-img"
 								src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=img_path %>" />
 							<h4 class="username"><%=id %></h4>
-							<a class="profile-setting" href="/wjm/accounts/settings/profile/">기본
-								정보 수정</a>
 						</div>
 					</div>
 					<div class="sidebar-nav">
 						<ul>
 							<li class=""><a class="active"
-								href="/wjm/admin/accounts/profile/">기본 정보</a></li>
+								href="/wjm/admin/accounts/profile/<%=this_account.getPk()%>">기본 정보</a></li>
 							<li class="active"><a
-								href="/wjm/admin/accounts/verify_identity/">신원 인증</a></li>
-							<li class=""><a href="/wjm/admin/accounts/bank_account/">계좌
+								href="/wjm/admin/accounts/verify_identity/<%=this_account.getPk()%>">신원 인증</a></li>
+							<li class=""><a href="/wjm/admin/accounts/bank_account/<%=this_account.getPk()%>">계좌
 									관리</a></li>
 						</ul>
 					</div>

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import com.wjm.idao.ApplicantIDao;
 import com.wjm.main.function.Validator;
 import com.wjm.models.ApplicantInfo;
+import com.wjm.models.ContractInfo;
 import com.wjm.models.ProjectInfo;
 
 @Repository
@@ -31,6 +32,8 @@ public class ApplicantDao implements ApplicantIDao {
 
 	@Autowired
 	private AccountDao accountDao;
+	@Autowired
+	private ContractDao contractDao;
 	
 	public void setDataSource(DataSource ds) {
 		dataSource = ds;
@@ -136,8 +139,11 @@ public class ApplicantDao implements ApplicantIDao {
 	    				else
 	    					applicant.setPortfolio3(null);
 	    			}
+	    			
+	    			ContractInfo contract = contractDao.select_project_partners(applicant.getProject_pk(),applicant.getAccount_pk());
+	    			applicant.setContract(contract);
+	    			
 	    		}
-	    		
 	    		return applicant;
 	    	}
 	    });
@@ -364,7 +370,7 @@ public class ApplicantDao implements ApplicantIDao {
 	
 	public List<ProjectInfo> getInterestProject(int account_pk)
 	{
-		 return jdbcTemplate.query("select * from project where pk = (select project_pk from applicant where account_pk = ? and status = ?)",
+		List<ProjectInfo> list = jdbcTemplate.query("select * from project where pk = (select project_pk from applicant where account_pk = ? and status = ?)",
 		    	new Object[] { account_pk,"관심프로젝트" }, new RowMapper<ProjectInfo>() {
 	    	public ProjectInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{
@@ -393,6 +399,11 @@ public class ApplicantDao implements ApplicantIDao {
 	    				, resultSet.getTimestamp("reg_date"));
 	    	}
 	    });
+		
+		if(list!=null && list.isEmpty())
+			return null;
+		else
+			return list;
 		
 	}
 	public List<ApplicantInfo> select_applicant(int account_pk, String status)
@@ -458,6 +469,19 @@ public class ApplicantDao implements ApplicantIDao {
 			jdbcTemplate.update("delete from applicant where account_pk = ? and project_pk = ?", new Object[] { account_pk, project_pk });
 			return "false";
 		}
+	}
+	
+
+	public void updateStatusSuccess(int account_pk, String status)
+	{
+		jdbcTemplate.update("update applicant set status=? where account_pk=?"
+				, new Object[] { status, account_pk });
+	}
+
+	public void updateRemianApplicantFail(int project_pk)
+	{
+		jdbcTemplate.update("update applicant set status='지원종료' where project_pk=? and (status = '지원중' or status = '관심프로젝트')"
+				, new Object[] { project_pk });
 	}
 	public void deleteAll()
 	{

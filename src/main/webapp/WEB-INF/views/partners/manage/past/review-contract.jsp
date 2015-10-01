@@ -1,5 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page import="com.wjm.models.AccountInfo, com.wjm.models.ContractInfo, java.util.*, com.wjm.main.function.Time"%>
+<%
+	AccountInfo account = (AccountInfo)session.getAttribute("account");
+	List<ContractInfo> reviewlist = (List<ContractInfo>)request.getAttribute("reviewlist");
+	int reviewCnt = 0;
+
+	Integer completednum = 0;
+	if((Integer) request.getAttribute("completednum") != null)
+		completednum = (Integer) request.getAttribute("completednum");
+	if(reviewlist != null)
+		reviewCnt = reviewlist.size();
+	%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <!--[if IE 6]><html lang="ko" class="no-js old ie6"><![endif]-->
@@ -52,9 +64,9 @@
 					<div class="user-name-tag">
 						<h3 class="user-name-tag-heading">파트너스</h3>
 						<div class="user-name-tag-body">
-							<img alt="gksthf16112 사진" class="img-circle user-img"
-								src="${pageContext.request.contextPath}/resources/static/img/default_avatar.jpg" />
-							<h4 class="username">gksthf16112</h4>
+							<img alt="<%=account.getId() %> 사진" class="img-circle user-img"
+								src="${pageContext.request.contextPath}/resources/upload/profile_img/${profile}" />
+							<h4 class="username"><%=account.getId() %></h4>
 							<a class="profile-setting" href="/wjm/accounts/settings/profile/">기본
 								정보 수정</a>
 						</div>
@@ -62,9 +74,10 @@
 					<div class="sidebar-nav">
 						<ul>
 							<li class="active"><a
-								href="/wjm/partners/manage/past/review-contract/">평가 대기 중</a></li>
+								href="/wjm/partners/manage/past/review-contract/"><span
+									class="badge badge-info pull-right"><%if(reviewCnt != 0) out.print(reviewCnt); %></span>평가 대기 중</a></li>
 							<li class=""><a
-								href="/wjm/partners/manage/past/completed-contract/">완료한 프로젝트</a></li>
+								href="/wjm/partners/manage/past/completed-contract/"><%if(completednum != null && completednum.intValue() != 0 ) out.print("<span class='badge badge-info pull-right'>"+completednum+"</span> "); %>완료한 프로젝트</a></li>
 						</ul>
 					</div>
 				</div>
@@ -85,10 +98,55 @@
 							</p>
 							<div style="clear: both;"></div>
 						</div>
-						<section>
+						<section><%
+						
+							if(reviewCnt != 0)
+							{
+								for(int i=0;i<reviewCnt;i++)
+								{
+								
+						%>
+							<section class="proposal-unit">
+								<section class="proposal-unit-heading">
+									<h4 class="project-title"><%=reviewlist.get(i).getName() %></h4>
+									<div class="management-tools">
+										<a class="btn btn-sm btn-default" 
+										href="/wjm/partners/manage/review/<%=reviewlist.get(i).getProject_pk() %>/<%=reviewlist.get(i).getClient_pk()%>/<%=reviewlist.get(i).getPartners_pk()%>">평가하기</a>
+									</div>
+								</section>
+								<section class="proposal-unit-body">
+									<ul class="project-info list-item-narrow">
+										<li><h5 class="label-item"
+												style="min-width: 80px !important;">
+												<i class="fa fa-won"></i> 클라이언트
+											</h5>
+											<span><%=reviewlist.get(i).getClient_id() %></span></li>
+										<li><h5 class="label-item"
+												style="min-width: 80px !important;">
+												<i class="fa fa-clock-o"></i> 비용
+											</h5>
+											<span><%=reviewlist.get(i).getBudget() %>원</span></li>
+										<li><h5 class="label-item"
+												style="min-width: 80px !important;">
+												<i class="fa fa-calendar-o"></i> 종료일자
+											</h5>
+											<span><%=Time.toString3(reviewlist.get(i).getProject().getReg_date()) %></span></li>
+									</ul>
+								</section>
+							</section>
+							<%	
+								}
+							}
+							else
+							{
+							%>
 						<section>
 						<p class="text-muted">평가 대기 중인 프로젝트가 없습니다.</p>
-						</section></section>
+						</section>
+							<%
+							}
+							%>
+						</section>
 					</div>
 				</div>
 			</div>

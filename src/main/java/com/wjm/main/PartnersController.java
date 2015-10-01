@@ -23,6 +23,7 @@ import com.wjm.dao.AccountInformationDao;
 import com.wjm.dao.ApplicantDao;
 import com.wjm.dao.AssessmentDao;
 import com.wjm.dao.CareerDao;
+import com.wjm.dao.ContractDao;
 import com.wjm.dao.EducationDao;
 import com.wjm.dao.LicenseDao;
 import com.wjm.dao.Partners_infoDao;
@@ -82,6 +83,8 @@ public class PartnersController {
 	
 	@Autowired
 	private ApplicantDao applicantDao;
+	@Autowired
+	private ContractDao contractDao;
 
 	public boolean AccountCheck(AccountInfo account)
 	{
@@ -399,6 +402,7 @@ public class PartnersController {
 			mv.setViewName("/partners");
 			return mv;
 		}
+		mv.addObject("profile",accountInformationDao.getProfileImg(this_account.getPk()));
 
 		String isSame = isSame(account, this_account);
 		mv.addObject("isSame", isSame);
@@ -435,6 +439,7 @@ public class PartnersController {
 			mv.setViewName("/partners");
 			return mv;
 		}
+		mv.addObject("profile",accountInformationDao.getProfileImg(this_account.getPk()));
 
 		String isSame = isSame(account, this_account);
 		mv.addObject("isSame", isSame);
@@ -1264,7 +1269,7 @@ public class PartnersController {
 	@RequestMapping(value = "/partners/p/{id}/background", method = RequestMethod.GET)
 	public ModelAndView PartnersController_p_background(HttpServletRequest request, ModelAndView mv,
 			@PathVariable("id") String id) {
-		logger.info("index Page");
+		logger.info("/partners/p/{id}/background Page");
 
 		AccountInfo account = (AccountInfo) request.getSession().getAttribute("account");
 		AccountInfo this_account = accountDao.select(id);
@@ -1277,6 +1282,7 @@ public class PartnersController {
 
 		AccountInformationInfo this_accountinfo = accountInformationDao.select(this_account.getPk());
 		mv.addObject("this_accountinfo", this_accountinfo);
+		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
 
 		String isSame = isSame(account, this_account);
 		mv.addObject("isSame", isSame);
@@ -2437,12 +2443,12 @@ public class PartnersController {
 		
 		if(account == null)
 		{
-			mv.setViewName("/accounts/login");
+			mv.setViewName("redirect:/accounts/login");
 			return mv;
 		}
 		else if(!account.getAccount_type().equals("partners"))
 		{
-			mv.setViewName("/accounts/login");
+			mv.setViewName("redirect:/error");
 			return mv;
 		}
 		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
@@ -2473,9 +2479,13 @@ public class PartnersController {
 			mv.setViewName("/accounts/login");
 			return mv;
 		}
-		
+		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
+
 		List<ApplicantInfo> apply = applicantDao.select_applicant(account.getPk(), "지원중");
 		
+		List<ApplicantInfo> end_apply = applicantDao.select_applicant(account.getPk(), "지원종료");
+		if(end_apply!=null) mv.addObject("endnum",end_apply.size());
+
 		mv.addObject("apply",apply);
 		
 		mv.setViewName("/partners/manage/proposal/counselling");
@@ -2501,7 +2511,11 @@ public class PartnersController {
 			mv.setViewName("/accounts/login");
 			return mv;
 		}
-		
+		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
+
+		List<ApplicantInfo> apply_ing = applicantDao.select_applicant(account.getPk(), "지원중");
+		if(apply_ing!=null) mv.addObject("ingnum",apply_ing.size());
+
 		List<ApplicantInfo> apply = applicantDao.select_applicant(account.getPk(), "지원종료");
 		
 		mv.addObject("apply",apply);
@@ -2522,18 +2536,20 @@ public class PartnersController {
 		
 		if(account == null)
 		{
-			mv.setViewName("/accounts/login");
+			mv.setViewName("redirect:/accounts/login");
 			return mv;
 		}
 		else if(!account.getAccount_type().equals("partners"))
 		{
-			mv.setViewName("/accounts/login");
+			mv.setViewName("redirect:/accounts/login");
 			return mv;
 		}
 
-		List<ContractInfo> contract = null;
+		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
 
-		mv.addObject("contract",contract);
+		
+		List<ContractInfo> contractlist = contractDao.selectProgressPartners(account.getPk(),"진행중");
+		mv.addObject("contractlist",contractlist);
 		
 		mv.setViewName("/partners/manage/contract-in-progress");
 		
@@ -2556,18 +2572,224 @@ public class PartnersController {
 		}
 		else if(!account.getAccount_type().equals("partners"))
 		{
-			mv.setViewName("/accounts/login");
+			mv.setViewName("/accounts/error");
 			return mv;
 		}
+		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
 
-		List<ContractInfo> contract = null;
-
-		mv.addObject("contract",contract);
+		List<ContractInfo> reviewlist = contractDao.selectReviewPartners(account.getPk(),"완료한프로젝트");
+		List<ContractInfo> completedlist = contractDao.selectCompletedPartners(account.getPk(),"완료한프로젝트");
+		if(completedlist!=null) mv.addObject("completednum",completedlist.size());
+		
+		mv.addObject("reviewlist",reviewlist);
 		
 		mv.setViewName("/partners/manage/past/review-contract");
 		return mv;
 	}
 
+	/**
+	 * 평가 하기 페이지
+	 */
+	@RequestMapping(value = "/partners/manage/review/{project_pk}/{client_pk}/{partners_pk}", method = RequestMethod.GET)
+	public ModelAndView ClientController_review_form(HttpServletRequest request, ModelAndView mv,
+			@PathVariable("project_pk") int project_pk,
+			@PathVariable("client_pk") int client_pk,
+			@PathVariable("partners_pk") int partners_pk) {
+		logger.info("평가 하기 페이지");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null)
+		{
+			mv.setViewName("redirect:/accounts/login");
+			return mv;
+		}
+		if(!AccountCheck(account))
+		{
+			mv.setViewName("redirect:/error");
+			return mv;
+		}
+		
+		ContractInfo contract = contractDao.select_project_client_partners(project_pk, client_pk, partners_pk);
+		if(contract!= null)
+		{
+			if(contract.getPartners_pk() != account.getPk())
+			{
+				logger.info("다른 사람이 해당 평가에 접근중");
+				mv.setViewName("redirect:/error");
+				return mv;
+			}
+		}
+		else
+		{
+			logger.info("해당 계약이 존재하지 않음");
+			mv.setViewName("redirect:/error");
+			return mv;
+		}
+		
+		mv.addObject("contract",contract);
+		
+		mv.setViewName("partners/manage/review");
+		
+		return mv;
+	}
+
+	/**
+	 * 평가 하기 처리 페이지
+	 */
+	@RequestMapping(value = "/partners/manage/review/{project_pk}/{client_pk}/{partners_pk}", method = RequestMethod.POST)
+	public ModelAndView ClientController_review_form_post(HttpServletRequest request, ModelAndView mv,
+			@PathVariable("project_pk") int project_pk,
+			@PathVariable("client_pk") int client_pk,
+			@PathVariable("partners_pk") int partners_pk,
+			@RequestParam("professionalism") String professionalism,
+			@RequestParam("satisfaction") String satisfaction,
+			@RequestParam("schedule_observance") String schedule_observance,
+			@RequestParam("activeness") String activeness,
+			@RequestParam("communication") String communication,
+			@RequestParam("recommendation") String recommendation) {
+		logger.info("평가 하기 처리 페이지");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null)
+		{
+			mv.setViewName("redirect:/accounts/login");
+			return mv;
+		}
+		if(!AccountCheck(account))
+		{
+			mv.setViewName("redirect:/error");
+			return mv;
+		}
+		
+		ContractInfo contract = contractDao.select_project_client_partners(project_pk, client_pk, partners_pk);
+		if(contract!= null)
+		{
+			if(contract.getPartners_pk() != account.getPk())
+			{
+				logger.info("다른 사람이 해당 평가에 접근중");
+				mv.setViewName("redirect:/error");
+				return mv;
+			}
+		}
+		else
+		{
+			logger.info("해당 계약이 존재하지 않음");
+			mv.setViewName("redirect:/error");
+			return mv;
+		}
+		
+		if(!Validator.hasValue(professionalism))
+		{
+			logger.info("전문선 x");
+			mv.addObject("messages","전문성을 선택해주세요.");
+			mv.addObject("contract",contract);
+			mv.setViewName("partners/manage/review");
+			return mv;
+		}
+		else if(!Validator.isDigit(professionalism))
+		{
+			logger.info("전문선 x");
+			mv.addObject("messages","전문성은 숫자만 입력 가능합니다.");
+			mv.addObject("contract",contract);
+			mv.setViewName("partners/manage/review");
+			return mv;
+		}
+
+		if(!Validator.hasValue(satisfaction))
+		{
+			logger.info("만족도 x");
+			mv.addObject("messages","만족도를 선택해주세요.");
+			mv.addObject("contract",contract);
+			mv.setViewName("partners/manage/review");
+			return mv;
+		}
+		else if(!Validator.isDigit(satisfaction))
+		{
+			logger.info("만족도 x");
+			mv.addObject("messages","만족도는 숫자만 입력 가능합니다.");
+			mv.addObject("contract",contract);
+			mv.setViewName("partners/manage/review");
+			return mv;
+		}
+
+		if(!Validator.hasValue(schedule_observance))
+		{
+			logger.info("일정준수 x");
+			mv.addObject("messages","일정준수를 선택해주세요.");
+			mv.addObject("contract",contract);
+			mv.setViewName("partners/manage/review");
+			return mv;
+		}
+		else if(!Validator.isDigit(schedule_observance))
+		{
+			logger.info("일정준수 x");
+			mv.addObject("messages","일정준수는 숫자만 입력 가능합니다.");
+			mv.addObject("contract",contract);
+			mv.setViewName("partners/manage/review");
+			return mv;
+		}
+
+		if(!Validator.hasValue(activeness))
+		{
+			logger.info("적극성 x");
+			mv.addObject("messages","적극성을 선택해주세요.");
+			mv.addObject("contract",contract);
+			mv.setViewName("partners/manage/review");
+			return mv;
+		}
+		else if(!Validator.isDigit(activeness))
+		{
+			logger.info("적극성 x");
+			mv.addObject("messages","적극성은 숫자만 입력 가능합니다.");
+			mv.addObject("contract",contract);
+			mv.setViewName("partners/manage/review");
+			return mv;
+		}
+
+		if(!Validator.hasValue(communication))
+		{
+			logger.info("의사소통 x");
+			mv.addObject("messages","의사소통을 선택해주세요.");
+			mv.addObject("contract",contract);
+			mv.setViewName("partners/manage/review");
+			return mv;
+		}
+		else if(!Validator.isDigit(communication))
+		{
+			logger.info("의사소통 x");
+			mv.addObject("messages","의사소통은 숫자만 입력 가능합니다.");
+			mv.addObject("contract",contract);
+			mv.setViewName("partners/manage/review");
+			return mv;
+		}
+		
+		if(!Validator.hasValue(communication))
+		{
+			logger.info("추천한마디 x");
+			mv.addObject("messages","추천한마디를 입력해주세요.");
+			mv.addObject("contract",contract);
+			mv.setViewName("partners/manage/review");
+			return mv;
+		}
+		else if(!Validator.isValidLength(recommendation, 1, 250))
+		{
+			logger.info("추천 한마디가 250자 넘음");
+			mv.addObject("messages","추천 한 마디는 250 미만입니다.");
+			mv.addObject("contract",contract);
+			mv.setViewName("partners/manage/review");
+			return mv;
+		}
+		
+		logger.info("평가생성");
+		assessmentDao.create(project_pk, partners_pk, client_pk
+				, Integer.parseInt(professionalism), Integer.parseInt(satisfaction), 
+						Integer.parseInt(schedule_observance), Integer.parseInt(activeness), 
+								Integer.parseInt(communication), recommendation);
+				
+		mv.setViewName("redirect:/partners/manage/past/completed-contract");
+		
+		return mv;
+	}
 	/**
 	 * 완료한 프로젝트 내역(완료한 프로젝트)
 	 */
@@ -2579,19 +2801,22 @@ public class PartnersController {
 		
 		if(account == null)
 		{
-			mv.setViewName("/accounts/login");
+			mv.setViewName("redirect:/accounts/login");
 			return mv;
 		}
 		else if(!account.getAccount_type().equals("partners"))
 		{
-			mv.setViewName("/accounts/login");
+			mv.setViewName("redirect:/accounts/error");
 			return mv;
 		}
+		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
 
-		List<ContractInfo> contract = null;
+		List<ContractInfo> reviewlist = contractDao.selectReviewPartners(account.getPk(),"완료한프로젝트");
+		if(reviewlist!=null) mv.addObject("reviewnum",reviewlist.size());
 
-		mv.addObject("contract",contract);
-		
+		List<ContractInfo> completedlist = contractDao.selectCompletedPartners(account.getPk(),"완료한프로젝트");
+		mv.addObject("completedlist",completedlist);
+
 		mv.setViewName("/partners/manage/past/completed-contract");
 		return mv;
 	}

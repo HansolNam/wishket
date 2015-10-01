@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.wjm.idao.CommentIDao;
+import com.wjm.main.function.Validator;
 import com.wjm.models.CommentInfo;
 
 @Repository
@@ -59,7 +60,7 @@ public class CommentDao implements CommentIDao {
 		    	public CommentInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{
 		    		
-		    		return new CommentInfo(
+		    		CommentInfo comment =  new CommentInfo(
 		    				resultSet.getInt("pk")
 		    				, resultSet.getInt("account_pk")
 		    				, resultSet.getInt("project_pk")
@@ -67,6 +68,10 @@ public class CommentDao implements CommentIDao {
 		    				, resultSet.getTimestamp("reg_date")
 		    				, resultSet.getString("id")
 		    				, resultSet.getString("profile_img"));
+		    		
+		    		if(!Validator.hasValue(comment.getImg()))
+		    			comment.setImg("default_avatar.png");
+		    		return comment;
 		    	}
 		    });
 		if(list == null)

@@ -1,13 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	<%@ page import="com.wjm.models.AccountInfo, com.wjm.models.ProjectInfo, java.util.*, com.wjm.main.function.Time"%>
+	<%@ page import="com.wjm.main.function.Validator,java.sql.Timestamp,com.wjm.models.AccountInfo, com.wjm.models.ContractInfo, java.util.*, com.wjm.main.function.Time"%>
 <%
 	AccountInfo account = (AccountInfo)session.getAttribute("account");
-	List<ProjectInfo> projectlist = (List<ProjectInfo>)request.getAttribute("projectlist");
-	int projectCnt = 0;
+	List<ContractInfo> contractlist = (List<ContractInfo>)request.getAttribute("contractlist");
+	int contractCnt = 0;
 	
-	if(projectlist != null)
-		projectCnt = projectlist.size();
+	if(contractlist != null)
+		contractCnt = contractlist.size();
+	
+	
+	String profile = (String)request.getAttribute("profile");
+	
+	if(!Validator.hasValue(profile))
+		profile = "default_avatar.png";
 	%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -60,17 +66,17 @@
 					<div class="user-name-tag">
 						<h3 class="user-name-tag-heading">파트너스</h3>
 						<div class="user-name-tag-body">
-							<img alt="gksthf16112 사진" class="img-circle user-img"
-								src="${pageContext.request.contextPath}/resources/static/img/default_avatar.jpg" />
-							<h4 class="username">gksthf16112</h4>
-							<a class="profile-setting" href="/accounts/settings/profile/">기본
+							<img alt="<%=account.getId() %> 사진" class="img-circle user-img"
+								src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=profile %>" />
+							<h4 class="username"><%=account.getId() %></h4>
+							<a class="profile-setting" href="/wjm/accounts/settings/profile/">기본
 								정보 수정</a>
 						</div>
 					</div>
 					<div class="sidebar-nav">
 						<ul>
 							<li class="active"><a
-								href="/partners/manage/contract-in-progress/">진행 중인 프로젝트</a></li>
+								href="/wjm/partners/manage/contract-in-progress/">진행 중인 프로젝트</a></li>
 						</ul>
 					</div>
 				</div>
@@ -94,12 +100,63 @@
 							<div style="clear: both;"></div>
 						</div>
 						<section>
+						<%
 						
+							if(contractCnt != 0)
+							{
+								for(int i=0;i<contractCnt;i++)
+								{
+								
+						%>
+							<section class="proposal-unit">
+								<section class="proposal-unit-heading">
+									<h4 class="project-title"><%=contractlist.get(i).getName() %></h4>
+								</section>
+								<section class="proposal-unit-body">
+									<ul class="interest-summary-info">
+										<li><h5 class="label-item"
+												style="min-width: 80px !important;">
+												<i class="fa fa-won"></i> 클라이언트
+											</h5>
+											<span><%=contractlist.get(i).getClient_id() %></span></li>
+										<li><h5 class="label-item"
+												style="min-width: 80px !important;">
+												<i class="fa fa-clock-o"></i> 남은기간
+											</h5>
+											<span><%
+									Timestamp now = Time.getCurrentTimestamp();
+									now = Time.dateToTimestamp(Time.TimestampToString(now));
+									Timestamp reg_date = contractlist.get(i).getReg_date();
+									reg_date = Time.dateToTimestamp(Time.TimestampToString(reg_date));
+									
+									int remain = Time.remainDate(now, reg_date)/(60*24);
+									
+									if(contractlist.get(i).getTerm() - remain>=0)
+										out.print(contractlist.get(i).getTerm() - remain+" 일 전");
+									else
+										out.print(contractlist.get(i).getTerm() - remain*(-1)+"일 초과");
+									
+									%>/<%=contractlist.get(i).getTerm() %>일</span></li>
+										<li><h5 class="label-item"
+												style="min-width: 80px !important;">
+												<i class="fa fa-calendar-o"></i> 비용
+											</h5>
+											<span><%=contractlist.get(i).getBudget() %> 원</span></li>
+									</ul>
+								</section>
+							</section>
+							<%	
+								}
+							}
+							else
+							{
+							%>
 						<section>
 						<p class="text-muted">진행 중인 프로젝트가 없습니다.</p>
 						</section>
-						
-						
+							<%
+							}
+							%>
 						</section>
 					</div>
 				</div>
@@ -161,40 +218,5 @@ $( document ).ready(function($) {
 });
 
 </script>
-	<script type="text/javascript">
-        var TRS_AIDX = 9287;
-        var TRS_PROTOCOL = document.location.protocol;
-        document.writeln();
-        var TRS_URL = TRS_PROTOCOL + '//' + ((TRS_PROTOCOL=='https:')?'analysis.adinsight.co.kr':'adlog.adinsight.co.kr') +  '/emnet/trs_esc.js';
-        document.writeln("<scr"+"ipt language='javascript' src='" + TRS_URL + "'></scr"+"ipt>");
-        </script>
-	<script type="text/javascript">
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-        ga('create', 'UA-31427125-2', 'wishket.com');
-        var ga_now = new Date();
-        var dimension4Value = "Y" + ga_now.getFullYear()
-                              + "M" + (ga_now.getMonth()+1)
-                              + "D" + (ga_now.getDate())
-                              + "H" + (ga_now.getHours())
-                              + "I" + (ga_now.getMinutes())
-                              + "W" + (ga_now.getDay());
-        ga('require', 'displayfeatures');
-        ga('set', '&uid', '28338');
-        ga('send', 'pageview', {
-          'dimension1': 'user',
-          'dimension2': 'partners',
-          'dimension3': '28338',
-          'dimension4': dimension4Value
-        });
-      </script>
-	<script type="text/javascript">(function(e,b){if(!b.__SV){var a,f,i,g;window.mixpanel=b;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===e.location.protocol?"https:":"http:")+'//cdn.mxpnl.com/libs/mixpanel-2.2.min.js';f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f);b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==
-typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.set_once people.increment people.append people.track_charge people.clear_charges people.delete_user".split(" ");for(g=0;g<i.length;g++)f(c,i[g]);
-b._i.push([a,e,d])};b.__SV=1.2}})(document,window.mixpanel||[]);
-mixpanel.init("c7b742deb9d00b4f1c0e1e9e8c5c3115");</script>
-	<script type="text/javascript"> if (!wcs_add) var wcs_add={}; wcs_add["wa"] = "s_3225afd5bb50";if (!_nasa) var _nasa={};wcs.inflow();wcs_do(_nasa);</script>
 </body>
 </html>

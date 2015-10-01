@@ -8,9 +8,10 @@ import com.wjm.models.AssessmentInfo;
 
 public interface AssessmentIDao {
 	void setDataSource(DataSource ds);
-	void create(int project_pk,int account_pk,int professionalism,int satisfaction,int schedule_observance, int activeness, int communication, String recommendation);
+	void create(int project_pk,int assessing_pk, int assessed_pk,int professionalism,int satisfaction,int schedule_observance, int activeness, int communication, String recommendation);
 	List<AssessmentInfo> selectAll();
-	List<AssessmentInfo> select(int project_pk, int account_pk);
+	AssessmentInfo select_assessing(int project_pk, int assessing_pk);
+	AssessmentInfo select_assessed(int project_pk, int assessed_pk);
 	void deleteAll();
 	void delete(int pk);
 }

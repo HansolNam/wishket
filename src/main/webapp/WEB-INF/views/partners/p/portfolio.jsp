@@ -106,7 +106,7 @@ div.ui-tooltip {
 						<div class="partners-name-tag-body">
 							<img alt="<%=this_account.getId() %> 사진"
 								class="p5-partners-img-lg"
-								src="${pageContext.request.contextPath}/resources/static/img/<%=profile %>" />
+								src="${pageContext.request.contextPath}/resources/upload/profile_img/${profile}" />
 							<h4 class="partners-username-bottom"><%=this_account.getId()%></h4>
 						</div>
 					</div>

@@ -5,7 +5,11 @@
 	AccountInfo account = (AccountInfo)session.getAttribute("account");
 	List<ApplicantInfo> apply = (List<ApplicantInfo>)request.getAttribute("apply");
 	int cnt = 0;
-	
+
+	Integer endnum = 0;
+	if((Integer) request.getAttribute("endnum") != null)
+		endnum = (Integer) request.getAttribute("endnum");
+
 	if(apply != null)
 		cnt = apply.size();
 	%>
@@ -60,19 +64,20 @@
 					<div class="user-name-tag">
 						<h3 class="user-name-tag-heading">파트너스</h3>
 						<div class="user-name-tag-body">
-							<img alt="gksthf16112 사진" class="img-circle user-img"
-								src="${pageContext.request.contextPath}/resources/static/img/default_avatar.jpg" />
-							<h4 class="username">gksthf16112</h4>
-							<a class="profile-setting" href="/accounts/settings/profile/">기본
+							<img alt="<%=account.getId() %> 사진" class="img-circle user-img"
+								src="${pageContext.request.contextPath}/resources/upload/profile_img/${profile}" />
+							<h4 class="username"><%=account.getId() %></h4>
+							<a class="profile-setting" href="/wjm/accounts/settings/profile/">기본
 								정보 수정</a>
 						</div>
 					</div>
 					<div class="sidebar-nav">
 						<ul>
 							<li class="active"><a
-								href="/wjm/partners/manage/proposal/counselling/">지원 중</a></li>
+								href="/wjm/partners/manage/proposal/counselling/"><span
+									class="badge badge-info pull-right"><%if(cnt != 0) out.print(cnt); %></span>지원 중</a></li>
 							<li class=""><a
-								href="/wjm/partners/manage/proposal/end-counselling/">지원 종료</a></li>
+								href="/wjm/partners/manage/proposal/end-counselling/"><%if(endnum.intValue() != 0 ) out.print("<span class='badge badge-info pull-right'>"+endnum+"</span> "); %>지원 종료</a></li>
 						</ul>
 					</div>
 				</div>

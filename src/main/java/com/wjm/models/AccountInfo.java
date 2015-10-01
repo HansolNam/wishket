@@ -1,6 +1,7 @@
 package com.wjm.models;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class AccountInfo {
 	private int pk;
@@ -12,19 +13,24 @@ public class AccountInfo {
 	private String authorization_key;
 	private Timestamp reg_date;
 	private AccountInformationInfo accountinfo;
+	private Partners_infoInfo partnersinfo;
+	private List<TechniqueInfo> techniqueinfo;
+	private int portfolionum;
+	private List<AssessmentInfo> assessmentinfo;
+	private List<ProjectInfo> projectinfo;
 	private AuthenticationInfo authenticationinfo;
 	
-	public AccountInformationInfo getAccountinfo() {
-		return accountinfo;
-	}
-	public void setAccountinfo(AccountInformationInfo accountinfo) {
-		this.accountinfo = accountinfo;
-	}
 	public AuthenticationInfo getAuthenticationinfo() {
 		return authenticationinfo;
 	}
 	public void setAuthenticationinfo(AuthenticationInfo authenticationinfo) {
 		this.authenticationinfo = authenticationinfo;
+	}
+	public AccountInformationInfo getAccountinfo() {
+		return accountinfo;
+	}
+	public void setAccountinfo(AccountInformationInfo accountinfo) {
+		this.accountinfo = accountinfo;
 	}
 	public AccountInfo(int pk, String email, String id, String password, String account_type, int authorized,
 			String authorization_key, Timestamp reg_date) {

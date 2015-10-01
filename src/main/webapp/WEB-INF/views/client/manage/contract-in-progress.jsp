@@ -1,13 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="com.wjm.main.function.Validator,com.wjm.models.AccountInfo, com.wjm.models.ProjectInfo, java.util.*, com.wjm.main.function.Time"%>
+<%@ page import="com.wjm.main.function.Validator,com.wjm.models.AccountInfo, com.wjm.models.ContractInfo, java.util.*,java.sql.Timestamp, com.wjm.main.function.Time"%>
 <%
 	AccountInfo account = (AccountInfo)session.getAttribute("account");
-	List<ProjectInfo> projectlist = (List<ProjectInfo>)request.getAttribute("projectlist");
-	int projectCnt = 0;
+	List<ContractInfo> contractlist = (List<ContractInfo>)request.getAttribute("contractlist");
+	int contractCnt = 0;
 	
-	if(projectlist != null)
-		projectCnt = projectlist.size();
+	if(contractlist != null)
+		contractCnt = contractlist.size();
 	
 
 	String profile = (String)request.getAttribute("profile");
@@ -64,8 +64,8 @@
 					<div class="user-name-tag">
 						<h3 class="user-name-tag-heading">클라이언트</h3>
 						<div class="user-name-tag-body">
-							<img alt="gksthf16111 사진" class="img-circle user-img"
-								src="${pageContext.request.contextPath}/resources/static/img/${profile}" />
+							<img alt="<%=account.getId() %> 사진" class="img-circle user-img"
+								src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=profile %>" />
 							<h4 class="username"><%=account.getId() %></h4>
 							<a class="profile-setting" href="/wjm/accounts/settings/profile/">기본
 								정보 수정</a>
@@ -75,7 +75,7 @@
 						<ul>
 							<li class="active"><a
 								href="/wjm/client/manage/contract-in-progress/"><span
-									class="badge badge-info pull-right"><%=projectCnt %></span>진행 중인 프로젝트</a></li>
+									class="badge badge-info pull-right"><%=contractCnt %></span>진행 중인 프로젝트</a></li>
 						</ul>
 					</div>
 				</div>
@@ -102,38 +102,46 @@
 						<section>
 						<%
 						
-							if(projectCnt != 0)
+							if(contractCnt != 0)
 							{
-								for(int i=0;i<projectCnt;i++)
+								for(int i=0;i<contractCnt;i++)
 								{
 								
 						%>
 							<section class="project-unit">
 								<section class="project-unit-heading">
-									<h4 class="project-title"><%=projectlist.get(i).getName() %></h4>
-									<div class="management-tools">
-										<a class="btn btn-sm btn-default" href="/wjm/project/edit/<%=projectlist.get(i).getPk() %>/">수정</a>
-										<a class="btn btn-sm btn-cancel" data-toggle="modal"
-											href="#saved-project-delete-modal-4870" role="button">삭제</a>
-									</div>
+									<h4 class="project-title"><%=contractlist.get(i).getName() %></h4>
 								</section>
 								<section class="project-unit-body">
 									<ul class="project-info list-item-narrow">
 										<li><h5 class="label-item"
 												style="min-width: 80px !important;">
-												<i class="fa fa-won"></i> 예상비용
+												<i class="fa fa-won"></i> 파트너스
 											</h5>
-											<span><%=projectlist.get(i).getBudget() %>원</span></li>
+											<span><%=contractlist.get(i).getPartners_id() %></span></li>
 										<li><h5 class="label-item"
 												style="min-width: 80px !important;">
-												<i class="fa fa-clock-o"></i> 예상기간
+												<i class="fa fa-clock-o"></i> 남은기간
 											</h5>
-											<span><%=projectlist.get(i).getPeriod() %>일</span></li>
+											<span><%
+									Timestamp now = Time.getCurrentTimestamp();
+									now = Time.dateToTimestamp(Time.TimestampToString(now));
+									Timestamp reg_date = contractlist.get(i).getReg_date();
+									reg_date = Time.dateToTimestamp(Time.TimestampToString(reg_date));
+									
+									int remain = Time.remainDate(now, reg_date)/(60*24);
+									
+									if(contractlist.get(i).getTerm() - remain>=0)
+										out.print(contractlist.get(i).getTerm() - remain+" 일 전");
+									else
+										out.print(contractlist.get(i).getTerm() - remain*(-1)+"일 초과");
+									
+									%>/<%=contractlist.get(i).getTerm() %>일</span></li>
 										<li><h5 class="label-item"
 												style="min-width: 80px !important;">
-												<i class="fa fa-calendar-o"></i> 저장일자
+												<i class="fa fa-calendar-o"></i> 비용
 											</h5>
-											<span><%=Time.toString3(projectlist.get(i).getReg_date()) %></span></li>
+											<span><%=contractlist.get(i).getBudget() %> 원</span></li>
 									</ul>
 								</section>
 							</section>

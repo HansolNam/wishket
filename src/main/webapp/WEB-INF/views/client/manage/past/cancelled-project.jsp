@@ -6,10 +6,14 @@
 	AccountInfo account = (AccountInfo)session.getAttribute("account");
 	List<ProjectInfo> projectlist = (List<ProjectInfo>)request.getAttribute("projectlist");
 	int projectCnt = 0;
-	
-	Integer completednum = (Integer)request.getAttribute("completednum");
-	
-	Integer reviewnum = (Integer)request.getAttribute("reviewnum");
+
+	Integer completednum = 0;
+	if((Integer) request.getAttribute("completednum") != null)
+		completednum = (Integer) request.getAttribute("completednum");
+
+	Integer reviewnum = 0;
+	if((Integer) request.getAttribute("reviewnum") != null)
+		reviewnum = (Integer) request.getAttribute("reviewnum");
 	
 	if(projectlist != null)
 		projectCnt = projectlist.size();

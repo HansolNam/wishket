@@ -1,31 +1,30 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="com.wjm.models.AccountInfo"%>
+<%@ page import="com.wjm.main.function.Validator, com.wjm.models.AccountInfo,com.wjm.models.AccountInformationInfo"%>
 <%
-	AccountInfo account = (AccountInfo) session.getAttribute("account");
-	boolean hasAccount = false;
+	AccountInfo this_account = (AccountInfo) request.getAttribute("this_account");
+	AccountInformationInfo this_accountinfo = (AccountInformationInfo) request.getAttribute("this_accountinfo");
+
+	String img_path = this_accountinfo.getProfile_img();
+	if (img_path != null) {
+		if (img_path.isEmpty())
+			img_path = "default_avatar.png";
+	} else
+		img_path = "default_avatar.png";
+
 	String id = "", bank_name="",account_holder="",account_number="";
 	
-	if(account == null) response.sendRedirect("/accounts/login");
-	else
+	if(this_account != null)
 	{
-		id = account.getId();
+		id = this_account.getId();
 		bank_name = (String)request.getAttribute("bank_name");
 		account_holder = (String)request.getAttribute("account_holder");
 		account_number = (String)request.getAttribute("account_number");
 		
-		if(bank_name == null) bank_name = "";
-		if(account_holder == null) account_holder = "";
-		if(account_number == null) account_number = "";
-		
-		if("true".equals((String)request.getAttribute("hasAccount")))
-		{
-			hasAccount = true;
-		}
+		if(!Validator.hasValue(bank_name)) bank_name = "";
+		if(!Validator.hasValue(account_holder)) account_holder = "";
+		if(!Validator.hasValue(account_number)) account_number = "";
 	}
-	
-	
-	
 	%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -74,26 +73,26 @@
 						<h3 class="user-name-tag-heading">클라이언트</h3>
 						<div class="user-name-tag-body">
 							<img alt="<%=id %> 사진" class="img-circle user-img"
-								src="${pageContext.request.contextPath}/resources/upload/profile_img/${profile}" />
+								src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=img_path %>" />
 							<h4 class="username"><%=id %></h4>
-							<a class="profile-setting" href="/wjm/accounts/settings/profile/">기본
-								정보 수정</a>
 						</div>
 					</div>
 					<div class="sidebar-nav">
 						<ul>
-							<li class=""><a class="active"
-								href="/wjm/accounts/settings/profile/">기본 정보 수정</a></li>
-							<li class=""><a href="/wjm/accounts/settings/verify_identity/">신원
+							<li class=""><a
+								href="/wjm/admin/accounts/profile/<%=this_account.getPk()%>">기본 정보</a></li>
+							<li class=""><a href="/wjm/admin/accounts/verify_identity/<%=this_account.getPk()%>">신원
 									인증</a></li>
-							<li class=" active "><a
-								href="/wjm/accounts/settings/bank_account/">계좌 관리</a></li>
-							<li class=""><a href="/wjm/accounts/settings/relogin/">비밀번호
-									변경</a></li>
+							<li class=" active "><a class="active"
+								href="/wjm/wjm/admin/accounts/bank_account/<%=this_account.getPk()%>">계좌 관리</a></li>
 						</ul>
 					</div>
 				</div>
 				<div class="content">
+				<p class="back">
+				<a href='/wjm/admin/home/'>[관리자 홈]으로 가기 <i class='fa fa-arrow-circle-o-right'></i></a>
+					
+				</p>
 					<div class="content-header action">
 						<h3 class="header-text">
 							계좌 관리 <small class="small-text">프로젝트 대금을 지급받을 계좌 정보를
@@ -108,26 +107,11 @@
 									계좌번호</strong>가 필요합니다.
 							</p>
 						</div>
-						<%
-							if(!hasAccount)
-							{
-						%>
-						<h4 id="sub_title">계좌 등록</h4>
-						<%
-							}
-							else
-							{
-						%>
 						<h4 id="sub_title">
-							등록 계좌<input class="btn btn-default" id="do_edit"
-								onclick="show_form()" style="float: right" type="submit"
-								value="수정하기" />
+							등록 계좌
 						</h4>
-						<%
-							}
-						%>
 						<form action="." class="form-horizontal" id="show_bank_form"
-							method="POST" style="margin-top: 25px;<%if(!hasAccount) out.print("display: none;");%>">
+							method="POST" style="margin-top: 25px;">
 							<input name="csrfmiddlewaretoken" type="hidden"
 								value="v1CvkzdEylYHMo4IA35c483YZ2vjwmvs" />
 							<div class="form-group">
@@ -156,98 +140,6 @@
 								</div>
 							</div>
 						</form>
-						<form class="form-horizontal" enctype="multipart/form-data"
-							id="edit_bank_form" method="POST" style="margin-top: 25px;<%if(hasAccount) out.print("display: none;");%>">
-							<input name="csrfmiddlewaretoken" type="hidden"
-								value="7YCuiuWVSyxVfH1qjb8JOSXcBvfKqQBY" /><span
-								class="help-block"></span>
-							<div class="form-group ">
-								<label class="control-label required" for="id_bank"><span>*</span>
-									은행명</label>
-								<div class="control-wrapper">
-									<select class="form-control" id="id_bank" name="bank"
-										required="required"><option value="">은행 선택</option>
-										<option value="1">한국산업은행</option>
-										<option value="2">기업은행</option>
-										<option value="3">국민은행</option>
-										<option value="4">우리은행</option>
-										<option value="5">신한은행</option>
-										<option value="6">하나은행</option>
-										<option value="7">농협</option>
-										<option value="8">단위농협</option>
-										<option value="9">SC은행</option>
-										<option value="10">외환은행</option>
-										<option value="11">한국씨티은행</option>
-										<option value="12">우체국</option>
-										<option value="13">경남은행</option>
-										<option value="14">광주은행</option>
-										<option value="15">대구은행</option>
-										<option value="16">도이치</option>
-										<option value="17">부산은행</option>
-										<option value="18">산림조합</option>
-										<option value="19">산업은행</option>
-										<option value="20">상호저축은행</option>
-										<option value="21">새마을금고</option>
-										<option value="22">수협</option>
-										<option value="23">신협중앙회</option>
-										<option value="24">전북은행</option>
-										<option value="25">제주은행</option>
-										<option value="26">BOA</option>
-										<option value="27">HSBC</option>
-										<option value="28">JP모간</option>
-										<option value="29">교보증권</option>
-										<option value="30">대신증권</option>
-										<option value="31">대우증권</option>
-										<option value="32">동부증권</option>
-										<option value="33">동양증권</option>
-										<option value="34">메리츠증권</option>
-										<option value="35">미래에셋</option>
-										<option value="36">부국증권</option>
-										<option value="37">삼성증권</option>
-										<option value="38">솔로몬투자증권</option>
-										<option value="39">신영증권</option>
-										<option value="40">신한금융투자</option>
-										<option value="41">우리투자증권</option>
-										<option value="42">유진투자은행</option>
-										<option value="43">이트레이드증권</option>
-										<option value="44">키움증권</option>
-										<option value="45">하나대투</option>
-										<option value="46">하이투자</option>
-										<option value="47">한국투자</option>
-										<option value="48">한화증권</option>
-										<option value="49">현대증권</option>
-										<option value="50">HMC증권</option>
-										<option value="51">LIG투자증권</option>
-										<option value="52">NH증권</option>
-										<option value="53">SK증권</option>
-										<option value="54">비엔비파리바은행</option></select>
-								</div>
-							</div>
-							<div class="form-group ">
-								<label class="control-label required" for="id_account_holder"><span>*</span>
-									예금주</label>
-								<div class="control-wrapper">
-									<input class="form-control" id="id_account_holder"
-										name="account_holder" required="required" type="text" />
-								</div>
-							</div>
-							<div class="form-group ">
-								<label class="control-label required" for="id_account_number"><span>*</span>
-									계좌번호</label>
-								<div class="control-wrapper">
-									<input class="form-control" id="id_account_number"
-										name="account_number" required="required" type="text" /><span
-										class="help-block">'-'를 제외하고 입력해주세요.</span>
-								</div>
-							</div>
-							<input id="id_owner" name="owner" type="hidden" value="28155" />
-							<div class="form-group">
-								<div style="float: right; margin-top: 15px; margin-right: 10px;">
-									<input class="btn btn-client" id="bank_account_submit_btn"
-										type="submit" value="등록하기" />
-								</div>
-							</div>
-						</form>
 					</div>
 				</div>
 			</div>
@@ -256,69 +148,6 @@
 	</div>	
 	<jsp:include page="../../footer.jsp" flush="false" />
 
-	<script type="text/javascript">
-    $(document).ready(function(){
-
-		var bank_name = "${bank_name}";
-		var bank_id = "${bank_id}";
-		var account_holder = "${account_holder}";
-		var account_number = "${account_number}";
-
-		var messages = "${messages}";
-		if(messages != null && messages != "")
-			$("#messages").html("<div class='alert alert-warning fade in'>"+messages+"</div>");
-
-		if(bank_name == null || bank_id == null ||account_holder == null || account_number == null)
-			show_form();
-		else if(bank_name == ""||bank_id == ""||account_holder == ""||account_number == "")
-			show_form();
-		else
-			cancel_edit();
-
-		if(bank_id != null && bank_id != "")
-		{
-			var len = document.getElementById("id_bank").length;
-			for(var i=0; i<len; i++)
-			{
-				if(document.getElementById("id_bank").options[i].value == bank_id)
-					{
-						document.getElementById("id_bank").options[i].selected = true;
-						break;
-					}
-			}
-		}
-		if(account_holder != null && account_holder != "")
-		{
-			document.getElementById("id_account_holder").value = account_holder;
-		}
-		if(account_number != null && account_number != "")
-		{
-			document.getElementById("id_account_number").value = account_number;
-		}
-    });
-
-    var bank_id = $('#id_bank').val();
-    function show_form(){
-    	$('#sub_title').html("계좌 등록");
-        $('#edit_bank_form').css('display', 'block');
-        $('#show_bank_form').css('display', 'none');
-        $('#cancel_edit').css('display', 'block');
-        $('#do_edit').css('display', 'none');
-        $('#bank_account_submit_btn').val('등록하기');
-    }
-    function cancel_edit(){
-    	$('#sub_title').html("등록 계좌<input class='btn btn-default' id='do_edit'"+
-    			"onclick='show_form()' style='float: right' type='submit'"+
-    			"value='수정하기' />");
-        $('#edit_bank_form').css('display', 'none');
-        $('#show_bank_form').css('display', 'block');
-        $('#cancel_edit').css('display', 'none');
-        $('#do_edit').css('display', 'block');
-        $('#id_bank').val(bank_id);
-        $('#id_account_holder').val('');
-        $('#id_account_number').val('');
-    }
-</script>
 	<script type="text/javascript">
   $(function() {
     wishket.init();

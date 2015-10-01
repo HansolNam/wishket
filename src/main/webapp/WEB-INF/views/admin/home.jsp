@@ -1,10 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="com.wjm.models.AccountInfo, com.wjm.models.ProjectInfo, java.util.*, com.wjm.main.function.Time"%>
+<%@ page import="java.sql.Timestamp,com.wjm.models.ContractInfo, com.wjm.models.AccountInfo, com.wjm.models.ProjectInfo, java.util.*, com.wjm.main.function.Time"%>
 <%
 	AccountInfo account = (AccountInfo)session.getAttribute("account");
 	List<ProjectInfo> submitted = (List<ProjectInfo>)request.getAttribute("submitted");
 	List<AccountInfo> authenticationlist = (List<AccountInfo>)request.getAttribute("authenticationlist");
+	List<ContractInfo> contractlist = (List<ContractInfo>)request.getAttribute("contractlist");
+	List<ContractInfo> progresslist = (List<ContractInfo>)request.getAttribute("progresslist");
 	%>
 <!DOCTYPE html>
 <html class="no-js modern" lang="ko">
@@ -49,7 +51,7 @@
 			<div class="content">
 				<div class="content-header">
 					<h3 class="header-text">
-						마이외주몬 
+						관리자 페이지 
 					</h3>
 				</div>
 				<div class="content-inner">
@@ -70,10 +72,10 @@
 						</ul>
 					</div>
 					<div class="mywishket-project">
-						<h4 class="mywishket-project-heading">관리자 목록</h4>
+						<h4 class="mywishket-project-heading">관리 목록</h4>
 						<div class="submitted-project">
 							<h5 class="submitted-project-heading">
-								<a href="/wjm/client/manage/project/submitted/">검수 신청</a>
+								<a href="#">검수 신청</a>
 							</h5>
 							<table class="table table-hover">
 								<thead>
@@ -110,7 +112,7 @@
 						</div>
 						<div class="proposal-project">
 							<h5 class="proposal-project-heading">
-								<a href="/wjm/client/manage/recruiting/">미팅 신청</a>
+								<a href="#">미팅 신청</a>
 							</h5>
 							<table class="table table-hover">
 								<thead>
@@ -118,16 +120,103 @@
 										<th>프로젝트 제목</th>
 										<th>클라이언트</th>
 										<th>파트너스</th>
-										<th>도구</th>
+										<th>도구1</th>
+										<th>도구2</th>
+										<th>제출일자</th>
 									</tr>
 								</thead>
-								<tbody><tr><td class='text-muted' colspan='4'>모집 중인 프로젝트가 없습니다.</td></tr></tbody>
+								<tbody>
+								<%
+									if(contractlist == null)
+									{
+								%>
+								<tr><td class='text-muted' colspan='6'>미팅 신청 리스트가 없습니다.</td></tr>
+								<%
+									}
+									else
+									{
+										for(int i=0;i<contractlist.size();i++)
+										{
+								%>
+								<tr>
+									<td><a href="/wjm/project/<%=contractlist.get(i).getProject().getName() %>/<%=contractlist.get(i).getProject_pk() %>"><%=contractlist.get(i).getProject().getName() %></a></td>
+									<td><a href="/wjm/admin/accounts/profile/<%=contractlist.get(i).getClient_pk() %>"><%=contractlist.get(i).getClient_id() %></a></td>
+									<td><a href="/wjm/admin/accounts/profile/<%=contractlist.get(i).getPartners_pk() %>"><%=contractlist.get(i).getPartners_id() %></a></td>
+									<td><a class='btn btn-sm btn-client' href='/wjm/admin/contract/success/<%=contractlist.get(i).getProject_pk()%>/<%=contractlist.get(i).getClient_pk()%>/<%=contractlist.get(i).getPartners_pk()%>'>계약 성사</a></td>
+									<td><a class='btn btn-sm btn-client' href='/wjm/admin/contract/fail/<%=contractlist.get(i).getProject_pk()%>/<%=contractlist.get(i).getClient_pk()%>/<%=contractlist.get(i).getPartners_pk()%>'>계약 실패</a></td>
+									<td><%=Time.toString3(contractlist.get(i).getReg_date()) %></td>
+								</tr>
+								<%
+										}
+									}
+								%>
+								</tbody>
+								
+							</table>
+						</div>
+						<div class="proposal-project">
+							<h5 class="proposal-project-heading">
+								<a href="#">진행중인 프로젝트</a>
+							</h5>
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th>프로젝트 제목</th>
+										<th>클라이언트</th>
+										<th>파트너스</th>
+										<th>남은기간</th>
+										<th>도구1</th>
+										<th>도구2</th>
+									</tr>
+								</thead>
+								<tbody>
+								<%
+									if(progresslist == null)
+									{
+								%>
+								<tr>
+								<td class='text-muted' colspan='6'>진행중인 프로젝트 리스트가 없습니다.</td>
+								</tr>
+								<%
+									}
+									else
+									{
+										for(int i=0;i<progresslist.size();i++)
+										{
+								%>
+								<tr>
+									<td><a href="/wjm/project/<%=progresslist.get(i).getName() %>/<%=progresslist.get(i).getProject_pk() %>"><%=progresslist.get(i).getName() %></a></td>
+									<td><a href="/wjm/admin/accounts/profile/<%=progresslist.get(i).getClient_pk() %>"><%=progresslist.get(i).getClient_id() %></a></td>
+									<td><a href="/wjm/admin/accounts/profile/<%=progresslist.get(i).getPartners_pk() %>"><%=progresslist.get(i).getPartners_id() %></a></td>
+									<td><%
+									Timestamp now = Time.getCurrentTimestamp();
+									now = Time.dateToTimestamp(Time.TimestampToString(now));
+									Timestamp reg_date = progresslist.get(i).getReg_date();
+									reg_date = Time.dateToTimestamp(Time.TimestampToString(reg_date));
+									
+									int remain = Time.remainDate(now, reg_date)/(60*24);
+									
+									if(progresslist.get(i).getTerm() - remain>=0)
+										out.print(progresslist.get(i).getTerm() - remain+" 일 전");
+									else
+										out.print(progresslist.get(i).getTerm() - remain*(-1)+"일 초과");
+									
+									%>/<%=progresslist.get(i).getTerm() %>일</td>
+									<td><a class='btn btn-sm btn-client' href='/wjm/admin/project/complete/success/<%=progresslist.get(i).getProject_pk()%>/<%=progresslist.get(i).getClient_pk()%>/<%=progresslist.get(i).getPartners_pk()%>'>완료</a></td>
+									<td><a class='btn btn-sm btn-client' href='/wjm/admin/project/complete/fail/<%=progresslist.get(i).getProject_pk()%>/<%=progresslist.get(i).getClient_pk()%>/<%=progresslist.get(i).getPartners_pk()%>'>취소</a></td>
+									
+								</tr>
+								<%
+										}
+									}
+								%>
+								</tbody>
 								
 							</table>
 						</div>
 						<div class="contract-project">
 							<h5 class="contract-project-heading">
-								<a href="/wjm/client/manage/contract-in-progress/">인증 서류</a>
+								<a href="#">신원 인증 신청</a>
 							</h5>
 							<table class="table table-hover">
 								<thead>

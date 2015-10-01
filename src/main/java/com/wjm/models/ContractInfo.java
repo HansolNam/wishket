@@ -14,6 +14,42 @@ public class ContractInfo {
 	private int term;
 	private String status;
 	private Timestamp reg_date;
+	private ProjectInfo project;
+	private AccountInfo client;
+	private AccountInfo partners;
+	private AssessmentInfo assessed;
+	private AssessmentInfo assessing;
+	
+	public AssessmentInfo getAssessed() {
+		return assessed;
+	}
+	public void setAssessed(AssessmentInfo assessed) {
+		this.assessed = assessed;
+	}
+	public AssessmentInfo getAssessing() {
+		return assessing;
+	}
+	public void setAssessing(AssessmentInfo assessing) {
+		this.assessing = assessing;
+	}
+	public ProjectInfo getProject() {
+		return project;
+	}
+	public void setProject(ProjectInfo project) {
+		this.project = project;
+	}
+	public AccountInfo getClient() {
+		return client;
+	}
+	public void setClient(AccountInfo client) {
+		this.client = client;
+	}
+	public AccountInfo getPartners() {
+		return partners;
+	}
+	public void setPartners(AccountInfo partners) {
+		this.partners = partners;
+	}
 	public ContractInfo(int pk, int project_pk, int client_pk, int partners_pk, String name, String partners_id,
 			String client_id, int budget, int term, String status, Timestamp reg_date) {
 		super();

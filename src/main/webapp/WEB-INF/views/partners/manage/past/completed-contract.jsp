@@ -1,5 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	<%@ page
+	import="com.wjm.models.AccountInfo, com.wjm.models.ContractInfo, java.util.*, com.wjm.main.function.Time"%>
+<%
+	AccountInfo account = (AccountInfo) session.getAttribute("account");
+	List<ContractInfo> completedlist = (List<ContractInfo>) request.getAttribute("completedlist");
+	int completedCnt = 0;
+
+	Integer reviewnum = 0;
+	if((Integer) request.getAttribute("reviewnum") != null)
+		reviewnum = (Integer) request.getAttribute("reviewnum");
+
+	if (completedlist != null)
+		completedCnt = completedlist.size();
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <!--[if IE 6]><html lang="ko" class="no-js old ie6"><![endif]-->
@@ -52,9 +66,9 @@
 					<div class="user-name-tag">
 						<h3 class="user-name-tag-heading">파트너스</h3>
 						<div class="user-name-tag-body">
-							<img alt="gksthf16112 사진" class="img-circle user-img"
-								src="${pageContext.request.contextPath}/resources/static/img/default_avatar.jpg" />
-							<h4 class="username">gksthf16112</h4>
+							<img alt="<%=account.getId() %> 사진" class="img-circle user-img"
+								src="${pageContext.request.contextPath}/resources/upload/profile_img/${profile}" />
+							<h4 class="username"><%=account.getId() %></h4>
 							<a class="profile-setting" href="/wjm/accounts/settings/profile/">기본
 								정보 수정</a>
 						</div>
@@ -62,9 +76,18 @@
 					<div class="sidebar-nav">
 						<ul>
 							<li class=""><a
-								href="/wjm/partners/manage/past/review-contract/">평가 대기 중</a></li>
+								href="/wjm/partners/manage/past/review-contract/"><%
+										if (reviewnum.intValue() != 0)
+											out.print("<span class='badge badge-info pull-right'>" + reviewnum + "</span> ");
+									%>평가 대기 중</a></li>
 							<li class="active"><a
-								href="/wjm/partners/manage/past/completed-contract/">완료한 프로젝트</a></li>
+								href="/wjm/partners/manage/past/completed-contract/"><span
+									class="badge badge-info pull-right">
+										<%
+											if (completedCnt != 0)
+												out.print(completedCnt);
+										%>
+								</span>완료한 프로젝트</a></li>
 						</ul>
 					</div>
 				</div>
@@ -87,9 +110,109 @@
 							<div style="clear: both;"></div>
 						</div>
 						<section>
+						
+						<%
+						
+							if(completedCnt != 0)
+							{
+								for(int i=0;i<completedCnt;i++)
+								{
+								
+						%>
+						<section>
+						<div class="p5-partners-project-evaluation">
+							<div class="p5-partners-project-evaluation-header">
+								<div class="p5-partners-project-evaluation-title">
+									<h4>
+										<a href="/project/<%=completedlist.get(i).getName() %>/<%=completedlist.get(i).getProject_pk() %>/"><%=completedlist.get(i).getName() %></a>
+									</h4>
+								</div>
+								<div class="p5-partners-project-evaluation-info">
+									<span>클라이언트 <span class="p5-partners-project-info-id"><%=completedlist.get(i).getClient_id()%></span></span>
+									<span>카테고리 <span
+										class="p5-partners-project-info-category"><%=completedlist.get(i).getProject().getCategoryL()%> &gt;
+											<%=completedlist.get(i).getProject().getCategoryM()%></span></span>
+								</div>
+							</div>
+							<div class="p5-partners-project-evaluation-body1">
+								<span><i class="fa fa-clock-o"></i>계약일<span
+									class="p5-partners-project-evaluation-date"><%=Time.toString3(completedlist.get(i).getReg_date())%></span></span>
+								<span><i class="fa fa-won"></i>계약금액<span
+									class="p5-partners-project-evaluation-cost"><%=completedlist.get(i).getBudget() %> 원</span></span>
+								<span><i class="fa fa-clock-o"></i>계약기간<span
+									class="p5-partners-project-evaluation-period"><%=completedlist.get(i).getTerm() %> 일</span></span>
+							</div>
+							<div class="p5-partners-project-evaluation-body2">
+							
+							<%
+								if(completedlist.get(i).getAssessed() != null)
+								{
+									double d = (double)(completedlist.get(i).getAssessed().getProfessionalism()+completedlist.get(i).getAssessed().getSatisfaction()
+											+completedlist.get(i).getAssessed().getCommunication()+completedlist.get(i).getAssessed().getSchedule_observance()+completedlist.get(i).getAssessed().getActiveness());
+									
+									d = (double)d/5.0;
+							%>
+								<h5>평균별점</h5>
+								<div class="star-lg star-lg-4"></div>
+								<span class="p5-partners-project-rating"><%=Math.round(d*10)/10.0 %></span> 
+							</div>
+							<div class="p5-review-specific-info">
+								<div class="p5-review-group1">
+									<span class="p5-review-title">전문성</span> <span
+										class="p5-review-star"><span><div
+												class="rating star-lg star-lg-3"></div></span> <span><%=completedlist.get(i).getAssessed().getProfessionalism() %></span></span> <span
+										class="p5-review-title">만족도</span> <span
+										class="p5-review-star"><span><div
+												class="rating star-lg star-lg-3"></div></span> <span><%=completedlist.get(i).getAssessed().getSatisfaction()%></span></span> <span
+										class="p5-review-title">의사소통</span> <span
+										class="p5-review-star"><span><div
+												class="rating star-lg star-lg-4"></div></span> <span><%=completedlist.get(i).getAssessed().getCommunication()%></span></span>
+								</div>
+								<div class="p5-review-group2">
+									<span class="p5-review-title">일정 준수</span> <span
+										class="p5-review-star"><span><div
+												class="rating star-lg star-lg-5"></div></span> <span><%=completedlist.get(i).getAssessed().getSchedule_observance()%></span></span> <span
+										class="p5-review-title">적극성</span> <span
+										class="p5-review-star"><span><div
+												class="rating star-lg star-lg-5"></div></span> <span><%=completedlist.get(i).getAssessed().getActiveness()%></span></span>
+								</div>
+								<div class="p5-user-comment">
+									<span class="p5-user-img-box"><h6>추천 한마디</h6></span>
+									<span class="p5-user-comment-box"><div>
+											<span class="label label-default label-role">파트너스</span> <span><span
+												class="p5-comment-user-id"><%=completedlist.get(i).getPartners_id()%></span></span>
+										</div>
+										<div class="p5-review-comment"><%=completedlist.get(i).getAssessed().getRecommendation().replaceAll("\r\n","<br/>") %></div></span>
+								</div>
+							</div>
+							
+							<%
+								}
+								else
+								{
+									%>
+									
+								<h5>아직 상대방이 평가를 하지 않았습니다.</h5>
+							</div>
+									<%
+								}
+							%>
+						</div>
+						</section>
+						
+							<%	
+								}
+							}
+							else
+							{
+							%>
 						<section>
 						<p class="text-muted">완료한 프로젝트가 없습니다.</p>
-						</section></section>
+						</section>
+							<%
+							}
+							%>
+						</section>
 					</div>
 				</div>
 			</div>

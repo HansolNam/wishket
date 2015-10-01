@@ -1213,13 +1213,13 @@ public class ProjectController {
 		
 		if(!Validator.hasValue(name))
 		{
-			mv.setViewName("/project");
+			mv.setViewName("redirect:/project");
 			return mv;
 		}
 		
 		if(!Validator.isDigit(pk))
 		{
-			mv.setViewName("/project");
+			mv.setViewName("redirect:/project");
 			return mv;
 		}
 		
@@ -1275,7 +1275,7 @@ public class ProjectController {
 		}
 		else
 		{
-			mv.setViewName("/project");
+			mv.setViewName("redirect:/project");
 			return mv;
 		}
 		
@@ -1419,7 +1419,7 @@ public class ProjectController {
 		
 		if(account == null)
 		{
-			mv.setViewName("/accounts/login");
+			mv.setViewName("redirect:/accounts/login");
 			return mv;
 		}
 		
@@ -1432,29 +1432,59 @@ public class ProjectController {
 			commentDao.create(account.getPk(), project_pk, body);
 		}
 
-		AccountInformationInfo accountinformation = accountInformationDao.select(account.getPk());
-		
-		mv.addObject("accountinfo",accountinformation);
-				
+		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
+
 		ProjectInfo project = projectDao.select(project_pk, name);
 		if(project!=null)
+		{
+			AccountInfo project_account = accountDao.select(project.getAccount_pk());
+			project.setAccount(project_account);
+			
 			mv.addObject("project",project);
+
+			mv.addObject("applicantnum", project.getApplicantnum());
+			AccountInformationInfo accountinformation = accountInformationDao.select(project.getAccount_pk());
+			mv.addObject("accountinfo",accountinformation);
+			
+			if(account.getAccount_type().equals("partners"))
+			{
+				boolean hasInfo, hasIntro, hasSkill, hasPortfolio, not_end, already_apply;
+				
+				hasInfo = partners_infoDao.hasPartnersInfo(account.getPk());
+				hasIntro = accountInformationDao.hasIntroduction(account.getPk());
+				hasSkill = techniqueDao.hasSkill(account.getPk());
+				hasPortfolio = portfolioDao.hasPortfolio(account.getPk());
+				
+				if(Time.remainDate(project.getDeadline(),Time.getCurrentTimestamp())>=0)
+				{
+					not_end = true;
+				}
+				else
+					not_end = false;
+				
+				ApplicantInfo applicant = applicantDao.select(account.getPk(),project.getPk());
+				if(applicant == null)
+					already_apply = false;
+				else
+					already_apply = true;
+				
+				if(hasInfo && hasIntro && hasSkill && hasPortfolio && not_end && !already_apply)
+					{
+						mv.addObject("available", "true");
+					}
+			}
+			
+		}
 		else
 		{
-			mv.setViewName("/project");
+			mv.setViewName("redirect:/project");
 			return mv;
 		}
 		
 		List<CommentInfo> comment = commentDao.select(project_pk);
 		mv.addObject("comment",comment);
 		
-		List<ApplicantInfo> applicantlist = applicantDao.select_project(project_pk);
-		if(applicantlist == null)
-			mv.addObject("applicantnum", 0);
-		else
-			mv.addObject("applicantnum", applicantlist.size());
 		mv.setViewName("/project/about");
-		
 		return mv;
 		
 	}

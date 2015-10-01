@@ -1,6 +1,64 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page
+	import="com.wjm.main.function.Validator, com.wjm.models.AccountInfo,com.wjm.models.AccountInformationInfo, com.wjm.models.AuthenticationInfo"%>
+<%
+	AccountInfo this_account = (AccountInfo) request.getAttribute("this_account");
+	AccountInformationInfo accountinfo = (AccountInformationInfo) request.getAttribute("this_accountinfo");
 
+	String name = accountinfo.getName();
+	String id = this_account.getId();
+	String email = this_account.getEmail();
+	String form = accountinfo.getForm();
+	String profile_img = accountinfo.getProfile_img();
+	String company_name = accountinfo.getCompany_name();
+	String company_representative = accountinfo.getCompany_representative();
+	String sex = accountinfo.getSex();
+	String birth_date = accountinfo.getBirth_date();
+	String regionl = accountinfo.getRegionl();
+	String regionm = accountinfo.getRegionm();
+	String regionr = accountinfo.getRegionr();
+	String cellphone_num = accountinfo.getCellphone_num();
+	String telephone_num = accountinfo.getTelephone_num();
+	String fax_num = accountinfo.getFax_num();
+	int subscription = accountinfo.getSubscription();
+
+	if (!Validator.hasValue(name))
+		name = "";
+	if (!Validator.hasValue(id))
+		id = "";
+	if (!Validator.hasValue(email))
+		email = "";
+	if (!Validator.hasValue(profile_img))
+		profile_img = "default_avatar.png";
+	if (!Validator.hasValue(company_name))
+		company_name = "";
+	if (!Validator.hasValue(company_representative))
+		company_representative = "";
+	if (!Validator.hasValue(regionl))
+		regionl = "";
+	if (!Validator.hasValue(regionm))
+		regionm = "";
+	if (!Validator.hasValue(regionr))
+		regionr = "";
+	if (!Validator.hasValue(cellphone_num))
+		cellphone_num = "";
+	if (!Validator.hasValue(telephone_num))
+		telephone_num = "";
+	if (!Validator.hasValue(fax_num))
+		fax_num = "";
+	
+	if (form.equals("individual"))
+		form = "개인";
+	else if (form.equals("team"))
+		form = "팀";
+	else if (form.equals("individual_business"))
+		form = "개인 사업자";
+	else if (form.equals("corporate_business"))
+		form = "법인 사업자";
+	else
+		form = "";
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <html class="no-js modern" lang="ko">
@@ -42,26 +100,26 @@
 	<jsp:include page="../../header.jsp" flush="false" />
 
 		<div class="container">
-			<div id="messages">${msg}</div>
+			<div id="messages"></div>
 		</div>
 		<div class="page">
 			<div class="page-inner">
 				<div class="sidebar">
 					<div class="user-name-tag">
-						<h3 class="user-name-tag-heading">클라이언트</h3>
+						<h3 class="user-name-tag-heading"><%=this_account.getAccount_type() %></h3>
 						<div class="user-name-tag-body">
 							<img alt=" 사진" class="img-circle user-img"
-								src="${pageContext.request.contextPath}/resources/upload/profile_img/${img_path}" />
-							<h4 class="username">id</h4>
+								src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=profile_img %>" />
+							<h4 class="username"><%=id %></h4>
 						</div>
 					</div>
 					<div class="sidebar-nav">
 						<ul>
 							<li class="active"><a class="active"
-								href="/wjm/admin/accounts/profile/">기본 정보</a></li>
-							<li class=""><a href="/wjm/admin/accounts/verify_identity/">신원
+								href="/wjm/admin/accounts/profile/<%=this_account.getPk()%>">기본 정보</a></li>
+							<li class=""><a href="/wjm/admin/accounts/verify_identity/<%=this_account.getPk()%>">신원
 									인증</a></li>
-							<li class=""><a href="/wjm/admin/accounts/bank_account/">계좌
+							<li class=""><a href="/wjm/admin/accounts/bank_account/<%=this_account.getPk()%>">계좌
 									관리</a></li>
 						</ul>
 					</div>
@@ -87,26 +145,30 @@
 									사진</label>
 								<div class="control-wrapper" style="padding-top: 7px;">
 									<img alt=" 사진" class="partners-img"
-										src="${pageContext.request.contextPath}/resources/upload/profile_img/"
+										src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=profile_img %>"
 										style="border-radius: 10%; border: 1px solid #dedede; width: 220px; height: 220px;" />
 								</div>
 							</div>
 							<div class="form-group">
 								<label class="control-label required"><span>*</span>
-									클라이언트 형태</label>
+									<%=this_account.getAccount_type() %> 형태</label>
 								<div class="control-wrapper">
 									<input disabled="" id="get_form_of_business"
 										name="identification"
 										style="border: none; width: 100%; margin-top: 5px;"
-										type="text" value="" />
+										type="text" value="<%=form %>" />
 								</div>
 							</div>
+							<%
+							if(form.equals("개인") || form.equals("팀"))
+							{
+							%>
 							<div class="form-group">
 								<label class="control-label required"><span>*</span> 이름</label>
 								<div class="control-wrapper">
 									<input disabled="" name="identification"
 										style="border: none; width: 100%; margin-top: 5px;"
-										type="text" value="aaa" />
+										type="text" value="<%=name %>" />
 								</div>
 							</div>
 							<div class="form-group">
@@ -114,7 +176,7 @@
 								<div class="control-wrapper">
 									<input disabled="" name="identification"
 										style="border: none; width: 100%; margin-top: 5px;"
-										type="text" value="aaaa" />
+										type="text" value="<%=sex %>" />
 								</div>
 							</div>
 							<div class="form-group">
@@ -123,16 +185,57 @@
 								<div class="control-wrapper">
 									<input disabled="" name="identification"
 										style="border: none; width: 100%; margin-top: 5px;"
-										type="text" value="aaa-aaa-aaa" />
+										type="text" value="<%=birth_date %>" />
 								</div>
 							</div>
+							<%
+							}
+							else
+							{
+							%>
+							<div class="form-group">
+								<label class="control-label required"><span>*</span> 담당자명</label>
+								<div class="control-wrapper">
+									<input disabled="" name="identification"
+										style="border: none; width: 100%; margin-top: 5px;"
+										type="text" value="<%=name %>" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label required"><span>*</span> 회사명</label>
+								<div class="control-wrapper">
+									<input disabled="" name="identification"
+										style="border: none; width: 100%; margin-top: 5px;"
+										type="text" value="<%=company_name %>" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label required"><span>*</span> 대표자명</label>
+								<div class="control-wrapper">
+									<input disabled="" name="identification"
+										style="border: none; width: 100%; margin-top: 5px;"
+										type="text" value="<%=company_representative %>" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label required"><span>*</span>
+									설립일</label>
+								<div class="control-wrapper">
+									<input disabled="" name="identification"
+										style="border: none; width: 100%; margin-top: 5px;"
+										type="text" value="<%=birth_date %>" />
+								</div>
+							</div>
+							<%
+							}
+							%>
 							<div class="form-group">
 								<label class="control-label required"><span>*</span> 지역
 									- 시, 도</label>
 								<div class="control-wrapper">
 									<input disabled="" name="identification"
 										style="border: none; width: 100%; margin-top: 5px;"
-										type="text" value="aaa" />
+										type="text" value="<%=regionl %>" />
 								</div>
 							</div>
 							<div class="form-group">
@@ -141,14 +244,14 @@
 								<div class="control-wrapper">
 									<input disabled="" name="identification"
 										style="border: none; width: 100%; margin-top: 5px;"
-										type="text" value="aaa" />
+										type="text" value="<%=regionm %>" />
 								</div>
 							</div>
 							<div class="form-group">
 								<label class="control-label">나머지 주소</label>
 								<div class="control-wrapper">
 									<input style="border: none; margin-top: 5px;"
-										type="text" value="aaa" />
+										type="text" value="<%=regionr %>" />
 								</div>
 							</div>
 						</form>
@@ -165,7 +268,7 @@
 								<div class="control-wrapper">
 									<input disabled="" name="cell_phone_number" id="cell_phone_number2"
 										style="border: none; width: 100%; margin-top: 5px;"
-										type="text" value="${cell_phone_number_code }${cell_phone_number_middle }${cell_phone_number_end }" />
+										type="text" value="<%=cellphone_num %>" />
 								</div>
 							</div>
 							<div class="form-group">
@@ -173,7 +276,7 @@
 								<div class="control-wrapper">
 								<input disabled="" name="phone_number" id="phone_number2"
 										style="border: none; width: 100%; margin-top: 5px;"
-										type="text" value="${phone_number_code }${phone_number_entered}" />
+										type="text" value="<%=telephone_num %>" />
 								</div>
 							</div>
 							<div class="form-group">
@@ -181,7 +284,7 @@
 								<div class="control-wrapper">
 									<input disabled="" name="fax_number" id="fax_number2"
 										style="border: none; width: 100%; margin-top: 5px;"
-										type="text" value="${fax_number }" />
+										type="text" value="<%=fax_num %>" />
 								</div>
 							</div>
 						</form>
@@ -196,14 +299,14 @@
 								<div class="control-wrapper">
 									<input disabled="" name="identification"
 										style="border: none; width: 100%; margin-top: 5px;"
-										type="text" value="aaa" />
+										type="text" value="<%=email %>" />
 								</div>
 							</div>
 							<div class="form-group ">
 								<div class="checkbox-wrapper">
 									<div class="checkbox">
 										<label class="" for="email_subscription"><input
-											checked="checked" id="email_subscription"
+											<%if(subscription == 1){ %>checked="checked"<%} %> id="email_subscription"
 											name="email_subscription" value="true" type="checkbox" />외주몬의 프로젝트 소식을
 											구독합니다.</label>
 									</div>
@@ -217,183 +320,6 @@
 		<div id="push"></div>
 	</div>
 <jsp:include page="../../footer.jsp" flush="false" />
-	<script type="text/javascript">
-	
-    $('.content-inner').on('change', '#email_subscription', function(){
-        //$('#email_edit_form').submit();
-        email_submit();
-    });
-    $('.content-inner').on('click', '#connect_submit_btn', function(){
-        //$('#email_edit_form').submit();
-        connect_submit();
-    });
-    $('.content-inner').on('click', '#base_submit_btn', function(){
-        //$('#email_edit_form').submit();
-        base_submit();
-    });
-    function show_connect_form(){
-        $('#show_connect_button').css('display', 'none');
-        $('#connect_show_form').css('display', 'none');
-        $('#connect_edit_form').css('display', 'block');
-    }
-    function show_base_form(){
-        $('#show_base_button').css('display', 'none');
-        $('#base_show_form').css('display', 'none');
-        $('#base_edit_form').css('display', 'block');
-    }
-    function edit_connect_form(){
-        $('#show_connect_button').css('display', 'block');
-        $('#connect_show_form').css('display', 'block');
-        $('#connect_edit_form').css('display', 'none');
-        $('#connect_submit_btn').val('등록하기');
-    }
-    function edit_base_form(){
-        $('#show_base_button').css('display', 'block');
-        $('#base_show_form').css('display', 'block');
-        $('#base_edit_form').css('display', 'none');
-        $('#base_submit_btn').val('등록하기');
-    }
-    $(function () {
-        var $form, $form_val;
-        $form = $('#form_of_business');
-        $form_val = $form.val();
-        if ($form_val != 'individual') {
-            if($form_val == 'team'){
-                $('#representative_label').html('<span>*</span> 팀 대표명');
-                $('#company_name_label').html('<span>*</span> 팀명');
-            }
-            else{
-                $('#representative_label').html('<span>*</span> 대표자명');
-                $('#company_name_label').html('<span>*</span> 회사명');
-            }
-            $('#company_name').parents('.form-group').show();
-            $('#representative').parents('.form-group').show();
-            $('#date_of_birth_label').html('<span>*</span> 설립일');
-            $('#full_name_label').html('<span>*</span> 담당자명');
-            $('#gender_1').parents('.form-group').hide();
-        }
-        else{
-            $('#gender_1').parents('.form-group').show();
-            $('#full_name_label').html('<span>*</span> 이름');
-            $('#date_of_birth_label').html('<span>*</span> 생년월일');
-        }
-        $form.on('change', function() {
-            $form_val = $(this).val();
-            if ($form_val == 'individual') {
-                $('#full_name_label').html('<span>*</span> 이름');
-                $('#date_of_birth_label').html('<span>*</span> 생년월일');
-                $('#full_name_view_label').html('<span>*</span> 이름');
-                $('#date_of_birth_view_label').html('<span>*</span> 생년월일');
-                $('#company_name').parents('.form-group').hide();
-                $('#representative').parents('.form-group').hide();
-                $('#gender_1').parents('.form-group').show();
-            }
-            else if ($form_val == 'team'){
-                $('#full_name_label').html('<span>*</span> 담당자명');
-                $('#representative_label').html('<span>*</span> 팀 대표명');
-                $('#company_name_label').html('<span>*</span> 팀명');
-                $('#date_of_birth_label').html('<span>*</span> 설립일');
-                $('#full_name_view_label').html('<span>*</span> 담당자명');
-                $('#representative_view_label').html('<span>*</span> 팀 대표명');
-                $('#company_name_view_label').html('<span>*</span> 팀명');
-                $('#date_of_birth_view_label').html('<span>*</span> 설립일');
-                $('#company_name').parents('.form-group').show();
-                $('#representative').parents('.form-group').show();
-                $('#gender_1').parents('.form-group').hide();
-            }
-            else {
-                $('#full_name_label').html('<span>*</span> 담당자명');
-                $('#representative_label').html('<span>*</span> 대표자명');
-                $('#company_name_label').html('<span>*</span> 회사명');
-                $('#date_of_birth_label').html('<span>*</span> 설립일');
-                $('#full_name_view_label').html('<span>*</span> 담당자명');
-                $('#representative_view_label').html('<span>*</span> 팀 대표명');
-                $('#company_name_view_label').html('<span>*</span> 팀명');
-                $('#date_of_birth_view_label').html('<span>*</span> 설립일');
-                $('#company_name').parents('.form-group').show();
-                $('#representative').parents('.form-group').show();
-                $('#gender_1').parents('.form-group').hide();
-            }
-        });
-    });
-    
-    function getSigungu(value)
-    {
-    	var options = '';
-    	
-    	if(value == '')
-    		return false;
-    	
-    	$.ajax({
-    		url : "/wjm/getAddress",
-    		type : "POST",
-    		data : 
-    		{
-    			area:value
-    		},
-    		dataType : "JSON",
-    		success : function(data) {
-    			
-    			if(data!=null || data!="")
-    			{
-    				var list = data.arealist;
-    				var listLen = list.length;
-    				var $addressSigungu = $('input[name="address_sigungu"]');
-                    var addressSigunguVal = $addressSigungu.val();
-
-                    options = '';
-    				for(var i=0;i<listLen;i++)
-    				{
-                        if (list[i] == addressSigunguVal) {
-                            options += "<option value='" + list[i] + "' selected='selected'>" + list[i] + "</option>";
-                        } else {
-                            options += "<option value='" + list[i] + "'>" + list[i] + "</option>";
-                        }
-    				}
-    	            $('#sigungu').html(options);
-    	            $('#sigungu').selecter('refresh');
-    			}
-    		},
-
-    		error : function(request, status, error) {
-    			if (request.status != '0') {
-    				alert("code : " + request.status + "\r\nmessage : "
-    						+ request.reponseText + "\r\nerror : " + error);
-    			}
-    		}
-    	});
-
-        if (value === '') {
-            options = '<option value="">선택</option>';
-            $('#sigungu').html(options);
-            $('#sigungu').selecter('refresh');
-        }
-    }
-    $(function () {
-        var $sido, sido_val;
-
-        $sido = $('#address_sido');
-        sido_val = $sido.val();
-        if (sido_val !== 0) {
-            getSigungu(sido_val);
-        }
-
-        $sido.on('change', function() {
-            var value;
-            value = $(this).val();
-            getSigungu(value);
-            
-        });
-    });
-        $('.content-inner').on('click','#notify-modal-btn', function(e) {
-            e.preventDefault();
-            $('#notify-modal').modal('toggle');
-        });
-        $('.content-inner').on('click','#notify-cancel-modal-btn', function(e) {
-            e.preventDefault();
-            $('#notify-cancel-modal').modal('toggle');
-        });
-</script>
 	<script type="text/javascript">
   $(function() {
     wishket.init();
