@@ -78,7 +78,7 @@ public class ClientController {
 		}
 		if(!AccountCheck(account))
 		{
-			mv.setViewName("redirect:/error");
+			mv.setViewName("redirect:/error/404error");
 			return mv;
 		}
 		
@@ -112,7 +112,7 @@ public class ClientController {
 		}
 		if(!AccountCheck(account))
 		{
-			mv.setViewName("redirect:/error");
+			mv.setViewName("redirect:/error/404error");
 			return mv;
 		}
 		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
@@ -144,7 +144,7 @@ public class ClientController {
 		}
 		if(!AccountCheck(account))
 		{
-			mv.setViewName("redirect:/error");
+			mv.setViewName("redirect:/error/404error");
 			return mv;
 		}
 		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
@@ -179,7 +179,7 @@ public class ClientController {
 		}
 		if(!AccountCheck(account))
 		{
-			mv.setViewName("redirect:/error");
+			mv.setViewName("redirect:/error/404error");
 			return mv;
 		}
 		
@@ -189,14 +189,14 @@ public class ClientController {
 			if(contract.getClient_pk() != account.getPk())
 			{
 				logger.info("다른 사람이 해당 평가에 접근중");
-				mv.setViewName("redirect:/error");
+				mv.setViewName("redirect:/error/404error");
 				return mv;
 			}
 		}
 		else
 		{
 			logger.info("해당 계약이 존재하지 않음");
-			mv.setViewName("redirect:/error");
+			mv.setViewName("redirect:/error/404error");
 			return mv;
 		}
 		
@@ -231,7 +231,7 @@ public class ClientController {
 		}
 		if(!AccountCheck(account))
 		{
-			mv.setViewName("redirect:/error");
+			mv.setViewName("redirect:/error/404error");
 			return mv;
 		}
 		
@@ -241,14 +241,14 @@ public class ClientController {
 			if(contract.getClient_pk() != account.getPk())
 			{
 				logger.info("다른 사람이 해당 평가에 접근중");
-				mv.setViewName("redirect:/error");
+				mv.setViewName("redirect:/error/404error");
 				return mv;
 			}
 		}
 		else
 		{
 			logger.info("해당 계약이 존재하지 않음");
-			mv.setViewName("redirect:/error");
+			mv.setViewName("redirect:/error/404error");
 			return mv;
 		}
 		
@@ -379,7 +379,7 @@ public class ClientController {
 		}
 		if(!AccountCheck(account))
 		{
-			mv.setViewName("redirect:/error");
+			mv.setViewName("redirect:/error/404error");
 			return mv;
 		}
 		
@@ -404,7 +404,7 @@ public class ClientController {
 		}
 		if(!AccountCheck(account))
 		{
-			mv.setViewName("redirect:/error");
+			mv.setViewName("redirect:/error/404error");
 			return mv;
 		}
 		List<ProjectInfo> projectlist = projectDao.selectStatus(account.getPk(),"임시저장");
@@ -434,7 +434,7 @@ public class ClientController {
 		}
 		if(!AccountCheck(account))
 		{
-			mv.setViewName("redirect:/error");
+			mv.setViewName("redirect:/error/404error");
 			return mv;
 		}
 		List<ProjectInfo> projectlist = projectDao.selectStatus(account.getPk(),"등록실패");
@@ -458,7 +458,7 @@ public class ClientController {
 		}
 		if(!AccountCheck(account))
 		{
-			mv.setViewName("redirect:/error");
+			mv.setViewName("redirect:/error/404error");
 			return mv;
 		}
 		
@@ -483,7 +483,7 @@ public class ClientController {
 		}
 		if(!AccountCheck(account))
 		{
-			mv.setViewName("redirect:/error");
+			mv.setViewName("redirect:/error/404error");
 			return mv;
 		}
 		
@@ -521,7 +521,7 @@ public class ClientController {
 		}
 		if(!AccountCheck(account))
 		{
-			mv.setViewName("redirect:/error");
+			mv.setViewName("redirect:/error/404error");
 			return mv;
 		}
 

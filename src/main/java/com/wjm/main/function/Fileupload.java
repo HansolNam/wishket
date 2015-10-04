@@ -212,6 +212,43 @@ public class Fileupload {
 		
 		return true;
 	}
+
+	static public String upload_notice(String realPath, MultipartFile image, String replaceName)
+			 throws IOException, FileUploadException{
+		
+		// \wjm\ + 
+		realPath += "resources\\upload\\notice\\";
+		String savePath = realPath.replace('\\','/');
+		
+		File targetDir = new File(savePath);
+		if (!targetDir.exists()) {
+	         targetDir.mkdirs();
+	      }
+
+		String rootPath, FinalFileName;
+		try{
+			byte[] bytes = image.getBytes();
+			
+			FinalFileName = replaceName;
+			
+			rootPath = savePath+FinalFileName;
+			logger.info("rootPath = "+rootPath);
+			
+			File serverFile = new File(rootPath);
+			BufferedOutputStream stream = new BufferedOutputStream(
+					new FileOutputStream(serverFile));
+			stream.write(bytes);
+			stream.close();
+
+			logger.info("img path = "+replaceName);
+			return FinalFileName;
+		}
+		catch(Exception e){
+			logger.info("Exception = "+e.toString());
+			return "error";
+		}
+		
+	}
 	
 	static public boolean isValidFileSize(MultipartFile image, int max) throws  IOException
 	{

@@ -127,7 +127,7 @@ public class PartnersController {
 		AccountInfo this_account = accountDao.select(id);
 
 		if (this_account == null) {
-			mv.setViewName("/error");
+			mv.setViewName("redirect:/error/404error");
 			return mv;
 		}
 
@@ -256,7 +256,7 @@ public class PartnersController {
 		}
 		if(!AccountCheck(account))
 		{
-			mv.setViewName("redirect:/error");
+			mv.setViewName("redirect:/error/404error");
 			return mv;
 		}
 		AccountInfo this_account = accountDao.select(id);
@@ -302,7 +302,7 @@ public class PartnersController {
 		}
 		if(!AccountCheck(account))
 		{
-			mv.setViewName("redirect:/error");
+			mv.setViewName("redirect:/error/404error");
 			return mv;
 		}
 		AccountInfo this_account = accountDao.select(id);
@@ -474,7 +474,7 @@ public class PartnersController {
 		}
 		if(!AccountCheck(account))
 		{
-			mv.setViewName("redirect:/error");
+			mv.setViewName("redirect:/error/404error");
 			return mv;
 		}
 		AccountInfo this_account = accountDao.select(id);
@@ -525,7 +525,7 @@ public class PartnersController {
 		}
 		if(!AccountCheck(account))
 		{
-			mv.setViewName("redirect:/error");
+			mv.setViewName("redirect:/error/404error");
 			return mv;
 		}
 		AccountInfo this_account = accountDao.select(id);
@@ -579,7 +579,7 @@ public class PartnersController {
 		}
 		if(!AccountCheck(account))
 		{
-			mv.setViewName("redirect:/error");
+			mv.setViewName("redirect:/error/404error");
 			return mv;
 		}
 		AccountInfo this_account = accountDao.select(id);
@@ -2448,7 +2448,7 @@ public class PartnersController {
 		}
 		else if(!account.getAccount_type().equals("partners"))
 		{
-			mv.setViewName("redirect:/error");
+			mv.setViewName("redirect:/error/404error");
 			return mv;
 		}
 		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
@@ -2572,7 +2572,7 @@ public class PartnersController {
 		}
 		else if(!account.getAccount_type().equals("partners"))
 		{
-			mv.setViewName("/accounts/error");
+			mv.setViewName("redirect:/error/404error");
 			return mv;
 		}
 		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
@@ -2605,7 +2605,7 @@ public class PartnersController {
 		}
 		if(!AccountCheck(account))
 		{
-			mv.setViewName("redirect:/error");
+			mv.setViewName("redirect:/error/404error");
 			return mv;
 		}
 		
@@ -2615,14 +2615,14 @@ public class PartnersController {
 			if(contract.getPartners_pk() != account.getPk())
 			{
 				logger.info("다른 사람이 해당 평가에 접근중");
-				mv.setViewName("redirect:/error");
+				mv.setViewName("redirect:/error/404error");
 				return mv;
 			}
 		}
 		else
 		{
 			logger.info("해당 계약이 존재하지 않음");
-			mv.setViewName("redirect:/error");
+			mv.setViewName("redirect:/error/404error");
 			return mv;
 		}
 		
@@ -2657,7 +2657,7 @@ public class PartnersController {
 		}
 		if(!AccountCheck(account))
 		{
-			mv.setViewName("redirect:/error");
+			mv.setViewName("redirect:/error/404error");
 			return mv;
 		}
 		
@@ -2667,14 +2667,14 @@ public class PartnersController {
 			if(contract.getPartners_pk() != account.getPk())
 			{
 				logger.info("다른 사람이 해당 평가에 접근중");
-				mv.setViewName("redirect:/error");
+				mv.setViewName("redirect:/error/404error");
 				return mv;
 			}
 		}
 		else
 		{
 			logger.info("해당 계약이 존재하지 않음");
-			mv.setViewName("redirect:/error");
+			mv.setViewName("redirect:/error/404error");
 			return mv;
 		}
 		
@@ -2806,7 +2806,7 @@ public class PartnersController {
 		}
 		else if(!account.getAccount_type().equals("partners"))
 		{
-			mv.setViewName("redirect:/accounts/error");
+			mv.setViewName("redirect:/error/404error");
 			return mv;
 		}
 		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));

@@ -32,9 +32,9 @@ public class MainController {
 	private ProjectDao projectDao;
 	
 	/**
-	 * Ȩȭ��
+	 * index
 	 */
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public ModelAndView MainController_index(HttpServletRequest request, ModelAndView mv) {
 		logger.info("index Page");
 		
@@ -94,13 +94,49 @@ public class MainController {
 		return mv;
 	}
 	/**
-	 * ���� �Ұ� ȭ��
+	 * 404error
 	 */
-	@RequestMapping(value = "/error", method = RequestMethod.GET)
-	public String MainController_error(HttpServletRequest request) {
-		logger.info("error Page");
+	@RequestMapping(value = "/error/400error", method = RequestMethod.GET)
+	public String MainController_400error(HttpServletRequest request) {
+		logger.info("400 error Page");
 		
-		return "error";
+		return "/error/400error";
+	}
+	/**
+	 * 403error
+	 */
+	@RequestMapping(value = "/error/403error", method = RequestMethod.GET)
+	public String MainController_403error(HttpServletRequest request) {
+		logger.info("403 error Page");
+		
+		return "/error/403error";
+	}
+	/**
+	 * 404error
+	 */
+	@RequestMapping(value = "/error/404error", method = RequestMethod.GET)
+	public String MainController_404error(HttpServletRequest request) {
+		logger.info("404 error Page");
+		
+		return "/error/404error";
+	}
+	/**
+	 * 500error
+	 */
+	@RequestMapping(value = "/error/500error", method = RequestMethod.GET)
+	public String MainController_500error(HttpServletRequest request) {
+		logger.info("500 error Page");
+		
+		return "/error/500error";
+	}
+	/**
+	 * 예외 발생
+	 */
+	@RequestMapping(value = "/error/error", method = RequestMethod.GET)
+	public String MainController_error(HttpServletRequest request) {
+		logger.info("Exception Page");
+		
+		return "/error/error";
 	}
 
 	/**
@@ -178,7 +214,7 @@ public class MainController {
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public String MainController_test(HttpServletRequest request) {
 		logger.info("test Page");
-		
+
 		return "test";
 	}
 }

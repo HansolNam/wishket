@@ -82,7 +82,7 @@ public class MywjmController {
 		}
 		else if(!account.getAccount_type().equals("partners"))
 		{
-			mv.setViewName("/error");
+			mv.setViewName("/error/404error");
 			return mv;
 		}
 		

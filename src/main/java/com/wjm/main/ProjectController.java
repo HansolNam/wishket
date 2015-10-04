@@ -298,7 +298,7 @@ public class ProjectController {
 		
 		if(project == null)
 		{
-			mv.setViewName("/error");
+			mv.setViewName("redirect:/error/404error");
 			return mv;
 		}
 		else
@@ -1066,7 +1066,7 @@ public class ProjectController {
 
 		ProjectInfo project = projectDao.select(pk, name);
 		if(project == null)
-			mv.setViewName("/error");
+			mv.setViewName("redirect:/error/404error");
 		
 		AccountInformationInfo this_accountinfo = accountInformationDao.select(project.getAccount_pk());
 		AccountInfo this_account = accountDao.select(project.getPk());
