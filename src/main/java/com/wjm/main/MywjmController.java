@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -15,10 +16,12 @@ import org.springframework.web.servlet.ModelAndView;
 import com.wjm.dao.AccountDao;
 import com.wjm.dao.AccountInformationDao;
 import com.wjm.dao.ApplicantDao;
+import com.wjm.dao.NoticeDao;
 import com.wjm.dao.ProjectDao;
 import com.wjm.models.AccountInfo;
 import com.wjm.models.ApplicantInfo;
 import com.wjm.models.ContractInfo;
+import com.wjm.models.NoticeInfo;
 import com.wjm.models.ProjectInfo;
 
 /**
@@ -40,6 +43,9 @@ public class MywjmController {
 	
 	@Autowired
 	private AccountInformationDao accountInformationDao;
+	
+	@Autowired
+	private NoticeDao noticeDao;
 	/**
 	 * 클라이언트 마이페이지
 	 */
@@ -58,6 +64,11 @@ public class MywjmController {
 			mv.setViewName("redirect:/accounts/login");
 			return mv;
 		}
+		
+
+		List<NoticeInfo> notice = noticeDao.select_limit(3);
+		mv.addObject("notice",notice);
+		
 		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
 
 		mv.addObject("projectlist",projectlist);
@@ -86,7 +97,8 @@ public class MywjmController {
 			return mv;
 		}
 		
-		
+		List<NoticeInfo> notice = noticeDao.select_limit(3);
+		mv.addObject("notice",notice);
 		
 		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
 
@@ -101,5 +113,26 @@ public class MywjmController {
 		
 		return mv;
 	}
-	
+	/**
+	 * 공지사항 보기 페이지
+	 */
+	@RequestMapping(value = "/mywjm/notice/preview/{pk}", method = RequestMethod.GET)
+	public ModelAndView AdminController_notice_preview(HttpServletRequest request, ModelAndView mv,
+			@PathVariable("pk") int pk) {
+		logger.info("/mywjm/notice/preview/{pk} Page");
+		
+		NoticeInfo notice = noticeDao.select(pk);
+		
+		if(notice == null)
+		{
+			mv.setViewName("redirect:/index");
+			return mv;
+		}
+		
+		mv.addObject("notice",notice);
+		
+		
+		mv.setViewName("/mywjm/notice/preview");
+		return mv;
+	}
 }

@@ -5,14 +5,15 @@
 <%@ page
 	import="com.wjm.main.function.Time, java.sql.Timestamp, com.wjm.models.ProjectInfo, com.wjm.models.ApplicantInfo"%>
 <%@ page
-	import="com.wjm.main.function.Validator, com.wjm.models.ContractInfo"%>
+	import="com.wjm.models.NoticeInfo,com.wjm.main.function.Validator, com.wjm.models.ContractInfo"%>
 
 <%
 	AccountInfo account = (AccountInfo) session.getAttribute("account");
 	List<ProjectInfo> interest = (List<ProjectInfo>)request.getAttribute("interest");
 	List<ApplicantInfo> apply = (List<ApplicantInfo>)request.getAttribute("apply");
 	List<ContractInfo> contract = (List<ContractInfo>)request.getAttribute("contract");
-	
+	List<NoticeInfo> notice = (List<NoticeInfo>)request.getAttribute("notice");
+
 	if(interest != null)
 		if(interest.size() == 0)
 			interest = null;
@@ -101,17 +102,21 @@
 					<div class="notice">
 						<h4 class="notice-heading">공지사항</h4>
 						<ul class="notice-list list-unstyled">
-							<li><span class="label label-notice">새소식</span> <a
-								href="http://goo.gl/1DCKCs" target="_blank">[업데이트] 파트너 프로필
-									페이지 리뉴얼 - 평가 및 데이터 차트화</a> <span class="notice-date">2015.
-									08. 20</span></li>
-							<li><span class="label label-notice">새소식</span> <a
-								href="http://bit.ly/1He8Lgm" target="_blank">클라이언트를 사로잡는 지원서
-									작성 가이드</a> <span class="notice-date">2015. 06. 24</span></li>
-							<li><a
-								href="http://blog.wishket.com/프리랜서들이-협상-중에-가장-많이-저지르는-실수-5가/"
-								target="_blank">프리랜서들이 협상 중에 많이 저지르는 실수 5가지</a> <span
-								class="notice-date">2015. 01. 09</span></li>
+						<%
+							if(notice != null && notice.size()>0)
+							{
+								for(int i=0;i<notice.size();i++)
+								{
+						%>
+						<li>
+							<span class="label label-notice">새소식</span>
+							<a href="/wjm/mywjm/notice/preview/<%=notice.get(i).getPk() %>" target="_blank"><%=notice.get(i).getName() %></a> 
+							<span class="notice-date"><%=Time.toString3(notice.get(i).getReg_date()) %></span>
+						</li>
+						<%
+								}
+							}
+						%>
 						</ul>
 					</div>
 					<div class="mywishket-project">

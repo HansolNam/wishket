@@ -34,6 +34,10 @@ public class ProjectInfo {
 	}
 	private AccountInfo account;
 
+	public ProjectInfo()
+	{
+		super();
+	}
 	public ProjectInfo(int pk, int account_pk, String categoryL, String categoryM, int another, int applicantnum,
 			String name, int period, int budget, String plan_status, String description, String technique,
 			Timestamp deadline, String meeting_type, String meeting_area, String meeting_area_detail,

@@ -80,10 +80,6 @@
 				</p>
 				<div class="content-inner">
 					<div class="header-text project-detail-header"><%=project.getName()%>
-						<span class="label label-sm label-reviewing"><%=project.getStatus()%></span>
-						<span class="applicant-count">총 <span class="applicant-num">0명</span>
-							지원
-						</span>
 					</div>
 					<div class="project-detail-category"><%=project.getCategoryL()%>
 						&gt;
@@ -173,6 +169,11 @@
 							class="btn btn-large btn-project-application btn-default btn-block"
 							href="/wjm/admin/project/<%=project.getName()%>/<%=project.getPk()%>/exam/fail/" style="margin-bottom: 0;"><span
 							id="interest_action_text">프로젝트 등록 거부하기</span></a>
+						<hr>
+						<a
+							class="btn btn-large btn-project-application btn-default btn-block"
+							href="/wjm/admin/project/<%=project.getName()%>/<%=project.getPk()%>/edit/" style="margin-bottom: 0;"><span
+							id="interest_action_text">프로젝트 수정하기</span></a>
 					</div>
 				</div>
 			</div>

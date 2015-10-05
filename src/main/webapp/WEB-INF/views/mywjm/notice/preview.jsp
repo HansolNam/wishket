@@ -4,6 +4,7 @@
 	import="com.wjm.models.NoticeInfo,com.wjm.models.AccountInfo, com.wjm.main.function.Time, java.sql.Timestamp"%>
 <%
 	NoticeInfo notice = (NoticeInfo) request.getAttribute("notice");
+	AccountInfo account = (AccountInfo) session.getAttribute("account");
 
 	String content = "";
 	String name = "";
@@ -78,7 +79,7 @@
 		<div class="page">
 			<div class="content">
 				<p class="back">
-				<a href='/wjm/admin/home/'>[관리자 홈]으로 가기 <i class='fa fa-arrow-circle-o-right'></i></a>
+				<a href='/wjm/mywjm/<%=account.getAccount_type() %>/'>[마이외주몬 홈]으로 가기 <i class='fa fa-arrow-circle-o-right'></i></a>
 					
 				</p>
 				<div class="content-inner">

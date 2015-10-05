@@ -1,8 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="com.wjm.main.function.Validator, com.wjm.models.AccountInfo, com.wjm.models.ProjectInfo, java.util.*, com.wjm.main.function.Time"%>
+<%@ page import="com.wjm.main.function.Validator,com.wjm.models.NoticeInfo, com.wjm.models.AccountInfo, com.wjm.models.ProjectInfo, java.util.*, com.wjm.main.function.Time"%>
 <%
 	AccountInfo account = (AccountInfo)session.getAttribute("account");
+	List<NoticeInfo> notice = (List<NoticeInfo>)request.getAttribute("notice");
+
 	List<ProjectInfo> projectlist = (List<ProjectInfo>)request.getAttribute("projectlist");
 	int check_cnt = 0;
 	int recruit_cnt = 0;
@@ -90,17 +92,21 @@
 					<div class="notice">
 						<h4 class="notice-heading">공지사항</h4>
 						<ul class="notice-list list-unstyled">
-							<li><span class="label label-notice">새소식</span> <a
-								href="http://goo.gl/1DCKCs" target="_blank">[업데이트] 파트너 프로필
-									페이지 리뉴얼 - 평가 및 데이터 차트화</a> <span class="notice-date">2015.
-									08. 20</span></li>
-							<li><a href="http://goo.gl/SLa1uy" target="_blank">CEO의
-									입장에서 바라본 원격 근무의 장점</a> <span class="notice-date">2015. 05.
-									04</span></li>
-							<li><a
-								href="http://blog.wishket.com/%EC%9C%84%EC%8B%9C%EC%BC%93-%EB%8C%80%EA%B8%88-%EB%B3%B4%ED%98%B8%EB%A5%BC-%ED%86%B5%ED%95%B4-%EC%8B%A0%EB%A2%B0%ED%95%A0-%EC%88%98-%EC%9E%88%EB%8A%94-%EA%B3%84%EC%95%BD%EC%9D%"
-								target="_blank">[인터뷰] “대금 보호를 통해 신뢰할 수 있는 계약을 할 수 있었습니다</a> <span
-								class="notice-date">2015. 01. 09</span></li>
+						<%
+							if(notice != null && notice.size()>0)
+							{
+								for(int i=0;i<notice.size();i++)
+								{
+						%>
+						<li>
+							<span class="label label-notice">새소식</span>
+							<a href="/wjm/mywjm/notice/preview/<%=notice.get(i).getPk() %>" target="_blank"><%=notice.get(i).getName() %></a> 
+							<span class="notice-date"><%=Time.toString3(notice.get(i).getReg_date()) %></span>
+						</li>
+						<%
+								}
+							}
+						%>
 						</ul>
 					</div>
 					<div class="mywishket-project">

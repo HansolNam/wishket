@@ -52,7 +52,7 @@
 					</h3>
 				</div>
 				<div class="content-inner">
-					<form action="/wjm/project/add/edit/<%=project.getPk() %>" class="form-horizontal-70" data-behaviours="lock"
+					<form class="form-horizontal-70" data-behaviours="lock" id="project-edit-form"
 						enctype="multipart/form-data" method="POST"
 						novalidate="novalidate">
 						<input name="csrfmiddlewaretoken" type="hidden"
@@ -63,15 +63,17 @@
 								<label class="control-label required" for="category"><span>*</span>카테고리</label>
 								<div class="control-wrapper">
 									<div class="category-wrapper">
-										<select id="category" name="category" required="required"><option
-												value="">카테고리</option>
+										<select id="category" name="category" required="required">
+											<option value="">카테고리</option>
 											<option value="개발">개발</option>
-											<option value="디자인">디자인</option></select><select id="sub_category"
-											name="sub_category" required="required"><option
-												value="">세부 카테고리</option></select>
+											<option value="디자인">디자인</option>
+										</select>
+										
+										<select id="sub_category" name="sub_category" required="required">
+											<option value="">세부 카테고리</option>
+										</select>
 									</div>
 									<span class="help-block">프로젝트 카테고리를 선택해 주세요.</span>
-									<span class="help-block">${category_msg}</span>
 								</div>
 							</div>
 							<div class="form-group form-siblings" id="is_turnkey_div">
@@ -101,7 +103,6 @@
 										maxlength="30" name="title" required="required" size="30"
 										type="text" /><span class="help-block">프로젝트 제목을 입력해
 										주세요. (30자 이내)</span>
-									<span class="help-block">${title_msg}</span>
 								</div>
 							</div>
 							<div class="form-group project-term-form-group " id="project_term_div">
@@ -115,7 +116,6 @@
 									</div>
 									<span class="help-block">프로젝트를 진행할 기간을 일 단위로 입력해 주세요.
 										(최대 3자리)</span>
-									<span class="help-block">${project_term_msg}</span>
 								</div>
 							</div>
 							<div class="form-group project-term-form-group " id="budget_maximum_div">
@@ -130,7 +130,6 @@
 									</div>
 									<span class="help-block">지출 가능한 예산을 입력해 주세요. ( VAT 별도, 예
 										: 100,000,000)</span>
-									<span class="help-block">${budget_maximum_msg}</span>
 								</div>
 							</div>
 							<div class="form-group description-form-group " id="planning_status_div">
@@ -169,7 +168,6 @@
 													</label>
 												</div></label></li>
 									</ul>
-									<span class="help-block">${planning_status_msg}</span>
 									
 								</div>
 							</div>
@@ -184,7 +182,6 @@
 											<span class="label label-danger">주의</span> 이메일, 전화번호 등을 게시하는
 											경우 서비스 이용에 제재를 받을 수 있습니다.
 										</p></span>
-									<span class="help-block">${description_msg}</span>
 								</div>
 							</div>
 							<div class="form-group " id="skill_required_div">
@@ -195,7 +192,6 @@
 										class="help-block">다수의 관련 기술을 입력 할때에는 쉼표(,)로 구분해 주세요.
 										(최대 5개)<br />예) Photoshop, Android, HTML5, Python, Django
 									</span>
-									<span class="help-block">${skill_required_msg}</span>
 								</div>
 							</div>
 							<div class="form-group description-form-group">
@@ -235,7 +231,6 @@
 										class="help-block">사전 미팅 방식을 선택해주세요.<br />마음에 드는 지원자와의
 										미팅을 위시켓에서 주선해드립니다.
 									</span>
-									<span class="help-block">${method_pre_interview_msg}</span>
 								</div>
 							</div>
 							<div class="form-group address-form-group " id="address_div">
@@ -266,7 +261,6 @@
 												value="">시, 군, 구</option></select>
 									</div>
 									<span class="help-block">사전 미팅을 진행할 지역을 선택해 주세요</span>
-									<span class="help-block">${address_msg}</span>
 								</div>
 							</div>
 							<div class="form-group address-form-group new-date-form " id="date_expected_kick_off_div">
@@ -308,7 +302,6 @@
 												id="has_manage_experience_2" name="has_manage_experience"
 												type="radio" value="false" />아니오, 없습니다.</label></li>
 									</ul>
-									<span class="help-block">${has_manage_experience_msg}</span>
 								</div>
 							</div>
 							<div class="form-group prefer-partner-form-group " id="prefer_partner_div">
@@ -332,7 +325,6 @@
 												id="prefer_partner_5" name="prefer_partner" type="radio"
 												value="individual" />개인</label></li>
 									</ul>
-									<span class="help-block">${prefer_partner_msg}</span>
 								</div>
 							</div>
 							<div class="form-group prefer-partner-form-group " id="submit_purpose_div">
@@ -347,7 +339,6 @@
 												id="submit_purpose_2" name="submit_purpose" type="radio"
 												value="inquire" />견적 문의</label></li>
 									</ul>
-									<span class="help-block">${submit_purpose_msg }</span>
 								</div>
 							</div>
 						</div>
@@ -358,14 +349,16 @@
 									type="hidden" value="" /><input id="turnkey_keeper"
 									name="turnkey_keeper" type="hidden" value="" /><input
 									id="sigungu_keeper" name="sigungu_keeper" type="hidden"
+									value="" /><input
+									id="status" name="status" type="hidden"
 									value="" />
 									<input autocomplete="off"
 									class="btn btn-lg btn-client js-disable-on-click btn-submit"
-									data-loading-text="제출 중" name="post_a_job" id = "post_a_job_id" type="submit"
+									data-loading-text="제출 중" name="post_a_job" id = "post_a_job_id" type="button"
 									value="프로젝트 등록" />
 									<input autocomplete="off"
 									class="btn btn-lg btn-default js-disable-on-click"
-									data-loading-text="저장 중" name="save_for_later" id = "save_for_later_id" type="submit"
+									data-loading-text="저장 중" name="save_for_later" id = "save_for_later_id" type="button"
 									value="임시 저장" />
 							</div>
 						</div>
@@ -419,7 +412,74 @@
 	<script type="text/javascript">
 
 	$(document).ready(function(){
+
+		$( "#post_a_job_id" ).click(function() {
+			
+			$("#status").val("프로젝트 등록");
+			$.ajax({
+				url : "/wjm/project/add/edit/<%=project.getPk()%>",
+				type : "POST",
+				data : $('#project-edit-form').serialize(),
+				dataType : "JSON",
+				success : function(data) {
+					var messages = data.messages;
+
+			    	if(messages == "success")
+			        	{
+			    		location.href= data.path; 
+			        	}
+			        else if(messages == "error")
+			        	{
+			        	location.href= data.path; 
+			        	}
+			        else
+			        	{
+							alert(messages);
+			        	}
+				},
 		
+				error : function(request, status, error) {
+					if (request.status != '0') {
+						alert("code : " + request.status + "\r\nmessage : "
+								+ request.reponseText + "\r\nerror : " + error);
+					}
+				}
+			});
+		});
+		
+		$( "#save_for_later_id" ).click(function() {
+			$("#status").val("임시저장");
+
+			$.ajax({
+				url : "/wjm/project/add/edit/<%=project.getPk()%>",
+				type : "POST",
+				data : $('#project-edit-form').serialize(),
+				dataType : "JSON",
+				success : function(data) {
+					var messages = data.messages;
+
+			    	if(messages == "success")
+			        	{
+			    		location.href= data.path; 
+			        	}
+			        else if(messages == "error")
+			        	{
+			        	location.href= data.path; 
+			        	}
+			        else
+			        	{
+							alert(messages);
+			        	}
+				},
+		
+				error : function(request, status, error) {
+					if (request.status != '0') {
+						alert("code : " + request.status + "\r\nmessage : "
+								+ request.reponseText + "\r\nerror : " + error);
+					}
+				}
+			});
+		});
 		function form_check()
 		{
 			var result = true;
@@ -618,32 +678,11 @@
 		var prefer_partner_val = "<%=project.getPartner_type()%>";
 		var submit_purpose_val = "<%=project.getPurpose()%>";
 		
-		var title_msg = "${title_msg}";
-		var category_msg = "${category_msg}";
-		var is_turnkey_msg = "${is_turnkey_msg}";
-		var project_term_msg = "${project_term_msg}";
-		var budget_maximum_msg = "${budget_maximum_msg}";
-		var planning_status_msg = "${planning_status_msg}";
-		var description_msg = "${description_msg}";
-		var skill_required_msg = "${skill_required_msg}";
-		var deadline_msg = "${deadline_msg}";
-		var method_pre_interview_msg = "${method_pre_interview_msg}";
-		var address_msg = "${address_msg}";
-		var date_expected_kick_off_msg = "${date_expected_kick_off_msg}";
-		var has_manage_experience_msg = "${has_manage_experience_msg}";
-		var prefer_partner_msg = "${prefer_partner_msg}";
-		var submit_purpose_msg = "${submit_purpose_msg}";
-		
 		// 프로젝트 제목
 		if(title_val != null && title_val != "")
 		{
 			document.getElementById("title").value = title_val;
 		}
-		if(title_msg != null && title_msg != "")
-		{
-			$("#title_div").addClass('has-error');
-		}
-		
 		//카테고리
 		if(category_val != null && category_val != "")
 		{
@@ -659,7 +698,22 @@
 			getCategoryM();
 		}
 		
-		
+
+		if(sub_category_val != null && sub_category_val != "")
+		{
+			var len = document.getElementById("sub_category").length;
+			for(var i=0; i<len; i++)
+				{
+					if(document.getElementById("sub_category").options[i].value == sub_category_val)
+						{
+							document.getElementById("sub_category").options[i].selected = true;
+							break;
+						}
+				}		
+			
+			$('#sub_category').selecter('refresh');
+			$('#sub_category').trigger('change');
+		}
 		
 		//다른 카테고리도 필요한지
 		if(is_turnkey_val != null && is_turnkey_val != "")
@@ -693,19 +747,10 @@
                 check_design.className = "turnkey-none";
             }
 		}
-		if(category_msg != null && category_msg != "")
-		{
-			$("#category_div").addClass('has-error');
-		}
-		
 		//예상기간
 		if(project_term_val != null && project_term_val != "")
 		{
 			document.getElementById("project_term").value = project_term_val;
-		}
-		if(project_term_msg != null && project_term_msg != "")
-		{
-			$("#project_term_div").addClass('has-error');
 		}
 
 		//지출 가능 예산
@@ -713,11 +758,6 @@
 		{
 			document.getElementById("budget_maximum").value = budget_maximum_val;
 		}
-		if(budget_maximum_msg != null && budget_maximum_msg != "")
-		{
-			$("#budget_maximum_div").addClass('has-error');
-		}
-
 		//기획 상태
 		if(planning_status_val != null && planning_status_val != "")
 		{
@@ -728,25 +768,11 @@
 			else if(planning_status_val == "project_book")
 				$("#planning_status_1").attr("checked","checked");
 		}
-		if(planning_status_msg != null && planning_status_msg != "")
-		{
-			$("#planning_status_div").addClass('has-error');
-		}
-
-		//프로젝트 내용
-		if(description_msg != null && description_msg != "")
-		{
-			$("#description_div").addClass('has-error');
-		}
 
 		//관련 기술
 		if(skill_required_val != null && skill_required_val != "")
 		{
 			document.getElementById("skill_required").value = skill_required_val;
-		}
-		if(skill_required_msg != null && skill_required_msg != "")
-		{
-			$("#skill_required_div").addClass('has-error');
 		}
 
 		//모집 마감 일자
@@ -763,28 +789,6 @@
 				}
 			$('#deadline').selecter('refresh');
 		}
-		if(deadline_msg != null && deadline_msg != "")
-		{
-			$("#deadline_div").addClass('has-error');
-		}
-
-		if(is_turnkey_msg != null && is_turnkey_msg != "")
-		{
-            var check = document.getElementById('turnkey-box');
-            
-            if (category_val == '디자인') {
-                check.className = "turnkey-checker turnkey-show";
-                document.getElementById('turnkey-dev').className = "turnkey-none";
-                document.getElementById('turnkey-design').className = "turnkey-show";
-            }
-            else {
-                check.className = "turnkey-checker turnkey-show";
-                document.getElementById('turnkey-dev').className = "turnkey-show";
-                document.getElementById('turnkey-design').className = "turnkey-none";
-            }
-			$("#messages").html("<div class='alert alert-warning fade in'>"+is_turnkey_msg+"</div>");
-			
-		}
 		//사전 미팅
 		if(method_pre_interview_val != null && method_pre_interview_val != "")
 		{
@@ -800,16 +804,8 @@
 			}
 			$('#method_pre_interview').selecter('refresh');
 		}
-		if(method_pre_interview_msg != null && method_pre_interview_msg != "")
-		{
-			$("#method_pre_interview_div").addClass('has-error');
-		}
 		
-		//사전 미팅 지역
-		if(address_msg != null && address_msg != "")
-			{
-			$("#address_div").addClass('has-error');
-			}
+		
 		if(address_sido_val != null && address_sido_val != "")
 		{
 
@@ -855,10 +851,7 @@
 				}
 			$('#date_expected_kick_off').selecter('refresh');
 		}
-		if(date_expected_kick_off_msg != null && date_expected_kick_off_msg != "")
-		{
-			$("#date_expected_kick_off_div").addClass('has-error');
-		}
+		
 		
 		//프로젝트 매니징 경험
 		if(has_manage_experience_val != null && has_manage_experience_val != "")
@@ -868,10 +861,7 @@
 			else if(has_manage_experience_val == "0")
 				$("#has_manage_experience_2").attr("checked","checked");
 		}
-		if(has_manage_experience_msg != null && has_manage_experience_msg != "")
-		{
-			$("#has_manage_experience_div").addClass('has-error');
-		}
+		
 
 		//선호하는 파트너 형태
 		if(prefer_partner_val != null && prefer_partner_val != "")
@@ -887,10 +877,6 @@
 			else if(prefer_partner_val == "individual")
 				$("#prefer_partner_5").attr("checked","checked");
 		}
-		if(prefer_partner_msg != null && prefer_partner_msg != "")
-		{
-			$("#prefer_partner_div").addClass('has-error');
-		}
 		
 		//프로젝트 의뢰 목적
 		if(submit_purpose_val != null && submit_purpose_val != "")
@@ -900,11 +886,56 @@
 			else if(submit_purpose_val == "inquire")
 				$("#submit_purpose_2").attr("checked","checked");
 		}
-		if(submit_purpose_msg != null && submit_purpose_msg != "")
-		{
-			$("#submit_purpose_div").addClass('has-error');
-		}
 		
+		function getCategoryM()
+		{
+	    	$('#sub_category').html("<option value=''>세부 카테고리</option>");
+
+			if(document.getElementById('category').value == '')
+			{
+				return false;
+			}
+			$.ajax({
+				url : "/wjm/getCategoryM",
+				type : "POST",
+				data : 
+				{
+					categoryL:document.getElementById('category').value
+				},
+				dataType : "JSON",
+				success : function(data) {
+					
+					if(data!=null || data!="")
+					{
+						var list = data.categoryMlist;
+						var listLen = list.length;
+						
+						for(var i=0;i<listLen;i++)
+						{
+							$('#sub_category').append("<option value='"+list[i]+"'>"+list[i]+"</option>");
+							
+						}
+						$('#sub_category').selecter('refresh');
+
+					}
+				},
+		
+				error : function(request, status, error) {
+					if (request.status != '0') {
+						alert("code : " + request.status + "\r\nmessage : "
+								+ request.reponseText + "\r\nerror : " + error);
+					}
+				}
+			});
+		}
+
+		
+	    
+	    $('#category').on('change', function() {
+	    	getCategoryM();
+	        var check = document.getElementById('turnkey-box');
+	        check.className = "turnkey-checker turnkey-none";
+	    });
 	});
 	window.onload = function(){
 
@@ -965,53 +996,6 @@
         }
     }
 
-	function getCategoryM()
-	{
-    	$('#sub_category').html("<option value=''>세부 카테고리</option>");
-		$('#sub_category').selecter('refresh');
-
-		if(document.getElementById('category').value == '')
-		{
-			return false;
-		}
-		$.ajax({
-			url : "/wjm/getCategoryM",
-			type : "POST",
-			data : 
-			{
-				categoryL:document.getElementById('category').value
-			},
-			dataType : "JSON",
-			success : function(data) {
-				
-				if(data!=null || data!="")
-				{
-					var list = data.categoryMlist;
-					var listLen = list.length;
-					
-					for(var i=0;i<listLen;i++)
-					{
-						$('#sub_category').append("<option value='"+list[i]+"'>"+list[i]+"</option>");
-						
-					}
-					$('#sub_category').selecter('refresh');
-				}
-			},
-	
-			error : function(request, status, error) {
-				if (request.status != '0') {
-					alert("code : " + request.status + "\r\nmessage : "
-							+ request.reponseText + "\r\nerror : " + error);
-				}
-			}
-		});
-	}
-    
-    $('#category').on('change', function() {
-    	getCategoryM();
-        var check = document.getElementById('turnkey-box');
-        check.className = "turnkey-checker turnkey-none";
-    });
 
     $(function () {
         $('#sub_category').on('change', function() {

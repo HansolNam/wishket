@@ -5,11 +5,13 @@
 <%
 	NoticeInfo notice = (NoticeInfo) request.getAttribute("notice");
 
+	int pk = 0;
 	String content = "";
 	String name = "";
 	
 	if(notice != null)
 	{
+		pk = notice.getPk();
 		name = notice.getName();
 		content = notice.getContent();
 	}
@@ -79,7 +81,7 @@
 				</div>
 				<div class="content-inner">
 				<!-- action : 에디터에 입력한 html 코드를 전달받을 Controller페이지 URL -->
-				<form action="/wjm/admin/notice/edit" method="post" id="frm">
+				<form action="/wjm/admin/notice/edit/<%=pk %>" method="post" id="frm">
 				   <div>
 				   	<div><b>제목</b></div>
 				   	<input type="text" id="title" name="title" value="<%=name %>" maxlength="100" style="width: 100%;"/>
@@ -129,11 +131,6 @@
 		if(messages != '')
 			{
 			$("#messages").html("<div class='alert alert-warning fade in'>"+messages+"</div>");
-			
-			if("${title}" != "" && $('#title').val() == "")
-				$('#title').val("${title}");
-			if("${editor}" != ""&& $('#editor').val() == "")
-				$('#editor').val("${editor}");
 
 			}
 	});

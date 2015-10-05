@@ -468,18 +468,20 @@ public class AdminController {
 	/**
 	 * 공지사항 등록 처리 페이지
 	 */
-	@RequestMapping(value = "/admin/notice/add", method = RequestMethod.POST)
-	public ModelAndView AdminController_notice_add_post(HttpServletRequest request, ModelAndView mv,
+	@RequestMapping(value = "/admin/notice/edit/{pk}", method = RequestMethod.POST)
+	public ModelAndView AdminController_notice_edit_post(HttpServletRequest request, ModelAndView mv,
 			@RequestParam("editor") String editor,
-			@RequestParam("title") String title) {
+			@RequestParam("title") String title,
+			@PathVariable("pk") int pk) {
 		logger.info("/admin/notice/add post Page");
 		
+		logger.info("pk = "+pk);
 		logger.info("title = "+title);
 		logger.info("editor : "+editor);
 		
-		mv.addObject("title",title);
-		mv.addObject("editor",editor);
-		mv.setViewName("/admin/notice/add");
+		NoticeInfo notice = new NoticeInfo(pk, title, editor, null);
+		mv.addObject("notice",notice);
+		mv.setViewName("/admin/notice/edit");
 		
 		if(!Validator.hasValue(title))
 		{
@@ -510,9 +512,10 @@ public class AdminController {
 			logger.info("내용정상입력");
 		}
 		
-		logger.info("디비에 저장");
-		noticeDao.create(title, editor);
+		logger.info("디비 수정");
+		noticeDao.update(pk, title, editor);
 		
+		mv = new ModelAndView();
 		mv.setViewName("redirect:/admin/home");
 		return mv;
 	}

@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.wjm.idao.NoticeIDao;
+import com.wjm.main.function.Time;
 import com.wjm.models.AssessmentInfo;
 import com.wjm.models.NoticeInfo;
 
@@ -35,6 +36,12 @@ public class NoticeDao implements NoticeIDao {
 	{
 		jdbcTemplate.update("insert into notice (name, content) values (?,?)"
 				, new Object[] { name, content });
+	}
+	
+	public void update(int pk, String name, String content)
+	{
+		jdbcTemplate.update("update notice set name=?, content=? where pk=?"
+				, new Object[] {name, content, pk });
 	}
 	
 	public List<NoticeInfo> selectAll()
