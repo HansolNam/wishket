@@ -5,21 +5,22 @@
 
 <%	
 	List<ProjectInfo> projectlist = (List<ProjectInfo>)request.getAttribute("projectlist");
-
+	Integer projectnum = (Integer)request.getAttribute("projectnum");
+	
 	long now_time = System.currentTimeMillis();
 	Timestamp now = new Timestamp(now_time);
 	
 	if(projectlist != null)
 	{
 		int pagenum;
-		if(projectlist.size()%10 == 0)
-			pagenum = projectlist.size()/10;
+		if(projectnum%10 == 0)
+			pagenum = projectnum/10;
 		else
-			pagenum = projectlist.size()/10 + 1;
+			pagenum = projectnum/10 + 1;
 		%>
 
 <input id="project_total_number" type="hidden"
-	value=<%=projectlist.size()%> />
+	value=<%=projectnum%> />
 <input id="page_size" type="hidden" value=<%=pagenum%> />
 <%
 		for(int i=0;i<projectlist.size();i++)

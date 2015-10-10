@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 
 import com.wjm.idao.ProjectIDao;
 import com.wjm.main.function.Time;
+import com.wjm.main.function.Validator;
 import com.wjm.models.ApplicantInfo;
 import com.wjm.models.ProjectInfo;
 
@@ -315,8 +316,26 @@ public class ProjectDao implements ProjectIDao {
 		return null;
 	}
 	
-	public List<ProjectInfo> selectCondition(String q, String dev, String design, String addr,String sort)
+	public List<ProjectInfo> selectCondition(String page, String q, String dev, String design, String addr,String sort)
 	{
+		///////////////////////////////////////////////////////
+		///page filtering
+		////////////////////////////////////////////////////////
+		/*
+		String page_sql = "";
+		
+		if(!Validator.isDigit(page))
+		{
+			return null;
+		}
+		else
+		{
+			int page_num = Integer.parseInt(page);
+			
+			if(page_num < 0)
+				return null;
+			page_sql = " limit "+(page_num*10 - 10)+",10";
+		}*/
 		///////////////////////////////////////////////////////
 		///dev filtering
 		////////////////////////////////////////////////////////
@@ -549,7 +568,7 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getString("purpose")
 	    				, resultSet.getString("status")
 	    				, resultSet.getTimestamp("reg_date"));
-	    		logger.info("project name "+ project.getName());
+	    		logger.info(rowNum+" : project name "+ project.getName());
 	    		return project;
 	    	}
 	    });

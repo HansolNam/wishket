@@ -408,7 +408,6 @@
 		<div id="push"></div>
 	</div>
 	<jsp:include page="../../footer.jsp" flush="false" />
-
 	<script type="text/javascript">
 
 	$(document).ready(function(){

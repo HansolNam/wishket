@@ -1168,12 +1168,40 @@ public class ProjectController {
 		String return_val = "/project_ajax";
 		mv.setViewName(return_val);
 		
-		List<ProjectInfo> projectlist = projectDao.selectCondition(q,cat_dev,cat_design,addr,sort);
-		
-		for(int i=0;i<projectlist.size();i++)
+		int page_num = 1;
+		if(!Validator.isDigit(page))
 		{
-			logger.info(i + " : "+projectlist.get(i).getName());
+			mv.addObject("projectnum",0);
+			return mv;
 		}
+		else
+		{
+			page_num = Integer.parseInt(page);
+			
+			if(page_num <= 0)
+			{
+				mv.addObject("projectnum",0);
+				return mv;
+			}
+		}
+		
+		List<ProjectInfo> projectlist = projectDao.selectCondition(page, q,cat_dev,cat_design,addr,sort);
+		logger.info("project size : "+projectlist.size());
+		mv.addObject("projectnum",projectlist.size());
+		
+		int from = page_num*10-10, to = page_num*10;
+		if(projectlist.size() <= from)
+			projectlist = null;
+		else
+		{
+			if(projectlist.size() <= to)
+				to = projectlist.size()-1;
+			
+			logger.info("from : "+from + " , to : "+to);
+			
+			projectlist = projectlist.subList(from, to);
+		}
+		
 		mv.addObject("projectlist",projectlist);
 		
 		return mv;
