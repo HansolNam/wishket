@@ -174,7 +174,8 @@
 										{
 											if(projectlist.get(i).getStatus().equals("지원자모집중"))
 											{
-												out.print("<tbody><tr><td>"+projectlist.get(i).getName()+"</td>");
+												out.print("<tbody><tr><td><a href='/wjm/project/"+projectlist.get(i).getName()+"/"
+														+projectlist.get(i).getPk()+"'>"+projectlist.get(i).getName()+"</a></td>");
 												out.print("<td>"+Time.toString3(projectlist.get(i).getDeadline())+"</td>");
 												out.print("<td>"+projectlist.get(i).getApplicantnum()+"</td>");
 												out.println("<td><a class='btn btn-sm btn-client' href='/wjm/client/manage/project/"+projectlist.get(i).getName()+"/"+projectlist.get(i).getPk()+"/applicant'>지원자 목록</a></td></tr></tbody>");
@@ -213,7 +214,8 @@
 										{
 											if(projectlist.get(i).getStatus().equals("진행중"))
 											{
-												out.print("<tbody><tr><td>"+projectlist.get(i).getName()+"</td>");
+												out.print("<tbody><tr><td><a href='/wjm/project/"+projectlist.get(i).getName()+"/"
+													+projectlist.get(i).getPk()+"'>"+projectlist.get(i).getName()+"</a></td>");
 												out.print("<td>"+"파트너스"+"</td>");
 												out.print("<td>"+projectlist.get(i).getBudget()+"</td>");
 												out.print("<td>"+"남은 기간"+"</td>");
@@ -254,22 +256,32 @@
 						<a class="btn btn-client btn-lg btn-project-add"
 							href="/wjm/project/add/">프로젝트 등록하기</a>
 					</div>
+					<%
+						int register_num = check_cnt+recruit_cnt+ing_cnt+finish_cnt;
+						int contract_num = ing_cnt+finish_cnt;
+						
+						double contract_per = 0;
+						if(register_num != 0)
+						{
+							contract_per = 100.0*(double)contract_num/(double)register_num;
+						}
+					%>
 					<div class="client-history">
 						<h3 class="client-history-heading">위시켓 히스토리</h3>
 						<div class="client-history-body">
 							<div class="project">
 								<div class="history-body-title">프로젝트 등록</div>
-								<div class="pull-right history-body-data"><%=check_cnt+recruit_cnt+ing_cnt+finish_cnt %> 건</div>
+								<div class="pull-right history-body-data"><%=register_num %> 건</div>
 							</div>
 							<div class="contract">
 								<div class="contract-title">
 									<div class="history-body-title">계약한 프로젝트</div>
-									<div class="pull-right history-body-data"><%=ing_cnt+finish_cnt %> 건</div>
+									<div class="pull-right history-body-data"><%=contract_num %> 건</div>
 								</div>
 								<div class="contract-data">
 									<div class="contract-data-box">
 										<div class="history-body-title">계약률</div>
-										<div class="pull-right history-body-data">0%</div>
+										<div class="pull-right history-body-data"><%=Math.round(contract_per*10.0)/10.0%>%</div>
 									</div>
 									<div class="contract-data-box">
 										<div class="history-body-title">진행중인 프로젝트</div>

@@ -124,7 +124,7 @@
 							<div class="p5-partners-project-evaluation-header">
 								<div class="p5-partners-project-evaluation-title">
 									<h4>
-										<a href="/project/<%=completedlist.get(i).getName() %>/<%=completedlist.get(i).getProject_pk() %>/"><%=completedlist.get(i).getName() %></a>
+										<a href="/wjm/project/<%=completedlist.get(i).getName() %>/<%=completedlist.get(i).getProject_pk() %>/"><%=completedlist.get(i).getName() %></a>
 									</h4>
 								</div>
 								<div class="p5-partners-project-evaluation-info">

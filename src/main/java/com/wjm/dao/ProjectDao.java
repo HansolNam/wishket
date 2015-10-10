@@ -701,7 +701,7 @@ public class ProjectDao implements ProjectIDao {
 		}
 		else if(project.getStatus().equals("지원자모집중"))
 		{
-			logger.info("검수중이므로 취소 프로젝트로 변경");
+			logger.info("지원자모집중이므로 취소 프로젝트로 변경");
 			jdbcTemplate.update("update project set status='취소한프로젝트' where pk=?"
 					, new Object[] {pk });
 		}
@@ -709,6 +709,16 @@ public class ProjectDao implements ProjectIDao {
 		return "성공";
 		
 	}
+	
+
+	public void updateStatusByScheduler()
+	{
+
+		//지원자 모집중인데 지원자가 0명이고 모집기간이 지난경우
+		jdbcTemplate.update("update project set status='취소한프로젝트' where status='지원자모집중' and applicantnum=0 and deadline <= CURRENT_TIMESTAMP");
+		
+	}
+	
 	public void delete(int pk)
 	{
 		jdbcTemplate.update("delete from project where pk = ?", new Object[] { pk });

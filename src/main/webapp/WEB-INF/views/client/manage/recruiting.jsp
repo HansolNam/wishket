@@ -102,7 +102,8 @@
 						%>
 							<section class="project-unit">
 								<section class="project-unit-heading">
-									<h4 class="project-title"><%=projectlist.get(i).getName() %></h4>
+									
+									<h4 class="project-title"><a href="/wjm/project/<%=projectlist.get(i).getName() %>/<%=projectlist.get(i).getPk() %>"><%=projectlist.get(i).getName() %></a></h4>
 									<div class="management-tools">
 										<a class='btn btn-sm btn-client' href='/wjm/client/manage/project/<%=projectlist.get(i).getName() %>/<%=projectlist.get(i).getPk() %>/applicant'>지원자 목록</a>
 									</div>
@@ -124,6 +125,12 @@
 												<i class="fa fa-calendar-o"></i> 저장일자
 											</h5>
 											<span><%=Time.toString3(projectlist.get(i).getReg_date()) %></span></li>
+										
+										<li><h5 class="label-item"
+												style="min-width: 80px !important;">
+												<i class="fa fa-won"></i> 지원자수
+											</h5>
+											<span><%=projectlist.get(i).getApplicantnum() %>명</span></li>
 									</ul>
 								</section>
 							</section>
