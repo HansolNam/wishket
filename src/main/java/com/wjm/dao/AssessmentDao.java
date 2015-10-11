@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -20,6 +21,15 @@ import com.wjm.models.AssessmentInfo;
 public class AssessmentDao implements AssessmentIDao {
 
 	private static final Logger logger = LoggerFactory.getLogger(AssessmentDao.class);
+
+	@Autowired
+	private AccountDao accountDao;
+
+	@Autowired
+	private ProjectDao projectDao;
+
+	@Autowired
+	private ContractDao contractDao;
 	
 	private DataSource dataSource;
 	private JdbcTemplate jdbcTemplate;
@@ -130,6 +140,46 @@ public class AssessmentDao implements AssessmentIDao {
 			}
 			else
 				return list.get(0);
+		}
+		else
+			return null;
+	}
+	
+	public List<AssessmentInfo> select_assessed(int assessed_pk)
+	{
+		List<AssessmentInfo> list = jdbcTemplate.query("select * from assessment where assessed_pk = ?",
+		    	new Object[] { assessed_pk }, new RowMapper<AssessmentInfo>() {
+	    	public AssessmentInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+	    	{
+	    		AssessmentInfo assessment = new AssessmentInfo(
+	    				resultSet.getInt("pk")
+	    				, resultSet.getInt("project_pk")
+	    				, resultSet.getInt("assessing_pk")
+	    				, resultSet.getInt("assessed_pk")
+	    				, resultSet.getInt("professionalism")
+	    				, resultSet.getInt("satisfaction")
+	    				, resultSet.getInt("schedule_observance")
+	    				, resultSet.getInt("activeness")
+	    				, resultSet.getInt("communication")
+	    				, resultSet.getString("recommendation"));
+	    		
+	    		assessment.setClient(accountDao.select(assessment.getAssessing_pk()));
+	    		assessment.setProject(projectDao.select_project(assessment.getProject_pk()));
+	    		assessment.setContract(contractDao.select_project_client_partners(assessment.getProject_pk(), assessment.getAssessing_pk(), assessment.getAssessed_pk()));
+	    		
+	    		return assessment;
+	    	}
+	    });
+		
+		if(list != null)
+		{
+			if(list.size() == 0)
+			{
+				logger.info("평가 없음");
+				return null;
+			}
+			else
+				return list;
 		}
 		else
 			return null;

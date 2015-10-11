@@ -166,7 +166,7 @@ div.ui-tooltip {
 								href="/wjm/partners/p/<%=this_account.getId()%>/background/">경력,
 									학력, 자격증</a></li>
 							<li class="" style="border-top: 1px dashed #dedede"><a
-								href="/wjm/partners/p/<%=this_account.getId()%> /evaluation/">클라이언트의
+								href="/wjm/partners/p/<%=this_account.getId()%>/evaluation/">클라이언트의
 									평가</a></li>
 							<li class=""><a
 								href="/wjm/partners/p/<%=this_account.getId()%>/history/">외주몬에서
@@ -673,6 +673,7 @@ div.ui-tooltip {
 		href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css"
 		rel="stylesheet" />
 	<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+	
 	<script>
     $(document).ready(function() {
         $('.content-inner').on('click','.p5-review-show-btn', function(e) {

@@ -33,6 +33,7 @@ import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
 import com.wjm.models.AccountInformationInfo;
 import com.wjm.models.ApplicantInfo;
+import com.wjm.models.AssessmentInfo;
 import com.wjm.models.CareerInfo;
 import com.wjm.models.ContractInfo;
 import com.wjm.models.EducationInfo;
@@ -2139,7 +2140,7 @@ public class PartnersController {
 		AccountInfo this_account = accountDao.select(id);
 
 		if (this_account == null) {
-			mv.setViewName("/partners");
+			mv.setViewName("redirect:/partners");
 			return mv;
 		}
 		mv.addObject("this_account", this_account);
@@ -2150,6 +2151,15 @@ public class PartnersController {
 		String isSame = isSame(account, this_account);
 		mv.addObject("isSame", isSame);
 
+		List<AssessmentInfo> assessmentlist = assessmentDao.select_assessed(this_account.getPk());
+		mv.addObject("assessmentlist",assessmentlist);
+		
+		if(assessmentlist != null)
+		{
+			for(int i=0;i<assessmentlist.size();i++)
+				logger.info(i + " : "+assessmentlist.get(i).getProject().getName());
+		}
+		
 		mv.setViewName("/partners/p/evaluation");
 
 		return mv;
@@ -2811,9 +2821,11 @@ public class PartnersController {
 		}
 		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
 
+		//평가 대기중
 		List<ContractInfo> reviewlist = contractDao.selectReviewPartners(account.getPk(),"완료한프로젝트");
 		if(reviewlist!=null) mv.addObject("reviewnum",reviewlist.size());
 
+		//완료한 프로젝트
 		List<ContractInfo> completedlist = contractDao.selectCompletedPartners(account.getPk(),"완료한프로젝트");
 		mv.addObject("completedlist",completedlist);
 

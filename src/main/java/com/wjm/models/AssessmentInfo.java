@@ -11,6 +11,28 @@ public class AssessmentInfo {
 	private int activeness;
 	private int communication;
 	private String recommendation;
+	private ProjectInfo project;
+	private AccountInfo client;
+	private ContractInfo contract;
+	
+	public ContractInfo getContract() {
+		return contract;
+	}
+	public void setContract(ContractInfo contract) {
+		this.contract = contract;
+	}
+	public ProjectInfo getProject() {
+		return project;
+	}
+	public void setProject(ProjectInfo project) {
+		this.project = project;
+	}
+	public AccountInfo getClient() {
+		return client;
+	}
+	public void setClient(AccountInfo client) {
+		this.client = client;
+	}
 	public AssessmentInfo(int pk, int project_pk, int assessing_pk, int assessed_pk, int professionalism,
 			int satisfaction, int schedule_observance, int activeness, int communication, String recommendation) {
 		super();

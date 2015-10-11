@@ -717,6 +717,9 @@ public class ProjectDao implements ProjectIDao {
 		//지원자 모집중인데 지원자가 0명이고 모집기간이 지난경우
 		jdbcTemplate.update("update project set status='취소한프로젝트' where status='지원자모집중' and applicantnum=0 and deadline <= CURRENT_TIMESTAMP");
 		
+		//지원자 모집중인데 모집기간이 7일 지난경우, contract가 없는 경우 or contract 2번다 성사 안된경우
+		//jdbcTemplate.update("update project set status='취소한프로젝트' where status='지원자모집중' and applicantnum=0 and deadline <= CURRENT_TIMESTAMP");
+
 	}
 	
 	public void delete(int pk)
