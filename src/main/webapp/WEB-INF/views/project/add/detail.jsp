@@ -51,7 +51,7 @@ response.setContentType("text/html; charset=UTF-8");
 					</h3>
 				</div>
 				<div class="content-inner">
-					<form action="/wjm/project/add/detail/" class="form-horizontal-70" data-behaviours="lock"
+					<form class="form-horizontal-70" data-behaviours="lock" id="project-add-form"
 						enctype="multipart/form-data" method="POST"
 						novalidate="novalidate">
 						<input name="csrfmiddlewaretoken" type="hidden"
@@ -357,14 +357,16 @@ response.setContentType("text/html; charset=UTF-8");
 									type="hidden" value="" /><input id="turnkey_keeper"
 									name="turnkey_keeper" type="hidden" value="" /><input
 									id="sigungu_keeper" name="sigungu_keeper" type="hidden"
+									value="" /><input
+									id="status" name="status" type="hidden"
 									value="" />
 									<input autocomplete="off"
 									class="btn btn-lg btn-client js-disable-on-click btn-submit"
-									data-loading-text="제출 중" name="post_a_job" type="submit"
+									data-loading-text="제출 중" name="post_a_job" id = "post_a_job_id" type="button"
 									value="프로젝트 등록" />
 									<input autocomplete="off"
 									class="btn btn-lg btn-default js-disable-on-click"
-									data-loading-text="저장 중" name="save_for_later" type="submit"
+									data-loading-text="저장 중" name="save_for_later" id = "save_for_later_id"  type="button"
 									value="임시 저장" />
 							</div>
 						</div>
@@ -419,308 +421,253 @@ response.setContentType("text/html; charset=UTF-8");
 
 	$(document).ready(function(){
 
-		var title_val = "${title_val}";
-		var category_val = "${category_val}";
-		var sub_category_val = "${sub_category_val}";
-		var is_turnkey_val = "${is_turnkey_val}";
-		var project_term_val = "${project_term_val}";
-		var budget_maximum_val = "${budget_maximum_val}";
-		var planning_status_val = "${planning_status_val}";
-		var skill_required_val = "${skill_required_val}";
-		var deadline_val = "${deadline_val}";
-		var method_pre_interview_val = "${method_pre_interview_val}";
-		var address_sido_val = "${address_sido_val}";
-		var sigungu_val = "${sigungu_val}";
-		var date_expected_kick_off_val = "${date_expected_kick_off_val}";
-		var has_manage_experience_val = "${has_manage_experience_val}";
-		var prefer_partner_val = "${prefer_partner_val}";
-		var submit_purpose_val = "${submit_purpose_val}";
-		
-		var title_msg = "${title_msg}";
-		var category_msg = "${category_msg}";
-		var is_turnkey_msg = "${is_turnkey_msg}";
-		var project_term_msg = "${project_term_msg}";
-		var budget_maximum_msg = "${budget_maximum_msg}";
-		var planning_status_msg = "${planning_status_msg}";
-		var description_msg = "${description_msg}";
-		var skill_required_msg = "${skill_required_msg}";
-		var deadline_msg = "${deadline_msg}";
-		var method_pre_interview_msg = "${method_pre_interview_msg}";
-		var address_msg = "${address_msg}";
-		var date_expected_kick_off_msg = "${date_expected_kick_off_msg}";
-		var has_manage_experience_msg = "${has_manage_experience_msg}";
-		var prefer_partner_msg = "${prefer_partner_msg}";
-		var submit_purpose_msg = "${submit_purpose_msg}";
-		
-		// 프로젝트 제목
-		if(title_val != null && title_val != "")
-		{
-			document.getElementById("title").value = title_val;
-		}
-		if(title_msg != null && title_msg != "")
-		{
-			$("#title_div").addClass('has-error');
-		}
-		
-		//카테고리
-		if(category_val != null && category_val != "")
-		{
-			var len = document.getElementById("category").length;
-			for(var i=0; i<len; i++)
-				{
-					if(document.getElementById("category").options[i].value == category_val)
-						{
-							document.getElementById("category").options[i].selected = true;
-							break;
-						}
-				}
-			getCategoryM();
-		}
-		
-		
-		
-		//다른 카테고리도 필요한지
-		if(is_turnkey_val != null && is_turnkey_val != "")
-		{
-			var value = $("#category").val();
-            var check = document.getElementById('turnkey-box');
-            check.className = "turnkey-checker turnkey-none";
-            var check_dev = document.getElementById('turnkey-dev');
-            var check_design = document.getElementById('turnkey-design');
-            
-            if(is_turnkey_val == "1")
-            	{
-                $('#turnkey_true').prop('checked', true);
-                $('#turnkey_false').prop('checked', false);
-            	}
-            else
-            	{
-                $('#turnkey_true').prop('checked', false);
-                $('#turnkey_false').prop('checked', true);
-            	}
-            
-            reset_plan();
-            if (value == '디자인') {
-                check.className = "turnkey-checker turnkey-show";
-                check_dev.className = "turnkey-none";
-                check_design.className = "turnkey-show";
-            }
-            else {
-                check.className = "turnkey-checker turnkey-show";
-                check_dev.className = "turnkey-show";
-                check_design.className = "turnkey-none";
-            }
-		}
-		if(category_msg != null && category_msg != "")
-		{
-			$("#category_div").addClass('has-error');
-		}
-		
-		//예상기간
-		if(project_term_val != null && project_term_val != "")
-		{
-			document.getElementById("project_term").value = project_term_val;
-		}
-		if(project_term_msg != null && project_term_msg != "")
-		{
-			$("#project_term_div").addClass('has-error');
-		}
 
-		//지출 가능 예산
-		if(budget_maximum_val != null && budget_maximum_val != "")
-		{
-			document.getElementById("budget_maximum").value = budget_maximum_val;
-		}
-		if(budget_maximum_msg != null && budget_maximum_msg != "")
-		{
-			$("#budget_maximum_div").addClass('has-error');
-		}
-
-		//기획 상태
-		if(planning_status_val != null && planning_status_val != "")
-		{
-			if(planning_status_val == "idea")
-				$("#planning_status_1").attr("checked","checked");
-			else if(planning_status_val == "simple")
-				$("#planning_status_1").attr("checked","checked");
-			else if(planning_status_val == "project_book")
-				$("#planning_status_1").attr("checked","checked");
-		}
-		if(planning_status_msg != null && planning_status_msg != "")
-		{
-			$("#planning_status_div").addClass('has-error');
-		}
-
-		//프로젝트 내용
-		if(description_msg != null && description_msg != "")
-		{
-			$("#description_div").addClass('has-error');
-		}
-
-		//관련 기술
-		if(skill_required_val != null && skill_required_val != "")
-		{
-			document.getElementById("skill_required").value = skill_required_val;
-		}
-		if(skill_required_msg != null && skill_required_msg != "")
-		{
-			$("#skill_required_div").addClass('has-error');
-		}
-
-		//모집 마감 일자
-		if(deadline_val != null && deadline_val != "")
-		{
-			var len = document.getElementById("deadline").length;
-			for(var i=0; i<len; i++)
-				{
-					if(document.getElementById("deadline").options[i].value == deadline_val)
-						{
-							document.getElementById("deadline").options[i].selected = true;
-							break;
-						}
-				}
-			$('#deadline').selecter('refresh');
-		}
-		if(deadline_msg != null && deadline_msg != "")
-		{
-			$("#deadline_div").addClass('has-error');
-		}
-
-		if(is_turnkey_msg != null && is_turnkey_msg != "")
-		{
-            var check = document.getElementById('turnkey-box');
-            
-            if (category_val == '디자인') {
-                check.className = "turnkey-checker turnkey-show";
-                document.getElementById('turnkey-dev').className = "turnkey-none";
-                document.getElementById('turnkey-design').className = "turnkey-show";
-            }
-            else {
-                check.className = "turnkey-checker turnkey-show";
-                document.getElementById('turnkey-dev').className = "turnkey-show";
-                document.getElementById('turnkey-design').className = "turnkey-none";
-            }
-			$("#messages").html("<div class='alert alert-warning fade in'>"+is_turnkey_msg+"</div>");
+		$( "#post_a_job_id" ).click(function() {
 			
-		}
-		//사전 미팅
-		if(method_pre_interview_val != null && method_pre_interview_val != "")
-		{
+			$("#status").val("프로젝트 등록");
+			$.ajax({
+				url : "/wjm/project/add/detail/",
+				type : "POST",
+				data : $('#project-add-form').serialize(),
+				dataType : "JSON",
+				success : function(data) {
+					var messages = data.messages;
 
-			var len = document.getElementById("method_pre_interview").length;
-			for(var i=0; i<len; i++)
-			{
-				if(document.getElementById("method_pre_interview").options[i].value == method_pre_interview_val)
-					{
-						document.getElementById("method_pre_interview").options[i].selected = true;
-						break;
-					}
-			}
-			$('#method_pre_interview').selecter('refresh');
-		}
-		if(method_pre_interview_msg != null && method_pre_interview_msg != "")
-		{
-			$("#method_pre_interview_div").addClass('has-error');
-		}
+			    	if(messages == "success")
+			        	{
+			    		location.href= data.path; 
+			        	}
+			        else if(messages == "error")
+			        	{
+			        	location.href= data.path; 
+			        	}
+			        else
+			        	{
+							alert(messages);
+			        	}
+				},
 		
-		//사전 미팅 지역
-		if(address_msg != null && address_msg != "")
-			{
-			$("#address_div").addClass('has-error');
-			}
-		if(address_sido_val != null && address_sido_val != "")
-		{
-
-			var len = document.getElementById("address_sido").length;
-			for(var i=0; i<len; i++)
-			{
-				if(document.getElementById("address_sido").options[i].value == address_sido_val)
-					{
-						document.getElementById("address_sido").options[i].selected = true;
-						break;
+				error : function(request, status, error) {
+					if (request.status != '0') {
+						alert("code : " + request.status + "\r\nmessage : "
+								+ request.reponseText + "\r\nerror : " + error);
 					}
-			}
-			getAddress();
-			$('#address_sido').selecter('refresh');
-			$('#sigungu').selecter('refresh');
-		}
-		if(sigungu_val != null && sigungu_val != "")
-		{
-
-			var len = document.getElementById("sigungu").length;
-			for(var i=0; i<len; i++)
-			{
-				if(document.getElementById("sigungu").options[i].value == sigungu_val)
-					{
-						document.getElementById("sigungu").options[i].selected = true;
-						break;
-					}
-			}
-			$('#sigungu').selecter('refresh');
-		}
-		
-		//프로젝트 예상 시작일
-		if(date_expected_kick_off_val != null && date_expected_kick_off_val != "")
-		{
-			var len = document.getElementById("date_expected_kick_off").length;
-			for(var i=0; i<len; i++)
-				{
-					if(document.getElementById("date_expected_kick_off").options[i].value == date_expected_kick_off_val)
-						{
-							document.getElementById("date_expected_kick_off").options[i].selected = true;
-							break;
-						}
 				}
-			$('#date_expected_kick_off').selecter('refresh');
-		}
-		if(date_expected_kick_off_msg != null && date_expected_kick_off_msg != "")
-		{
-			$("#date_expected_kick_off_div").addClass('has-error');
-		}
+			});
+		});
 		
-		//프로젝트 매니징 경험
-		if(has_manage_experience_val != null && has_manage_experience_val != "")
-		{
-			if(has_manage_experience_val == "true")
-				$("#has_manage_experience_1").attr("checked","checked");
-			else if(has_manage_experience_val == "false")
-				$("#has_manage_experience_2").attr("checked","checked");
-		}
-		if(has_manage_experience_msg != null && has_manage_experience_msg != "")
-		{
-			$("#has_manage_experience_div").addClass('has-error');
-		}
+		$( "#save_for_later_id" ).click(function() {
+			$("#status").val("임시저장");
 
-		//선호하는 파트너 형태
-		if(prefer_partner_val != null && prefer_partner_val != "")
-		{
-			if(prefer_partner_val == "whatever")
-				$("#prefer_partner_1").attr("checked","checked");
-			else if(prefer_partner_val == "corporate_business")
-				$("#prefer_partner_2").attr("checked","checked");
-			else if(prefer_partner_val == "individual_business")
-				$("#prefer_partner_3").attr("checked","checked");
-			else if(prefer_partner_val == "team")
-				$("#prefer_partner_4").attr("checked","checked");
-			else if(prefer_partner_val == "individual")
-				$("#prefer_partner_5").attr("checked","checked");
-		}
-		if(prefer_partner_msg != null && prefer_partner_msg != "")
-		{
-			$("#prefer_partner_div").addClass('has-error');
-		}
+			$.ajax({
+				url : "/wjm/project/add/detail",
+				type : "POST",
+				data : $('#project-add-form').serialize(),
+				dataType : "JSON",
+				success : function(data) {
+					var messages = data.messages;
+
+			    	if(messages == "success")
+			        	{
+			    		location.href= data.path; 
+			        	}
+			        else if(messages == "error")
+			        	{
+			        	location.href= data.path; 
+			        	}
+			        else
+			        	{
+							alert(messages);
+			        	}
+				},
 		
-		//프로젝트 의뢰 목적
-		if(submit_purpose_val != null && submit_purpose_val != "")
+				error : function(request, status, error) {
+					if (request.status != '0') {
+						alert("code : " + request.status + "\r\nmessage : "
+								+ request.reponseText + "\r\nerror : " + error);
+					}
+				}
+			});
+		});
+		function form_check()
 		{
-			if(submit_purpose_val == "request")
-				$("#submit_purpose_1").attr("checked","checked");
-			else if(submit_purpose_val == "inquire")
-				$("#submit_purpose_2").attr("checked","checked");
-		}
-		if(submit_purpose_msg != null && submit_purpose_msg != "")
-		{
-			$("#submit_purpose_div").addClass('has-error');
+			var result = true;
+			
+	        if($('#category').val()==""||$('#sub_category').val()=="") {
+	        	 $('#category').parent().addClass("has-error");
+	             $('#category').addClass('error');
+	             $('#category').parent().children('.form-error').remove();
+	             $('#category').parent().append('<span class="help-block form-error"><i class="fa fa-exclamation-circle"></i> 이 항목은 필수입니다.</span>');
+	             result = false;
+	        }
+	        else
+        	{
+               $('#category').parent().removeClass("has-error");
+               $('#category').removeClass('error');
+               $('#category').parent().children('.form-error').remove();
+        	}
+	        
+	        if($('#turnkey_true').is(":checked") ==false && $('#turnkey_false').is(":checked")==false ) {
+	        	 $('#turnkey_true').parent().addClass("has-error");
+	             $('#turnkey_true').addClass('error');
+	             $('#turnkey_true').parent().children('.form-error').remove();
+	             $('#turnkey_true').parent().append('<span class="help-block form-error"><i class="fa fa-exclamation-circle"></i> 이 항목은 필수입니다.</span>');
+	             result = false;
+	        }
+	        else
+	       	{
+	              $('#turnkey_true').parent().removeClass("has-error");
+	              $('#turnkey_true').removeClass('error');
+	              $('#turnkey_true').parent().children('.form-error').remove();
+	       	}
+	        
+
+	        if($('#title').val() == "" ) {
+	        	 $('#title').parent().addClass("has-error");
+	             $('#title').addClass('error');
+	             $('#title').parent().children('.form-error').remove();
+	             $('#title').parent().append('<span class="help-block form-error"><i class="fa fa-exclamation-circle"></i> 이 항목은 필수입니다.</span>');
+	             result = false;
+	        }
+	        else
+	       	{
+	              $('#title').parent().removeClass("has-error");
+	              $('#title').removeClass('error');
+	              $('#title').parent().children('.form-error').remove();
+	       	}
+
+	        if($('#project_term').val() == "" ) {
+	        	 $('#project_term').parent().addClass("has-error");
+	             $('#project_term').addClass('error');
+	             $('#project_term').parent().children('.form-error').remove();
+	             $('#project_term').parent().append('<span class="help-block form-error"><i class="fa fa-exclamation-circle"></i> 이 항목은 필수입니다.</span>');
+	             result = false;
+	        }
+	        else
+	       	{
+	              $('#project_term').parent().removeClass("has-error");
+	              $('#project_term').removeClass('error');
+	              $('#project_term').parent().children('.form-error').remove();
+	       	}
+
+	        if($('#budget_maximum').val() == "" ) {
+	        	 $('#budget_maximum').parent().addClass("has-error");
+	             $('#budget_maximum').addClass('error');
+	             $('#budget_maximum').parent().children('.form-error').remove();
+	             $('#budget_maximum').parent().append('<span class="help-block form-error"><i class="fa fa-exclamation-circle"></i> 이 항목은 필수입니다.</span>');
+	             result = false;
+	        }
+	        else
+	       	{
+	              $('#budget_maximum').parent().removeClass("has-error");
+	              $('#budget_maximum').removeClass('error');
+	              $('#budget_maximum').parent().children('.form-error').remove();
+	       	}
+
+	        if($('#radio-one').is(":checked") ==false && $('#radio-two').is(":checked")==false && $('#radio-three').is(":checked")==false ) {
+	        	 $('#radio-one').parent().addClass("has-error");
+	             $('#radio-one').addClass('error');
+	             $('#radio-one').parent().children('.form-error').remove();
+	             $('#radio-one').parent().append('<span class="help-block form-error"><i class="fa fa-exclamation-circle"></i> 이 항목은 필수입니다.</span>');
+	             result = false;
+	        }
+	        else
+	       	{
+	              $('#radio-one').parent().removeClass("has-error");
+	              $('#radio-one').removeClass('error');
+	              $('#radio-one').parent().children('.form-error').remove();
+	       	}
+	        
+	        if($('#description').val() == "" ) {
+	        	 $('#description').parent().addClass("has-error");
+	             $('#description').addClass('error');
+	             $('#description').parent().children('.form-error').remove();
+	             $('#description').parent().append('<span class="help-block form-error"><i class="fa fa-exclamation-circle"></i> 이 항목은 필수입니다.</span>');
+	             result = false;
+	        }
+	        else
+	       	{
+	              $('#description').parent().removeClass("has-error");
+	              $('#description').removeClass('error');
+	              $('#description').parent().children('.form-error').remove();
+	       	}
+	        
+
+	        if($('#deadline').val() == "" ) {
+	        	 $('#deadline').parent().addClass("has-error");
+	             $('#deadline').addClass('error');
+	             $('#deadline').parent().children('.form-error').remove();
+	             $('#deadline').parent().append('<span class="help-block form-error"><i class="fa fa-exclamation-circle"></i> 이 항목은 필수입니다.</span>');
+	             result = false;
+	        }
+	        else
+	       	{
+	              $('#deadline').parent().removeClass("has-error");
+	              $('#deadline').removeClass('error');
+	              $('#deadline').parent().children('.form-error').remove();
+	       	}
+	        
+
+	        if($('#method_pre_interview').val() == "" ) {
+	        	 $('#method_pre_interview').parent().addClass("has-error");
+	             $('#method_pre_interview').addClass('error');
+	             $('#method_pre_interview').parent().children('.form-error').remove();
+	             $('#method_pre_interview').parent().append('<span class="help-block form-error"><i class="fa fa-exclamation-circle"></i> 이 항목은 필수입니다.</span>');
+	             result = false;
+	        }
+	        else
+	       	{
+	              $('#method_pre_interview').parent().removeClass("has-error");
+	              $('#method_pre_interview').removeClass('error');
+	              $('#method_pre_interview').parent().children('.form-error').remove();
+	       	}
+	        
+
+	        if($('#address_sido').val()==""||$('#sigungu').val()=="") {
+	        	 $('#address_sido').parent().addClass("has-error");
+	             $('#address_sido').addClass('error');
+	             $('#address_sido').parent().children('.form-error').remove();
+	             $('#address_sido').parent().append('<span class="help-block form-error"><i class="fa fa-exclamation-circle"></i> 이 항목은 필수입니다.</span>');
+	             result = false;
+	        }
+	        else
+        	{
+               $('#address_sido').parent().removeClass("has-error");
+               $('#address_sido').removeClass('error');
+               $('#address_sido').parent().children('.form-error').remove();
+        	}
+	        
+
+	        if($('#date_expected_kick_off').val()=="") {
+	        	 $('#date_expected_kick_off').parent().addClass("has-error");
+	             $('#date_expected_kick_off').addClass('error');
+	             $('#date_expected_kick_off').parent().children('.form-error').remove();
+	             $('#date_expected_kick_off').parent().append('<span class="help-block form-error"><i class="fa fa-exclamation-circle"></i> 이 항목은 필수입니다.</span>');
+	             result = false;
+	        }
+	        else
+        	{
+               $('#date_expected_kick_off').parent().removeClass("has-error");
+               $('#date_expected_kick_off').removeClass('error');
+               $('#date_expected_kick_off').parent().children('.form-error').remove();
+        	}
+	        
+
+	        if($('#has_manage_experience_1').is(":checked") ==false && $('#has_manage_experience_2').is(":checked")==false) {
+	        	 $('#has_manage_experience_2').parent().addClass("has-error");
+	             $('#has_manage_experience_2').addClass('error');
+	             $('#has_manage_experience_2').parent().children('.form-error').remove();
+	             $('#has_manage_experience_2').parent().append('<span class="help-block form-error"><i class="fa fa-exclamation-circle"></i> 이 항목은 필수입니다.</span>');
+	             result = false;
+	        }
+	        else
+	       	{
+	              $('#has_manage_experience_2').parent().removeClass("has-error");
+	              $('#has_manage_experience_2').removeClass('error');
+	              $('#has_manage_experience_2').parent().children('.form-error').remove();
+	       	}
+	        
+	        return result;
 		}
 		
 	});

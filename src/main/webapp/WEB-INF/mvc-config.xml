@@ -41,7 +41,7 @@
 	    <beans:property name="host" value="smtp.gmail.com" />
 	    <beans:property name="port" value="587" />
 	    <beans:property name="username" value="gksthf1611@gmail.com" />
-	    <beans:property name="password" value="s0607060" />
+	    <beans:property name="password" value="ss06070607" />
 	    <beans:property name="javaMailProperties">
 	    <beans:props>
            <beans:prop key="mail.transport.protocol">smtp</beans:prop>
@@ -102,6 +102,9 @@
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>
 	<beans:bean id="NoticeDao" class="com.wjm.dao.NoticeDao">
+		<beans:property name="dataSource" ref="dataSource" />
+	</beans:bean>
+	<beans:bean id="NotificationDao" class="com.wjm.dao.NotificationDao">
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>
 	<beans:bean id="PortfolioDao" class="com.wjm.dao.PortfolioDao">

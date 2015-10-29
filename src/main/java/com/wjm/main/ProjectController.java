@@ -4,12 +4,15 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,10 +26,12 @@ import com.wjm.dao.AccountInformationDao;
 import com.wjm.dao.ApplicantDao;
 import com.wjm.dao.AreaDetailDao;
 import com.wjm.dao.CommentDao;
+import com.wjm.dao.NotificationDao;
 import com.wjm.dao.Partners_infoDao;
 import com.wjm.dao.PortfolioDao;
 import com.wjm.dao.ProjectDao;
 import com.wjm.dao.TechniqueDao;
+import com.wjm.main.function.Mail;
 import com.wjm.main.function.Time;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
@@ -72,6 +77,35 @@ public class ProjectController {
 
 	@Autowired
 	private TechniqueDao techniqueDao;
+	@Autowired
+	private NotificationDao notificationDao;
+	
+
+	@Autowired
+	private JavaMailSender mailSender;
+	//메일 전송
+	public String sendMail(String from, String to, String content, String subject) {
+		
+		logger.info("from = "+from);
+		logger.info("to = "+to);
+		logger.info("content = "+content);
+		logger.info("subject = "+subject);
+		try {
+			MimeMessage message = mailSender.createMimeMessage();
+			MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
+			messageHelper.setTo(to);
+			messageHelper.setText(content, true);
+			messageHelper.setFrom(from);
+			messageHelper.setSubject(subject);	// 메일제목은 생략이 가능하다
+			
+			mailSender.send(message);
+		} catch(Exception e){
+			System.out.println(e);
+			return "실패";
+		}
+		
+		return "성공";
+	}
 	/**
 	 * 프로젝트 추가
 	 */
@@ -664,8 +698,9 @@ public class ProjectController {
 	 * @throws ParseException 
 	 * @throws NumberFormatException 
 	 */
-	@RequestMapping(value = "/project/add/detail", method = RequestMethod.POST, produces = "text/plain; charset=utf8")
-	public ModelAndView ProjectController_add_detail_post(HttpServletRequest request,
+	@RequestMapping(value = "/project/add/detail", method = RequestMethod.POST, produces = "text/json; charset=utf8")
+	@ResponseBody
+	public String ProjectController_add_detail_post(HttpServletRequest request,
  			HttpServletResponse response,
 			 @RequestParam(value = "category", required = false, defaultValue = "") String category,
 			 @RequestParam(value = "sub_category", required = false, defaultValue = "") String sub_category,
@@ -684,116 +719,101 @@ public class ProjectController {
 			 @RequestParam(value = "has_manage_experience", required = false, defaultValue = "") String has_manage_experience,
 			 @RequestParam(value = "prefer_partner", required = false, defaultValue = "") String prefer_partner,
 			 @RequestParam(value = "submit_purpose", required = false, defaultValue = "") String submit_purpose,
-			 @RequestParam(value = "post_a_job", required = false, defaultValue = "") String post_a_job,
-			 @RequestParam(value ="save_for_later", required = false, defaultValue = "") String save_for_later
+			 @RequestParam(value = "status", required = false, defaultValue = "") String status
 			 ) throws NumberFormatException, ParseException {
 		logger.info("프로젝트 추가 처리");
-		
-		boolean isAvailable = true;
-		
-		//모델앤뷰 생성
-		ModelAndView mv = new ModelAndView();
-		String return_val = "/project/add/detail";
-		mv.setViewName(return_val);
-		
-		
-		
+		JSONObject jObject = new JSONObject();
+
 		//title 체크
 		if(title.isEmpty())
 		{
 			logger.info("title!!!!");
-			isAvailable = false;
-			mv.addObject("title_msg","이 항목은 필수입니다.");
+			jObject.put("messages", "제목은 필수입니다.");
+			return jObject.toString();
 		}
 		else if(!Validator.isValidLength(title, 1, 30))
 		{
 			logger.info("title!!!!");
-			isAvailable = false;
-			mv.addObject("title_msg","프로젝트 제목을 올바르게 입력해주세요");
+			jObject.put("messages", "프로젝트 제목은 최대 30자입니다.");
+			return jObject.toString();
 		}
 		else
 		{
 			logger.info("title = "+title);
-			mv.addObject("title_val",title);
 		}
-		
 		
 		//category 체크
 		if(category.isEmpty())
 		{
 			logger.info("category!!!!");
-			isAvailable = false;
-			mv.addObject("category_msg","이 항목은 필수입니다.");
+			jObject.put("messages", "카테고리는 필수입니다.");
+			return jObject.toString();
 		}
 		else if(!category.equals("개발")&&!category.equals("디자인"))
 		{
 			logger.info("category!!!!");
-			isAvailable = false;
-			mv.addObject("category_msg","카테고리를 올바르게 선택해주세요");
+			jObject.put("messages", "카테고리를 올바르게 선택해주세요.");
+			return jObject.toString();
 		}
 		else
 		{
 			logger.info("category_val = "+category);
-			mv.addObject("category_val",category);
 		}
 
 		//sub category 체크
 		if(sub_category.isEmpty())
 		{
 			logger.info("sub_category!!!!");
-			isAvailable = false;
-			mv.addObject("category_msg","이 항목은 필수입니다.");
+			jObject.put("messages", "세부 카테고리는 필수입니다.");
+			return jObject.toString();
 		}
 		else if(!Validator.isProjectCategory(category, sub_category))
 		{
 			logger.info("sub_category!!!!");
-			isAvailable = false;
-			mv.addObject("category_msg","카테고리를 올바르게 선택해주세요");
+			jObject.put("messages", "세부 카테고리를 올바르게 선택해주세요.");
+			return jObject.toString();
 		}
 		else
 		{
 			logger.info("sub_category_val = "+sub_category);
-			mv.addObject("sub_category_val",sub_category);
 		}
 		
 		//is_turnkey 체크
 		if(is_turnkey.isEmpty())
 		{
 			logger.info("is_turnkey!!!!");
-			isAvailable = false;
-			mv.addObject("is_turnkey_msg","디자인 혹은 개발도 필요하신지 선택해주세요.");
+			jObject.put("messages", "디자인 혹은 개발도 필요하신지 선택해주세요.");
+			return jObject.toString();
 		}
 		else
 		{
 			logger.info("is_turnkey_val = "+is_turnkey);
-			mv.addObject("is_turnkey_val",is_turnkey);
 		}
 		
 		//project_term 체크
 		if(project_term.isEmpty())
 		{
 			logger.info("project_term!!!!");
-			isAvailable = false;
-			mv.addObject("project_term_msg","이 항목은 필수입니다.");
+			jObject.put("messages", "진행 기간은 필수입니다.");
+			return jObject.toString();
 		}
 		else if(!Validator.isDigit(project_term)||!Validator.isValidLength(project_term, 1, 3))
 		{
 			logger.info("project_term!!!!");
-			isAvailable = false;
-			mv.addObject("project_term_msg","프로젝트 진행기간을 올바르게 입력해주세요");
+			jObject.put("messages", "프로젝트 진행기간을 올바르게 입력해주세요");
+			return jObject.toString();
 		}
 		else
 		{
 			logger.info("project_term_val = "+project_term);
-			mv.addObject("project_term_val",project_term);
 		}
 		
 		//budget_maximum 체크
 		if(budget_maximum.isEmpty())
 		{
 			logger.info("budget_maximum!!!!");
-			isAvailable = false;
-			mv.addObject("budget_maximum_msg","이 항목은 필수입니다.");
+			jObject.put("messages", "예산을 올바르게 입력해주세요");
+			return jObject.toString();
 		}
 		else
 		{
@@ -802,53 +822,49 @@ public class ProjectController {
 			if(!Validator.isDigit(budget_maximum))
 			{
 				logger.info("budget_maximum!!!!");
-				isAvailable = false;
-				mv.addObject("budget_maximum_msg","숫자만 입력 가능합니다.");
+				jObject.put("messages", "숫자만 입력 가능합니다.");
+				return jObject.toString();
 			}
 			else
 			{
 			logger.info("budget_maximum_val = "+budget_maximum);
-			mv.addObject("budget_maximum_val",budget_maximum);
 			}
 		}	
-		
 		//planning_status 체크
 		if(planning_status.isEmpty())
 		{
 			logger.info("planning_status!!!!");
-			isAvailable = false;
-			mv.addObject("planning_status_msg","이 항목은 필수입니다.");
+			jObject.put("messages", "기획상태는 필수입니다.");
+			return jObject.toString();
 		}
 		else if(!Validator.isPlanStatus(planning_status))
 		{
 			logger.info("planning_status!!!!");
-			isAvailable = false;
-			mv.addObject("planning_status_msg","프로젝트 기획상태를 올바르게 입력해주세요");
+			jObject.put("messages", "프로젝트 기획상태를 올바르게 입력해주세요");
+			return jObject.toString();
 		}
 		else
 		{
 			logger.info("planning_status_val = "+planning_status);
-			mv.addObject("planning_status_val",planning_status);
 		}	
 		
 		//description 체크
 		if(description.isEmpty())
 		{
 			logger.info("description!!!!");
-			isAvailable = false;
-			mv.addObject("description_msg","이 항목은 필수입니다.");
+			jObject.put("messages", "프로젝트 내용은 필수입니다.");
+			return jObject.toString();
 		}
 		else if(!Validator.isValidLength(description, 1, 5000))
 		{
 			logger.info("description!!!!");
-			isAvailable = false;
-			mv.addObject("description_msg","프로젝트 내용이 너무 깁니다.");
+			jObject.put("messages", "프로젝트 내용이 너무 깁니다.");
+			return jObject.toString();
 		}
 		else
 		{
 			description.replace("\n", "<br/>");
 			logger.info("description_val = "+description);
-			mv.addObject("description_val",description);
 		}	
 		
 		//skill_required 체크(필수 X)
@@ -857,13 +873,12 @@ public class ProjectController {
 			if(!Validator.isValidLength(skill_required, 1, 100))
 			{
 				logger.info("skill_required!!!!");
-				isAvailable = false;
-				mv.addObject("skill_required_msg","관련 기술이 너무 깁니다");
+				jObject.put("messages", "관련 기술이 너무 깁니다.");
+				return jObject.toString();
 			}
 			else
 			{
 				logger.info("skill_required_val = "+skill_required);
-				mv.addObject("skill_required_val",skill_required);
 			}	
 		}
 		
@@ -871,47 +886,43 @@ public class ProjectController {
 		if(deadline.isEmpty())
 		{
 			logger.info("deadline!!!!");
-			isAvailable = false;
-			mv.addObject("deadline_msg","이 항목은 필수입니다.");
+			jObject.put("messages", "모집 마감 일자는 필수입니다.");
+			return jObject.toString();
 		}
 		else
 		{
 			logger.info("deadline_val = "+deadline);
-			mv.addObject("deadline_val",deadline);
 		}
 		
 		//method_pre_interview 체크
 		if(method_pre_interview.isEmpty())
 		{
 			logger.info("method_pre_interview!!!!");
-			isAvailable = false;
-			mv.addObject("method_pre_interview_msg","이 항목은 필수입니다.");
+			jObject.put("messages", "사전 미팅은 필수입니다.");
+			return jObject.toString();
 		}
 		else if(!method_pre_interview.equals("OFFLINE")&&!method_pre_interview.equals("ONLINE"))
 		{
 			logger.info("method_pre_interview!!!!");
-			isAvailable = false;
-			mv.addObject("method_pre_interview_msg","사전 미팅을 올바르게 선택해주세요.");
+			jObject.put("messages", "사전 미팅을 올바르게 선택해주세요.");
+			return jObject.toString();
 		}
 		else
 		{
 			logger.info("method_pre_interview_val = "+method_pre_interview);
-			mv.addObject("method_pre_interview_val",method_pre_interview);
 		}
 		
 		//시,도 군 체크
 		if(address_sido.isEmpty() ||sigungu.isEmpty() )
 		{
 			logger.info("address_sido||sigungu!!!!");
-			isAvailable = false;
-			mv.addObject("address_msg","이 항목은 필수입니다.");
+			jObject.put("messages", "지역은 필수입니다.");
+			return jObject.toString();
 		}
 		else
 		{
 			logger.info("address_sido_val = "+address_sido);
 			logger.info("sigungu_val = "+sigungu);
-			mv.addObject("address_sido_val",address_sido);
-			mv.addObject("sigungu_val",sigungu);
 		}
 		
 		
@@ -919,26 +930,24 @@ public class ProjectController {
 		if(date_expected_kick_off.isEmpty() )
 		{
 			logger.info("date_expected_kick_off!!!!");
-			isAvailable = false;
-			mv.addObject("date_expected_kick_off_msg","이 항목은 필수입니다.");
+			jObject.put("messages", "프로젝트 시작일은 필수입니다.");
+			return jObject.toString();
 		}
 		else
 		{
 			logger.info("date_expected_kick_off_val = "+date_expected_kick_off);
-			mv.addObject("date_expected_kick_off_val",date_expected_kick_off);
 		}
 		
 		//has_manage_experience
 		if(has_manage_experience.isEmpty())
 		{
 			logger.info("has_manage_experience!!!!");
-			isAvailable = false;
-			mv.addObject("has_manage_experience_msg","이 항목은 필수입니다.");
+			jObject.put("messages", "매니징 경험은 필수입니다.");
+			return jObject.toString();
 		}
 		else
 		{
 			logger.info("has_manage_experience_val = "+has_manage_experience);
-			mv.addObject("has_manage_experience_val",has_manage_experience);
 		}
 		
 		//prefer_partner(필수X)
@@ -948,14 +957,13 @@ public class ProjectController {
 					&&!prefer_partner.equals("individual_business")&&!prefer_partner.equals("team")
 					&&!prefer_partner.equals("individual"))
 			{
-				isAvailable = false;
 				logger.info("prefer_partner!!!!");
-				mv.addObject("prefer_partner_msg","선호하는 파트너를 올바르게 선택해주세요.");
+				jObject.put("messages", "선호하는 파트너를 올바르게 선택해주세요.");
+				return jObject.toString();
 			}
 			else
 			{
 				logger.info("prefer_partner_val = "+prefer_partner);
-				mv.addObject("prefer_partner_val",prefer_partner);
 			}
 		}
 		
@@ -965,47 +973,61 @@ public class ProjectController {
 			if(!submit_purpose.equals("request")&&!submit_purpose.equals("inquire"))
 			{
 				logger.info("submit_purpose!!!!");
-				isAvailable = false;
-				mv.addObject("submit_purpose_msg","프로젝트 의뢰 목적를 올바르게 선택해주세요.");
+				jObject.put("messages", "프로젝트 의뢰 목적를 올바르게 선택해주세요.");
+				return jObject.toString();
 			}
 			else
 			{
 				logger.info("submit_purpose_val = "+submit_purpose);
-				mv.addObject("submit_purpose_val",submit_purpose);
 			}
 		}
 
-		String status = "";
-		if(!post_a_job.isEmpty())
+		if(status.equals("프로젝트 등록"))
+		{	
 			status = "검수중";
-		else if(!save_for_later.isEmpty())
+		}
+		else if(status.equals("임시저장"))
 			status = "임시저장";
-		
-		
-		if(isAvailable)
+		else
 		{
-			logger.info("추가 가능");
-			AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+			jObject.put("messages", "error");
+			jObject.put("path", "redirect:/wjm/index");
+			return jObject.toString();
+		}
+		
+		
+		logger.info("추가 가능");
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
 
-			if(account!=null)
-			{
-				projectDao.Save(account.getPk(),category,sub_category,is_turnkey,title,Integer.parseInt(project_term),
+		if(account==null)
+		{
+			jObject.put("messages", "error");
+			jObject.put("path", "redirect:/wjm/accounts/login");
+			return jObject.toString();
+		}
+		
+		
+	projectDao.Save(account.getPk(),category,sub_category,is_turnkey,title,Integer.parseInt(project_term),
 						Integer.parseInt(budget_maximum),planning_status,description,skill_required,Time.dateToTimestamp(deadline),
 						method_pre_interview, address_sido, sigungu, Time.dateToTimestamp(date_expected_kick_off), has_manage_experience,
 						prefer_partner, submit_purpose, status);
-				if(status.equals("임시저장"))
-				{
-					mv = new ModelAndView();
-					return_val = "redirect:/client/manage/project/saved/";
-				}
-				else if(status.equals("검수중")){
-					mv = new ModelAndView();
-					return_val = "redirect:/project/add/thank-you";
-				}
-				mv.setViewName(return_val);
-			}
+		if(status.equals("임시저장"))
+		{
+			jObject.put("messages", "success");
+			jObject.put("path", "/wjm/client/manage/project/saved/");
 		}
-		return mv;
+		else if(status.equals("검수중")){
+			//notification update
+			notificationDao.create(account.getPk(), title+" 프로젝트가 등록되어 검수중입니다. 검수에는 최대 24시간이 소요됩니다.");
+			String result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", title+" 프로젝트가 등록되어 검수중입니다. 검수에는 최대 24시간이 소요됩니다.", "외주몬 알림 메일입니다");
+			logger.info("이메일 전송 결과 = "+result);
+			
+			jObject.put("messages", "success");
+			jObject.put("path", "/wjm/project/add/thank-you");
+		}
+	
+		return jObject.toString();
+
 	}
 	/**
 	 * 프로젝트 추가 안내
@@ -1013,8 +1035,6 @@ public class ProjectController {
 	@RequestMapping(value = "/project/add/thank-you", method = RequestMethod.GET)
 	public String ProjectController_add_thankyou(HttpServletRequest request) {
 		logger.info("add thankyou Page");
-		
-		
 		
 		return "/project/add/thank-you";
 	}
@@ -1503,10 +1523,12 @@ public class ProjectController {
 	@RequestMapping(value = "/project/delete", method = RequestMethod.POST, produces = "text/json; charset=utf8")
 	@ResponseBody
 	public String ProjectController_projectdelete_post(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam("delete_project_id") String delete_project_id) {
+			@RequestParam("delete_project_id") String delete_project_id,
+			@RequestParam("delete_project_name") String delete_project_name) {
 
 		logger.info("/project/delete Post Page");
 		logger.info("delete_project_id = " + delete_project_id);
+		logger.info("delete_project_name = " + delete_project_name);
 
 		JSONObject jObject = new JSONObject();
 
@@ -1529,7 +1551,14 @@ public class ProjectController {
 
 		logger.info("result = " + result);
 		if (result.equals("성공"))
+		{
+			//notification update
+			notificationDao.create(account.getPk(), delete_project_name+" 프로젝트를 취소하였습니다.");
+			//String result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", title+" 프로젝트가 등록되어 검수중입니다. 검수에는 최대 24시간이 소요됩니다.", "외주몬 알림 메일입니다");
+			//logger.info("이메일 전송 결과 = "+result);
+			
 			jObject.put("messages", "success");
+		}
 		else {
 			jObject.put("messages", result);
 		}

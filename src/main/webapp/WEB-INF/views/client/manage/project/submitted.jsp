@@ -169,6 +169,8 @@
 						method="POST">
 						<input name="delete_project_id" type="hidden"
 							value="" />
+						<input name="delete_project_name" type="hidden"
+							value="" />
 						<p id="p5-haveskill-name">aaaa을(를) 정말 삭제하시겠습니까?</p>
 						<div class="form-group">
 							<div class="btn-wrapper-right">
@@ -198,6 +200,8 @@ $( document ).ready(function($) {
         event.preventDefault();
         projectPK = $(this).attr('project-pk');
         $('[name="delete_project_id"]').val(projectPK);
+        $('[name="delete_project_name"]').val($(this).attr('project-title'));
+
         $('#p5-haveskill-name').html('"'+$(this).attr('project-title')+'"'+'을(를) 정말 삭제하시겠습니까?');
     });
     

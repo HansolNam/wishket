@@ -3,7 +3,6 @@ package com.wjm.main;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.List;
 import java.util.Random;
 
 import javax.mail.internet.MimeMessage;
@@ -28,7 +27,7 @@ import com.wjm.dao.AccountDao;
 import com.wjm.dao.AccountInformationDao;
 import com.wjm.dao.AuthenticationDao;
 import com.wjm.dao.BankDao;
-import com.wjm.main.function.Fileupload;
+import com.wjm.main.function.Mail;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
 import com.wjm.models.AccountInformationInfo;
@@ -56,10 +55,33 @@ public class AccountController {
 
 	@Autowired
 	private AuthenticationDao authenticationDao;
-	
+
 
 	@Autowired
 	private JavaMailSender mailSender;
+	//메일 전송
+	public String sendMail(String from, String to, String content, String subject) {
+		
+		logger.info("from = "+from);
+		logger.info("to = "+to);
+		logger.info("content = "+content);
+		logger.info("subject = "+subject);
+		try {
+			MimeMessage message = mailSender.createMimeMessage();
+			MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
+			messageHelper.setTo(to);
+			messageHelper.setText(content, true);
+			messageHelper.setFrom(from);
+			messageHelper.setSubject(subject);	// 메일제목은 생략이 가능하다
+			
+			mailSender.send(message);
+		} catch(Exception e){
+			System.out.println(e);
+			return "실패";
+		}
+		
+		return "성공";
+	}
 	
 	/**
 	 * 알림 페이지
@@ -1209,22 +1231,4 @@ public class AccountController {
 		return mv;
 	}
 
-	//메일 전송
-	public String sendMail(String from, String to, String content, String subject) {
-		
-		try {
-			MimeMessage message = mailSender.createMimeMessage();
-			MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
-			messageHelper.setTo(to);
-			messageHelper.setText(content, true);
-			messageHelper.setFrom(from);
-			messageHelper.setSubject(subject);	// 메일제목은 생략이 가능하다
-			
-			mailSender.send(message);
-		} catch(Exception e){
-			System.out.println(e);
-		}
-		
-		return "성공";
-	}
 }
