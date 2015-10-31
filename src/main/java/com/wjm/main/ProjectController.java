@@ -1290,7 +1290,15 @@ public class ProjectController {
 				if(applicant == null)
 					already_apply = false;
 				else
-					already_apply = true;
+				{
+					if(applicant.getStatus().equals("관심프로젝트"))
+					{
+						already_apply = false;
+						mv.addObject("interest","true");
+					}
+					else
+						already_apply = true;
+				}
 				
 				if(hasInfo && hasIntro && hasSkill && hasPortfolio && not_end && !already_apply)
 					{
@@ -1385,7 +1393,6 @@ public class ProjectController {
 
 		logger.info("/project/{name}/{pk}/proposal/apply Post Page");
 		
-
 		logger.info("name = " + name);
 		logger.info("pk = " + pk);
 		logger.info("estimated_budget = " + estimated_budget);
@@ -1421,7 +1428,21 @@ public class ProjectController {
 		}
 		logger.info("result = " + result);
 		if (result.equals("성공"))
+		{
+			//notification update
+			//파트너스
+			notificationDao.create(account.getPk(), name+" 프로젝트에 지원하셨습니다.");
+			//클라이언트
+			ProjectInfo project = projectDao.select(Integer.parseInt(pk), name); 
+			notificationDao.create(project.getAccount_pk(), name+" 프로젝트에 "+account.getId()+" 님이 지원하셨습니다.");
+			
+			String mail_result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", name+" 프로젝트에 지원하셨습니다.", "외주몬 알림 메일입니다");
+			logger.info("이메일 전송 결과1 = "+mail_result);
+			mail_result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", name+" 프로젝트에 "+account.getId()+" 님이 지원하셨습니다.", "외주몬 알림 메일입니다");
+			logger.info("이메일 전송 결과2 = "+mail_result);
+			
 			jObject.put("messages", "success");
+		}
 		else {
 			jObject.put("messages", result);
 		}

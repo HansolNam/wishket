@@ -321,6 +321,8 @@ div.ui-tooltip {
 																	'세부 카테고리'
 																			+ '<i class="fa fa-sort"></i>');
 													currentCategory = "전체보기";
+													makeNoPortfolioComponent($(
+													'.p5-portfolio-list').length);
 													break;
 												case "개발"://개발
 													$(

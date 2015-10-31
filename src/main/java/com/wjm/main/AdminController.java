@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,6 +19,8 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +36,7 @@ import com.wjm.dao.ApplicantDao;
 import com.wjm.dao.AuthenticationDao;
 import com.wjm.dao.ContractDao;
 import com.wjm.dao.NoticeDao;
+import com.wjm.dao.NotificationDao;
 import com.wjm.dao.ProjectDao;
 import com.wjm.main.function.Fileupload;
 import com.wjm.main.function.Validator;
@@ -67,6 +71,34 @@ public class AdminController {
 	private ContractDao contractDao;
 	@Autowired
 	private NoticeDao noticeDao;
+	@Autowired
+	private NotificationDao notificationDao;
+
+	@Autowired
+	private JavaMailSender mailSender;
+	//메일 전송
+	public String sendMail(String from, String to, String content, String subject) {
+		
+		logger.info("from = "+from);
+		logger.info("to = "+to);
+		logger.info("content = "+content);
+		logger.info("subject = "+subject);
+		try {
+			MimeMessage message = mailSender.createMimeMessage();
+			MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
+			messageHelper.setTo(to);
+			messageHelper.setText(content, true);
+			messageHelper.setFrom(from);
+			messageHelper.setSubject(subject);	// 메일제목은 생략이 가능하다
+			
+			mailSender.send(message);
+		} catch(Exception e){
+			System.out.println(e);
+			return "실패";
+		}
+		
+		return "성공";
+	}
 	/**
 	 * 관리자 페이지
 	 */
@@ -142,7 +174,10 @@ public class AdminController {
 		if(project == null)
 			mv.setViewName("/error/404error");
 		
-		//알림
+		//notification update
+		notificationDao.create(project.getAccount_pk(), project.getName()+" 프로젝트가 검수가 완료되어 지원자 모집중입니다.");
+		String result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", project.getName()+" 프로젝트가 검수가 완료되어 지원자 모집중입니다.", "외주몬 알림 메일입니다");
+		logger.info("이메일 전송 결과 = "+result);
 		
 		projectDao.updateStatus(pk,"지원자모집중");
 		
@@ -169,7 +204,10 @@ public class AdminController {
 		if(project == null)
 			mv.setViewName("/error/404error");
 		
-		//알림
+		//notification update
+		notificationDao.create(project.getAccount_pk(), project.getName()+" 프로젝트가 검수에 실패하였습니다. 관리자에게 문의해주세요.");
+		String result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", project.getName()+" 프로젝트가 검수에 실패하였습니다. 관리자에게 문의해주세요.", "외주몬 알림 메일입니다");
+		logger.info("이메일 전송 결과 = "+result);
 		
 		projectDao.updateStatus(pk,"등록실패");
 		
@@ -373,6 +411,25 @@ public class AdminController {
 		//프로젝트의 상태 "진행중"으로 변경
 		projectDao.updateStatus(project_pk,"진행중");
 		
+		ProjectInfo project = projectDao.select_project(contract.getProject_pk());
+		
+		//notification update
+		//파트너스
+		notificationDao.create(contract.getPartners_pk(),contract.getClient_id()+"와의 계약이 성사되어 "
+				+project.getName()+" 프로젝트가 진행됩니다.");
+		//클라이언트
+		notificationDao.create(contract.getClient_pk(), contract.getPartners_id()+"와의 계약이 성사되어 "
+				+project.getName()+" 프로젝트가 진행됩니다.");
+		
+		//클라이언트
+		String result = sendMail("admin@wjm.com","gksthf1611@gmail.com",contract.getPartners_id()+"와의 계약이 성사되어 "
+				+project.getName()+" 프로젝트가 진행됩니다.", "외주몬 알림 메일입니다.");
+		logger.info("클라이언트 메일 : "+result);
+		//파트너스
+		result = sendMail("admin@wjm.com","gksthf1611@gmail.com",contract.getClient_id()+"와의 계약이 성사되어 "
+				+project.getName()+" 프로젝트가 진행됩니다.", "외주몬 알림 메일입니다.");
+		logger.info("파트너스 메일 : "+result);
+		
 		mv.setViewName("redirect:/admin/home");
 		return mv;
 	}
@@ -403,8 +460,23 @@ public class AdminController {
 		}
 		logger.info("계약 존재");
 		
+		/////////////////////////////////////////////대금 지급 루틴!
+		
 		//프로젝트의 상태 "완료한프로젝트"로 변경
 		projectDao.updateStatus(project_pk,"완료한프로젝트");
+		
+		ProjectInfo project = projectDao.select_project(project_pk);
+		
+		//notification update
+		//파트너스
+		notificationDao.create(partners_pk, project.getName()+" 프로젝트의 대금이 지급되었습니다. 클라이언트를 평가해야 프로젝트가 완료됩니다.");
+		//클라이언트
+		notificationDao.create(client_pk, project.getName()+" 프로젝트의 대금이 지급되었습니다. 파트너스를 평가해야 프로젝트가 완료됩니다.");
+		
+		String mail_result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", project.getName()+" 프로젝트의 대금이 지급되었습니다. 클라이언트를 평가해야 프로젝트가 완료됩니다.", "외주몬 알림 메일입니다");
+		logger.info("이메일 전송 결과1 = "+mail_result);
+		mail_result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", project.getName()+" 프로젝트의 대금이 지급되었습니다. 파트너스를 평가해야 프로젝트가 완료됩니다.", "외주몬 알림 메일입니다");
+		logger.info("이메일 전송 결과2 = "+mail_result);
 		
 		mv.setViewName("redirect:/admin/home");
 		return mv;

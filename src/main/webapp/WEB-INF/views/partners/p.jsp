@@ -395,7 +395,7 @@ div.ui-tooltip {
 								%>
 								<span category-id="<%=portfolio.get(i).getCategoryL() %>" subcategory-id="<%=portfolio.get(i).getCategoryM() %>" style="width:210px"><img
 									src="${pageContext.request.contextPath}/resources/upload/portfolio/<%=portfolio.get(i).getImg0() %>"><a
-									href="/wjm/partners/p/<%=this_account.getId() %>/portfolio/<%=portfolio.get(i).getPk() %>/update/"><span
+									href="/wjm/partners/p/<%=this_account.getId() %>/portfolio/<%=portfolio.get(i).getPk() %>"><span
 										class="p5-img-info"><div class="p5-img-brief-info">
 												<div class="p5-img-title text-right"><%=portfolio.get(i).getName() %></div>
 												<div class="p5-img-category text-right"><%=portfolio.get(i).getCategoryL() %> &gt; <%=portfolio.get(i).getCategoryM() %></div>

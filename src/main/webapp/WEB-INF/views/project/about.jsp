@@ -12,6 +12,7 @@
 	long now_time = System.currentTimeMillis();
 	Timestamp now = new Timestamp(now_time);
 	
+	String interest = (String)request.getAttribute("interest");
 	String available = (String)request.getAttribute("available");
 	
 	String introduction = "";
@@ -299,11 +300,29 @@
 							href="/wjm/project/<%=project.getName()%>/<%=project.getPk()%>/proposal/apply/">프로젝트
 							지원하기</a>
 						<hr>
+						<%
+							if(interest == null)
+							{
+						%>
 						<a
 							class="btn btn-large btn-project-application btn-black btn-block"
 							href="#" onclick="toggle_interest(this);"
 							style="margin-bottom: 0;"><span id="interest_action_text">관심
 								프로젝트 추가하기</span></a>
+						<%
+							}
+							else
+							{
+						%>
+						<div
+							class="btn btn-large btn-project-application btn-default btn-block"
+							href="#" onclick="toggle_interest(this);"
+							style="margin-bottom: 0;">
+							<span id="interest_action_text">관심 프로젝트 삭제하기</span>
+						</div>
+						<%
+							}
+						%>
 					</div>
 					<%
 							}
