@@ -39,7 +39,31 @@ public class NotificationDao implements NotificationIDao {
 		
 		
 	}
-	
+	public List<NotificationInfo> select(int account_pk)
+	{
+		List<NotificationInfo> notificationlist = jdbcTemplate.query("select * from notification where account_pk = ?",
+		    	new Object[] { account_pk },new RowMapper<NotificationInfo>() {
+	    	public NotificationInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+	    	{
+	    		return new NotificationInfo(resultSet.getInt("pk"),
+	    				resultSet.getInt("account_pk"),
+	    				resultSet.getString("content"),
+	    				resultSet.getTimestamp("reg_date")
+	    				);
+	    	}
+	    });
+		
+		if(notificationlist == null)
+			return null;
+		else if(notificationlist.size() == 0)
+		{
+			return null;
+		}
+		else
+		{
+			return notificationlist;
+		}
+	}
 	public List<NotificationInfo> selectAll()
 	{
 		return jdbcTemplate.query("select * from notification",new RowMapper<NotificationInfo>() {

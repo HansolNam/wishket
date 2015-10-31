@@ -108,7 +108,7 @@
 				<div class="content-inner">
 					<div class="header-text project-detail-header"><%=project.getName() %>
 					<span class="label label-sm label-reviewing"><%=project.getStatus() %></span> <span
-							class="applicant-count">총 <span class="applicant-num">0명</span>
+							class="applicant-count">총 <span class="applicant-num"><%=project.getApplicantnum() %>명</span>
 							지원
 						</span>
 					</div>

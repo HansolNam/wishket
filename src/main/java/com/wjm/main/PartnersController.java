@@ -3,12 +3,15 @@ package com.wjm.main;
 import java.text.ParseException;
 import java.util.List;
 
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,8 +29,10 @@ import com.wjm.dao.CareerDao;
 import com.wjm.dao.ContractDao;
 import com.wjm.dao.EducationDao;
 import com.wjm.dao.LicenseDao;
+import com.wjm.dao.NotificationDao;
 import com.wjm.dao.Partners_infoDao;
 import com.wjm.dao.PortfolioDao;
+import com.wjm.dao.ProjectDao;
 import com.wjm.dao.TechniqueDao;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
@@ -87,6 +92,37 @@ public class PartnersController {
 	@Autowired
 	private ContractDao contractDao;
 
+	@Autowired
+	private ProjectDao projectDao;
+	@Autowired
+	private NotificationDao notificationDao;
+
+	@Autowired
+	private JavaMailSender mailSender;
+	//메일 전송
+	public String sendMail(String from, String to, String content, String subject) {
+		
+		logger.info("from = "+from);
+		logger.info("to = "+to);
+		logger.info("content = "+content);
+		logger.info("subject = "+subject);
+		try {
+			MimeMessage message = mailSender.createMimeMessage();
+			MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
+			messageHelper.setTo(to);
+			messageHelper.setText(content, true);
+			messageHelper.setFrom(from);
+			messageHelper.setSubject(subject);	// 메일제목은 생략이 가능하다
+			
+			mailSender.send(message);
+		} catch(Exception e){
+			System.out.println(e);
+			return "실패";
+		}
+		
+		return "성공";
+	}
+	
 	public boolean AccountCheck(AccountInfo account)
 	{
 		if(account.getAccount_type() == null)
@@ -2795,7 +2831,17 @@ public class PartnersController {
 				, Integer.parseInt(professionalism), Integer.parseInt(satisfaction), 
 						Integer.parseInt(schedule_observance), Integer.parseInt(activeness), 
 								Integer.parseInt(communication), recommendation);
+		
+		ProjectInfo project = projectDao.select_project(project_pk);
+		//notification update
+		notificationDao.create(account.getPk(), contract.getClient_id()+" 클라이언트를 평가하셨습니다. 프로젝트가 완료되었습니다.");
+		String result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", contract.getClient_id()+" 클라이언트를 평가하셨습니다. 프로젝트가 완료되었습니다.", "외주몬 알림 메일입니다");
+		logger.info("이메일 전송 결과 = "+result);
+		notificationDao.create(client_pk, contract.getPartners_id()+" 님이 "+project.getName()+" 프로젝트의 평가를 완료하셨습니다.");
+		result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", contract.getPartners_id()+" 님이 "+project.getName()+" 프로젝트의 평가를 완료하셨습니다.", "외주몬 알림 메일입니다");
+		logger.info("이메일 전송 결과 = "+result);
 				
+		
 		mv.setViewName("redirect:/partners/manage/past/completed-contract");
 		
 		return mv;

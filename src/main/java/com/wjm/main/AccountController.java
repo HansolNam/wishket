@@ -3,6 +3,7 @@ package com.wjm.main;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.List;
 import java.util.Random;
 
 import javax.mail.internet.MimeMessage;
@@ -27,11 +28,12 @@ import com.wjm.dao.AccountDao;
 import com.wjm.dao.AccountInformationDao;
 import com.wjm.dao.AuthenticationDao;
 import com.wjm.dao.BankDao;
-import com.wjm.main.function.Mail;
+import com.wjm.dao.NotificationDao;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
 import com.wjm.models.AccountInformationInfo;
 import com.wjm.models.AuthenticationInfo;
+import com.wjm.models.NotificationInfo;
 
 import net.sf.json.JSONObject;
 
@@ -55,6 +57,9 @@ public class AccountController {
 
 	@Autowired
 	private AuthenticationDao authenticationDao;
+
+	@Autowired
+	private NotificationDao notificationDao;
 
 
 	@Autowired
@@ -87,11 +92,25 @@ public class AccountController {
 	 * 알림 페이지
 	 */
 	@RequestMapping(value = "/accounts/notifications", method = RequestMethod.GET)
-	public String MainController_notifications_get(HttpServletRequest request) {
+	public ModelAndView MainController_notifications_get(HttpServletRequest request,
+ 			ModelAndView mv) {
 		logger.info("notifications Get Page");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		List<NotificationInfo> notificationlist = notificationDao.select(account.getPk());
 		
-		return "/accounts/notifications";
+		mv.addObject("notificationlist",notificationlist);
+		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
+		
+		if(notificationlist == null)
+			logger.info("notificationlist 개수 = "+0);
+		else
+			logger.info("notificationlist 개수 = "+notificationlist.size());
+		mv.setViewName("/accounts/notifications");
+		
+		return mv;
 	}
+	
 	/**
 	 * 비밀번호 찾기 페이지
 	 */

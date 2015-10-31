@@ -32,7 +32,12 @@ public class Time {
 		Date date = new Date(timestamp.getTime());
 		return sd2.format(date);
 	}
-	
+
+	static public String toString6(Timestamp timestamp){
+		SimpleDateFormat sd2 = new SimpleDateFormat ( "yyyy. MM. dd. hh:mm");
+		Date date = new Date(timestamp.getTime());
+		return sd2.format(date);
+	}
 	
 	static public Date nextDate(int iDay)
 	{
