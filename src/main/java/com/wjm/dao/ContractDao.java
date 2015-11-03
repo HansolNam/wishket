@@ -355,6 +355,10 @@ public class ContractDao implements ContractIDao {
 			return list;
 		}
 	}	
+	
+	/*
+	 * 특정 프로젝트와 파트너의 계약 
+	 */
 	public ContractInfo select_project_partners(int project_pk, int partners_pk)
 	{
 		List<ContractInfo> list = jdbcTemplate.query("select * from contract where project_pk = ? and partners_pk = ?",
@@ -381,7 +385,10 @@ public class ContractDao implements ContractIDao {
 		else
 			return list.get(0);
 	}	
-	
+
+	/*
+	 * 특정 프로젝트와 클라이언트의 계약 
+	 */
 	public List<ContractInfo> select_project_client(int project_pk, int client_pk)
 	{
 		List<ContractInfo> list = jdbcTemplate.query("select * from contract where project_pk = ? and client_pk = ?",
@@ -409,6 +416,10 @@ public class ContractDao implements ContractIDao {
 			return list;
 	}	
 	
+
+	/*
+	 * 특정 프로젝트의 계약 리스트
+	 */
 	public List<ContractInfo> select_project(int project_pk)
 	{
 		return jdbcTemplate.query("select * from contract where project_pk = ?",
@@ -431,6 +442,11 @@ public class ContractDao implements ContractIDao {
 		    });
 		
 	}	
+	
+
+	/*
+	 * 특정 클라이언트의 계약 리스트
+	 */
 	public List<ContractInfo> select_client(int client_pk)
 	{
 		return jdbcTemplate.query("select * from contract where client_pk = ?",
@@ -452,6 +468,10 @@ public class ContractDao implements ContractIDao {
 		    	}
 		    });
 	}	
+	
+	/*
+	 * 특정 파트너스의 계약 리스트
+	 */
 	public List<ContractInfo> select_partners(int partners_pk)
 	{
 		return jdbcTemplate.query("select * from contract where partners_pk = ?",
@@ -473,6 +493,10 @@ public class ContractDao implements ContractIDao {
 		    	}
 		    });
 	}
+	
+	/*
+	 * 특정 클라이언트와 파트너스의 계약
+	 */
 	public ContractInfo select_project_client_partners(int project_pk,int client_pk, int partners_pk)
 	{
 		List<ContractInfo> list = jdbcTemplate.query("select * from contract where project_pk = ? and client_pk = ? and partners_pk = ?",
@@ -513,6 +537,9 @@ public class ContractDao implements ContractIDao {
 			return null;
 	}
 
+	/*
+	 * 진행중인 프로젝트의 모든 계약 리스트
+	 */
 	public List<ContractInfo> selectProgressProjectAdmin()
 	{
 		List<ContractInfo> list = jdbcTemplate.query("select contract.* from contract,project where contract.project_pk = project.pk and project.status='진행중'", new RowMapper<ContractInfo>() {
@@ -538,6 +565,18 @@ public class ContractDao implements ContractIDao {
 		else
 			return list;
 	}
+	
+
+	/*
+	 * 특정 파트너스의 계약 개수
+	 */
+	public int getPartnersContractCount(int partners_pk)
+	{
+		int num = jdbcTemplate.queryForInt("select count(*) from contract where partners_pk = ? and status='완료'", new Object[]{partners_pk});
+
+		return num;
+	}
+	
 	public void updateStatus(int project_pk,int client_pk, int partners_pk, String status)
 	{
 		jdbcTemplate.update("update contract set status=? where project_pk=? and client_pk=? and partners_pk = ?"

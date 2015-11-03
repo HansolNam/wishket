@@ -215,6 +215,7 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getString("purpose")
 	    				, resultSet.getString("status")
 	    				, resultSet.getTimestamp("reg_date"));
+	    		
 	    	}
 	    });
 		

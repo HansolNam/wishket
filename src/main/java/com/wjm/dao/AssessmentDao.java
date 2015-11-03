@@ -14,7 +14,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.wjm.idao.AssessmentIDao;
-import com.wjm.models.AccountInfo;
 import com.wjm.models.AssessmentInfo;
 
 @Repository
@@ -31,6 +30,8 @@ public class AssessmentDao implements AssessmentIDao {
 	@Autowired
 	private ContractDao contractDao;
 	
+	@Autowired
+	private AccountInformationDao accountInformationDao;
 	private DataSource dataSource;
 	private JdbcTemplate jdbcTemplate;
 	
@@ -166,6 +167,7 @@ public class AssessmentDao implements AssessmentIDao {
 	    		assessment.setClient(accountDao.select(assessment.getAssessing_pk()));
 	    		assessment.setProject(projectDao.select_project(assessment.getProject_pk()));
 	    		assessment.setContract(contractDao.select_project_client_partners(assessment.getProject_pk(), assessment.getAssessing_pk(), assessment.getAssessed_pk()));
+	    		assessment.setProfile(accountInformationDao.getProfileImg(assessment.getAssessing_pk()));
 	    		
 	    		return assessment;
 	    	}

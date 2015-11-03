@@ -11,7 +11,9 @@
 	String isSame = (String) request.getAttribute("isSame");
 
 	String profile = this_accountinfo.getProfile_img();
-
+	Integer contractnum = (Integer)request.getAttribute("contractnum");
+	if(contractnum == null)
+		contractnum = 0;
 	if (!Validator.hasValue(profile))
 		profile = "default_avatar.png";
 
@@ -182,7 +184,7 @@ div.ui-tooltip {
 								<div class="contract-project-count">
 									<div class="title-column">계약한 프로젝트</div>
 									<div class="data-column">
-										<span class="value">0</span> 개 / 평가
+										<span class="value"><%=contractnum%></span> 개 / 평가
 										<%=assessmentCnt%>개
 									</div>
 								</div>
@@ -307,11 +309,10 @@ div.ui-tooltip {
 								</div>
 								<div class="p5-user-comment">
 									<span class="p5-user-img-box"><h6>추천 한마디</h6>
-										<img alt="jjinz84 사진" class="p5-user-comment-img"
-										src="/media/profiles/25302_20150714_412deff0f8284b7e.jpg"></span>
+										<img alt="<%=assessmentlist.get(i).getClient().getId() %> 사진" class="p5-user-comment-img"
+										src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=assessmentlist.get(i).getProfile() %>"></span>
 									<span class="p5-user-comment-box"><div>
-											<span class="label label-default label-role">클라이언트</span> <span><span
-												class="p5-comment-user-id"><%=assessmentlist.get(i).getClient().getId() %></span></span>
+											<span class="label label-default label-role"><%=assessmentlist.get(i).getClient().getId() %></span>
 										</div>
 										<div class="p5-review-comment"><%=assessmentlist.get(i).getRecommendation()%></div></span>
 								</div>

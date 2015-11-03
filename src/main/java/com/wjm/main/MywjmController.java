@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.wjm.dao.AccountDao;
 import com.wjm.dao.AccountInformationDao;
 import com.wjm.dao.ApplicantDao;
+import com.wjm.dao.ContractDao;
 import com.wjm.dao.NoticeDao;
 import com.wjm.dao.ProjectDao;
 import com.wjm.models.AccountInfo;
@@ -46,6 +47,10 @@ public class MywjmController {
 	
 	@Autowired
 	private NoticeDao noticeDao;
+	
+	
+	@Autowired
+	private ContractDao contractDao;
 	/**
 	 * 클라이언트 마이페이지
 	 */
@@ -73,6 +78,23 @@ public class MywjmController {
 
 		mv.addObject("projectlist",projectlist);
 		
+		//진행중인 프로젝트
+		List<ContractInfo> contractlist = contractDao.selectProgressClient(account.getPk(),"진행중");
+		mv.addObject("contractlist",contractlist);
+		
+		//완료한 프로젝트
+		contractlist = contractDao.selectCompletedClient(account.getPk(),"완료한프로젝트");
+		int total = 0;
+		
+		if(contractlist != null)
+		{
+			for(int i=0;i<contractlist.size();i++)
+			{
+				logger.info("budget"+i+" : "+contractlist.get(i).getBudget());
+				total += contractlist.get(i).getBudget();
+			}
+		}
+		mv.addObject("total",total);
 		return mv;
 	}
 
@@ -104,12 +126,34 @@ public class MywjmController {
 
 		List<ProjectInfo> interest = applicantDao.getInterestProject(account.getPk());
 		List<ApplicantInfo> apply = applicantDao.select_applicant(account.getPk(), "지원중");
-		List<ContractInfo> contract = null;
+		
+		//진행중인 프로젝트
+		List<ContractInfo> contractlist = contractDao.selectProgressPartners(account.getPk(),"진행중");
 
 		mv.setViewName("/mywjm/partners");
 		mv.addObject("interest",interest);
 		mv.addObject("apply",apply);
-		mv.addObject("contract",contract);
+		mv.addObject("contractlist",contractlist);
+		
+		mv.addObject("applynum", applicantDao.select_applicant_num(account.getPk()));
+		mv.addObject("contractnum", contractDao.getPartnersContractCount(account.getPk()));
+		
+		int total = 0;
+		
+		List<ContractInfo> completelist = contractDao.selectCompletedPartners(account.getPk(), "완료한프로젝트");
+		if(completelist != null)
+		{
+			mv.addObject("completenum", completelist.size());
+
+			for(int i=0;i<completelist.size();i++)
+			{
+				total += completelist.get(i).getBudget();
+			}
+		}
+		else
+			mv.addObject("completenum",0);
+		
+		mv.addObject("total",total);
 		
 		return mv;
 	}

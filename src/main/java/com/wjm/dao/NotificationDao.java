@@ -41,7 +41,7 @@ public class NotificationDao implements NotificationIDao {
 	}
 	public List<NotificationInfo> select(int account_pk)
 	{
-		List<NotificationInfo> notificationlist = jdbcTemplate.query("select * from notification where account_pk = ?",
+		List<NotificationInfo> notificationlist = jdbcTemplate.query("select * from notification where account_pk = ? order by reg_date desc",
 		    	new Object[] { account_pk },new RowMapper<NotificationInfo>() {
 	    	public NotificationInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{

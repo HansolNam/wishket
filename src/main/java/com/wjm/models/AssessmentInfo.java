@@ -14,7 +14,14 @@ public class AssessmentInfo {
 	private ProjectInfo project;
 	private AccountInfo client;
 	private ContractInfo contract;
+	private String profile;
 	
+	public String getProfile() {
+		return profile;
+	}
+	public void setProfile(String profile) {
+		this.profile = profile;
+	}
 	public ContractInfo getContract() {
 		return contract;
 	}

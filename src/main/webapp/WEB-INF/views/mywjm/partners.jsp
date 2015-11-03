@@ -11,7 +11,7 @@
 	AccountInfo account = (AccountInfo) session.getAttribute("account");
 	List<ProjectInfo> interest = (List<ProjectInfo>)request.getAttribute("interest");
 	List<ApplicantInfo> apply = (List<ApplicantInfo>)request.getAttribute("apply");
-	List<ContractInfo> contract = (List<ContractInfo>)request.getAttribute("contract");
+	List<ContractInfo> contractlist = (List<ContractInfo>)request.getAttribute("contractlist");
 	List<NoticeInfo> notice = (List<NoticeInfo>)request.getAttribute("notice");
 
 	if(interest != null)
@@ -20,9 +20,19 @@
 	if(apply != null)
 		if(apply.size() == 0)
 			apply = null;
-	if(contract != null)
-		if(contract.size() == 0)
-			contract = null;
+	if(contractlist != null)
+		if(contractlist.size() == 0)
+			contractlist = null;
+	
+	Integer applynum = (Integer)request.getAttribute("applynum");
+	Integer contractnum = (Integer)request.getAttribute("contractnum");
+	Integer completenum = (Integer)request.getAttribute("completenum");
+	Integer total = (Integer)request.getAttribute("total");
+	
+	if(applynum == null) applynum = 0;
+	if(contractnum == null) contractnum = 0;
+	if(completenum == null) completenum = 0;
+	if(total == null) total = 0;
 
 	String profile = (String)request.getAttribute("profile");
 	
@@ -37,7 +47,7 @@
 <meta charset="utf-8" />
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
-<title>외주몬(WJM) · 마이위시켓</title>
+<title>외주몬(WJM) · 마이외주몬</title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
 <link
 	href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css"
@@ -93,7 +103,7 @@
 			<div class="content">
 				<div class="content-header">
 					<h3 class="header-text">
-						마이위시켓 <small class="small-text"><a href="/wjm/partners-use/">처음
+						마이외주몬 <small class="small-text"><a href="/wjm/partners-use/">처음
 								오셨나요? 이용방법을 확인하세요 <i class="fa fa-chevron-right"></i>
 						</a></small>
 					</h3>
@@ -234,13 +244,38 @@
 										<th class="contract-project-client">클라이언트</th>
 										<th class="contract-project-budget">비용</th>
 										<th class="contract-project-term">남은기간/기간</th>
-										<th class="contract-status">상태</th>
 									</tr>
 								</thead>
 								<tbody>
-									<tr>
-										<td class="text-muted" colspan="6">진행 중인 프로젝트가 없습니다.</td>
-									</tr>
+								<%
+									if(contractlist != null)
+									{
+										for(int i=0;i<contractlist.size();i++)
+										{
+											out.print("<tr><td><a href='/wjm/project/"+contractlist.get(i).getName()+"/"
+												+contractlist.get(i).getProject_pk()+"'>"+contractlist.get(i).getName()+"</a></td>");
+											out.print("<td>"+contractlist.get(i).getClient_id()+"</td>");
+											out.print("<td>"+contractlist.get(i).getBudget()+"</td>");
+
+											Timestamp now = Time.getCurrentTimestamp();
+											now = Time.dateToTimestamp(Time.TimestampToString(now));
+											Timestamp reg_date = contractlist.get(i).getReg_date();
+											reg_date = Time.dateToTimestamp(Time.TimestampToString(reg_date));
+											
+											int remain = Time.remainDate(now, reg_date)/(60*24);
+											
+											if(contractlist.get(i).getTerm() - remain>=0)
+												out.print("<td>"+(contractlist.get(i).getTerm() - remain)+" 일 전");
+											else
+												out.print("<td>"+(contractlist.get(i).getTerm() - remain*(-1))+"일 초과");
+											
+											out.print("/"+contractlist.get(i).getTerm()+"일</td>");
+										}
+									}
+									else
+										out.println("<tr><td class='text-muted' colspan='4'>진행 중인 프로젝트가 없습니다.</td></tr>");
+									
+								%>
 								</tbody>
 							</table>
 							<p class="text-right">
@@ -265,38 +300,30 @@
 						</div>
 					</div>
 					<div class="partners-history">
-						<h3 class="partners-history-heading">위시켓 히스토리</h3>
+						<h3 class="partners-history-heading">외주몬 히스토리</h3>
 						<div class="partners-history-body">
 							<table class="table table-responsive">
 								<tbody>
 									<tr>
 										<th>지원한 프로젝트</th>
-										<td>0 <span class="append-unit">건</span></td>
+										<td><%= applynum%> <span class="append-unit">건</span></td>
 									</tr>
 									<tr>
 										<th>계약한 프로젝트</th>
-										<td>0 <span class="append-unit">건</span></td>
+										<td><%=contractnum %> <span class="append-unit">건</span></td>
 									</tr>
 									<tr>
 										<th>완료한 프로젝트</th>
-										<td>0 <span class="append-unit">건</span></td>
+										<td><%=completenum %> <span class="append-unit">건</span></td>
 									</tr>
 								</tbody>
 							</table>
 							<dl>
 								<dt>누적 완료 금액</dt>
 								<dd>
-									0 <span class="append-unit">원</span>
+									<%=total %> <span class="append-unit">원</span>
 								</dd>
 							</dl>
-						</div>
-					</div>
-					<div class="activity">
-						<h3 class="activity-heading">새로운 소식</h3>
-						<div id="activity-body">
-							<ul class="activity-unit-list">
-								<li class="empty-activity activity-unit">새로운 소식이 없습니다.</li>
-							</ul>
 						</div>
 					</div>
 				</div>
@@ -305,72 +332,5 @@
 		<div id="push"></div>
 	</div>
 	<jsp:include page="../footer.jsp" flush="false" />
-
-	<script type="text/javascript">
-		$(function() {
-			wishket.init();
-
-			svgeezy.init(false, 'png');
-		});
-	</script>
-	<script>
-		$(document).ready(
-				function($) {
-					var p5TotalSubNavigationFlag = 0;
-
-					if ($(window).width() >= 1200) {
-						$('.p5-side-nav-deactive').css('display', 'none');
-					} else {
-						$('.p5-side-nav-active').css('display', 'none');
-						$('.p5-side-nav-deactive').css('display', 'block');
-					}
-
-					$('.content-inner')
-							.on(
-									'click',
-									'.p5-side-nav-active-btn',
-									function() {
-										$('.p5-side-nav-active').css('display',
-												'none');
-										$('.p5-side-nav-deactive').css(
-												'display', 'block');
-									});
-
-					$('.content-inner').on(
-							'click',
-							'.p5-side-nav-deactive-btn',
-							function() {
-								$('.p5-side-nav-active')
-										.css('display', 'block');
-								$('.p5-side-nav-deactive').css('display',
-										'none');
-							});
-
-					$(window).scroll(
-							function() {
-								if ($(window).scrollTop() > 87
-										&& p5TotalSubNavigationFlag === 0) {
-									setTimeout(function() {
-										$('#p5-total-sub-navigation-wrapper')
-												.removeClass('hide fadeOut');
-										$('#p5-total-sub-navigation-wrapper')
-												.addClass('fadeInDown');
-									}, 200);
-									flag = 1;
-
-								} else if ($(window).scrollTop() <= 87) {
-									p5TotalSubNavigationFlag = 0;
-									$('#p5-total-sub-navigation-wrapper')
-											.removeClass('fadeInDown');
-									$('#p5-total-sub-navigation-wrapper')
-											.addClass('fadeOut');
-									setTimeout(function() {
-										$('#p5-total-sub-navigation-wrapper')
-												.addClass('hide');
-									}, 200);
-								}
-							});
-				});
-	</script>
 </body>
 </html>

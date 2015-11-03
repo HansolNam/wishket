@@ -2173,20 +2173,30 @@ public class PartnersController {
 		logger.info("/partners/p/{id}/evaluation Page");
 
 		AccountInfo account = (AccountInfo) request.getSession().getAttribute("account");
+		
+		//해당 파트너스의 계정
 		AccountInfo this_account = accountDao.select(id);
 
+		//에러
 		if (this_account == null) {
 			mv.setViewName("redirect:/partners");
 			return mv;
 		}
+		
+		//해당 파트너스의 계정과 계정 정보
 		mv.addObject("this_account", this_account);
-
 		AccountInformationInfo this_accountinfo = accountInformationDao.select(this_account.getPk());
 		mv.addObject("this_accountinfo", this_accountinfo);
 
+		//접속한 사용자와 해당 사용자가 같은지 체크
 		String isSame = isSame(account, this_account);
 		mv.addObject("isSame", isSame);
 
+		//계약 개수
+		int contractnum = contractDao.getPartnersContractCount(this_account.getPk());
+		mv.addObject("contractnum",contractnum);
+		
+		//평가받은 리스트
 		List<AssessmentInfo> assessmentlist = assessmentDao.select_assessed(this_account.getPk());
 		mv.addObject("assessmentlist",assessmentlist);
 		

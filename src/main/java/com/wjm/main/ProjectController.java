@@ -1270,6 +1270,9 @@ public class ProjectController {
 			AccountInformationInfo accountinformation = accountInformationDao.select(project.getAccount_pk());
 			mv.addObject("accountinfo",accountinformation);
 			
+			List<ProjectInfo> projectlist = projectDao.select(project.getAccount_pk());
+			mv.addObject("projectlist",projectlist);
+			
 			if(account.getAccount_type().equals("partners"))
 			{
 				boolean hasInfo, hasIntro, hasSkill, hasPortfolio, not_end, already_apply;

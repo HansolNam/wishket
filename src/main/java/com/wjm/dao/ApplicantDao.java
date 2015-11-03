@@ -177,6 +177,13 @@ public class ApplicantDao implements ApplicantIDao {
 	    	}
 	    });
 	}
+	
+	public int select_applicant_num(int account_pk)
+	{
+		return jdbcTemplate.queryForInt("select count(*) from applicant where account_pk = ?",
+		    	new Object[] { account_pk });
+	}
+	
 	public ApplicantInfo select(int account_pk, int project_pk)
 	{
 		List<ApplicantInfo> list = jdbcTemplate.query("select * from applicant where account_pk = ? and project_pk = ?",

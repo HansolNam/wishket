@@ -97,6 +97,13 @@ public class AccountController {
 		logger.info("notifications Get Page");
 
 		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+
+		if(account == null)
+		{
+			mv.setViewName("redirect:/accounts/login");
+			return mv;
+		}
+		
 		List<NotificationInfo> notificationlist = notificationDao.select(account.getPk());
 		
 		mv.addObject("notificationlist",notificationlist);
@@ -1174,9 +1181,9 @@ public class AccountController {
 	 * 신원 인증 처리
 	 * @throws IOException 
 	 */
-	@RequestMapping(value = "/accounts/settings/verify_identity", method = RequestMethod.POST)
-	public ModelAndView AccountController_verify_identity_post(HttpServletRequest request
-			,ModelAndView mv,
+	@RequestMapping(value = "/accounts/settings/verify_identity", method = RequestMethod.POST, produces = "text/json; charset=utf8")
+	@ResponseBody
+	public String AccountController_verify_identity_post(HttpServletRequest request,
  			HttpServletResponse response,
 			 @RequestParam(value = "user_type", required = false, defaultValue = "") String user_type
 			 ,@RequestParam("image") MultipartFile image
@@ -1186,22 +1193,29 @@ public class AccountController {
 			 ,@RequestParam(value = "identify_number", required = false, defaultValue = "") String identify_number
 			 ,@RequestParam(value = "company_name", required = false, defaultValue = "") String company_name
 			) throws FileUploadException, IOException{
-			logger.info("verify_identity POST Page");
-
-
 			
+		logger.info("verify_identity POST Page");
+		JSONObject jObject = new JSONObject();
+
 		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
-		if(account == null){mv.setViewName("redirect:/accounts/login");return mv;}
+		if(account == null)
+		{
+			jObject.put("messages", "error");
+			jObject.put("path", "redirect:/wjm/accounts/login");
+			logger.info("jobject = " + jObject.toString());
+			return jObject.toString();
+		}
 
 		AccountInformationInfo accountinfo = accountInformationDao.select(account.getPk());
-		if(accountinfo == null){mv.setViewName("redirect:/accounts/login");return mv;}
-		
-		mv.addObject("accountinfo",accountinfo);
-		mv.addObject("hasBasicInfo","true");
-
+		if(accountinfo == null)
+		{
+			jObject.put("messages", "error");
+			jObject.put("path", "/wjm/accounts/login");
+			logger.info("jobject = " + jObject.toString());
+			return jObject.toString();
+		}
 		
 		String form = accountinfo.getForm();
-
 		String real_path = request.getRealPath(File.separator);
 
 		try{
@@ -1211,28 +1225,27 @@ public class AccountController {
 
 				accountInformationDao.updateIdentity_authentication(account.getPk(),"검수중");
 
-				mv.addObject("messages","정상적으로 등록되었습니다.");
-				mv.addObject("hasAuthentication","true");
-				mv.addObject("authenticatoninfo", authenticationDao.select(account.getPk()));
-				return mv;
+				String result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", account.getId()+" 님이 신원 인증을 요청했습니다.", "외주몬 알림 메일입니다");
+				logger.info("이메일 전송 결과 = "+result);
+				
+				jObject.put("messages", "success");
+				jObject.put("path", "/wjm/accounts/settings/verify_identity/");
+				logger.info("jobject = " + jObject.toString());
+				return jObject.toString();
 			}
 			else
 			{
-				mv.addObject("user_type",user_type);
-				mv.addObject("representer_name",representer_name);
-				mv.addObject("address_detail",address_detail);
-				mv.addObject("email_for_tax",email_for_tax);
-				mv.addObject("identify_number",identify_number);
-				mv.addObject("company_name",company_name);
-				
-				mv.addObject("messages",msg);
-				return mv;
+				jObject.put("messages", msg);
+				logger.info("jobject = " + jObject.toString());
+				return jObject.toString();
 			}
 		}
 		catch(Exception e)
 		{
-			mv.addObject("messages","에러가 발생했습니다.");
-			return mv;
+			jObject.put("messages", "error");
+			jObject.put("path", "/wjm/accounts/settings/verify_identity/");
+			logger.info("jobject = " + jObject.toString());
+			return jObject.toString();
 		}
 	
 	}

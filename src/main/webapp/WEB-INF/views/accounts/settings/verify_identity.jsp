@@ -61,6 +61,7 @@
 <meta charset="utf-8" />
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 <title>외주몬(WJM) · 신원 인증</title>
+<script src= "http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
 <link href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
 	type="text/css" />
@@ -87,6 +88,16 @@
 	sizes="152x152" />
 <script src="${pageContext.request.contextPath}/resources/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/resources/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
+<style>
+	/* 로딩이미지 박스 꾸미기 */
+	#viewLoading {
+		text-align: center;
+		background: #FFFFF0;
+		filter: alpha(opacity=60);
+		opacity: alpha*0.6;
+	}
+</style>
+
 </head>
 <body class="logged-in client account-setting">
 	<div id="wrap">
@@ -211,7 +222,7 @@
 							else
 							{
 						%>
-							<form action="/wjm/accounts/settings/verify_identity/"
+							<form action="/wjm/accounts/settings/verify_identity/" id="verify-identity-form"
 							class="form-horizontal" enctype="multipart/form-data"
 							method="POST">
 							<input name="csrfmiddlewaretoken" type="hidden"
@@ -344,8 +355,8 @@
 							<div class="form-group last-form-group"
 								style="padding-top: 15px;">
 								<div style="float: right">
-									<input class="btn btn-partners account-btn"
-										style="margin-right: 10px;" type="submit" value="제출하기" />
+									<input class="btn btn-partners account-btn" id="submit-btn"
+										style="margin-right: 10px;" type="button" value="제출하기" />
 								</div>
 							</div>
 							<%
@@ -355,6 +366,11 @@
 						<%
 							}
 						%>
+						
+	<!-- 로딩 이미지 -->
+	<div id="viewLoading">
+		<img src="${pageContext.request.contextPath}/resources/upload/viewLoading.gif" />
+	</div>
 					</div>
 				</div>
 			</div>
@@ -363,9 +379,77 @@
 	</div>
 	<jsp:include page="../../footer.jsp" flush="false" />
 	<script>
-    $(document).ready(function(){
+	$(document).ready(function($){
 
-    	var identity_doc = "<%=identity_doc%>";
+    	// 페이지가 로딩될 때 'Loading 이미지'를 숨긴다.
+		$('#viewLoading').hide();
+			
+		// ajax 실행 및 완료시 'Loading 이미지'의 동작을 컨트롤하자.
+		$(document)
+		.ajaxStart(function()
+		{
+			// 로딩이미지의 위치 및 크기조절	
+			//$('#viewLoading').css('position', 'absolute');
+			//$('#viewLoading').css('top', '50%');
+			//$('#viewLoading').css('left','50%');
+			
+			//$('#viewLoading').show();
+		})
+		.ajaxStop(function()
+		{
+			//$(this).hide();
+			$('#viewLoading').fadeOut(500);
+		});
+	});
+    $(document).ready(function(){
+		
+    	$('#submit-btn').click(function(){
+			//$('#viewLoading').fadeIn(500);
+			$('#viewLoading').css('position', 'absolute');
+			$('#viewLoading').css('top', '50%');
+			$('#viewLoading').css('left','50%');
+			$('#viewLoading').show();
+			//alert(a);
+			
+			//$('#viewLoading').css('display','block');
+    		/*var formData = new FormData($('#verify-identity-form')[0]);
+    		$.ajax({
+    		    type: "POST",
+    		    url: "/wjm/accounts/settings/verify_identity",
+    		    data: formData,  // 폼데이터 직렬화
+    		    async: false,
+    		    cache: false,
+    		    contentType: false,
+    		    processData: false,
+    		    dataType: "json",   // 데이터타입을 JSON형식으로 지정
+    		    success: function(data) { // data: 백엔드에서 requestBody 형식으로 보낸 데이터를 받는다.
+    		        var messages = data.messages;
+
+    			    if(messages == "success")
+    	        	{
+    			    	location.href=data.path; 
+    	        	}
+    			    else if(messages == "error")
+    			    	{
+    			    	alert("에러가 발생했습니다.");
+    			    	location.href=data.path; 
+    			    	}
+    			    else
+    	        	{
+    			    	alert(messages);
+    	        	}
+            
+    		    },
+    		    error: function(jqXHR, textStatus, errorThrown) {
+    		        //에러코드
+					$(this).fadeOut(500);
+    		        alert('에러가 발생했습니다.');
+    		    }
+    		});*/
+    	});
+		
+		
+		var identity_doc = "<%=identity_doc%>";
     	var user_type = "<%=user_type%>";
     	var representer_name = "<%=representer_name%>";
     	var address_detail = "<%=address_detail%>";

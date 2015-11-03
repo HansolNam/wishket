@@ -21,6 +21,35 @@
 		if(Validator.hasValue(accountinfo.getIntroduction()))
 			introduction = accountinfo.getIntroduction().replaceAll("\r\n","<br/>");
 	}
+	
+	List<ProjectInfo> projectlist = (List<ProjectInfo>)request.getAttribute("projectlist");
+	int check_cnt = 0;
+	int recruit_cnt = 0;
+	int ing_cnt = 0;
+	int finish_cnt = 0;
+	
+	if(projectlist != null)
+	{
+		for(int i=0;i<projectlist.size();i++)
+		{
+			if(projectlist.get(i).getStatus().equals("검수중"))
+			{
+				check_cnt++;
+			}
+			else if(projectlist.get(i).getStatus().equals("지원자모집중"))
+			{
+				recruit_cnt++;
+			}
+			else if(projectlist.get(i).getStatus().equals("진행중"))
+			{
+				ing_cnt++;
+			}
+			else if(projectlist.get(i).getStatus().equals("완료한프로젝트"))
+			{
+				finish_cnt++;
+			}
+		}
+	}
 %>
 <!DOCTYPE html>
 <html class="no-js modern" lang="ko">
@@ -163,44 +192,7 @@
 						<div class="project-desc">
 							<div class="project-desc-title">프로젝트 내용</div>
 							<%=project.getDescription().replaceAll("\r\n", "<br/>")%>
-							<!-- 
-							<p></p>
-							<p></p>
-							<p>
-								<strong>&lt;프로젝트 진행 방식&gt;</strong><br />
-								<em>최초 1회 미팅<br /></em> 프로젝트 중에는 별도 미팅 없이 협업 도구 이용<br />- 이슈 관리는
-								JIRA<br />- 대화 채널은 SLACK
-							</p>
-							<br />
-							<p>
-								<strong>&lt;프로젝트의 현재 상황&gt;</strong><br />
-								<em>제품 기획 및 프로젝트PM이 가능한 담당자 있음<br /></em> 워크플로우 기준으로 전체 와이어프레임이
-								작성된 기획서 있음<br />
-								<em>모바일앱에 대응하는 CMS 서버 및 API 개발<br /></em> 앱 기준 12월말까지 플레이스토어에
-								임시로 올리기 필요 (투자사 중간 보고용)<br />* 내년 1월말까지 런칭 목표
-							</p>
-							<br />
-							<p>
-								<strong>&lt;상세한 업무 내용&gt;</strong><br />
-								<em>해당 서비스를 통해 문화명소의 이벤트 일정, 체험프로그램, 전시 정보를 쉽게 올리고 찾을 수 있는
-									서비스<br />
-								</em> 서비스용 모바일앱을 위한 컨텐츠 관리 시스템 구축<br />
-								<em>AWS에 서버 구축 필요(혹은 국내 호스팅 이용도 가능)<br /></em> UI는 Bootstrap 을
-								이용해 별도의 HTML Publishing 작업 최소화 (협의 가능)<br />* 주요 기능 목록<br />-
-								사용자 로그인 (관리자)<br />- 회원 관리 (등록/삭제)<br />- 컨텐츠관리 (작성/수정/삭제)<br />-
-								컨텐츠 작성은 (Bootstrap editor plugin 사용, 협의 가능)
-							</p>
-							<br />
-							<p>
-								<strong>&lt;참고자료 / 유의사항&gt;</strong><br />
-								<em>초기 CMS 개발 및 서버 세팅 후 앱 런칭까지 피드백 필요<br /></em> 프로젝트 시작은 빠를 수록
-								좋음
-							</p>
-							<br />
-							<p>비용과 기간은 협의가 가능합니다.</p>
-							<p></p>
-							<p></p>
-							 -->
+							
 						</div>
 						<div class="project-skill-required">
 							<div class="skill-required-title">관련 기술</div>
@@ -328,6 +320,16 @@
 							}
 						}
 					%>
+					<%
+						int register_num = check_cnt+recruit_cnt+ing_cnt+finish_cnt;
+						int contract_num = ing_cnt+finish_cnt;
+						
+						double contract_per = 0;
+						if(register_num != 0)
+						{
+							contract_per = 100.0*(double)contract_num/(double)register_num;
+						}
+					%>
 					<div class="client-info-box">
 						<h3 class="client-name-tag-heading">클라이언트</h3>
 						<div class="client-name-tag-body">
@@ -376,25 +378,25 @@
 							<div class="client-history-body">
 								<div class="project">
 									<div class="history-body-title">프로젝트 등록</div>
-									<div class="pull-right history-body-data">1 건</div>
+									<div class="pull-right history-body-data"><%=register_num %> 건</div>
 								</div>
 								<div class="contract">
 									<div class="contract-title">
 										<div class="history-body-title">계약한 프로젝트</div>
-										<div class="pull-right history-body-data">0 건</div>
+										<div class="pull-right history-body-data"><%=contract_num %> 건</div>
 									</div>
 									<div class="contract-data">
 										<div class="contract-data-box">
 											<div class="history-body-title">계약률</div>
-											<div class="pull-right history-body-data">0%</div>
+											<div class="pull-right history-body-data"><%=Math.round(contract_per*10.0)/10.0%>%</div>
 										</div>
 										<div class="contract-data-box">
 											<div class="history-body-title">진행중인 프로젝트</div>
-											<div class="pull-right history-body-data">0 건</div>
+											<div class="pull-right history-body-data"><%=ing_cnt %> 건</div>
 										</div>
 										<div class="contract-data-box">
 											<div class="history-body-title">완료한 프로젝트</div>
-											<div class="pull-right history-body-data">0 건</div>
+											<div class="pull-right history-body-data"><%=finish_cnt %> 건</div>
 										</div>
 									</div>
 								</div>

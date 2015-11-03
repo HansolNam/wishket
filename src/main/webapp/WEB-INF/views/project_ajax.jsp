@@ -43,7 +43,7 @@
 				href="/wjm/project/<%=projectlist.get(i).getName()%>/<%=projectlist.get(i).getPk() %>">
 				<%=projectlist.get(i).getName() %>
 			</a>
-			<%if(remain>= 0)
+			<%if(remain>= 0 && projectlist.get(i).getStatus().equals("지원자모집중"))
 				{
 				%>
 			<span class="label label-sm label-partners-availability possible" style="*margin-top: -17px;">모집중

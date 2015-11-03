@@ -1,16 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="com.wjm.main.function.Validator,com.wjm.models.NoticeInfo, com.wjm.models.AccountInfo, com.wjm.models.ProjectInfo, java.util.*, com.wjm.main.function.Time"%>
+<%@ page import="java.sql.Timestamp, com.wjm.main.function.Validator,com.wjm.models.ContractInfo ,com.wjm.models.NoticeInfo, com.wjm.models.AccountInfo, com.wjm.models.ProjectInfo, java.util.*, com.wjm.main.function.Time"%>
 <%
 	AccountInfo account = (AccountInfo)session.getAttribute("account");
 	List<NoticeInfo> notice = (List<NoticeInfo>)request.getAttribute("notice");
-
+	
+	List<ContractInfo> contractlist = (List<ContractInfo>)request.getAttribute("contractlist");
 	List<ProjectInfo> projectlist = (List<ProjectInfo>)request.getAttribute("projectlist");
 	int check_cnt = 0;
 	int recruit_cnt = 0;
 	int ing_cnt = 0;
 	int finish_cnt = 0;
-	
+	Integer total = (Integer)request.getAttribute("total");
+	if(total == null) total = 0;
 	if(projectlist != null)
 	{
 		for(int i=0;i<projectlist.size();i++)
@@ -204,27 +206,35 @@
 										<th>파트너스</th>
 										<th>금액</th>
 										<th>남은기간/기간</th>
-										<th>상태</th>
 									</tr>
 								</thead>
 								<%
 									if(ing_cnt != 0)
 									{
-										for(int i=0;i<projectlist.size();i++)
+										for(int i=0;i<contractlist.size();i++)
 										{
-											if(projectlist.get(i).getStatus().equals("진행중"))
-											{
-												out.print("<tbody><tr><td><a href='/wjm/project/"+projectlist.get(i).getName()+"/"
-													+projectlist.get(i).getPk()+"'>"+projectlist.get(i).getName()+"</a></td>");
-												out.print("<td>"+"파트너스"+"</td>");
-												out.print("<td>"+projectlist.get(i).getBudget()+"</td>");
-												out.print("<td>"+"남은 기간"+"</td>");
-												out.println("<td><a class='btn btn-sm btn-client' href='/wjm/project/preview/"+projectlist.get(i).getName()+"/"+projectlist.get(i).getPk()+"/'>미리보기</a></td></tr></tbody>");
-											}
+											out.print("<tbody><tr><td><a href='/wjm/project/"+contractlist.get(i).getName()+"/"
+												+contractlist.get(i).getProject_pk()+"'>"+contractlist.get(i).getName()+"</a></td>");
+											out.print("<td><a href='/wjm/partners/p/"+contractlist.get(i).getPartners_id()+"'/>"+contractlist.get(i).getPartners_id()+"</a></td>");
+											out.print("<td>"+contractlist.get(i).getBudget()+"</td>");
+
+											Timestamp now = Time.getCurrentTimestamp();
+											now = Time.dateToTimestamp(Time.TimestampToString(now));
+											Timestamp reg_date = contractlist.get(i).getReg_date();
+											reg_date = Time.dateToTimestamp(Time.TimestampToString(reg_date));
+											
+											int remain = Time.remainDate(now, reg_date)/(60*24);
+											
+											if(contractlist.get(i).getTerm() - remain>=0)
+												out.print("<td>"+(contractlist.get(i).getTerm() - remain)+" 일 전");
+											else
+												out.print("<td>"+(contractlist.get(i).getTerm() - remain*(-1))+"일 초과");
+											
+											out.print("/"+contractlist.get(i).getTerm()+"일</td>");
 										}
 									}
 									else
-										out.println("<tbody><tr><td class='text-muted' colspan='4'>모집 중인 프로젝트가 없습니다.</td></tr></tbody>");
+										out.println("<tbody><tr><td class='text-muted' colspan='4'>진행 중인 프로젝트가 없습니다.</td></tr></tbody>");
 									
 								%>
 							</table>
@@ -267,7 +277,7 @@
 						}
 					%>
 					<div class="client-history">
-						<h3 class="client-history-heading">위시켓 히스토리</h3>
+						<h3 class="client-history-heading">외주몬 히스토리</h3>
 						<div class="client-history-body">
 							<div class="project">
 								<div class="history-body-title">프로젝트 등록</div>
@@ -296,17 +306,9 @@
 							<div class="client-history-budget-body">
 								<div class="budget-body-title">누적 완료 금액</div>
 								<div class="pull-right budget-body-data">
-									0 <span class="budget-body-clo">원</span>
+									<%=total %> <span class="budget-body-clo">원</span>
 								</div>
 							</div>
-						</div>
-					</div>
-					<div class="activity">
-						<h3 class="activity-heading">새로운 소식</h3>
-						<div id="activity-body">
-							<ul class="activity-unit-list">
-								<li class="empty-activity activity-unit">새로운 소식이 없습니다.</li>
-							</ul>
 						</div>
 					</div>
 				</div>
