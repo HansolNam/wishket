@@ -56,7 +56,7 @@
 					<div class="user-name-tag">
 						<h3 class="user-name-tag-heading">클라이언트</h3>
 						<div class="user-name-tag-body">
-							<img alt="gksthf16111 사진" class="img-circle user-img"
+							<img alt="<%=account.getId() %> 사진" class="img-circle user-img"
 								src="${pageContext.request.contextPath}/resources/static/img/default_avatar.png" />
 							<h4 class="username"><%=account.getId() %></h4>
 							<a class="profile-setting" href="/wjm/accounts/settings/profile/">기본

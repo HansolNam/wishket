@@ -6,6 +6,14 @@
 	List<ProjectInfo> projectlist = (List<ProjectInfo>)request.getAttribute("projectlist");
 	int projectCnt = 0;
 	
+	Integer submittednum = (Integer)request.getAttribute("submittednum");
+	Integer rejectednum = (Integer)request.getAttribute("rejectednum");
+	
+	if(submittednum == null)
+		submittednum = 0;
+	if(rejectednum == null)
+		rejectednum = 0;
+	
 	if(projectlist != null)
 		projectCnt = projectlist.size();
 	%>
@@ -64,11 +72,11 @@
 					</div>
 					<div class="sidebar-nav">
 						<ul>
-							<li class=""><a href="/wjm/client/manage/project/submitted/">검수
+							<li class=""><a href="/wjm/client/manage/project/submitted/"><%if(submittednum != null && submittednum.intValue() != 0 ) out.print("<span class='badge badge-info pull-right'>"+submittednum+"</span> "); %>검수
 									중</a></li>
 							<li class="active"><a href="/wjm/client/manage/project/saved/"><span
 									class="badge badge-info pull-right"><%=projectCnt %></span> 임시 저장</a></li>
-							<li class=""><a href="/wjm/client/manage/project/rejected/">등록
+							<li class=""><a href="/wjm/client/manage/project/rejected/"><%if(rejectednum != null && rejectednum.intValue() != 0 ) out.print("<span class='badge badge-info pull-right'>"+rejectednum+"</span> "); %>등록
 									실패</a></li>
 						</ul>
 					</div>

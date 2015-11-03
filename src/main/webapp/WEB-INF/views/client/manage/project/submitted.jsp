@@ -6,6 +6,14 @@
 	List<ProjectInfo> projectlist = (List<ProjectInfo>)request.getAttribute("projectlist");
 	int projectCnt = 0;
 	
+	Integer savednum = (Integer)request.getAttribute("savednum");
+	Integer rejectednum = (Integer)request.getAttribute("rejectednum");
+	
+	if(savednum == null)
+		savednum = 0;
+	if(rejectednum == null)
+		rejectednum = 0;
+	
 	if(projectlist != null)
 		projectCnt = projectlist.size();
 	%>
@@ -58,7 +66,7 @@
 					<div class="user-name-tag">
 						<h3 class="user-name-tag-heading">클라이언트</h3>
 						<div class="user-name-tag-body">
-							<img alt="gksthf16111 사진" class="img-circle user-img"
+							<img alt="<%=account.getId() %> 사진" class="img-circle user-img"
 								src="${pageContext.request.contextPath}/resources/static/img/default_avatar.png" />
 							<h4 class="username"><%=account.getId() %></h4>
 							<a class="profile-setting" href="/wjm/accounts/settings/profile/">기본
@@ -70,9 +78,9 @@
 							<li class="active"><a
 								href="/wjm/client/manage/project/submitted/"><span
 									class="badge badge-info pull-right"><%=projectCnt %></span>검수 중</a></li>
-							<li class=""><a href="/wjm/client/manage/project/saved/">임시
+							<li class=""><a href="/wjm/client/manage/project/saved/"><%if(savednum != null && savednum.intValue() != 0 ) out.print("<span class='badge badge-info pull-right'>"+savednum+"</span> "); %>임시
 									저장</a></li>
-							<li class=""><a href="/wjm/client/manage/project/rejected/">등록
+							<li class=""><a href="/wjm/client/manage/project/rejected/"><%if(rejectednum != null && rejectednum.intValue() != 0 ) out.print("<span class='badge badge-info pull-right'>"+rejectednum+"</span> "); %>등록
 									실패</a></li>
 						</ul>
 					</div>

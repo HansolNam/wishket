@@ -426,7 +426,18 @@ public class ClientController {
 		
 		List<ProjectInfo> projectlist = projectDao.selectStatus(account.getPk(),"검수중");
 		mv.addObject("projectlist",projectlist);
+
+		List<ProjectInfo> saved = projectDao.selectStatus(account.getPk(),"임시저장");
+		if(saved == null)
+			mv.addObject("savednum",0);
+		else
+			mv.addObject("savednum",saved.size());
 		
+		List<ProjectInfo> rejected = projectDao.selectStatus(account.getPk(),"등록실패");
+		if(rejected == null)
+			mv.addObject("rejectednum",0);
+		else
+			mv.addObject("rejectednum",rejected.size());
 		return mv;
 	}
 	/**
@@ -451,11 +462,19 @@ public class ClientController {
 		List<ProjectInfo> projectlist = projectDao.selectStatus(account.getPk(),"임시저장");
 		mv.addObject("projectlist",projectlist);
 		
-		if(projectlist!= null)
-		{
-			for(int i=0;i<projectlist.size();i++)
-				logger.info("project budget : "+projectlist.get(i).getBudget());
-		}
+
+		List<ProjectInfo> submitted = projectDao.selectStatus(account.getPk(),"검수중");
+
+		if(submitted == null)
+			mv.addObject("submittednum",0);
+		else
+			mv.addObject("submittednum",submitted.size());
+		
+		List<ProjectInfo> rejected = projectDao.selectStatus(account.getPk(),"등록실패");
+		if(rejected == null)
+			mv.addObject("rejectednum",0);
+		else
+			mv.addObject("rejectednum",rejected.size());
 		
 		return mv;
 	}
@@ -480,6 +499,20 @@ public class ClientController {
 		}
 		List<ProjectInfo> projectlist = projectDao.selectStatus(account.getPk(),"등록실패");
 		mv.addObject("projectlist",projectlist);
+		
+
+		List<ProjectInfo> submitted = projectDao.selectStatus(account.getPk(),"검수중");
+
+		if(submitted == null)
+			mv.addObject("submittednum",0);
+		else
+			mv.addObject("submittednum",submitted.size());
+		
+		List<ProjectInfo> saved = projectDao.selectStatus(account.getPk(),"임시저장");
+		if(saved == null)
+			mv.addObject("savednum",0);
+		else
+			mv.addObject("savednum",saved.size());
 		
 		return mv;
 	}

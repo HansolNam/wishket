@@ -73,7 +73,7 @@
 						<ul>
 							<li class="active"><a
 								href="/wjm/client/manage/past/review-contract/"><span
-									class="badge badge-info pull-right"><%if(reviewCnt != 0) out.print(reviewCnt); %></span>평가 대기 중</a></li>
+									class="badge badge-info pull-right"><%= reviewCnt %></span>평가 대기 중</a></li>
 							<li class=""><a
 								href="/wjm/client/manage/past/completed-contract/"><%if(completednum != null && completednum.intValue() != 0 ) out.print("<span class='badge badge-info pull-right'>"+completednum+"</span> "); %>완료한 프로젝트</a></li>
 							<li class=""><a
