@@ -75,7 +75,7 @@
 								href="/wjm/partners/manage/proposal/counselling/"><%if(ingnum.intValue() != 0 ) out.print("<span class='badge badge-info pull-right'>"+ingnum+"</span> "); %>지원 중</a></li>
 							<li class="active"><a
 								href="/wjm/partners/manage/proposal/end-counselling/"><span
-									class="badge badge-info pull-right"><%if(cnt != 0) out.print(cnt); %></span>지원 종료</a></li>
+									class="badge badge-info pull-right"><%=cnt%></span>지원 종료</a></li>
 						</ul>
 					</div>
 				</div>

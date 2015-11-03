@@ -76,7 +76,8 @@
 					<div class="sidebar-nav">
 						<ul>
 							<li class="active"><a
-								href="/wjm/partners/manage/contract-in-progress/">진행 중인 프로젝트</a></li>
+								href="/wjm/partners/manage/contract-in-progress/"><span
+									class="badge badge-info pull-right"><%=contractCnt%></span>진행 중인 프로젝트</a></li>
 						</ul>
 					</div>
 				</div>
@@ -110,7 +111,9 @@
 						%>
 							<section class="proposal-unit">
 								<section class="proposal-unit-heading">
-									<h4 class="project-title"><%=contractlist.get(i).getName() %></h4>
+									<h4 class="project-title">
+									<a href="/wjm/project/<%=contractlist.get(i).getName() %>/<%=contractlist.get(i).getProject_pk()%>/"><%=contractlist.get(i).getName() %></a>
+									</h4>
 								</section>
 								<section class="proposal-unit-body">
 									<ul class="interest-summary-info">

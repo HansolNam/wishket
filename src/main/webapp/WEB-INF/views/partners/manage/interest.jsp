@@ -10,6 +10,9 @@
 	long now_time = System.currentTimeMillis();
 	Timestamp now = new Timestamp(now_time);
 	
+	int interestCnt = 0;
+	if(interest != null)
+		interestCnt = interest.size();
 	String profile = (String) request.getAttribute("profile");
 
 	if(!Validator.hasValue(profile))
@@ -91,7 +94,8 @@
 					</div>
 					<div class="sidebar-nav">
 						<ul>
-							<li class="active"><a href="/wjm/partners/manage/interest/">관심
+							<li class="active"><a href="/wjm/partners/manage/interest/"><span
+									class="badge badge-info pull-right"><%=interestCnt%></span>관심
 									프로젝트</a></li>
 						</ul>
 					</div>

@@ -75,7 +75,7 @@
 						<ul>
 							<li class="active"><a
 								href="/wjm/partners/manage/past/review-contract/"><span
-									class="badge badge-info pull-right"><%if(reviewCnt != 0) out.print(reviewCnt); %></span>평가 대기 중</a></li>
+									class="badge badge-info pull-right"><%=reviewCnt%></span>평가 대기 중</a></li>
 							<li class=""><a
 								href="/wjm/partners/manage/past/completed-contract/"><%if(completednum != null && completednum.intValue() != 0 ) out.print("<span class='badge badge-info pull-right'>"+completednum+"</span> "); %>완료한 프로젝트</a></li>
 						</ul>
@@ -108,7 +108,9 @@
 						%>
 							<section class="proposal-unit">
 								<section class="proposal-unit-heading">
-									<h4 class="project-title"><%=reviewlist.get(i).getName() %></h4>
+									<h4 class="project-title">
+									<a href="/wjm/project/<%=reviewlist.get(i).getName() %>/<%=reviewlist.get(i).getProject_pk()%>/"><%=reviewlist.get(i).getName() %></a>
+									</h4>
 									<div class="management-tools">
 										<a class="btn btn-sm btn-default" 
 										href="/wjm/partners/manage/review/<%=reviewlist.get(i).getProject_pk() %>/<%=reviewlist.get(i).getClient_pk()%>/<%=reviewlist.get(i).getPartners_pk()%>">평가하기</a>

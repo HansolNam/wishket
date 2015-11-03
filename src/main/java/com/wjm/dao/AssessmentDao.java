@@ -73,7 +73,7 @@ public class AssessmentDao implements AssessmentIDao {
 		    	new Object[] { project_pk, assessing_pk }, new RowMapper<AssessmentInfo>() {
 	    	public AssessmentInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{
-	    		return new AssessmentInfo(
+	    		AssessmentInfo assessment =  new AssessmentInfo(
 	    				resultSet.getInt("pk")
 	    				, resultSet.getInt("project_pk")
 	    				, resultSet.getInt("assessing_pk")
@@ -84,6 +84,9 @@ public class AssessmentDao implements AssessmentIDao {
 	    				, resultSet.getInt("activeness")
 	    				, resultSet.getInt("communication")
 	    				, resultSet.getString("recommendation"));
+	    		
+	    		assessment.setProfile(accountInformationDao.getProfileImg(assessment.getAssessing_pk()));
+	    		return assessment;
 	    	}
 	    });
 		
@@ -113,7 +116,7 @@ public class AssessmentDao implements AssessmentIDao {
 		    	new Object[] { project_pk, assessed_pk }, new RowMapper<AssessmentInfo>() {
 	    	public AssessmentInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{
-	    		return new AssessmentInfo(
+	    		AssessmentInfo assessment =  new AssessmentInfo(
 	    				resultSet.getInt("pk")
 	    				, resultSet.getInt("project_pk")
 	    				, resultSet.getInt("assessing_pk")
@@ -124,6 +127,9 @@ public class AssessmentDao implements AssessmentIDao {
 	    				, resultSet.getInt("activeness")
 	    				, resultSet.getInt("communication")
 	    				, resultSet.getString("recommendation"));
+	    		
+	    		assessment.setProfile(accountInformationDao.getProfileImg(assessment.getAssessing_pk()));
+	    		return assessment;
 	    	}
 	    });
 		

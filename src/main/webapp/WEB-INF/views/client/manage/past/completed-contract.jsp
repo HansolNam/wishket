@@ -203,7 +203,9 @@
 												class="rating star-lg star-lg-5"></div></span> <span><%=completedlist.get(i).getAssessed().getActiveness()%></span></span>
 								</div>
 								<div class="p5-user-comment">
-									<span class="p5-user-img-box"><h6>추천 한마디</h6></span>
+									<span class="p5-user-img-box"><h6>추천 한마디</h6>
+										<img alt="<%=completedlist.get(i).getClient().getId() %> 사진" class="p5-user-comment-img"
+										src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=completedlist.get(i).getAssessed().getProfile() %>"></span>
 									<span class="p5-user-comment-box"><div>
 											<span class="label label-default label-role">파트너스</span> <span><span
 												class="p5-comment-user-id"><%=completedlist.get(i).getPartners_id()%></span></span>
