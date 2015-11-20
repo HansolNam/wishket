@@ -31,6 +31,9 @@ public class ProjectDao implements ProjectIDao {
 	@Autowired
 	private ApplicantDao applicantDao;
 	
+	@Autowired
+	private AccountDao accountDao;
+	
 	private DataSource dataSource;
 	private JdbcTemplate jdbcTemplate;
 	
@@ -192,7 +195,7 @@ public class ProjectDao implements ProjectIDao {
 		    	new Object[] { status }, new RowMapper<ProjectInfo>() {
 	    	public ProjectInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{
-	    		return new ProjectInfo(
+	    		ProjectInfo project =  new ProjectInfo(
 	    				resultSet.getInt("pk")
 	    				, resultSet.getInt("account_pk")
 	    				, resultSet.getString("categoryL")
@@ -216,6 +219,9 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getString("status")
 	    				, resultSet.getTimestamp("reg_date"));
 	    		
+	    		project.setAccount(accountDao.select(project.getAccount_pk()) );
+	    		
+	    		return project;
 	    	}
 	    });
 		

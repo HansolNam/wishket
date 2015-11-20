@@ -90,6 +90,7 @@
 								<thead>
 									<tr>
 										<th>프로젝트 제목</th>
+										<th>클라이언트</th>
 										<th>제출일자</th>
 										<th>도구</th>
 									</tr>
@@ -99,7 +100,7 @@
 									if(submitted == null)
 									{
 								%>
-								<tr><td class='text-muted' colspan='3'>검수 신청중인 프로젝트가 없습니다.</td></tr>
+								<tr><td class='text-muted' colspan='4'>검수 신청중인 프로젝트가 없습니다.</td></tr>
 								<%
 									}
 									else
@@ -108,7 +109,9 @@
 										{
 								%>
 								<tr>
-									<td><%=submitted.get(i).getName() %></td>
+									<td><%=submitted.get(i).getName() %></td>	
+									<td><a href="/wjm/admin/accounts/profile/<%=submitted.get(i).getAccount_pk() %>"><%=submitted.get(i).getAccount().getId() %></a></td>
+
 									<td><%= Time.toString3(submitted.get(i).getReg_date()) %></td>
 									<td><a class='btn btn-sm btn-client' href='/wjm/admin/project/preview/<%=submitted.get(i).getName()%>/<%= submitted.get(i).getPk()%>/'>자세히보기</a></td>
 								</tr>

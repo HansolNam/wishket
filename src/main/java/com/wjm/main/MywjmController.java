@@ -136,7 +136,7 @@ public class MywjmController {
 		mv.addObject("contractlist",contractlist);
 		
 		mv.addObject("applynum", applicantDao.select_applicant_num(account.getPk()));
-		mv.addObject("contractnum", contractDao.getPartnersContractCount(account.getPk()));
+		mv.addObject("contractnum", contractDao.getPartnersContractCount(account.getPk(), "완료"));
 		
 		int total = 0;
 		

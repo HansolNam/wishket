@@ -570,11 +570,54 @@ public class ContractDao implements ContractIDao {
 	/*
 	 * 특정 파트너스의 계약 개수
 	 */
-	public int getPartnersContractCount(int partners_pk)
+	public int getPartnersContractCount(int partners_pk, String status)
 	{
-		int num = jdbcTemplate.queryForInt("select count(*) from contract where partners_pk = ? and status='완료'", new Object[]{partners_pk});
-
+		int num = jdbcTemplate.queryForInt("select count(*) from contract where partners_pk = ? and status=?",
+		    	new Object[] { partners_pk, status });
+		
 		return num;
+	}
+	
+	/*
+	 * 특정 파트너스의 계약 리스트
+	 */
+	public List<ContractInfo> getPartnersContract(int partners_pk, String status)
+	{
+		List<ContractInfo> list = jdbcTemplate.query("select * from contract where partners_pk = ? and status = ?",
+		    	new Object[] { partners_pk, status }, new RowMapper<ContractInfo>() {
+		    	public ContractInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		ContractInfo contract =  new ContractInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getInt("project_pk")
+		    				, resultSet.getInt("client_pk")
+		    				, resultSet.getInt("partners_pk")
+		    				, resultSet.getString("name")
+		    				, resultSet.getString("partners_id")
+		    				, resultSet.getString("client_id")
+		    				, resultSet.getInt("budget")
+		    				, resultSet.getInt("term")
+		    				, resultSet.getString("status")
+		    				, resultSet.getTimestamp("reg_date"));
+		    		
+		    		contract.setProject(projectDao.select_project(contract.getProject_pk()));
+		    		
+		    		return contract;
+		    	}
+		    });
+		
+		if(list!=null)
+		{
+			if(list.size() == 0)
+			{
+				logger.info("계약 존재 X");
+				return null;
+			}
+			else
+				return list;
+		}
+		else
+			return null;
 	}
 	
 	public void updateStatus(int project_pk,int client_pk, int partners_pk, String status)

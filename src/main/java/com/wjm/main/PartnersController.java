@@ -1,7 +1,12 @@
 package com.wjm.main;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
@@ -169,6 +174,74 @@ public class PartnersController {
 		}
 
 		mv.addObject("isSame", isSame(account, this_account));
+		
+		//평가받은 리스트
+		List<AssessmentInfo> assessmentlist = assessmentDao.select_assessed(this_account.getPk());
+		mv.addObject("assessmentlist",assessmentlist);
+		
+		if(assessmentlist != null)
+		{
+			for(int i=0;i<assessmentlist.size();i++)
+				logger.info(i + " : "+assessmentlist.get(i).getProject().getName());
+		}
+		
+		//계약정보
+		List<ContractInfo> contractlist = contractDao.getPartnersContract(this_account.getPk(), "완료");
+		
+		if(contractlist == null)
+			mv.addObject("contractnum", 0);
+		else
+		{
+			mv.addObject("contractnum",contractlist.size());
+
+			HashMap map = new HashMap();
+			
+			String categoryl = "";
+			String categorym = "";
+			String key = "";
+			for(int i=0;i<contractlist.size();i++)
+			{
+				categoryl = contractlist.get(i).getProject().getCategoryL();
+				categorym = contractlist.get(i).getProject().getCategoryM();
+				key = categoryl + " > " + categorym;
+				
+				logger.info(i + " : " + key);
+				if(map.containsKey(key))
+				{
+					Integer temp = (Integer)map.get(key);
+					temp = temp+1;
+					map.put(key, temp);
+					logger.info(">"+temp);
+				}
+				else
+				{
+					map.put(key,1);
+					logger.info(">"+1);
+				}
+				
+			}
+		        
+			logger.info("hashmap size : "+ map.size());
+			
+			//해쉬맵을 리스트로 변환하여 value 정렬
+			List<Map.Entry<String, Integer>> list = new ArrayList<Map.Entry<String, Integer>>(map.entrySet());
+			Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
+				  public int compare(Map.Entry<String, Integer> e1, Map.Entry<String, Integer> e2)
+				  {
+				    if (e1.getValue() == e2.getValue())
+				      return e1.getKey().compareTo(e2.getKey());
+				    else
+				    return e2.getValue().compareTo(e1.getValue());
+				  }
+				});
+			
+			//최대 개수 보다 많은 경우, 기타로 처리
+			if(list.size() > 7)
+			{
+				
+			}
+			mv.addObject("categorylist", list);
+		}
 
 		//파트너스정보
 		Partners_infoInfo info = partners_infoDao.select(this_account.getPk());
@@ -2193,7 +2266,7 @@ public class PartnersController {
 		mv.addObject("isSame", isSame);
 
 		//계약 개수
-		int contractnum = contractDao.getPartnersContractCount(this_account.getPk());
+		int contractnum = contractDao.getPartnersContractCount(this_account.getPk(), "완료");
 		mv.addObject("contractnum",contractnum);
 		
 		//평가받은 리스트

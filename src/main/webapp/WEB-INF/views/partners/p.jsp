@@ -3,33 +3,89 @@
 <%@ page
 	import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo, com.wjm.models.TechniqueInfo, java.util.List"%>
 <%@ page
-	import="com.wjm.main.function.Validator,com.wjm.models.LicenseInfo, com.wjm.models.EducationInfo, com.wjm.models.CareerInfo, com.wjm.models.Partners_infoInfo, com.wjm.models.PortfolioInfo"%>
+	import="com.wjm.models.AssessmentInfo, com.wjm.main.function.Validator, java.util.Map, com.wjm.models.LicenseInfo, com.wjm.models.EducationInfo, com.wjm.models.CareerInfo, com.wjm.models.Partners_infoInfo, com.wjm.models.PortfolioInfo"%>
 
 <%
 	AccountInfo this_account = (AccountInfo) request.getAttribute("this_account");
 	AccountInformationInfo this_accountinfo = (AccountInformationInfo) request.getAttribute("this_accountinfo");
-	String introduction = (String) request.getAttribute("introduction");
-	Partners_infoInfo info = (Partners_infoInfo) request.getAttribute("info");
-	List<PortfolioInfo> portfolio = (List<PortfolioInfo>) request.getAttribute("portfolio");
-	if (portfolio != null && portfolio.size() == 0)
-		portfolio = null;
-	List<TechniqueInfo> skill = (List<TechniqueInfo>) request.getAttribute("skill");
-	if (skill != null && skill.size() == 0)
-		skill = null;
-	List<CareerInfo> career = (List<CareerInfo>) request.getAttribute("career");
-	if (career != null && career.size() == 0)
-		career = null;
-	List<EducationInfo> education = (List<EducationInfo>) request.getAttribute("education");
-	if (education != null && education.size() == 0)
-		education = null;
-	List<LicenseInfo> license = (List<LicenseInfo>) request.getAttribute("license");
-	if (license != null && license.size() == 0)
-		license = null;
-	String isSame = (String) request.getAttribute("isSame");
 	
+	//평가받은 리스트
+	List<AssessmentInfo> assessmentlist = (List<AssessmentInfo>)request.getAttribute("assessmentlist");
+	int assessmentnum;
+	int total = 0, professionalism = 0, satisfaction = 0, communication = 0, schedule_observance = 0,activeness = 0;
+	double total_avg = 0.0;
+	if(assessmentlist == null) assessmentnum = 0;
+	else
+	{
+		assessmentnum = assessmentlist.size();
+		
+		for (int i = 0; i < assessmentnum; i++) {
+			int avg = (assessmentlist.get(i).getProfessionalism() + assessmentlist.get(i).getSatisfaction()
+					+ assessmentlist.get(i).getCommunication() + assessmentlist.get(i).getSchedule_observance()
+					+ assessmentlist.get(i).getActiveness()) / 5;
+			
+			professionalism += assessmentlist.get(i).getProfessionalism();
+			satisfaction += assessmentlist.get(i).getSatisfaction();
+			communication += assessmentlist.get(i).getCommunication();
+			schedule_observance += assessmentlist.get(i).getSchedule_observance();
+			activeness += assessmentlist.get(i).getActiveness();
+		}
+			
+		if (assessmentnum != 0) {
+				total = professionalism + satisfaction + communication + schedule_observance + activeness;
+				total_avg = (double) total / (double) (assessmentnum * 5);
+				professionalism /= assessmentnum;
+				satisfaction /= assessmentnum;
+				communication /= assessmentnum;
+				schedule_observance /= assessmentnum;
+				activeness /= assessmentnum;
+			}
+	}
+	
+	//계약 리스트
+	Integer contractnum = (Integer)request.getAttribute("contractnum");
+	if(contractnum == null) contractnum = 0;
+	
+	//카테고리 해시맵
+	List<Map.Entry<String, Integer>> categorylist = (List<Map.Entry<String, Integer>>)request.getAttribute("categorylist");
+	
+	//자기소개
+	String introduction = (String) request.getAttribute("introduction");
 	if(Validator.hasValue(introduction))
 		introduction = introduction.replaceAll("\r\n", "<br/>");
 	
+	//파트너스 정보
+	Partners_infoInfo info = (Partners_infoInfo) request.getAttribute("info");
+	
+	//포트폴리오 리스트
+	List<PortfolioInfo> portfolio = (List<PortfolioInfo>) request.getAttribute("portfolio");
+	if (portfolio != null && portfolio.size() == 0)
+		portfolio = null;
+	
+	//보유기술 리스트
+	List<TechniqueInfo> skill = (List<TechniqueInfo>) request.getAttribute("skill");
+	if (skill != null && skill.size() == 0)
+		skill = null;
+	
+	//경력 리스트
+	List<CareerInfo> career = (List<CareerInfo>) request.getAttribute("career");
+	if (career != null && career.size() == 0)
+		career = null;
+	
+	//교육 리스트
+	List<EducationInfo> education = (List<EducationInfo>) request.getAttribute("education");
+	if (education != null && education.size() == 0)
+		education = null;
+	
+	//자격증 리스트
+	List<LicenseInfo> license = (List<LicenseInfo>) request.getAttribute("license");
+	if (license != null && license.size() == 0)
+		license = null;
+	
+	//해당 계정과 일치 여부
+	String isSame = (String) request.getAttribute("isSame");
+	
+	//정보들 유무
 	String hasInfo = (String) request.getAttribute("hasInfo");
 	String hasSkill = (String) request.getAttribute("hasSkill");
 	String hasPortfolio = (String) request.getAttribute("hasPortfolio");
@@ -200,19 +256,24 @@ div.ui-tooltip {
 						</h2>
 
 						<h5 class="p5-basic-info-underground">
-							<span> <span>
-									<%
-										if (info == null)
-											out.print("직종 미입력");
-										else
-											out.print(info.getJob());
-									%>
-							</span><span class="p5-basic-info-seperator">|</span></span> <span> <span>
+							<span> 
+								<span>
+										<%
+											if (info == null)
+												out.print("<span class='text-muted'><span>직종 미입력</span></span>");
+											else
+												out.print(info.getJob());
+										%>
+								</span>
+								<span class="p5-basic-info-seperator">|</span>
+							</span> 
+							<span> 
+								<span>
 									<%
 										if (this_accountinfo == null)
-											out.print("회사형태 미입력");
+											out.print("<span class='text-muted'><span>회사형태 미입력</span></span>");
 										else if(!Validator.hasValue(this_accountinfo.getForm()))
-											out.print("회사형태 미입력");
+											out.print("<span class='text-muted'><span>회사형태 미입력</span></span>");
 										else
 										{
 											if(this_accountinfo.getForm().equals("individual"))
@@ -224,31 +285,41 @@ div.ui-tooltip {
 											else if(this_accountinfo.getForm().equals("corporate_business"))
 												out.print("법인 사업자");
 										}
-									%></span><span
-								class="p5-basic-info-seperator">|</span></span> <span
-								class="text-muted"><span><%
+									%>
+								</span>
+								<span class="p5-basic-info-seperator">|</span>
+							</span> 
+							<span>
+								<span>
+								<%
 										if (this_accountinfo == null)
-											out.print("신원 미인증");
+											out.print("<span class='text-muted'><span>신원 미인증</span></span>");
 										else if(!Validator.hasValue(this_accountinfo.getIdentity_authentication()))
-											out.print("신원 미인증");
+											out.print("<span class='text-muted'><span>신원 미인증</span></span>");
 										else
 										{
 											if(this_accountinfo.getIdentity_authentication().equals("미인증"))
-												out.print("신원 미인증");
+												out.print("<span class='text-muted'><span>신원 미인증</span></span>");
 											else if(this_accountinfo.getIdentity_authentication().equals("검수중"))
-												out.print("신원 미인증");
+												out.print("<span class='text-muted'><span>신원 미인증</span></span>");
 											else if(this_accountinfo.getIdentity_authentication().equals("인증완료"))
-												out.print("신원 인증");
-										} %></span><span
-								class="p5-basic-info-seperator">|</span></span> <span
-								class="text-muted"> <span><%
+												out.print("<span><span>신원 인증</span></span>");
+										} %>
+								</span>
+								<span class="p5-basic-info-seperator">|</span>
+							</span> 
+							<span> 
+								<span>
+								<%
 										if (this_accountinfo == null)
-											out.print("연락처 미등록");
+											out.print("<span class='text-muted'><span>연락처 미등록</span></span>");
 										else if(!Validator.hasValue(this_accountinfo.getCellphone_num()))
-											out.print("연락처 미등록");
+											out.print("<span class='text-muted'><span>연락처 미등록</span></span>");
 										else
 										{	out.print("연락처 등록");
-										} %></span></span>
+										} %>
+								</span>
+							</span>
 						</h5>
 						</section>
 						<section class="profile-info"
@@ -259,13 +330,13 @@ div.ui-tooltip {
 									<div class="star-ultra p5-averageScore-star star-ultra-0" style=" width: 161px; "></div>
 									<div>
 										평균평점 <span class="pull-right p5-average-review-title"><span
-											class="p5-averageScore p5-">0.0</span> <span
+											class="p5-averageScore p5-"><%=Math.round(total_avg * 10) / 10.0%></span> <span
 											class="text-muted bold-font">/ 평가 <span
-												class="p5-reviewCount">0</span>개
+												class="p5-reviewCount"><%=assessmentnum %></span>개
 										</span></span>
 									</div>
 									<div>
-										계약한 프로젝트<span class="p5-contractCount">0 <span>건</span></span>
+										계약한 프로젝트<span class="p5-contractCount"><%=contractnum %> <span>건</span></span>
 									</div>
 									<div>
 										포트폴리오<span class="p5-portfolioCount">
@@ -280,7 +351,8 @@ div.ui-tooltip {
 								<div style="clear: right"></div>
 							</div>
 							<div id="myChart_rader_tooltip" style="float: left"
-								title="파트너님은 외주몬에서 진행한 프로젝트가 없습니다.">
+								title="<%if(contractnum == 0) out.print("파트너님은 외주몬에서 진행한 프로젝트가 없습니다.");
+										else out.print("파트너가 클라이언트에게 받은 세부 항목을 나타냅니다.");%>">
 								<div class="profile-detail-evaluation">
 									<h5>세부 항목 평가</h5>
 									<canvas id="myChart_rader"></canvas>
@@ -288,7 +360,8 @@ div.ui-tooltip {
 								</div>
 							</div>
 							<div id="myChart_tooltip" style="float: left"
-								title="파트너님은 외주몬에서 진행한 프로젝트가 없습니다.">
+								title="<%if(assessmentnum == 0) out.print("파트너님은 외주몬에서 진행한 프로젝트가 없습니다.");
+										else out.print("파트너가 외주몬에서 진행한 프로젝트 카테고리 비율을 나타냅니다.");%>">
 								<div class="profile-main-category">
 									<h5>진행한 카테고리</h5>
 									<div>
@@ -669,11 +742,11 @@ div.ui-tooltip {
 	</div>
 	<jsp:include page="../footer.jsp" flush="false" />
 
-	<link
+<!-- <link
 		href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css"
 		rel="stylesheet" />
 	<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
-	
+ -->		
 	<script>
     $(document).ready(function() {
         $('.content-inner').on('click','.p5-review-show-btn', function(e) {
@@ -722,6 +795,91 @@ div.ui-tooltip {
 
     $(document).ready(function(){
 
+        //////////
+        Chart.defaults.global.tooltipFontSize = 10;
+
+        var flag;
+        <%
+        if(categorylist.isEmpty())
+        {
+        %>
+        	flag = false;
+        <%
+        }
+        else
+        {
+        %>
+    		flag = true;
+        <%
+        }
+        %>
+        
+        if($("#myChart").length) {
+
+        	var color = [ '#05835E', '#19906D', '#2E9D7D', '#42AB8C', '#57B89C', '#6BC6AB', '#80D3BB' ];
+        	
+            var data =[
+            
+                <%
+                if(categorylist.isEmpty())
+                {
+                %>
+                    {
+                        value: 1,
+                        color: '#dedede',
+                        highlight: '#dedede',
+                        label: "진행한 프로젝트 없음"
+                    }
+                <%
+                }
+                else
+                { 
+                	for( int i=0;i<categorylist.size();i++ ){
+                
+                %>
+		                {
+		                    value: <%=categorylist.get(i).getValue() %>,
+		                    color: color[<%=i%>],
+		                    highlight: color[<%=i%>],
+		                    label: "<%=categorylist.get(i).getKey()%>"
+		                }
+
+                <%
+                		if(i == 6)
+                			break;
+                
+                		out.println(",");
+                	}
+                }
+                %>
+            ];
+
+            $('.doughnut-legend').html('');
+            <%
+            if(categorylist.isEmpty())
+            {
+            %>
+            $('.doughnut-legend').append('<li><span style="background-color: #dedede;"></span>진행한 프로젝트 없음</li>');
+            <%
+            }
+            else
+            {
+            	for( int i=0;i<categorylist.size();i++ ){
+            %>
+            $('.doughnut-legend').append('<li><span style="background-color: '+color[<%=i%>]+';"></span>'+'<%=categorylist.get(i).getKey()%>'+'</li>');
+            <%
+            	}
+            }
+            %>
+            new Chart(document.getElementById("myChart").getContext("2d")).Doughnut(data, {
+                animation: false,
+                tooltipFontSize: 8,
+                
+                showTooltips: flag
+                
+            });
+        }
+        
         var cnt=$(".doughnut-legend ").children().length;
         var marginTop;
         if(cnt===1){
@@ -751,34 +909,25 @@ div.ui-tooltip {
     });
 
     window.onload = function(){
-        Chart.defaults.global.tooltipFontSize = 10;
-
-        if($("#myChart").length) {
-
-            var data =[
-            
-                
-                    {
-                        value: 1,
-                        color: '#dedede',
-                        highlight: '#dedede',
-                        label: "진행한 프로젝트 없음"
-                    }
-                
-            ];
-
-            new Chart(document.getElementById("myChart").getContext("2d")).Doughnut(data, {
-                animation: false,
-                tooltipFontSize: 8,
-                
-                showTooltips: false
-                
-            });
-        }
-
-
+   
         if($("#myChart_rader").length)
         {
+        	var flag;
+            <%
+            if(assessmentnum == 0)
+            {
+            %>
+            	flag = false;
+            <%
+            }
+            else
+            {
+            %>
+        		flag = true;
+            <%
+            }
+            %>
+        	
             var review_data = new Array(5);
             for (var i = 0; i < review_data.length; i++) {
                 review_data[i] = Number($('.p5-review-star').children().eq(2 * i + 1).text());
@@ -794,11 +943,11 @@ div.ui-tooltip {
                         pointHighlightFill: "#fff",
                         pointHighlightStroke: "rgba(220,220,220,1)",
                         data: [
-                            0,
-                            0,
-                            0,
-                            0,
-                            0
+                            <%=professionalism%>,
+                            <%=satisfaction%>,
+                            <%=communication%>,
+                            <%=schedule_observance%>,
+                            <%=activeness%>
                         ]
                     }]
                 };
@@ -813,64 +962,12 @@ div.ui-tooltip {
                 scaleStepWidth: 1,
                 scaleStartValue: 0,
                 pointDotStrokeWidth: 2,
-                
-                showTooltips: false
+                //
+                showTooltips: flag
                 
             });
         }
     };
-
-</script>
-	<script type="text/javascript">
-  $(function() {
-    wishket.init();
-    
-    svgeezy.init(false, 'png');
-  });
-</script>
-	<script>
-
-$( document ).ready(function($) {
-    var p5TotalSubNavigationFlag = 0;
-
-
-	if ( $( window ).width() >= 1200 ) {
-		$( '.p5-side-nav-deactive' ).css( 'display', 'none' );
-	} else  {
-		$( '.p5-side-nav-active' ).css( 'display', 'none' );
-		$( '.p5-side-nav-deactive' ).css( 'display', 'block');
-	}
-
-	$('.content-inner').on('click', '.p5-side-nav-active-btn', function () {
-		$('.p5-side-nav-active').css( 'display', 'none' );
-		$('.p5-side-nav-deactive').css('display','block');
-	});
-
-	$('.content-inner').on('click', '.p5-side-nav-deactive-btn', function () {
-		$('.p5-side-nav-active').css( 'display', 'block' );
-		$('.p5-side-nav-deactive').css('display','none');
-	});
-
-
-    $( window ).scroll ( function () {
-		if ( $(window).scrollTop() > 87 && p5TotalSubNavigationFlag === 0) {
-			setTimeout(function() {
-				$('#p5-total-sub-navigation-wrapper').removeClass('hide fadeOut');
-				$('#p5-total-sub-navigation-wrapper').addClass('fadeInDown');
-			}, 200 );
-			flag = 1;
-
-
-		} else if ( $(window).scrollTop() <= 87 ){
-			p5TotalSubNavigationFlag = 0;
-			$('#p5-total-sub-navigation-wrapper').removeClass('fadeInDown');
-			$('#p5-total-sub-navigation-wrapper').addClass('fadeOut');
-			setTimeout(function() {
-				$('#p5-total-sub-navigation-wrapper').addClass('hide');
-			}, 200 );
-		}
-	});
-});
 
 </script>
 </body>
