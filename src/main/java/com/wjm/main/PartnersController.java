@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -201,6 +202,7 @@ public class PartnersController {
 			String key = "";
 			for(int i=0;i<contractlist.size();i++)
 			{
+				//카테고리 설정
 				categoryl = contractlist.get(i).getProject().getCategoryL();
 				categorym = contractlist.get(i).getProject().getCategoryM();
 				key = categoryl + " > " + categorym;
@@ -220,6 +222,8 @@ public class PartnersController {
 				}
 				
 			}
+			
+			
 		        
 			logger.info("hashmap size : "+ map.size());
 			
@@ -236,9 +240,24 @@ public class PartnersController {
 				});
 			
 			//최대 개수 보다 많은 경우, 기타로 처리
-			if(list.size() > 7)
+			if(list.size() >= 7)
 			{
+				Iterator<Map.Entry<String, Integer>> it = list.iterator();
+
+				int etc = 0, i = 0;
 				
+				while(it.hasNext())
+				{
+					if(i<6) continue;
+					
+					etc += it.next().getValue();
+					it.remove();
+				}
+				HashMap map2 = new HashMap();
+				map2.put("기타", etc);
+				List<Map.Entry<String, Integer>> list2 = new ArrayList<Map.Entry<String, Integer>>(map2.entrySet());
+
+				list.addAll(list2);
 			}
 			mv.addObject("categorylist", list);
 		}
@@ -2307,6 +2326,122 @@ public class PartnersController {
 		String isSame = isSame(account, this_account);
 		mv.addObject("isSame", isSame);
 
+
+		//계약정보
+		List<ContractInfo> contractlist = contractDao.getPartnersContract(this_account.getPk(), "완료");
+		int total_budget = 0, min_budget = 0, avg_budget = 0, max_budget =0, 
+				total_period = 0, min_period = 0, avg_period = 0, max_period = 0;
+		
+		if(contractlist == null)
+			mv.addObject("contractnum", 0);
+		else
+		{
+			mv.addObject("contractnum",contractlist.size());
+			mv.addObject("contractlist", contractlist);
+
+			HashMap map = new HashMap();
+			
+			String categoryl = "";
+			String categorym = "";
+			String key = "";
+			for(int i=0;i<contractlist.size();i++)
+			{
+				categoryl = contractlist.get(i).getProject().getCategoryL();
+				categorym = contractlist.get(i).getProject().getCategoryM();
+				key = categoryl + " > " + categorym;
+				
+				logger.info(i + " : " + key);
+				if(map.containsKey(key))
+				{
+					Integer temp = (Integer)map.get(key);
+					temp = temp+1;
+					map.put(key, temp);
+					logger.info(">"+temp);
+				}
+				else
+				{
+					map.put(key,1);
+					logger.info(">"+1);
+				}
+
+				//최소, 최대, 평균 기간 및 금액 설정
+				total_budget += contractlist.get(i).getBudget();
+				total_period += contractlist.get(i).getTerm();
+				
+				
+				//예산
+				if(min_budget == 0 || min_budget > contractlist.get(i).getBudget())
+					min_budget = contractlist.get(i).getBudget();
+				if(max_budget == 0 || max_budget < contractlist.get(i).getBudget())
+					max_budget = contractlist.get(i).getBudget();
+				
+				//기간
+				if(min_period == 0 || min_period > contractlist.get(i).getTerm())
+					min_period = contractlist.get(i).getTerm();
+				if(max_period == 0 || max_period < contractlist.get(i).getTerm())
+					max_period = contractlist.get(i).getTerm();
+			}
+			//평균 기간 및 금액 설정
+			if(contractlist.size() >0)
+			{
+				avg_budget = total_budget/contractlist.size();
+				avg_period = total_period/contractlist.size();
+			}
+			
+			logger.info("\ntotal_budget = "+total_budget);
+			logger.info("avg_budget = "+avg_budget);
+			logger.info("min_budget = "+min_budget);
+			logger.info("max_budget = "+max_budget);
+			logger.info("total_period = "+total_period);
+			logger.info("avg_period = "+avg_period);
+			logger.info("min_period = "+min_period);
+			logger.info("max_period = "+max_period);
+			
+			mv.addObject("total_budget", total_budget);
+			mv.addObject("avg_budget", avg_budget);
+			mv.addObject("min_budget", min_budget);
+			mv.addObject("max_budget", max_budget);
+			mv.addObject("total_period", total_period);
+			mv.addObject("avg_period", avg_period);
+			mv.addObject("min_period", min_period);
+			mv.addObject("max_period", max_period);
+			logger.info("hashmap size : "+ map.size());
+			
+			//해쉬맵을 리스트로 변환하여 value 정렬
+			List<Map.Entry<String, Integer>> list = new ArrayList<Map.Entry<String, Integer>>(map.entrySet());
+			Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
+				  public int compare(Map.Entry<String, Integer> e1, Map.Entry<String, Integer> e2)
+				  {
+				    if (e1.getValue() == e2.getValue())
+				      return e1.getKey().compareTo(e2.getKey());
+				    else
+				    return e2.getValue().compareTo(e1.getValue());
+				  }
+				});
+			
+			//최대 개수 보다 많은 경우, 기타로 처리
+			if(list.size() >= 7)
+			{
+				Iterator<Map.Entry<String, Integer>> it = list.iterator();
+
+				int etc = 0, i = 0;
+				
+				while(it.hasNext())
+				{
+					if(i<6) continue;
+					
+					etc += it.next().getValue();
+					it.remove();
+				}
+				HashMap map2 = new HashMap();
+				map2.put("기타", etc);
+				List<Map.Entry<String, Integer>> list2 = new ArrayList<Map.Entry<String, Integer>>(map2.entrySet());
+
+				list.addAll(list2);
+			}
+			mv.addObject("categorylist", list);
+		}
+		
 		mv.setViewName("/partners/p/history");
 
 		return mv;
@@ -2517,6 +2652,43 @@ public class PartnersController {
 		String isSame = isSame(account, this_account);
 		mv.addObject("isSame", isSame);
 
+		//평가받은 리스트
+		List<AssessmentInfo> assessmentlist = assessmentDao.select_assessed(this_account.getPk());
+		mv.addObject("assessmentlist",assessmentlist);
+		
+		if(assessmentlist != null)
+		{
+			for(int i=0;i<assessmentlist.size();i++)
+				logger.info(i + " : "+assessmentlist.get(i).getProject().getName());
+		}
+				
+		//프로젝트 히스토리
+		
+		//지원한 프로젝트
+		mv.addObject("applynum", applicantDao.select_applicant_num(account.getPk()));
+		
+		//진행중인 프로젝트
+		List<ContractInfo> contractlist = contractDao.selectProgressPartners(account.getPk(),"진행중");
+		if(contractlist != null)
+			mv.addObject("progressnum", contractlist.size());
+		
+		int total = 0;
+		
+		List<ContractInfo> completelist = contractDao.selectCompletedPartners(account.getPk(), "완료한프로젝트");
+		if(completelist != null)
+		{
+			mv.addObject("completenum", completelist.size());
+
+			for(int i=0;i<completelist.size();i++)
+			{
+				total += completelist.get(i).getBudget();
+			}
+		}
+		else
+			mv.addObject("completenum",0);
+		
+		mv.addObject("total",total);
+		
 		mv.setViewName("/partners/p/evaluation/update");
 
 		return mv;

@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 	<%@ page import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo, com.wjm.models.LicenseInfo"%>
-	<%@ page import="java.sql.Timestamp, com.wjm.main.function.Time"%>>
+	<%@ page import="java.sql.Timestamp, com.wjm.main.function.Time"%>
 <%
 	AccountInfo this_account = (AccountInfo)request.getAttribute("this_account");
 	AccountInfo account = (AccountInfo)session.getAttribute("account");

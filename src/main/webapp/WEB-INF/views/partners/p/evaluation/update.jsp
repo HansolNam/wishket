@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 		<%@ page
-	import="com.wjm.main.function.Validator,com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo, com.wjm.models.LicenseInfo, com.wjm.models.EducationInfo, com.wjm.models.CareerInfo, java.util.List"%>
+	import="com.wjm.main.function.Time, com.wjm.main.function.Validator,com.wjm.models.AssessmentInfo,com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo, com.wjm.models.LicenseInfo, com.wjm.models.EducationInfo, com.wjm.models.CareerInfo, java.util.List"%>
 <%
 	AccountInfo this_account = (AccountInfo) request.getAttribute("this_account");
 	AccountInformationInfo this_accountinfo = (AccountInformationInfo) request.getAttribute("this_accountinfo");
@@ -13,6 +13,49 @@
 	
 	if(!Validator.hasValue(profile))
 		profile = "default_avatar.png";
+	
+	//평가받은 리스트
+	List<AssessmentInfo> assessmentlist = (List<AssessmentInfo>)request.getAttribute("assessmentlist");
+	int assessmentnum;
+	double total = 0, professionalism = 0, satisfaction = 0, communication = 0, schedule_observance = 0,activeness = 0;
+	double total_avg = 0.0;
+	if(assessmentlist == null) assessmentnum = 0;
+	else
+	{
+		assessmentnum = assessmentlist.size();
+		
+		for (int i = 0; i < assessmentnum; i++) {
+			int avg = (assessmentlist.get(i).getProfessionalism() + assessmentlist.get(i).getSatisfaction()
+					+ assessmentlist.get(i).getCommunication() + assessmentlist.get(i).getSchedule_observance()
+					+ assessmentlist.get(i).getActiveness()) / 5;
+			
+			professionalism += assessmentlist.get(i).getProfessionalism();
+			satisfaction += assessmentlist.get(i).getSatisfaction();
+			communication += assessmentlist.get(i).getCommunication();
+			schedule_observance += assessmentlist.get(i).getSchedule_observance();
+			activeness += assessmentlist.get(i).getActiveness();
+		}
+			
+		if (assessmentnum != 0) {
+				total = professionalism + satisfaction + communication + schedule_observance + activeness;
+				total_avg = (double) total / (double) (assessmentnum * 5);
+				professionalism /= (double) assessmentnum;
+				satisfaction /= (double) assessmentnum;
+				communication /= (double) assessmentnum;
+				schedule_observance /= (double) assessmentnum;
+				activeness /= (double) assessmentnum;
+			}
+	}
+	
+	Integer applynum = (Integer)request.getAttribute("applynum");
+	Integer progressnum = (Integer)request.getAttribute("progressnum");
+	Integer completenum = (Integer)request.getAttribute("completenum");
+	Integer totalbudget = (Integer)request.getAttribute("total");
+	
+	if(applynum == null) applynum = 0;
+	if(progressnum == null) progressnum = 0;
+	if(completenum == null) completenum = 0;
+	if(totalbudget == null) total = 0;
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -115,73 +158,151 @@ div.ui-tooltip {
 								class="p5-project-history-project-num">
 								<div>
 									<span class="p5-project-num-title">지원한 프로젝트</span> <span
-										class="pull-right"><span class="p5-project-num">0</span><span
+										class="pull-right"><span class="p5-project-num"><%=applynum %></span><span
 										class="p5-append-text">건</span></span>
 								</div>
 								<div>
 									<span class="p5-project-num-title">진행중인 프로젝트</span> <span
-										class="pull-right"><span class="p5-project-num">0</span><span
+										class="pull-right"><span class="p5-project-num"><%=progressnum %></span><span
 										class="p5-append-text">건</span></span>
 								</div>
 								<div>
 									<span class="p5-project-num-title">완료한 프로젝트</span> <span
-										class="pull-right"><span class="p5-project-num">0</span><span
+										class="pull-right"><span class="p5-project-num"><%=completenum %></span><span
 										class="p5-append-text">건</span></span>
 								</div>
 							</div>
 							<div class="p5-project-history-amount">
 								<div>
 									<span class="p5-project-num-accumulate-title">누적 완료 금액</span> <span
-										class="pull-right"><span class="p5-project-money">0</span><span
+										class="pull-right"><span class="p5-project-money"><%=totalbudget %></span><span
 										class="p5-append-text">원</span></span>
 								</div>
 							</div></span> <span class="p5-project-history-review"><div
 								class="p5-project-history-review-breif">
 								<span class="p5-average-score-title">평균평점</span>
 								<div class="rating star-rating star-lg star-lg star-lg-0"></div>
-								<span class="p5-project-num">0.0</span> <span
+								<span class="p5-project-num"><%=Math.round(total_avg * 10) / 10.0%></span> <span
 									class="text-muted p5-evaluation-review-info">/ 평가 <span
-									class="p5-bold">0</span>개
+									class="p5-bold"><%=assessmentnum %></span>개
 								</span>
 							</div>
 							<div class="p5-project-history-review-specific">
 								<div>
 									<span class="p5-review-specific-title">전문성</span>
 									<div class="rating star-sm star-sm-0"></div>
-									<span class="p5-review-rate-num">0.0</span>
+									<span class="p5-review-rate-num"><%=Math.round(professionalism * 10) / 10.0%></span>
 								</div>
 								<div>
 									<span class="p5-review-specific-title">결과물 만족도</span>
 									<div class="rating star-sm star-sm-0"></div>
-									<span class="p5-review-rate-num">0.0</span>
+									<span class="p5-review-rate-num"><%=Math.round(satisfaction * 10) / 10.0%></span>
 								</div>
 								<div>
 									<span class="p5-review-specific-title">의사소통</span>
 									<div class="rating star-sm star-sm-0"></div>
-									<span class="p5-review-rate-num">0.0</span>
+									<span class="p5-review-rate-num"><%=Math.round(communication * 10) / 10.0%></span>
 								</div>
 								<div>
 									<span class="p5-review-specific-title">일정 준수</span>
 									<div class="rating star-sm star-sm-0"></div>
-									<span class="p5-review-rate-num">0.0</span>
+									<span class="p5-review-rate-num"><%=Math.round(schedule_observance * 10) / 10.0%></span>
 								</div>
 								<div>
 									<span class="p5-review-specific-title">적극성</span>
 									<div class="rating star-sm star-sm-0"></div>
-									<span class="p5-review-rate-num">0.0</span>
+									<span class="p5-review-rate-num"><%=Math.round(activeness * 10) / 10.0%></span>
 								</div>
 							</div></span></section>
 						<section class="p5-evaluation-list">
+						<%
+						 	if (assessmentnum > 0) {
+						 		for (int i = 0; i < assessmentnum; i++) {
+
+									double d = (double)(assessmentlist.get(i).getProfessionalism() + assessmentlist.get(i).getSatisfaction()
+											+ assessmentlist.get(i).getCommunication() + assessmentlist.get(i).getSchedule_observance()
+											+ assessmentlist.get(i).getActiveness());
+									
+									d = (double)d/5.0;
+						 %>
+
+						<div class="p5-partners-project-evaluation">
+							<div class="p5-partners-project-evaluation-header">
+								<div class="p5-partners-project-evaluation-title">
+									<h4>
+										<a
+											href="/wjm/project/<%=assessmentlist.get(i).getProject().getName() %>/<%=assessmentlist.get(i).getProject_pk() %>/"><%=assessmentlist.get(i).getProject().getName() %></a>
+									</h4>
+								</div>
+								<div class="p5-partners-project-evaluation-info">
+									<span>클라이언트 <span class="p5-partners-project-info-id"><%=assessmentlist.get(i).getClient().getId() %></span></span>
+									<span>카테고리 <span
+										class="p5-partners-project-info-category"><%=assessmentlist.get(i).getProject().getCategoryL() %> &gt; <%=assessmentlist.get(i).getProject().getCategoryM() %></span></span>
+								</div>
+							</div>
+							<div class="p5-partners-project-evaluation-body1">
+								<span><i class="fa fa-clock-o"></i>계약일<span
+									class="p5-partners-project-evaluation-date"><%=Time.toString3(assessmentlist.get(i).getContract().getReg_date())%></span></span>
+								<span><i class="fa fa-won"></i>계약금액<span
+									class="p5-partners-project-evaluation-cost"><%=assessmentlist.get(i).getContract().getBudget()%> 원</span></span>
+								<span><i class="fa fa-clock-o"></i>계약기간<span
+									class="p5-partners-project-evaluation-period"><%=assessmentlist.get(i).getContract().getTerm()%> 일</span></span>
+							</div>
+							<div class="p5-partners-project-evaluation-body2">
+								<h5>평균별점</h5>
+								<div class="star-lg star-lg-5"></div>
+								<span class="p5-partners-project-rating"><%=Math.round(d*10)/10.0 %></span> 
+							</div>
+							<div class="p5-review-specific-info">
+								<div class="p5-review-group1">
+									<span class="p5-review-title">전문성</span> <span
+										class="p5-review-star"><span><div
+												class="rating star-lg star-lg-5"></div></span> <span><%=assessmentlist.get(i).getProfessionalism() %></span></span> <span
+										class="p5-review-title">만족도</span> <span
+										class="p5-review-star"><span><div
+												class="rating star-lg star-lg-5"></div></span> <span><%=assessmentlist.get(i).getSatisfaction() %></span></span> <span
+										class="p5-review-title">의사소통</span> <span
+										class="p5-review-star"><span><div
+												class="rating star-lg star-lg-5"></div></span> <span><%=assessmentlist.get(i).getCommunication() %></span></span>
+								</div>
+								<div class="p5-review-group2">
+									<span class="p5-review-title">일정 준수</span> <span
+										class="p5-review-star"><span><div
+												class="rating star-lg star-lg-5"></div></span> <span><%=assessmentlist.get(i).getSchedule_observance() %></span></span> <span
+										class="p5-review-title">적극성</span> <span
+										class="p5-review-star"><span><div
+												class="rating star-lg star-lg-5"></div></span> <span><%=assessmentlist.get(i).getActiveness() %></span></span>
+								</div>
+								<div class="p5-user-comment">
+									<span class="p5-user-img-box"><h6>추천 한마디</h6>
+										<img alt="<%=assessmentlist.get(i).getClient().getId() %> 사진" class="p5-user-comment-img"
+										src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=assessmentlist.get(i).getProfile() %>"></span>
+									<span class="p5-user-comment-box"><div>
+											<span class="label label-default label-role"><%=assessmentlist.get(i).getClient().getId() %></span>
+										</div>
+										<div class="p5-review-comment"><%=assessmentlist.get(i).getRecommendation()%></div></span>
+								</div>
+							</div>
+						</div>
+						<%
+							}
+							}
+						 	else
+						 	{
+						%>
+
 						<div class="p5-empty-component-lg">
 							<div class="p5-assign-component">
 								<div>
-									<img src="${pageContext.request.contextPath}/resources/static/img/profile_evaluation.png" />
 									<p class="p5-no-partners-info-text">
 										등록된 <span class="text-center p5-bold">'평가'</span>가 없습니다.
 									</p>
 								</div>
 							</div>
 						</div>
+						<%
+						 	}
+						%>
 						</section>
 					</div>
 				</div>

@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-	<%@ page
-	import="com.wjm.main.function.Validator,com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo, com.wjm.models.LicenseInfo, com.wjm.models.EducationInfo, com.wjm.models.CareerInfo, java.util.List"%>
+<%@ page
+	import="java.util.Map, com.wjm.models.ContractInfo, com.wjm.main.function.Validator,com.wjm.models.AccountInfo, com.wjm.main.function.Time, com.wjm.models.AccountInformationInfo, com.wjm.models.LicenseInfo, com.wjm.models.EducationInfo, com.wjm.models.CareerInfo, java.util.List"%>
 <%
 	AccountInfo this_account = (AccountInfo) request.getAttribute("this_account");
 	AccountInformationInfo this_accountinfo = (AccountInformationInfo) request.getAttribute("this_accountinfo");
@@ -14,6 +14,39 @@
 	
 	if(!Validator.hasValue(profile))
 		profile = "default_avatar.png";
+	
+
+	//계약 리스트
+	List<ContractInfo> contractlist = (List<ContractInfo>)request.getAttribute("contractlist");
+	//계약 개수
+	Integer contractnum = (Integer)request.getAttribute("contractnum");
+	if(contractnum == null) contractnum = 0;
+
+	//카테고리 해시맵
+	List<Map.Entry<String, Integer>> categorylist = (List<Map.Entry<String, Integer>>)request.getAttribute("categorylist");
+	if(categorylist != null) if(categorylist.isEmpty()) categorylist = null;
+	
+	//최대, 최소, 평균, 전체 예산
+	Integer total_budget = (Integer)request.getAttribute("total_budget");
+	Integer avg_budget = (Integer)request.getAttribute("avg_budget");
+	Integer min_budget = (Integer)request.getAttribute("min_budget");
+	Integer max_budget = (Integer)request.getAttribute("max_budget");
+	
+	if(total_budget == null) total_budget = 0;
+	if(avg_budget == null) avg_budget = 0;
+	if(min_budget == null) min_budget = 0;
+	if(max_budget == null) max_budget = 0;
+	
+	//최대, 최소, 평균, 전체 기간
+	Integer total_period = (Integer)request.getAttribute("total_period");
+	Integer avg_period = (Integer)request.getAttribute("avg_period");
+	Integer min_period = (Integer)request.getAttribute("min_period");
+	Integer max_period = (Integer)request.getAttribute("max_period");
+	
+	if(total_period == null) total_period = 0;
+	if(avg_period == null) avg_period = 0;
+	if(min_period == null) min_period = 0;
+	if(max_period == null) max_period = 0;
 %>
 <!--[if IE 6]><html lang="ko" class="no-js old ie6"><![endif]-->
 <!--[if IE 7]><html lang="ko" class="no-js old ie7"><![endif]-->
@@ -27,37 +60,58 @@
 
 <title>외주몬(WJM) · 파트너스 - <%=this_account.getId() %></title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
-<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
-	type="text/css" />
-<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/aa41eeaffc60.css" rel="stylesheet"
-	type="text/css" />
-<link href="${pageContext.request.contextPath}/resources/static/CACHE/css/35066c295d92.css" rel="stylesheet"
-	type="text/css" />
+<link
+	href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css"
+	rel="stylesheet" type="text/css" />
+<link
+	href="${pageContext.request.contextPath}/resources/static/CACHE/css/aa41eeaffc60.css"
+	rel="stylesheet" type="text/css" />
+<link
+	href="${pageContext.request.contextPath}/resources/static/CACHE/css/35066c295d92.css"
+	rel="stylesheet" type="text/css" />
 <!--[if IE 7]><link rel="stylesheet" href="${pageContext.request.contextPath}/resources/static/CACHE/css/cc2b8202dedf.css" type="text/css" /><![endif]-->
 <!--[if IE 8]><link rel="stylesheet" href="${pageContext.request.contextPath}/resources/static/CACHE/css/0873b963b20a.css" type="text/css" /><![endif]-->
-<link href="${pageContext.request.contextPath}/resources/static/django_facebook/css/facebook.css" media="all"
-	rel="stylesheet" />
+<link
+	href="${pageContext.request.contextPath}/resources/static/django_facebook/css/facebook.css"
+	media="all" rel="stylesheet" />
 <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/a52a868564de.js" type="text/javascript"></script>
-<link href="${pageContext.request.contextPath}/resources/static/css/floating.css" rel="stylesheet" />
+<script
+	src="${pageContext.request.contextPath}/resources/static/CACHE/js/a52a868564de.js"
+	type="text/javascript"></script>
+<link
+	href="${pageContext.request.contextPath}/resources/static/css/floating.css"
+	rel="stylesheet" />
 <script src="http://wcs.naver.net/wcslog.js" type="text/javascript"></script>
-<link href="${pageContext.request.contextPath}/resources/static/css/floating.css" rel="stylesheet" />
+<link
+	href="${pageContext.request.contextPath}/resources/static/css/floating.css"
+	rel="stylesheet" />
 <script src="http://wcs.naver.net/wcslog.js" type="text/javascript"></script>
 <style type="text/css">
 div.ui-tooltip {
 	max-width: 252px !important;
 }
 </style>
-<link href="${pageContext.request.contextPath}/resources/static/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-<link href="${pageContext.request.contextPath}/resources/static/favicon.ico" rel="icon" type="image/x-icon" />
-<link href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad.png" rel="apple-touch-icon"
-	sizes="76x76" />
-<link href="${pageContext.request.contextPath}/resources/static/touch-icon-iphone-retina.png" rel="apple-touch-icon"
-	sizes="120x120" />
-<link href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad-retina.png" rel="apple-touch-icon"
-	sizes="152x152" />
-<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
-<script src="${pageContext.request.contextPath}/resources/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
+<link
+	href="${pageContext.request.contextPath}/resources/static/favicon.ico"
+	rel="shortcut icon" type="image/x-icon" />
+<link
+	href="${pageContext.request.contextPath}/resources/static/favicon.ico"
+	rel="icon" type="image/x-icon" />
+<link
+	href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad.png"
+	rel="apple-touch-icon" sizes="76x76" />
+<link
+	href="${pageContext.request.contextPath}/resources/static/touch-icon-iphone-retina.png"
+	rel="apple-touch-icon" sizes="120x120" />
+<link
+	href="${pageContext.request.contextPath}/resources/static/touch-icon-ipad-retina.png"
+	rel="apple-touch-icon" sizes="152x152" />
+<script
+	src="${pageContext.request.contextPath}/resources/static/CACHE/js/cb793deb7347.js"
+	type="text/javascript"></script>
+<script
+	src="${pageContext.request.contextPath}/resources/static/CACHE/js/c3617c8217d0.js"
+	type="text/javascript"></script>
 </head>
 <body class="logged-in partners partners-setting">
 	<div id="wrap">
@@ -71,25 +125,33 @@ div.ui-tooltip {
 					<div class="partners-name-tag">
 						<h3 class="partners-name-tag-heading">파트너스</h3>
 						<div class="partners-name-tag-body">
-							<img alt="<%=this_account.getId() %> 사진" class="p5-partners-img-lg"
+							<img alt="<%=this_account.getId() %> 사진"
+								class="p5-partners-img-lg"
 								src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=profile %>" />
 							<h4 class="partners-username-bottom"><%=this_account.getId() %></h4>
 						</div>
 					</div>
 					<div class="sidebar-nav">
 						<ul>
-							<li class=""><a href="/wjm/partners/p/<%=this_account.getId() %>/">전체보기</a></li>
-							<li class=""><a href="/wjm/partners/p/<%=this_account.getId() %>/introduction/">자기
+							<li class=""><a
+								href="/wjm/partners/p/<%=this_account.getId() %>/">전체보기</a></li>
+							<li class=""><a
+								href="/wjm/partners/p/<%=this_account.getId() %>/introduction/">자기
 									소개</a></li>
-							<li class=""><a href="/wjm/partners/p/<%=this_account.getId() %>/portfolio/">포트폴리오</a></li>
-							<li class=""><a href="/wjm/partners/p/<%=this_account.getId() %>/skill/">보유
+							<li class=""><a
+								href="/wjm/partners/p/<%=this_account.getId() %>/portfolio/">포트폴리오</a></li>
+							<li class=""><a
+								href="/wjm/partners/p/<%=this_account.getId() %>/skill/">보유
 									기술</a></li>
-							<li class=""><a href="/wjm/partners/p/<%=this_account.getId() %>/background/">경력,
+							<li class=""><a
+								href="/wjm/partners/p/<%=this_account.getId() %>/background/">경력,
 									학력, 자격증</a></li>
 							<li class="" style="border-top: 1px dashed #dedede"><a
-								href="/wjm/partners/p/<%=this_account.getId() %>/evaluation/">클라이언트의 평가</a></li>
+								href="/wjm/partners/p/<%=this_account.getId() %>/evaluation/">클라이언트의
+									평가</a></li>
 							<li class="active"><a
-								href="/wjm/partners/p/<%=this_account.getId() %>/history/">외주몬에서 진행한 프로젝트</a></li>
+								href="/wjm/partners/p/<%=this_account.getId() %>/history/">외주몬에서
+									진행한 프로젝트</a></li>
 						</ul>
 					</div>
 				</div>
@@ -103,13 +165,13 @@ div.ui-tooltip {
 									<div class="contract-project-count">
 										<div class="title-column">계약한 프로젝트</div>
 										<div class="data-column">
-											<span class="value">0</span> 개
+											<span class="value"><%=contractnum %></span> 개
 										</div>
 									</div>
 									<div class="contract-project-cost">
 										<div class="title-column">누적 프로젝트 금액</div>
 										<div class="data-column">
-											<span class="value">0</span> 원
+											<span class="value"><%=total_budget %></span> 원
 										</div>
 									</div>
 								</div>
@@ -133,32 +195,34 @@ div.ui-tooltip {
 									<div class="project-average-box-price">
 										<h5 style="margin-top: 0px;">프로젝트 평균 금액</h5>
 										<p>
-											<strong>0</strong> 원
+											<strong><%=avg_budget %></strong> 원
 										</p>
-										<img src="${pageContext.request.contextPath}/resources/static/img/project_average_price.png" />
+										<img
+											src="${pageContext.request.contextPath}/resources/static/img/project_average_price.png" />
 										<div class="project-average-price-img"></div>
 										<p class="project-average-price-low"
 											style="padding-left: 15px;">
-											최저 <strong>0</strong> 원
+											최저 <strong><%=min_budget %></strong> 원
 										</p>
 										<p class="project-average-price-high"
 											style="padding-right: 30px;">
-											최고 <strong>0</strong> 원
+											최고 <strong><%=max_budget %></strong> 원
 										</p>
 									</div>
 									<div class="project-average-box-period">
 										<h5 style="margin-top: 0px;">프로젝트 평균 기간</h5>
 										<p class="project-average-period-information"
 											style="padding-left: 30px;">
-											<strong>0</strong> 일
+											<strong><%=avg_period %></strong> 일
 										</p>
 										<img height="14px"
-											src="${pageContext.request.contextPath}/resources/static/img/project_average_period.png" width="199px" />
+											src="${pageContext.request.contextPath}/resources/static/img/project_average_period.png"
+											width="199px" />
 										<p class="project-average-period-low">
-											최저 <strong>0</strong> 일
+											최저 <strong><%=min_period %></strong> 일
 										</p>
 										<p class="project-average-period-high">
-											최고 <strong>0</strong> 일
+											최고 <strong><%=max_period %></strong> 일
 										</p>
 									</div>
 									<div style="clear: left"></div>
@@ -171,16 +235,77 @@ div.ui-tooltip {
 						<h4 style="padding-top: 15px;">외주몬에서 진행한 프로젝트</h4>
 						</section>
 						<section class="p5-evaluation-list">
+						<%
+							if(contractlist != null)
+							{
+								for(int i=0;i<contractlist.size();i++)
+								{
+						%>
+						
+						<div class="p5-partners-project-history">
+							<div class="p5-partners-project-evaluation-header">
+								<div class="p5-partners-project-evaluation-title">
+									<h4>
+										<a
+											href="/wjm/project/<%=contractlist.get(i).getProject().getName() %>/<%=contractlist.get(i).getProject_pk() %>/"><%=contractlist.get(i).getProject().getName() %></a>
+									</h4>
+								</div>
+								<div class="p5-partners-project-evaluation-info">
+									<span>클라이언트 <span class="p5-partners-project-info-id"><%=contractlist.get(i).getClient_id() %></span></span>
+									<span>카테고리 <span
+										class="p5-partners-project-info-category"><%=contractlist.get(i).getProject().getCategoryL() %> &gt; <%=contractlist.get(i).getProject().getCategoryM() %></span></span>
+								</div>
+							</div>
+							<div class="p5-partners-project-evaluation-body1">
+								<span style="border-bottom: none !important;"><i
+									class="fa fa-clock-o"></i>계약일<span
+									class="p5-partners-project-evaluation-date"><%=Time.toString3(contractlist.get(i).getReg_date())%></span></span>
+								<span style="border-bottom: none !important;"><i
+									class="fa fa-won"></i>계약금액<span
+									class="p5-partners-project-evaluation-cost"><%=contractlist.get(i).getBudget() %> 원</span></span> <span
+									style="border-bottom: none !important;"><i
+									class="fa fa-clock-o"></i>계약기간<span
+									class="p5-partners-project-evaluation-period"><%=contractlist.get(i).getTerm() %>일</span></span>
+							</div>
+						</div>
+						<%
+								}
+								
+						%>
+						
+						<div class="pagination-wrapper"
+							style="clear: both; margin-top: -20px; margin-bottom: -20px;">
+							<ul class="pagination" id="pagination_box">
+								<li id="page_1" class="active"><a style="cursor: pointer"
+									href="/partners/p/jjinz84/history/?page=1">1</a></li>
+								<li id="page_2"><a style="cursor: pointer"
+									href="/partners/p/jjinz84/history/?page=2">2</a></li>
+								<li id="page_3"><a style="cursor: pointer"
+									href="/partners/p/jjinz84/history/?page=3">3</a></li>
+								<li><a style="cursor: pointer"
+									href="/partners/p/jjinz84/history/?page=2" class="next"><i
+										class="fa fa-arrow-right"></i></a></li>
+							</ul>
+						</div>
+						<%
+							}
+							else
+							{
+								
+						%>
+						
 						<div class="p5-empty-component-lg">
 							<div class="p5-assign-component">
 								<div>
-									<img src="${pageContext.request.contextPath}/resources/static/img/project_history_no.png" />
 									<p class="p5-no-partners-info-text">
 										진행한 <span class="text-center p5-bold">'프로젝트'</span>가 없습니다.
 									</p>
 								</div>
 							</div>
 						</div>
+						<%
+							}
+						%>
 						</section>
 					</div>
 				</div>
@@ -189,8 +314,11 @@ div.ui-tooltip {
 		<div id="push"></div>
 	</div>
 	<jsp:include page="../../footer.jsp" flush="false" />
-	<script src="${pageContext.request.contextPath}/resources/static/js/Chart.js"></script>
-	<script src="${pageContext.request.contextPath}/resources/static/js/excanvas.js" type="text/javascript"></script>
+	<script
+		src="${pageContext.request.contextPath}/resources/static/js/Chart.js"></script>
+	<script
+		src="${pageContext.request.contextPath}/resources/static/js/excanvas.js"
+		type="text/javascript"></script>
 	<script>
     $(document).ready(function() {
 
@@ -252,6 +380,66 @@ div.ui-tooltip {
 	<script>
     $(document).ready(function(){
 
+    	var flag;
+        <%if (categorylist == null) {%>
+        	flag = false;
+        <%} else {%>
+    		flag = true;
+        <%}%>
+        
+
+        if($("#myChart").length) {
+
+        	var color = [ '#05835E', '#19906D', '#2E9D7D', '#42AB8C', '#57B89C', '#6BC6AB', '#80D3BB' ];
+        	
+            var data =[
+            
+                <%if (categorylist == null) {%>
+                    {
+                        value: 1,
+                        color: '#dedede',
+                        highlight: '#dedede',
+                        label: "진행한 프로젝트 없음"
+                    }
+                <%} else {
+				for (int i = 0; i < categorylist.size(); i++) {%>
+		                {
+		                    value: <%=categorylist.get(i).getValue()%>,
+		                    color: color[<%=i%>],
+		                    highlight: color[<%=i%>],
+		                    label: "<%=categorylist.get(i).getKey()%>"
+		                }
+
+                <%if (i == 6)
+						break;
+
+					out.println(",");
+				}
+			}%>
+            ];
+
+            $('.doughnut-legend').html('');
+            <%if (categorylist.isEmpty()) {%>
+            $('.doughnut-legend').append('<li><span style="background-color: #dedede;"></span>진행한 프로젝트 없음</li>');
+            <%
+            }
+            else
+            {
+            	for( int i=0;i<categorylist.size();i++ ){
+            %>
+            $('.doughnut-legend').append('<li><span style="background-color: '+color[<%=i%>]+';"></span>'+'<%=categorylist.get(i).getKey()%>'+'</li>');
+            <%
+            	}
+            }
+            %>
+            new Chart(document.getElementById("myChart").getContext("2d")).Doughnut(data, {
+                animation: false,
+                tooltipFontSize: 8,
+                
+                showTooltips: flag
+                
+            });
+        }
         var cnt=$(".doughnut-legend ").children().length;
         var marginTop;
         if(cnt===1){
@@ -279,38 +467,10 @@ div.ui-tooltip {
         $(".doughnut-legend").css({
             "margin-top" : marginTop
         })
+        
+        
+
     });
-
-    window.onload = function(){
-            var ctx = document.getElementById("myChart").getContext("2d");
-
-
-
-            var option = {
-                animation: false,
-                tooltipFontSize: 8,
-                
-                showTooltips: false
-                
-            };
-
-            var data =[
-            
-                
-                    {
-                    value: 1,
-                    color: '#dedede',
-                    highlight: '#dedede',
-                    label: "진행한 프로젝트 없음"
-                    }
-                
-            ];
-
-            var doughnut_chart =
-                    new Chart(ctx).Doughnut(data, option);
-
-
-    };
 
 </script>
 	<script type="text/javascript">
@@ -365,40 +525,5 @@ $( document ).ready(function($) {
 });
 
 </script>
-	<script type="text/javascript">
-        var TRS_AIDX = 9287;
-        var TRS_PROTOCOL = document.location.protocol;
-        document.writeln();
-        var TRS_URL = TRS_PROTOCOL + '//' + ((TRS_PROTOCOL=='https:')?'analysis.adinsight.co.kr':'adlog.adinsight.co.kr') +  '/emnet/trs_esc.js';
-        document.writeln("<scr"+"ipt language='javascript' src='" + TRS_URL + "'></scr"+"ipt>");
-        </script>
-	<script type="text/javascript">
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-        ga('create', 'UA-31427125-2', 'wishket.com');
-        var ga_now = new Date();
-        var dimension4Value = "Y" + ga_now.getFullYear()
-                              + "M" + (ga_now.getMonth()+1)
-                              + "D" + (ga_now.getDate())
-                              + "H" + (ga_now.getHours())
-                              + "I" + (ga_now.getMinutes())
-                              + "W" + (ga_now.getDay());
-        ga('require', 'displayfeatures');
-        ga('set', '&uid', '28338');
-        ga('send', 'pageview', {
-          'dimension1': 'user',
-          'dimension2': 'partners',
-          'dimension3': '28338',
-          'dimension4': dimension4Value
-        });
-      </script>
-	<script type="text/javascript">(function(e,b){if(!b.__SV){var a,f,i,g;window.mixpanel=b;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===e.location.protocol?"https:":"http:")+'//cdn.mxpnl.com/libs/mixpanel-2.2.min.js';f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f);b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==
-typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.set_once people.increment people.append people.track_charge people.clear_charges people.delete_user".split(" ");for(g=0;g<i.length;g++)f(c,i[g]);
-b._i.push([a,e,d])};b.__SV=1.2}})(document,window.mixpanel||[]);
-mixpanel.init("c7b742deb9d00b4f1c0e1e9e8c5c3115");</script>
-	<script type="text/javascript"> if (!wcs_add) var wcs_add={}; wcs_add["wa"] = "s_3225afd5bb50";if (!_nasa) var _nasa={};wcs.inflow();wcs_do(_nasa);</script>
 </body>
 </html>
