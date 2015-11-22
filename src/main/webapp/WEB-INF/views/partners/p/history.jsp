@@ -15,6 +15,9 @@
 	if(!Validator.hasValue(profile))
 		profile = "default_avatar.png";
 	
+	//현재 페이지
+	Integer present_page = (Integer)request.getAttribute("page");
+	if(present_page == null) present_page = 1;
 
 	//계약 리스트
 	List<ContractInfo> contractlist = (List<ContractInfo>)request.getAttribute("contractlist");
@@ -361,20 +364,20 @@ div.ui-tooltip {
             }
 
             if(present != 1){
-                html += "<li><a style='cursor:pointer' href='/partners/p/<%=this_account.getId() %>/history/?page="+prev+"' class='prev'><i class='fa fa-arrow-left'></i></a></li>";
+                html += "<li><a style='cursor:pointer' href='/wjm/partners/p/<%=this_account.getId() %>/history/?page="+prev+"' class='prev'><i class='fa fa-arrow-left'></i></a></li>";
             }
             for(var i = min_page; i<=max_page; ++i){
-                html +="<li id='page_" + i + "'><a style='cursor:pointer' href='/partners/p/<%=this_account.getId() %>/history/?page="+i+"'>" + i + "</a></li>";
+                html +="<li id='page_" + i + "'><a style='cursor:pointer' href='/wjm/partners/p/<%=this_account.getId() %>/history/?page="+i+"'>" + i + "</a></li>";
             }
             //html +="<li id='page_" + i + "'><a style='cursor:pointer' onclick='setPage(" + total + ");'>" + total + "</a></li>";
             if(present != total){
-                html += "<li><a style='cursor:pointer' href='/partners/p/<%=this_account.getId() %>/history/?page="+next+"' class='next'><i class='fa fa-arrow-right'></i></a></li>";
+                html += "<li><a style='cursor:pointer' href='/wjm/partners/p/<%=this_account.getId() %>/history/?page="+next+"' class='next'><i class='fa fa-arrow-right'></i></a></li>";
             }
 
             box.html(html);
             $(present_id).addClass('active');
         }
-        setPagination(1, 0);
+        setPagination(<%=present_page%>, <%=contractnum/10 +1%>);
     });
 </script>
 	<script>
@@ -435,9 +438,7 @@ div.ui-tooltip {
             new Chart(document.getElementById("myChart").getContext("2d")).Doughnut(data, {
                 animation: false,
                 tooltipFontSize: 8,
-                
                 showTooltips: flag
-                
             });
         }
         var cnt=$(".doughnut-legend ").children().length;
@@ -471,58 +472,6 @@ div.ui-tooltip {
         
 
     });
-
-</script>
-	<script type="text/javascript">
-  $(function() {
-    wishket.init();
-    
-    svgeezy.init(false, 'png');
-  });
-</script>
-	<script>
-
-$( document ).ready(function($) {
-    var p5TotalSubNavigationFlag = 0;
-
-
-	if ( $( window ).width() >= 1200 ) {
-		$( '.p5-side-nav-deactive' ).css( 'display', 'none' );
-	} else  {
-		$( '.p5-side-nav-active' ).css( 'display', 'none' );
-		$( '.p5-side-nav-deactive' ).css( 'display', 'block');
-	}
-
-	$('.content-inner').on('click', '.p5-side-nav-active-btn', function () {
-		$('.p5-side-nav-active').css( 'display', 'none' );
-		$('.p5-side-nav-deactive').css('display','block');
-	});
-
-	$('.content-inner').on('click', '.p5-side-nav-deactive-btn', function () {
-		$('.p5-side-nav-active').css( 'display', 'block' );
-		$('.p5-side-nav-deactive').css('display','none');
-	});
-
-
-    $( window ).scroll ( function () {
-		if ( $(window).scrollTop() > 87 && p5TotalSubNavigationFlag === 0) {
-			setTimeout(function() {
-				$('#p5-total-sub-navigation-wrapper').removeClass('hide fadeOut');
-				$('#p5-total-sub-navigation-wrapper').addClass('fadeInDown');
-			}, 200 );
-			flag = 1;
-
-
-		} else if ( $(window).scrollTop() <= 87 ){
-			p5TotalSubNavigationFlag = 0;
-			$('#p5-total-sub-navigation-wrapper').removeClass('fadeInDown');
-			$('#p5-total-sub-navigation-wrapper').addClass('fadeOut');
-			setTimeout(function() {
-				$('#p5-total-sub-navigation-wrapper').addClass('hide');
-			}, 200 );
-		}
-	});
-});
 
 </script>
 </body>

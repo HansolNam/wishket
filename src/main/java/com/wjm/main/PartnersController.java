@@ -2308,7 +2308,8 @@ public class PartnersController {
 	 */
 	@RequestMapping(value = "/partners/p/{id}/history", method = RequestMethod.GET)
 	public ModelAndView PartnersController_p_history(HttpServletRequest request, ModelAndView mv,
-			@PathVariable("id") String id) {
+			@PathVariable("id") String id,
+			@RequestParam(value = "page", required = false, defaultValue = "1") String page) {
 		logger.info("/partners/p/{id}/history Page");
 
 		AccountInfo account = (AccountInfo) request.getSession().getAttribute("account");
@@ -2337,7 +2338,15 @@ public class PartnersController {
 		else
 		{
 			mv.addObject("contractnum",contractlist.size());
-			mv.addObject("contractlist", contractlist);
+			
+			int page_int = Integer.parseInt(page);
+			
+			int page_max = (page_int - 1) * 10 + 9;
+			if(contractlist.size() < page_max)
+				page_max = contractlist.size();
+			
+			mv.addObject("page", page_int);
+			mv.addObject("contractlist", contractlist.subList((page_int - 1) * 10, page_max));
 
 			HashMap map = new HashMap();
 			
