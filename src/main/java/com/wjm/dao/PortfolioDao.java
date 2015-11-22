@@ -72,6 +72,14 @@ public class PortfolioDao implements PortfolioIDao {
 		    	}
 		    });
 	}
+	
+	public int getPortfolioNum(int account_pk)
+	{
+		int num = jdbcTemplate.queryForInt("select count(*) from portfolio where account_pk = ?",
+				new Object[]{ account_pk });
+		
+		return num;
+	}
 	public List<PortfolioInfo> select(int account_pk)
 	{
 		List<PortfolioInfo> list = jdbcTemplate.query("select * from portfolio where account_pk = ?",

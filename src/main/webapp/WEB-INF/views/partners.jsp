@@ -1,7 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-
 <!DOCTYPE html>
+<%@ page
+	import="com.wjm.models.AccountInfo, java.util.List"%>
+<%
+	List<AccountInfo> partnerslist = (List<AccountInfo>) request.getAttribute("partnerslist");
+	Integer partnersnum = (Integer) request.getAttribute("partnersnum");
+	if(partnersnum == null) partnersnum = 0;
+%>
 <!--[if IE 6]><html lang="ko" class="no-js old ie6"><![endif]-->
 <!--[if IE 7]><html lang="ko" class="no-js old ie7"><![endif]-->
 <!--[if IE 8]><html lang="ko" class="no-js old ie8"><![endif]-->
@@ -53,7 +59,7 @@
 			<div class="content">
 				<div class="content-header">
 					<h3 class="header-text">
-						파트너스 목록 <small class="small-text">14,733명의 파트너스가 있습니다.</small>
+						파트너스 목록 <small class="small-text"><%=partnersnum %>명의 파트너스가 있습니다.</small>
 					</h3>
 					<section class="search search-right">
 						<form action="." class="form-inline" method="get" role="form">
@@ -77,36 +83,50 @@
 					</section>
 				</div>
 				<div class="content-inner">
+				<%
 				
+				for(int i=0;i<partnersnum;i++)
+				{
+					String profile_img = partnerslist.get(i).getAccountinfo().getProfile_img();
+					if(profile_img == null) profile_img = "default_avatar.png";
+				%>
 					<section class="partners-unit">
-						<a class="grid-block" href="/partners/p/di8913/"></a>
+						<a class="grid-block" href="/wjm/partners/p/<%=partnerslist.get(i).getId() %>/"></a>
 						<section class="partners-basic-info">
 							<div class="partners-object">
 								<img alt="파트너스 프로필 이미지" class="partners-profile-image"
-									src="/media/profiles/10495_20140617_c99b788a671a1148.gif" />
+									src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=profile_img %>" />
 							</div>
 							<section class="partners-basic-info-body">
 								<div class="partners-unit-heading">
-									<h4 class="partners-username">di8913</h4>
+									<h4 class="partners-username"><%=partnerslist.get(i).getId() %></h4>
 									<span
-										class="label label-sm label-partners-availability possible">활동가능</span>
+										class="label label-sm label-partners-availability possible"><%=partnerslist.get(i).getPartnersinfo().getAvailability() %></span>
 								</div>
 								<section class="partners-business-info">
-									<span class="job"><i class="fa fa-laptop"></i> 디자이너</span> <span
-										class="form-of-business"><i class="fa fa-building-o"></i>
-										개인사업자</span>
+									<span class="job"><%=partnerslist.get(i).getPartnersinfo().getJob() %></span> <span
+										class="form-of-business"><%=partnerslist.get(i).getAccountinfo().getForm() %></span>
 								</section>
 								<section class="partners-desc">
-									<p>국내 외 다양항 프로잭트를 성공적으로 수행 해 온 저희는 새로움을 모색하여 도약의 발판을 마련하고자
+									<p><%=partnerslist.get(i).getAccountinfo().getIntroduction() %></p>
+									<!-- <p>국내 외 다양항 프로잭트를 성공적으로 수행 해 온 저희는 새로움을 모색하여 도약의 발판을 마련하고자
 										하는 기업에게 있어서 가장 적절한 전략적 파트너 입니다. 우리는 폭넓은 전문성을 바탕으로 고객의 당면한 문제를
-										정확하게 파악할 수 있으며, ...</p>
+										정확하게 파악할 수 있으며, ...</p> -->
 								</section>
 								<section class="partners-skill-list">
-									<span class="partners-skill label-skill">웹개발</span><span
-										class="partners-skill label-skill">3D 모델링, 랜더링</span><span
-										class="partners-skill label-skill">앱개발</span><span
-										class="partners-skill label-skill">UI, GUI</span><span
-										class="partners-skill label-skill">제품 팩키지</span>
+									
+									<%
+										if(partnerslist.get(i).getTechniqueinfo() != null)
+										{
+											for(int j=0;j<partnerslist.get(i).getTechniqueinfo().size();j++)
+											{
+									%>
+									<span class="partners-skill label-skill"><%=partnerslist.get(i).getTechniqueinfo().get(j).getName() %></span>
+									<%
+											}
+										}
+									%>
+								
 								</section>
 							</section>
 						</section>
@@ -116,11 +136,11 @@
 									<li><div class="rating star-lg star-lg-5"></div> <span
 										class="rating-stats-body stats-body"><span
 											class="average-rating-score">5.0</span> <span
-											class="rating-append-unit append-unit">/ 평가 5개</span></span></li>
+											class="rating-append-unit append-unit">/ 평가 개</span></span></li>
 									<li><span class="label-stats">계약한 프로젝트</span> <span
-										class="stats-body">6 <span class="append-unit">건</span></span></li>
+										class="stats-body"><%=partnerslist.get(i).getContractnum() %> <span class="append-unit">건</span></span></li>
 									<li><span class="label-stats">포트폴리오</span> <span
-										class="stats-body">31 <span class="append-unit">개</span></span></li>
+										class="stats-body"><%=partnerslist.get(i).getPortfolionum()%> <span class="append-unit">개</span></span></li>
 								</ul>
 							</div>
 							<div class="partners-authentication">
@@ -131,6 +151,11 @@
 							</div>
 						</section>
 					</section>
+					
+				
+				<%
+				}
+				%>
 					<div class="pagination-wrapper" style="clear: both">
 						<ul class="pagination">
 							<li class="active"><span class="current">1</span></li>
@@ -153,57 +178,5 @@
 		<div id="push"></div>
 	</div>
 	<jsp:include page="footer.jsp" flush="false" />
-	<script type="text/javascript">
-  $(function() {
-    wishket.init();
-    
-    svgeezy.init(false, 'png');
-  });
-</script>
-	<script>
-
-$( document ).ready(function($) {
-    var p5TotalSubNavigationFlag = 0;
-
-
-	if ( $( window ).width() >= 1200 ) {
-		$( '.p5-side-nav-deactive' ).css( 'display', 'none' );
-	} else  {
-		$( '.p5-side-nav-active' ).css( 'display', 'none' );
-		$( '.p5-side-nav-deactive' ).css( 'display', 'block');
-	}
-
-	$('.content-inner').on('click', '.p5-side-nav-active-btn', function () {
-		$('.p5-side-nav-active').css( 'display', 'none' );
-		$('.p5-side-nav-deactive').css('display','block');
-	});
-
-	$('.content-inner').on('click', '.p5-side-nav-deactive-btn', function () {
-		$('.p5-side-nav-active').css( 'display', 'block' );
-		$('.p5-side-nav-deactive').css('display','none');
-	});
-
-
-    $( window ).scroll ( function () {
-		if ( $(window).scrollTop() > 87 && p5TotalSubNavigationFlag === 0) {
-			setTimeout(function() {
-				$('#p5-total-sub-navigation-wrapper').removeClass('hide fadeOut');
-				$('#p5-total-sub-navigation-wrapper').addClass('fadeInDown');
-			}, 200 );
-			flag = 1;
-
-
-		} else if ( $(window).scrollTop() <= 87 ){
-			p5TotalSubNavigationFlag = 0;
-			$('#p5-total-sub-navigation-wrapper').removeClass('fadeInDown');
-			$('#p5-total-sub-navigation-wrapper').addClass('fadeOut');
-			setTimeout(function() {
-				$('#p5-total-sub-navigation-wrapper').addClass('hide');
-			}, 200 );
-		}
-	});
-});
-
-</script>
 </body>
 </html>

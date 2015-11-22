@@ -11,17 +11,35 @@ import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.wjm.idao.AccountIDao;
-import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
 
 @Repository
 public class AccountDao implements AccountIDao {
 
+	@Autowired
+	private AccountInformationDao accountInformationDao;
+
+	@Autowired
+	private Partners_infoDao partners_infoDao;
+
+	@Autowired
+	private TechniqueDao techniqueDao;
+
+	@Autowired
+	private AssessmentDao assessmentDao;
+	
+	@Autowired
+	private ContractDao contractDao;
+
+	@Autowired
+	private PortfolioDao portfolioDao;
+	
 	private static final Logger logger = LoggerFactory.getLogger(AccountDao.class);
 	
 	private DataSource dataSource;
@@ -58,45 +76,18 @@ public class AccountDao implements AccountIDao {
 
 	public int getPartnersCount()
 	{
-		List<Integer> list = jdbcTemplate.query("select count(*) from account where account_type = 'partners'"
-				,new RowMapper<Integer>() {
-		    	public Integer mapRow(ResultSet resultSet, int rowNum) throws SQLException 
-		    	{
-		    		return new Integer(
-		    				resultSet.getInt("count"));
-		    	}
-		    });
+		int count = jdbcTemplate.queryForInt("select count(*) from account where account_type = 'partners'");
 		
-		if(list!=null)
-		{
-			if(list.isEmpty())
-				return 0;
-			else
-				return list.get(0).intValue();
-		}
-		else
-			return 0;
+		return count;
 	}
 	
 	public List<AccountInfo> selectPartners(String page, String q, String job)
 	{
 		List<AccountInfo> accountlist;
-		if(!Validator.hasValue(q))
-		{
-			if(!Validator.hasValue(job))
-			{
-				
-			}
-			else
-			{
-				
-			}
-
-			accountlist = jdbcTemplate.query("select * from account where account_type = 'partners'",
-		    	new Object[] { account_type }, new RowMapper<AccountInfo>() {
+		accountlist = jdbcTemplate.query("select * from account where account_type = 'partners'",new RowMapper<AccountInfo>() {
 		    	public AccountInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{
-		    		return new AccountInfo(
+		    		AccountInfo account = new AccountInfo(
 		    				resultSet.getInt("pk")
 		    				, resultSet.getString("email")
 		    				, resultSet.getString("id")
@@ -105,18 +96,27 @@ public class AccountDao implements AccountIDao {
 		    				, resultSet.getInt("authorized")
 		    				, resultSet.getString("authorization_key")
 		    				, resultSet.getTimestamp("reg_date"));
+		    		
+		    		account.setAccountinfo(accountInformationDao.select(account.getPk()));
+		    		account.setPartnersinfo(partners_infoDao.select(account.getPk()));
+		    		account.setTechniqueinfo(techniqueDao.select(account.getPk()));
+		    		account.setPortfolionum(portfolioDao.getPortfolioNum(account.getPk()));
+		    		account.setAssessmentinfo(assessmentDao.select_assessed(account.getPk()));
+		    		account.setContractnum(contractDao.getPartnersContractCount(account.getPk(),"완료"));
+		    		
+		    		return account;
 		    	}
 		    });
-		}
-		else
-		{
-			
-		}
 		
-		if(accountlist == null)
-			return 0;
+		if(accountlist != null)
+		{
+			if(accountlist.isEmpty())
+				return null;
+			else
+				return accountlist;
+		}
 		else
-			return accountlist.size();
+			return null;
 	}
 	
 	public int select_account(String account_type)

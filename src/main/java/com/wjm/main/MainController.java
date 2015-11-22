@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.wjm.dao.AccountDao;
 import com.wjm.dao.ProjectDao;
 import com.wjm.main.function.Validator;
+import com.wjm.models.AccountInfo;
 
 /**
  * Handles requests for the application home page.
@@ -79,8 +80,6 @@ public class MainController {
 		logger.info("q = "+q);
 		logger.info("job = "+job);
 		
-		mv.setViewName("/partners");
-
 		if(!Validator.isDigit(page))
 		{
 			mv.addObject("messages","페이지 번호는 숫자만 가능합니다.");
@@ -89,8 +88,12 @@ public class MainController {
 		
 		Integer partnersnum = accountDao.getPartnersCount();
 		
-		//List<AccountInfo> partnerslist = accountDao.get
-		
+		logger.info("partners 명수 : "+partnersnum);
+		List<AccountInfo> partnerslist = accountDao.selectPartners(page,q,job);
+		mv.addObject("partnersnum",partnersnum);
+		mv.addObject("partnerslist", partnerslist);
+
+		mv.setViewName("/partners");
 		return mv;
 	}
 	/**

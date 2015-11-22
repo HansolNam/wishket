@@ -16,10 +16,48 @@ public class AccountInfo {
 	private Partners_infoInfo partnersinfo;
 	private List<TechniqueInfo> techniqueinfo;
 	private int portfolionum;
+	private int contractnum;
+	
 	private List<AssessmentInfo> assessmentinfo;
 	private List<ProjectInfo> projectinfo;
 	private AuthenticationInfo authenticationinfo;
 	
+	public int getContractnum() {
+		return contractnum;
+	}
+	public void setContractnum(int contractnum) {
+		this.contractnum = contractnum;
+	}
+	public Partners_infoInfo getPartnersinfo() {
+		return partnersinfo;
+	}
+	public void setPartnersinfo(Partners_infoInfo partnersinfo) {
+		this.partnersinfo = partnersinfo;
+	}
+	public List<TechniqueInfo> getTechniqueinfo() {
+		return techniqueinfo;
+	}
+	public void setTechniqueinfo(List<TechniqueInfo> techniqueinfo) {
+		this.techniqueinfo = techniqueinfo;
+	}
+	public int getPortfolionum() {
+		return portfolionum;
+	}
+	public void setPortfolionum(int portfolionum) {
+		this.portfolionum = portfolionum;
+	}
+	public List<AssessmentInfo> getAssessmentinfo() {
+		return assessmentinfo;
+	}
+	public void setAssessmentinfo(List<AssessmentInfo> assessmentinfo) {
+		this.assessmentinfo = assessmentinfo;
+	}
+	public List<ProjectInfo> getProjectinfo() {
+		return projectinfo;
+	}
+	public void setProjectinfo(List<ProjectInfo> projectinfo) {
+		this.projectinfo = projectinfo;
+	}
 	public AuthenticationInfo getAuthenticationinfo() {
 		return authenticationinfo;
 	}
