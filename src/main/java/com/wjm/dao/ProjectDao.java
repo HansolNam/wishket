@@ -356,7 +356,7 @@ public class ProjectDao implements ProjectIDao {
 		//개발 전체 선택
 		else if(dev.equals("2222222222"))
 		{
-			dev_sql = "(categoryL = 'develop')";
+			dev_sql = "(categoryL = '개발')";
 		}
 		//개별 선택
 		else
@@ -397,7 +397,7 @@ public class ProjectDao implements ProjectIDao {
 			if(dev_sql.length()>4 && dev_sql.substring(dev_sql.length()-4,dev_sql.length()).equals(" or "))
 				{
 				dev_sql = dev_sql.substring(0,dev_sql.length()-4);
-				dev_sql = "(categoryL = 'develop' and ("+dev_sql+"))";
+				dev_sql = "(categoryL = '개발' and ("+dev_sql+"))";
 				}
 		}
 
@@ -417,7 +417,7 @@ public class ProjectDao implements ProjectIDao {
 		//디자인 전체 선택
 		else if(design.equals("22222222222"))
 		{
-			design_sql = "(categoryL = 'design')";
+			design_sql = "(categoryL = '디자인')";
 		}
 		//개별 선택
 		else
@@ -460,7 +460,7 @@ public class ProjectDao implements ProjectIDao {
 			if(design_sql.length()>4 && design_sql.substring(design_sql.length()-4,design_sql.length()).equals(" or "))
 				{
 				design_sql = design_sql.substring(0,design_sql.length()-4);
-				design_sql = "(categoryL = 'design' and ("+design_sql+"))";
+				design_sql = "(categoryL = '디자인' and ("+design_sql+"))";
 				}
 		}
 

@@ -7,6 +7,9 @@
 	List<AccountInfo> partnerslist = (List<AccountInfo>) request.getAttribute("partnerslist");
 	Integer partnersnum = (Integer) request.getAttribute("partnersnum");
 	if(partnersnum == null) partnersnum = 0;
+	
+	Integer present_page = (Integer) request.getAttribute("page");
+	if(present_page == null) present_page = 1;
 %>
 <!--[if IE 6]><html lang="ko" class="no-js old ie6"><![endif]-->
 <!--[if IE 7]><html lang="ko" class="no-js old ie7"><![endif]-->
@@ -120,9 +123,12 @@
 										{
 											for(int j=0;j<partnerslist.get(i).getTechniqueinfo().size();j++)
 											{
+												if(partnerslist.get(i).getTechniqueinfo().get(j).getRepresentative() == 1)
+												{
 									%>
 									<span class="partners-skill label-skill"><%=partnerslist.get(i).getTechniqueinfo().get(j).getName() %></span>
 									<%
+												}
 											}
 										}
 									%>
@@ -135,8 +141,8 @@
 								<ul class="list-unstyled">
 									<li><div class="rating star-lg star-lg-5"></div> <span
 										class="rating-stats-body stats-body"><span
-											class="average-rating-score">5.0</span> <span
-											class="rating-append-unit append-unit">/ 평가 개</span></span></li>
+											class="average-rating-score"><%=Math.round(partnerslist.get(i).getAvg_assessment() * 10) / 10.0%></span> <span
+											class="rating-append-unit append-unit">/ 평가 <%=partnerslist.get(i).getAssessmentnum() %>개</span></span></li>
 									<li><span class="label-stats">계약한 프로젝트</span> <span
 										class="stats-body"><%=partnerslist.get(i).getContractnum() %> <span class="append-unit">건</span></span></li>
 									<li><span class="label-stats">포트폴리오</span> <span
@@ -144,10 +150,56 @@
 								</ul>
 							</div>
 							<div class="partners-authentication">
-								<span class="partners-authorized"><i
-									class="fa fa-check-circle-o"></i> 신원 인증</span> <span
+
+							<%
+								if(partnerslist.get(i).getAccountinfo().getIdentity_authentication().equals("인증완료"))
+								{
+							%>
+									<span class="partners-authorized"><i
+										class="fa fa-check-circle-o"></i> 신원 인증</span> 
+							<% 
+								}
+								else
+								{
+							%>
+									<span class="partners-unauthorized"><i
+										class="fa fa-circle-o"></i> 신원 미인증</span> 
+							<%
+								}
+
+								if(partnerslist.get(i).getAccountinfo().getCellphone_num() != null)
+								{
+									if(partnerslist.get(i).getAccountinfo().getCellphone_num().isEmpty())
+									{
+							%>
+									<span
+									class="partners-unauthorized"><i
+									class="fa fa-check-circle-o"></i> 연락처 미등록</span>
+							
+							<%
+									}
+									else
+									{
+							%>
+									<span
 									class="partners-authorized"><i
 									class="fa fa-check-circle-o"></i> 연락처 등록</span>
+							<%			
+									}
+								}
+								else
+								{
+							%>
+							
+									<span
+									class="partners-unauthorized"><i
+									class="fa fa-check-circle-o"></i> 연락처 미등록</span>
+							
+							
+							<%
+								}
+							
+							%>	
 							</div>
 						</section>
 					</section>
@@ -157,7 +209,7 @@
 				}
 				%>
 					<div class="pagination-wrapper" style="clear: both">
-						<ul class="pagination">
+						<ul class="pagination" id="pagination_box">
 							<li class="active"><span class="current">1</span></li>
 							<li><a href="?page=2">2</a></li>
 							<li><a href="?page=3">3</a></li>
@@ -178,5 +230,46 @@
 		<div id="push"></div>
 	</div>
 	<jsp:include page="footer.jsp" flush="false" />
+	<script>
+    $(document).ready(function() {
+        function setPagination(present, total){
+            var html="",
+                    box=$('#pagination_box'),
+                    present_id='#page_'+present+'',
+                    prev=Number(present) - 1,
+                    next=Number(present) + 1;
+            if(present % 10 == 0){
+                var max_page = parseInt(present / 10) * 10;
+            }
+            else{
+                var max_page = (parseInt(present / 10) + 1) * 10;
+            }
+            if(max_page > total){
+                max_page = total;
+            }
+            var min_page = max_page - 9;
+            if(min_page < 1){
+                min_page = 1;
+            }
+
+            if(present != 1){
+                html += "<li><a style='cursor:pointer' href='?page='"+prev+" class='prev'><i class='fa fa-arrow-left'></i></a></li>";
+            }
+            for(var i = min_page; i<=max_page; ++i){
+                html +="<li id='page_" + i + "'><a style='cursor:pointer' href='?page='"+i+">"+i+"</a></li>";
+            }
+            //html +="<li id='page_" + i + "'><a style='cursor:pointer' onclick='setPage(" + total + ");'>" + total + "</a></li>";
+            if(present != total){
+                html += "<li><a style='cursor:pointer' href='?page="+next+"' class='next'><i class='fa fa-arrow-right'></i></a></li>";
+            }
+
+            box.html(html);
+            $(present_id).addClass('active');
+        }
+        setPagination(<%=present_page%>, <%=partnersnum/10 +1%>);
+    });
+</script>
+
+
 </body>
 </html>

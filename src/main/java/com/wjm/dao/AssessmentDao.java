@@ -193,6 +193,63 @@ public class AssessmentDao implements AssessmentIDao {
 			return null;
 	}
 	
+
+	public int get_assessed_num(int assessed_pk)
+	{
+		int num = jdbcTemplate.queryForInt("select count(*) from assessment where assessed_pk = ?",
+		    	new Object[] { assessed_pk });
+		
+		return num;
+	}
+	
+
+	public double get_avg_assessed(int assessed_pk)
+	{
+		List<AssessmentInfo> list = jdbcTemplate.query("select * from assessment where assessed_pk = ?",
+		    	new Object[] { assessed_pk }, new RowMapper<AssessmentInfo>() {
+	    	public AssessmentInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+	    	{
+	    		AssessmentInfo assessment = new AssessmentInfo(
+	    				resultSet.getInt("pk")
+	    				, resultSet.getInt("project_pk")
+	    				, resultSet.getInt("assessing_pk")
+	    				, resultSet.getInt("assessed_pk")
+	    				, resultSet.getInt("professionalism")
+	    				, resultSet.getInt("satisfaction")
+	    				, resultSet.getInt("schedule_observance")
+	    				, resultSet.getInt("activeness")
+	    				, resultSet.getInt("communication")
+	    				, resultSet.getString("recommendation"));
+	    		
+	    		return assessment;
+	    	}
+	    });
+		
+		if(list != null)
+		{
+			if(list.size() == 0)
+			{
+				return 0;
+			}
+			else
+			{
+				double total = 0.0;
+				
+				for(int i=0;i<list.size();i++)
+				{
+
+		    		total += (list.get(i).getProfessionalism() + list.get(i).getSatisfaction() + list.get(i).getSchedule_observance()
+		    		+list.get(i).getActiveness() + list.get(i).getCommunication())/5.0;
+		    		
+				}
+				
+				return total/(double)list.size();
+			}
+		}
+		else
+			return 0;
+	}
+	
 	public void deleteAll()
 	{
 		jdbcTemplate.update("delete from assessment");

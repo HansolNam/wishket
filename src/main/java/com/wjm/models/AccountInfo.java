@@ -17,11 +17,17 @@ public class AccountInfo {
 	private List<TechniqueInfo> techniqueinfo;
 	private int portfolionum;
 	private int contractnum;
-	
-	private List<AssessmentInfo> assessmentinfo;
+	private int assessmentnum;
+	private double avg_assessment;
 	private List<ProjectInfo> projectinfo;
 	private AuthenticationInfo authenticationinfo;
 	
+	public int getAssessmentnum() {
+		return assessmentnum;
+	}
+	public void setAssessmentnum(int assessmentnum) {
+		this.assessmentnum = assessmentnum;
+	}
 	public int getContractnum() {
 		return contractnum;
 	}
@@ -46,11 +52,11 @@ public class AccountInfo {
 	public void setPortfolionum(int portfolionum) {
 		this.portfolionum = portfolionum;
 	}
-	public List<AssessmentInfo> getAssessmentinfo() {
-		return assessmentinfo;
+	public double getAvg_assessment() {
+		return avg_assessment;
 	}
-	public void setAssessmentinfo(List<AssessmentInfo> assessmentinfo) {
-		this.assessmentinfo = assessmentinfo;
+	public void setAvg_assessment(double avg_assessment) {
+		this.avg_assessment = avg_assessment;
 	}
 	public List<ProjectInfo> getProjectinfo() {
 		return projectinfo;

@@ -90,6 +90,8 @@ public class MainController {
 		
 		logger.info("partners 명수 : "+partnersnum);
 		List<AccountInfo> partnerslist = accountDao.selectPartners(page,q,job);
+		
+		mv.addObject("page",Integer.parseInt(page));
 		mv.addObject("partnersnum",partnersnum);
 		mv.addObject("partnerslist", partnerslist);
 
