@@ -17,6 +17,7 @@ import com.wjm.dao.AccountDao;
 import com.wjm.dao.ProjectDao;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
+import com.wjm.models.ProjectInfo;
 
 /**
  * Handles requests for the application home page.
@@ -39,9 +40,36 @@ public class MainController {
 	public ModelAndView MainController_index(HttpServletRequest request, ModelAndView mv) {
 		logger.info("index Page");
 		
-		//int projectnum = projectDao.countAll();
-		//long projectbudget = projectDao.countAllBudget();
-		//int accountnum = accountDao.countAll()
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+
+		if(account != null) {
+			if(account.getAccount_type().equals("client"))
+			{
+				mv.setViewName("redirect:/mywjm/client");
+				return mv;
+			}
+			else if(account.getAccount_type().equals("partners"))
+			{
+				mv.setViewName("redirect:/mywjm/partners");
+				return mv;
+			}
+			}
+		
+		int projectnum = projectDao.countAll();
+		int projectbudget = projectDao.getAllBudget();
+		int partnersnum = accountDao.getPartnersCount("","");
+		
+		logger.info("등록된 프로젝트 : "+projectnum);
+		logger.info("파트너스 계정 수 : "+partnersnum);
+		logger.info("프로젝트 등록 금액 : "+projectbudget);
+		
+		//최근 프로젝트
+		List<ProjectInfo> projectlist = projectDao.selectRecentProject(6);
+		
+		mv.addObject("projectnum", projectnum);
+		mv.addObject("projectbudget", projectbudget);
+		mv.addObject("partnersnum" , partnersnum);
+		mv.addObject("projectlist", projectlist);
 		
 		return mv;
 	}

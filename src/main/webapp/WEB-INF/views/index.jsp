@@ -1,7 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="com.wjm.models.AccountInfo"%>
+<%@ page import="com.wjm.models.AccountInfo, com.wjm.models.ProjectInfo, java.util.List"%>
 
+<%
+	Integer projectnum = (Integer)request.getAttribute("projectnum");
+	Integer projectbudget = (Integer)request.getAttribute("projectbudget");
+	Integer partnersnum = (Integer)request.getAttribute("partnersnum");
+	List<ProjectInfo> projectlist = (List<ProjectInfo>)request.getAttribute("projectlist");
+	
+	if(projectnum == null) projectnum = 0;
+	if(projectbudget == null) projectbudget = 0;
+	if(partnersnum == null) partnersnum = 0;
+%>
 <html class="no-js modern" lang="ko">
 <head
 	prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#">
@@ -72,121 +82,68 @@
 						style="margin-top: -3px;" />등록된 프로젝트
 				</h4>
 			</div>
+			<%
+				if(projectlist == null)
+				{
+			%>
 			<div class="landing-project-item right-bottom">
 				<h4>
-					<a href="/project/add/">결혼정보 검색 앱(iOS,Android) 개발</a>
+					등록된 프로젝트가 없습니다.
 				</h4>
-				<h5 class="project-element-list">
-					<span class="project-element-money"><i class="fa fa-krw"></i>
-						<strong>15,000,000원</strong></span> <span
-						class="project-element-day project-element-list-border"><i
-						class="fa fa-clock-o"></i> <strong>60일</strong></span> <span
-						class="project-element-proposal"><i class="fa fa-pencil"></i>
-						<strong>21명 지원</strong></span>
-				</h5>
-				<p class="landing-project-item-body">저희는 2004년부터 연구개발을 착수하여
-					2006년 정식 법인설립한 IT전문 개발회사입니다. 본사는 IT관련 컨텐츠를 개발하여 영어사도 설립..</p>
-				<p class="project-skill-list">
-					<span class="project-skill">Android</span> <span
-						class="project-skill">iOS</span>
-				</p>
 			</div>
-			<div class="landing-project-item right-bottom">
+			<%
+				}
+				else
+				{
+					for(int i=0;i<projectlist.size();i++)
+					{
+						String description = projectlist.get(0).getDescription();
+						if(description==null) description = "프로젝트 설명이 없습니다.";
+						else if(description.length() > 80) description = description.substring(0, 78) + "..";
+						
+						String classname ="";
+						if(i == 0 || i == 1) classname = "right-bottom";
+						else if(i == 2) classname = "bottom";
+						if(i == 3 || i == 4) classname = "right";
+						else if(i == 5) classname = "";
+			%>
+			<div class="landing-project-item <%=classname%>">
 				<h4>
-					<a href="/project/add/">ERP 시스템과 otp어플리케이션 제작</a>
+					<a href="/wjm/project/add/"><%=projectlist.get(i).getName() %></a>
 				</h4>
 				<h5 class="project-element-list">
 					<span class="project-element-money"><i class="fa fa-krw"></i>
-						<strong>50,000,000원</strong></span> <span
+						<strong><%=projectlist.get(i).getAccount_pk() %>원</strong></span> <span
 						class="project-element-day project-element-list-border"><i
-						class="fa fa-clock-o"></i> <strong>120일</strong></span> <span
+						class="fa fa-clock-o"></i> <strong><%=projectlist.get(i).getPeriod() %>일</strong></span> <span
 						class="project-element-proposal"><i class="fa fa-pencil"></i>
-						<strong>25명 지원</strong></span>
+						<strong><%=projectlist.get(i).getApplicantnum() %>명 지원</strong></span>
 				</h5>
-				<p class="landing-project-item-body">회사 내부 관리용 ERP 시스템 제작과 회원
-					권한분배 및 입출입 등에 이용할 OTP 어플리케이션 제작이 필요합니다. ERP의 언어는 제한없으며..</p>
+				<p class="landing-project-item-body"><%=description %></p>
 				<p class="project-skill-list">
-					<span class="project-skill">mysql</span> <span
-						class="project-skill">Android</span> <span class="project-skill">PHP</span>
-					<span class="project-skill">HTML5</span>
+				<%
+				if(projectlist.get(i).getTechnique() != null)
+				{
+					if(!projectlist.get(i).getTechnique().isEmpty())
+					{
+						String[] skill = projectlist.get(i).getTechnique().split(",");
+						for (int j = 0; j < skill.length; j++) {
+							out.println("<span class='project-skill'>" + skill[j] + "</span>");
+						}
+					}
+					else
+						out.println("<span class='project-skill'>관련 기술 없음</span>");
+				}
+				else
+					out.println("<span class='project-skill'>관련 기술 없음</span>");
+				
+				%>
 				</p>
 			</div>
-			<div class="landing-project-item bottom">
-				<h4>
-					<a href="/project/add/">성균관대학교 대학원 서비스 디자인</a>
-				</h4>
-				<h5 class="project-element-list">
-					<span class="project-element-money"><i class="fa fa-krw"></i>
-						<strong>3,000,000원</strong></span> <span
-						class="project-element-day project-element-list-border"><i
-						class="fa fa-clock-o"></i> <strong>20일</strong></span> <span
-						class="project-element-proposal"><i class="fa fa-pencil"></i>
-						<strong>30명 지원</strong></span>
-				</h5>
-				<p class="landing-project-item-body">저희는 성균관대학교 대학원 서비스 디자인
-					융합과정의 학교 홈페이지를 만들 예정입니다. / 시작시점에 미팅, 자주 온라인 미팅 / 컨텐츠..</p>
-				<p class="project-skill-list">
-					<span class="project-skill">HTML5</span> <span
-						class="project-skill">Photoshop</span>
-				</p>
-			</div>
-			<div class="landing-project-item right">
-				<h4>
-					<a href="/project/add/">사업장 웹ERP 및 전자결재 시스템</a>
-				</h4>
-				<h5 class="project-element-list">
-					<span class="project-element-money"><i class="fa fa-krw"></i>
-						<strong>30,000,000원</strong></span> <span
-						class="project-element-day project-element-list-border"><i
-						class="fa fa-clock-o"></i> <strong>90일</strong></span> <span
-						class="project-element-proposal"><i class="fa fa-pencil"></i>
-						<strong>12명 지원</strong></span>
-				</h5>
-				<p class="landing-project-item-body">(주)메가북스 / 시작시점에 미팅, 주 1회 미팅
-					/ 기획 완료, 스토리보드 작성 중 / 100인규모 사업장 웹 ERP 및 전자결재 시스템 개발 / 1. 개..</p>
-				<p class="project-skill-list">
-					<span class="project-skill">mysql</span> <span
-						class="project-skill">PHP</span> <span class="project-skill">JAVA</span>
-				</p>
-			</div>
-			<div class="landing-project-item right">
-				<h4>
-					<a href="/project/add/">임대형 모바일 쿠폰 쇼핑몰 구축</a>
-				</h4>
-				<h5 class="project-element-list">
-					<span class="project-element-money"><i class="fa fa-krw"></i>
-						<strong>5,000,000원</strong></span> <span
-						class="project-element-day project-element-list-border"><i
-						class="fa fa-clock-o"></i> <strong>30일</strong></span> <span
-						class="project-element-proposal"><i class="fa fa-pencil"></i>
-						<strong>6명 지원</strong></span>
-				</h5>
-				<p class="landing-project-item-body">현재 모바일쿠폰 유통 및 모바일시스템 개발을
-					주요사업으로 하고 있는 7년차 기업입니다. SK텔레콤 오브제 어플, 카카오 선물하기 어플..</p>
-				<p class="project-skill-list">
-					<span class="project-skill">Photoshop</span> <span
-						class="project-skill">PHP</span> <span class="project-skill">Python</span>
-				</p>
-			</div>
-			<div class="landing-project-item">
-				<h4>
-					<a href="/project/add/">차량 진단용 앱 디자인</a>
-				</h4>
-				<h5 class="project-element-list">
-					<span class="project-element-money"><i class="fa fa-krw"></i>
-						<strong>3,000,000원</strong></span> <span
-						class="project-element-day project-element-list-border"><i
-						class="fa fa-clock-o"></i> <strong>14일</strong></span> <span
-						class="project-element-proposal"><i class="fa fa-pencil"></i>
-						<strong>19명 지원</strong></span>
-				</h5>
-				<p class="landing-project-item-body">라우터나 OBD 같은 디바이스를 만드는 회사 /
-					시작시점 미팅, 주 1 ~ 2회 유선 미팅 / 전반적인 기능 구현할 개발과 기능 명세들은 구현이..</p>
-				<p class="project-skill-list">
-					<span class="project-skill">HTML5</span> <span
-						class="project-skill">Photoshop</span>
-				</p>
-			</div>
+					<%
+					}
+				}
+				%>
 		</div>
 		</section>
 		<section class="landing-process">
@@ -329,7 +286,7 @@
         function count(){
 
             var $el = $("#status_project"); //[make sure this is a unique variable name]
-            $({someValue: 0}).animate({someValue: '2457'}, {
+            $({someValue: 0}).animate({someValue: '<%=projectnum%>'}, {
                 duration: 1200,
                 easing:'swing', // can be anything
                 step: function() { // called on every step
@@ -343,7 +300,7 @@
             });
 
 
-            $({someValue: 0}).animate({someValue: ('20467960000')}, {
+            $({someValue: 0}).animate({someValue: ('<%=projectbudget%>')}, {
                 duration: 1200,
                 easing:'swing', // can be anything
                 step: function() { // called on every step
@@ -357,7 +314,7 @@
             });
 
             var $el2 = $("#status_project_partners");
-            $({someValue: 0}).animate({someValue: '14733'}, {
+            $({someValue: 0}).animate({someValue: '<%=partnersnum%>'}, {
                 duration: 1200,
                 easing:'swing', // can be anything
                 step: function() { // called on every step

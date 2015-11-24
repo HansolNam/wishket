@@ -62,23 +62,61 @@ public class ProjectDao implements ProjectIDao {
 
 	public int countAll()
 	{
-		List<Integer> projectlist = jdbcTemplate.query("select count(*) from project",new RowMapper<Integer>() {
-	    	public Integer mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		int num = jdbcTemplate.queryForInt("select count(*) from project where status = '진행중' or status = '평가대기중' or status = '완료한프로젝트' or status = '지원자모집중'");
+		
+		return num;
+	}
+	
+	public int getAllBudget()
+	{
+		int num = jdbcTemplate.queryForInt("select sum(budget) from project where status = '진행중' or status = '평가대기중' or status = '완료한프로젝트' or status = '지원자모집중'");
+		
+		return num;
+	}
+	
+	public List<ProjectInfo> selectRecentProject(int num)
+	{
+		List<ProjectInfo> list =  jdbcTemplate.query("select * from project where status = '진행중' or status = '평가대기중' or status = '완료한프로젝트' or status = '지원자모집중' order by reg_date desc limit ?",
+				new Object[] { num }, 
+				new RowMapper<ProjectInfo>() {
+	    	public ProjectInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{
-	    		return new Integer(
-	    				resultSet.getInt("count"));
+	    		return new ProjectInfo(
+	    				resultSet.getInt("pk")
+	    				, resultSet.getInt("account_pk")
+	    				, resultSet.getString("categoryL")
+	    				, resultSet.getString("categoryM")
+	    				, resultSet.getInt("another")
+	    				, resultSet.getInt("applicantnum")
+	    				, resultSet.getString("name")
+	    				, resultSet.getInt("period")
+	    				, resultSet.getInt("budget")
+	    				, resultSet.getString("plan_status")
+	    				, resultSet.getString("description")
+	    				, resultSet.getString("technique")
+	    				, resultSet.getTimestamp("deadline")
+	    				, resultSet.getString("meeting_type")
+	    				, resultSet.getString("meeting_area")
+	    				, resultSet.getString("meeting_area_detail")
+	    				, resultSet.getTimestamp("start_date")
+	    				, resultSet.getInt("managing")
+	    				, resultSet.getString("partner_type")
+	    				, resultSet.getString("purpose")
+	    				, resultSet.getString("status")
+	    				, resultSet.getTimestamp("reg_date"));
 	    	}
 	    });
 		
-		if(projectlist == null)
-			return 0;
-		if(projectlist.size()>1 || projectlist.size() == 0)
+
+		if(list != null)
 		{
-			logger.info("프로젝트개수 리스트가 1 초과거나 0");
-			return 0;
+			if(list.size() == 0)
+				return null;
+			else
+				return list;
 		}
-		else
-			return projectlist.get(0);
+		else 
+			return null;
 	}
 	
 	public List<ProjectInfo> selectAll()
