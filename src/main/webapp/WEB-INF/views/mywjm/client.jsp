@@ -101,7 +101,7 @@
 								{
 						%>
 						<li>
-							<span class="label label-notice">새소식</span>
+							<%if(Time.remainDate(Time.getCurrentTimestamp(), notice.get(i).getReg_date())/(60*24) < 7) out.print("<span class='label label-notice'>새소식</span>");%>
 							<a href="/wjm/mywjm/notice/preview/<%=notice.get(i).getPk() %>" target="_blank"><%=notice.get(i).getName() %></a> 
 							<span class="notice-date"><%=Time.toString3(notice.get(i).getReg_date()) %></span>
 						</li>

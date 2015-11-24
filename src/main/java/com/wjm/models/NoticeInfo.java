@@ -6,13 +6,22 @@ public class NoticeInfo {
 	private int pk;
 	private String name;
 	private String content;
+	private int flag;
 	private Timestamp reg_date;
-	public NoticeInfo(int pk, String name, String content, Timestamp reg_date) {
+	
+	public NoticeInfo(int pk, String name, String content, int flag, Timestamp reg_date) {
 		super();
 		this.pk = pk;
 		this.name = name;
 		this.content = content;
+		this.flag = flag;
 		this.reg_date = reg_date;
+	}
+	public int getFlag() {
+		return flag;
+	}
+	public void setFlag(int flag) {
+		this.flag = flag;
 	}
 	public int getPk() {
 		return pk;

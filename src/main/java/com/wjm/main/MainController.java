@@ -53,7 +53,12 @@ public class MainController {
 				mv.setViewName("redirect:/mywjm/partners");
 				return mv;
 			}
+			else if(account.getAccount_type().equals("admin"))
+			{
+				mv.setViewName("redirect:/admin/home");
+				return mv;
 			}
+		}
 		
 		int projectnum = projectDao.countAll();
 		int projectbudget = projectDao.getAllBudget();

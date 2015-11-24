@@ -8,12 +8,14 @@
 	int pk = 0;
 	String content = "";
 	String name = "";
+	int flag_int = 0;
 	
 	if(notice != null)
 	{
 		pk = notice.getPk();
 		name = notice.getName();
 		content = notice.getContent();
+		flag_int = notice.getFlag();
 	}
 %>
 <!DOCTYPE html>
@@ -87,7 +89,13 @@
 				   	<input type="text" id="title" name="title" value="<%=name %>" maxlength="100" style="width: 100%;"/>
 				  	</div>
 				    <textarea name="editor" id="editor" rows="10" cols="100" style="width:766px; height:412px;"><%=content %></textarea>
-				    <input type="button" id="savebutton" value="서버전송" />
+				     <div class="checkbox" style="padding-top: 0px; min-height: 20px;">
+						<label class="">
+						<input id="flag" name="flag" type="checkbox" <%if(flag_int == 1) out.print("checked"); %>>
+						<span>비공개</span>
+						</label>
+					</div>
+				    <input type="button" id="savebutton" value="공지사항 수정하기" />
 				</form>
 				</div>
 			</div>

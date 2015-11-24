@@ -108,7 +108,7 @@
 </header>
 <% 
 		}
-		else
+		else if(account.getAccount_type().equals("partners"))
 		{
 %>
 <header class="header">
@@ -183,6 +183,73 @@
 	</section>
 </header>
 <%	
+		}
+
+		else if(account.getAccount_type().equals("admin"))
+		{
+%>
+<header class="header">
+	<section class="nav-main navbar" role="navigation"
+		style="background-color: #2d3a45;">
+		<div class="container"
+			style="background-color: #2d3a45; color: #fff;">
+			<div class="nav-inner"
+				style="background-color: #2d3a45; color: #fff;">
+				<div class="navbar-header active" style="color: #fff">
+					<a class="navbar-brand" href='/wjm/admin/home'>WJM</a>
+				</div>
+				<nav>
+					<ul class="nav navbar-nav nav-primary">
+						<li class="" style="color: #fff"><a href="/wjm/project/"
+							style="color: #fff">프로젝트 찾기</a></li>
+						<li class="" style="color: #fff"><a href="/wjm/partners/"
+							style="color: #fff">파트너스 목록</a></li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right nav-secondary">
+						<li class="help"><a
+							class="nav-help pull-left how_to_use_button"
+							href="/wjm/client-use/"> <span class="glyphicon glyphicon-search" aria-hidden="true"></span></a></li>
+						<li class="notification"><a
+							class="nav-notification how_to_use_button"
+							href="/wjm/accounts/notifications/"> <span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span></a></li>
+						<li class="dropdown"><a
+							class="dropdown-toggle how_to_use_button"
+							data-toggle="dropdown" href="#"><%= account.getId() %>님 <b
+								class="fa fa-caret-down"></b></a>
+						<ul class="dropdown-menu">
+								<li class="dropdown_li"><a class="dropdown_li"
+									href="/wjm/accounts/logout/" tabindex="-1">로그아웃</a></li>
+							</ul></li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</section>
+	<section class="nav-sub"
+		style="box-shadow: 1px 1px #bdc4cc; background-color: #dadee2;">
+		<div class="container">
+			<div class="nav-inner">
+				<nav>
+					<ul class="nav navbar-nav">
+						<li class=""><a href="/wjm/admin/notice/"
+							style="color: #333; font-weight: 500 !important;">공지사항</a></li>
+						<li class=""><a href="/wjm/client/manage/past/review-contract/"
+							style="color: #333; font-weight: 500 !important;">신원인증 신청</a></li>
+						<li class=""><a href="/wjm/client/manage/recruiting/"
+							style="color: #333; font-weight: 500 !important;">검수신청</a></li>
+						<li class=""><a href="/wjm/client/manage/contract-in-progress/"
+							style="color: #333; font-weight: 500 !important;">미팅신청</a></li>
+						<li class=""><a href="/wjm/client/manage/past/review-contract/"
+							style="color: #333; font-weight: 500 !important;">진행중인 프로젝트</a></li>
+						<li class=""><a href="/wjm/client/manage/past/review-contract/"
+							style="color: #333; font-weight: 500 !important;">결제 대기중인 프로젝트</a></li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</section>
+</header>
+<%
 		}
 	}
 %>

@@ -213,9 +213,38 @@ public class AccountController {
 	public String MainController_signup_verify_get(HttpServletRequest request,
  			HttpServletResponse response) {
 		logger.info("signup_verify get Page");
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+
+		if(account == null) { return "redirect:/accounts/login";}
 		
+		if(account.getAuthorized() == 0)
+		{
+			logger.info("이메일 미인증");
+			return "/accounts/signup_verify";
+		}
 		
-		return "/accounts/signup_verify";
+		//클라이언트의 경우
+		if(account.getAccount_type().equals("client"))
+		{
+			logger.info("클라이언트");
+			return "redirect:/mywjm/client";
+		}
+		//파트너스의 경우
+		else if(account.getAccount_type().equals("partners"))
+		{
+			logger.info("파트너스");
+			return "redirect:/mywjm/partners";
+		}
+		else if(account.getAccount_type().equals("admin"))
+		{
+			logger.info("관리자");
+			return "redirect:/admin/home";
+		}
+		//둘다 아닌 경우, 오류..
+		else
+		{
+			return "redirect:/index";
+		}
 	}
 	/**
 	 * 회원가입 인증 페이지
@@ -249,6 +278,11 @@ public class AccountController {
 			{
 				return_val = "redirect:/mywjm/partners";
 			}
+			else if(account.getAccount_type().equals("admin"))
+			{
+				logger.info("관리자");
+				return_val = "redirect:/admin/home";
+			}
 			//둘다 아닌 경우, 오류..
 			else
 			{
@@ -269,8 +303,37 @@ public class AccountController {
 	@RequestMapping(value = "/accounts/login", method = RequestMethod.GET)
 	public String MainController_login_get(HttpServletRequest request) {
 		logger.info("login Get Page");
-		
-		
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account != null){
+			if(account.getAuthorized() == 0)
+			{
+				logger.info("이메일 미인증");
+				return "redirect:/accounts/signup_verify";
+			}
+			//클라이언트의 경우
+			if(account.getAccount_type().equals("client"))
+			{
+				logger.info("클라이언트");
+				return "redirect:/mywjm/client";
+			}
+			//파트너스의 경우
+			else if(account.getAccount_type().equals("partners"))
+			{
+				logger.info("파트너스");
+				return "redirect:/mywjm/partners";
+			}
+			else if(account.getAccount_type().equals("admin"))
+			{
+				logger.info("관리자");
+				return "redirect:/admin/home";
+			}
+			//둘다 아닌 경우, 오류..
+			else
+			{
+				return "redirect:/index";
+			}
+		}
 		
 		return "/accounts/login";
 	}
@@ -316,26 +379,40 @@ public class AccountController {
 		//세션에 계정 정보 저장
 		request.getSession().setAttribute("account", account);
 		
-		if(account.getAuthorized() == 0)
-		{
-			return_val = "/accounts/signup_verify";
-		}
-		//클라이언트의 경우
-		if(account.getAccount_type().equals("client"))
-		{
-			return_val = "redirect:/mywjm/client";
-		}
-		//파트너스의 경우
-		else if(account.getAccount_type().equals("partners"))
-		{
-			return_val = "redirect:/mywjm/partners";
-		}
-		//둘다 아닌 경우, 오류..
-		else
-		{
-			return_val = "redirect:/index";
-		}
+		logger.info("id = "+account.getId());
 		
+		if(account != null){
+			if(account.getAuthorized() == 0)
+			{
+				logger.info("이메일 미인증");
+				return_val = "/accounts/signup_verify";
+				mv.setViewName(return_val);
+				return mv;
+
+			}
+			//클라이언트의 경우
+			if(account.getAccount_type().equals("client"))
+			{
+				logger.info("클라이언트");
+				return_val = "/mywjm/client";
+			}
+			//파트너스의 경우
+			else if(account.getAccount_type().equals("partners"))
+			{
+				logger.info("파트너스");
+				return_val = "/mywjm/partners";
+			}
+			else if(account.getAccount_type().equals("admin"))
+			{
+				logger.info("관리자");
+				return_val = "redirect:/admin/home";
+			}
+			//둘다 아닌 경우, 오류..
+			else
+			{
+				return_val =  "/index";
+			}
+		}
 		mv.setViewName(return_val);
 
 		return mv;

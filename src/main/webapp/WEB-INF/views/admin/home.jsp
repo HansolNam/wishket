@@ -60,7 +60,11 @@
 				</div>
 				<div class="content-inner">
 					<div class="notice">
-						<h4 class="notice-heading">공지사항<small class="small-text pull-right"><a href="/wjm/admin/notice/add">공지사항 등록하기</a></small></h4>
+						<h4 class="notice-heading">공지사항<small class="small-text pull-right">
+						<a class="more" href="/wjm/admin/notice/">더
+							자세히 보기
+						</a>
+						</small></h4>
 						<ul class="notice-list list-unstyled">
 							<%
 								if(noticelist != null && !noticelist.isEmpty())
@@ -69,7 +73,7 @@
 									{
 							%>
 							<li>
-								<span class="label label-notice">새소식</span>
+								<%if(Time.remainDate(Time.getCurrentTimestamp(), noticelist.get(i).getReg_date())/(60*24) < 7) out.print("<span class='label label-notice'>새소식</span>");%>
 								<a href="/wjm/admin/notice/preview/<%=noticelist.get(i).getPk() %>" target="_blank"><%=noticelist.get(i).getName() %></a> 
 								<a class='btn btn-sm btn-client' href='/wjm/admin/notice/edit/<%=noticelist.get(i).getPk()%>'>수정</a>
 								<span class="notice-date"><%=Time.toString3(noticelist.get(i).getReg_date()) %></span>
@@ -80,8 +84,56 @@
 							%>
 						</ul>
 					</div>
+					
 					<div class="mywishket-project">
 						<h4 class="mywishket-project-heading">관리 목록</h4>
+						
+						
+						<div class="contract-project">
+							<h5 class="contract-project-heading">
+								<a href="#">신원 인증 신청</a>
+							</h5>
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th>ID</th>
+										<th>타입</th>
+										<th>도구</th>
+									</tr>
+								</thead>
+								<tbody>
+								<%
+									if(authenticationlist != null)
+									{
+										for(int i=0;i<authenticationlist.size();i++)
+										{
+								%>
+								<tr>
+									<td><%=authenticationlist.get(i).getId() %></td>
+									<td><% if(authenticationlist.get(i).getAccount_type().equals("client")) out.print("클라이언트"); else out.print("파트너스"); %></td>
+									<td><a class='btn btn-sm btn-client' href='/wjm/admin/accounts/verify_identity/<%=authenticationlist.get(i).getPk() %>/'>자세히보기</a></td>
+								</tr>
+								<%
+										}
+									}
+									else
+									{
+								%>
+								<tr>
+								<td class='text-muted' colspan='3'>제출된 인증서류가 없습니다.</td></tr>
+								
+								<%
+									}
+								%>
+								</tbody>
+							</table>
+							
+							<p class="text-right">
+								<a class="more" href="/wjm/client/manage/project/submitted/">신원인증 신청 
+									자세히 보기
+								</a>
+							</p>
+						</div>
 						<div class="submitted-project">
 							<h5 class="submitted-project-heading">
 								<a href="#">검수 신청</a>
@@ -121,6 +173,12 @@
 								%>
 								</tbody>
 							</table>
+							
+							<p class="text-right">
+								<a class="more" href="/wjm/client/manage/project/submitted/">검수 신청 
+									자세히 보기
+								</a>
+							</p>
 						</div>
 						<div class="proposal-project">
 							<h5 class="proposal-project-heading">
@@ -165,6 +223,12 @@
 								</tbody>
 								
 							</table>
+							
+							<p class="text-right">
+								<a class="more" href="/wjm/client/manage/project/submitted/">미팅 신청 
+									자세히 보기
+								</a>
+							</p>
 						</div>
 						<div class="proposal-project">
 							<h5 class="proposal-project-heading">
@@ -225,46 +289,14 @@
 								</tbody>
 								
 							</table>
+							
+							<p class="text-right">
+								<a class="more" href="/wjm/client/manage/project/submitted/">진행중인 프로젝트 
+									자세히 보기
+								</a>
+							</p>
 						</div>
-						<div class="contract-project">
-							<h5 class="contract-project-heading">
-								<a href="#">신원 인증 신청</a>
-							</h5>
-							<table class="table table-hover">
-								<thead>
-									<tr>
-										<th>ID</th>
-										<th>타입</th>
-										<th>도구</th>
-									</tr>
-								</thead>
-								<tbody>
-								<%
-									if(authenticationlist != null)
-									{
-										for(int i=0;i<authenticationlist.size();i++)
-										{
-								%>
-								<tr>
-									<td><%=authenticationlist.get(i).getId() %></td>
-									<td><% if(authenticationlist.get(i).getAccount_type().equals("client")) out.print("클라이언트"); else out.print("파트너스"); %></td>
-									<td><a class='btn btn-sm btn-client' href='/wjm/admin/accounts/verify_identity/<%=authenticationlist.get(i).getPk() %>/'>자세히보기</a></td>
-								</tr>
-								<%
-										}
-									}
-									else
-									{
-								%>
-								<tr>
-								<td class='text-muted' colspan='3'>제출된 인증서류가 없습니다.</td></tr>
-								
-								<%
-									}
-								%>
-								</tbody>
-							</table>
-						</div>
+						
 					</div>
 				</div>
 			</div>

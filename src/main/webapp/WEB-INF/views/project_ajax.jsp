@@ -81,7 +81,7 @@
 		</div>
 		<div style="clear: both;"></div>
 		<div class="project-unit-additional-info">
-		<span class="project-category"> <%if(projectlist.get(i).getCategoryL().equals("design"))
+		<span class="project-category"> <%if(projectlist.get(i).getCategoryL().equals("디자인"))
  			{
  				out.println("디자인");
  			}

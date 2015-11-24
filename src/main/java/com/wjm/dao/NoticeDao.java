@@ -32,34 +32,35 @@ public class NoticeDao implements NoticeIDao {
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
 	}
 
-	public void create(String name, String content)
+	public void create(String name, String content, int flag)
 	{
-		jdbcTemplate.update("insert into notice (name, content) values (?,?)"
-				, new Object[] { name, content });
+		jdbcTemplate.update("insert into notice (name, content, flag) values (?,?,?)"
+				, new Object[] { name, content, flag });
 	}
 	
-	public void update(int pk, String name, String content)
+	public void update(int pk, String name, String content, int flag)
 	{
-		jdbcTemplate.update("update notice set name=?, content=? where pk=?"
-				, new Object[] {name, content, pk });
+		jdbcTemplate.update("update notice set name=?, content=?, flag=? where pk=?"
+				, new Object[] {name, content, flag, pk });
 	}
 	
 	public List<NoticeInfo> selectAll()
 	{
-		return jdbcTemplate.query("select * from notice",new RowMapper<NoticeInfo>() {
+		return jdbcTemplate.query("select * from notice order by reg_date desc",new RowMapper<NoticeInfo>() {
 	    	public NoticeInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{
 	    		return new NoticeInfo(
 	    				resultSet.getInt("pk")
 	    				, resultSet.getString("name")
 	    				, resultSet.getString("content")
+	    				, resultSet.getInt("flag")
 	    				, resultSet.getTimestamp("reg_date"));
 	    	}
 	    });
 	}
 	public List<NoticeInfo> select_limit(int max)
 	{
-		return jdbcTemplate.query("select * from notice Limit ?",
+		return jdbcTemplate.query("select * from notice where flag = 0 order by reg_date desc Limit ?",
 		    	new Object[] { max }, new RowMapper<NoticeInfo>() {
 	    	public NoticeInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{
@@ -67,6 +68,7 @@ public class NoticeDao implements NoticeIDao {
 	    				resultSet.getInt("pk")
 	    				, resultSet.getString("name")
 	    				, resultSet.getString("content")
+	    				, resultSet.getInt("flag")
 	    				, resultSet.getTimestamp("reg_date"));
 	    	}
 	    });
@@ -84,6 +86,7 @@ public class NoticeDao implements NoticeIDao {
 	    				resultSet.getInt("pk")
 	    				, resultSet.getString("name")
 	    				, resultSet.getString("content")
+	    				, resultSet.getInt("flag")
 	    				, resultSet.getTimestamp("reg_date"));
 	    	}
 	    });

@@ -72,7 +72,13 @@
 				   	<input type="text" id="title" name="title" value="" maxlength="100" style="width: 100%;"/>
 				  	</div>
 				    <textarea name="editor" id="editor" rows="10" cols="100" style="width:766px; height:412px;"></textarea>
-				    <input type="button" id="savebutton" value="서버전송" />
+				    <div class="checkbox" style="padding-top: 0px; min-height: 20px;">
+						<label class="">
+						<input id="flag" name="flag" type="checkbox">
+						<span>비공개</span>
+						</label>
+					</div>
+				    <input type="button" id="savebutton" value="공지사항 게시" />
 				</form>
 				</div>
 			</div>

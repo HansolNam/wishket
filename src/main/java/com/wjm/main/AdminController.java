@@ -484,6 +484,20 @@ public class AdminController {
 	
 	//////////////////////////////////////////공지사항///////////////////////////////////////////
 	/**
+	 * 관리자 공지사항 페이지
+	 */
+	@RequestMapping(value = "/admin/notice", method = RequestMethod.GET)
+	public ModelAndView AdminController_notice(HttpServletRequest request, ModelAndView mv) {
+		logger.info("/admin/notice Page");
+		
+		List<NoticeInfo> noticelist = noticeDao.selectAll();
+		mv.addObject("noticelist",noticelist);
+
+		mv.setViewName("/admin/notice");
+		return mv;
+	}
+	
+	/**
 	 * 공지사항 등록 페이지
 	 */
 	@RequestMapping(value = "/admin/notice/add", method = RequestMethod.GET)
@@ -493,6 +507,72 @@ public class AdminController {
 		mv.setViewName("/admin/notice/add");
 		return mv;
 	}
+	
+	/**
+	 * 공지사항 등록 처리 페이지
+	 */
+	@RequestMapping(value = "/admin/notice/add", method = RequestMethod.POST)
+	public ModelAndView AdminController_notice_edit_post(HttpServletRequest request, 
+			ModelAndView mv,
+			@RequestParam("editor") String editor,
+			@RequestParam("title") String title,
+			 @RequestParam(value = "flag", required = false, 
+             defaultValue = "off") String flag) {
+		
+		logger.info("/admin/notice/add post Page");
+		
+		logger.info("title = "+title);
+		logger.info("editor : "+editor);
+		logger.info("flag : "+flag);
+		
+		mv.addObject("title",title);
+		mv.addObject("editor",editor);
+		mv.addObject("flag",flag);
+		
+		mv.setViewName("/admin/notice/add");
+		
+		if(!Validator.hasValue(title))
+		{
+			mv.addObject("messages","제목을 입력하세요.");
+			return mv;
+		}
+		else if(!Validator.isValidLength(title,1,50))
+		{
+			mv.addObject("messages","제목은 최대 50자입니다.");
+			return mv;
+		}
+		else
+		{
+			logger.info("제목정상입력");
+		}
+		
+		if(!Validator.hasValue(editor))
+		{
+			mv.addObject("messages","내용을 입력하세요.");
+			return mv;
+		}
+		else if(!Validator.isValidLength(editor,1,5000))
+		{
+			mv.addObject("messages","내용은 최대 5000자입니다.");
+			return mv;
+		}
+		else
+		{
+			logger.info("내용정상입력");
+		}
+		
+		logger.info("디비 생성");
+		if(flag.equals("on"))
+			noticeDao.create(title, editor, 1);
+		else
+			noticeDao.create(title, editor, 0);
+		
+		mv = new ModelAndView();
+		mv.setViewName("redirect:/admin/home");
+		return mv;
+	}
+	
+	
 	/**
 	 * 공지사항 보기 페이지
 	 */
@@ -544,14 +624,21 @@ public class AdminController {
 	public ModelAndView AdminController_notice_edit_post(HttpServletRequest request, ModelAndView mv,
 			@RequestParam("editor") String editor,
 			@RequestParam("title") String title,
-			@PathVariable("pk") int pk) {
+			@PathVariable("pk") int pk,
+			 @RequestParam(value = "flag", required = false, 
+             defaultValue = "off") String flag) {
 		logger.info("/admin/notice/add post Page");
 		
 		logger.info("pk = "+pk);
 		logger.info("title = "+title);
 		logger.info("editor : "+editor);
+		logger.info("flag : "+flag);
 		
-		NoticeInfo notice = new NoticeInfo(pk, title, editor, null);
+		int flag_int = 0;
+		if(flag.equals("on"))
+			flag_int = 1;
+		
+		NoticeInfo notice = new NoticeInfo(pk, title, editor, flag_int, null);
 		mv.addObject("notice",notice);
 		mv.setViewName("/admin/notice/edit");
 		
@@ -585,7 +672,7 @@ public class AdminController {
 		}
 		
 		logger.info("디비 수정");
-		noticeDao.update(pk, title, editor);
+		noticeDao.update(pk, title, editor, flag_int);
 		
 		mv = new ModelAndView();
 		mv.setViewName("redirect:/admin/home");
