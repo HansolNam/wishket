@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <%@ page
-	import="com.wjm.models.AccountInfo, java.util.List"%>
+	import="com.wjm.main.function.Validator, com.wjm.models.AccountInfo, java.util.List"%>
 <%
 	List<AccountInfo> partnerslist = (List<AccountInfo>) request.getAttribute("partnerslist");
 	Integer partnersnum = (Integer) request.getAttribute("partnersnum");
@@ -88,10 +88,37 @@
 				<div class="content-inner">
 				<%
 				
-				for(int i=0;i<partnersnum;i++)
+				if(partnerslist != null)
+				{
+				for(int i=0;i<partnerslist.size();i++)
 				{
 					String profile_img = partnerslist.get(i).getAccountinfo().getProfile_img();
 					if(profile_img == null) profile_img = "default_avatar.png";
+					
+					String availability = partnerslist.get(i).getPartnersinfo().getAvailability();
+					if(!Validator.hasValue(availability)) availability = "활동 가능성 미입력";
+					
+					String job = partnerslist.get(i).getPartnersinfo().getJob();
+					if(!Validator.hasValue(job)) job = "직종 미입력";
+					
+					String form = partnerslist.get(i).getAccountinfo().getForm();
+					if(!Validator.hasValue(form)) form = "사업자 형태 미입력";
+					else
+					{
+						if(form.equals("individual")) form = "개인";
+						else if(form.equals("team")) form = "팀";
+						else if(form.equals("individual_business")) form = "개인 사업자";
+						else if(form.equals("corporate_business")) form = "팀 사업자";
+					}
+					
+					String introduction = partnerslist.get(i).getAccountinfo().getIntroduction();
+					if(!Validator.hasValue(introduction)) introduction = "자기소개 미입력";
+					else 
+						{
+						introduction = introduction.replaceAll("\r\n", "<br/>");
+						if(introduction.length() > 100)
+							introduction = introduction.substring(0, 99)+"...";
+						}
 				%>
 					<section class="partners-unit">
 						<a class="grid-block" href="/wjm/partners/p/<%=partnerslist.get(i).getId() %>/"></a>
@@ -104,17 +131,14 @@
 								<div class="partners-unit-heading">
 									<h4 class="partners-username"><%=partnerslist.get(i).getId() %></h4>
 									<span
-										class="label label-sm label-partners-availability possible"><%=partnerslist.get(i).getPartnersinfo().getAvailability() %></span>
+										class="label label-sm label-partners-availability possible"><%=availability %></span>
 								</div>
 								<section class="partners-business-info">
-									<span class="job"><%=partnerslist.get(i).getPartnersinfo().getJob() %></span> <span
-										class="form-of-business"><%=partnerslist.get(i).getAccountinfo().getForm() %></span>
+									<span class="job"><%=job %></span> <span
+										class="form-of-business"><%=form %></span>
 								</section>
 								<section class="partners-desc">
-									<p><%=partnerslist.get(i).getAccountinfo().getIntroduction() %></p>
-									<!-- <p>국내 외 다양항 프로잭트를 성공적으로 수행 해 온 저희는 새로움을 모색하여 도약의 발판을 마련하고자
-										하는 기업에게 있어서 가장 적절한 전략적 파트너 입니다. 우리는 폭넓은 전문성을 바탕으로 고객의 당면한 문제를
-										정확하게 파악할 수 있으며, ...</p> -->
+									<p><%=introduction %></p>
 								</section>
 								<section class="partners-skill-list">
 									
@@ -206,6 +230,15 @@
 					
 				
 				<%
+				}
+				}
+				else
+				{
+				%>
+					<section class="no-result">
+						<p>검색 결과가 없습니다.</p>
+					</section>
+					<%
 				}
 				%>
 					<div class="pagination-wrapper" style="clear: both">

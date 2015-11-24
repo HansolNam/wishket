@@ -86,7 +86,7 @@ public class MainController {
 			return mv;
 		}
 		
-		Integer partnersnum = accountDao.getPartnersCount();
+		Integer partnersnum = accountDao.getPartnersCount(q,job);
 		
 		logger.info("partners 명수 : "+partnersnum);
 		List<AccountInfo> partnerslist = accountDao.selectPartners(page,q,job);

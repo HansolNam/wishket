@@ -75,11 +75,73 @@ public class AccountDao implements AccountIDao {
 		    });
 	}
 
-	public int getPartnersCount()
+	public int getPartnersCount(String q, String job)
 	{
-		int count = jdbcTemplate.queryForInt("select count(*) from account where account_type = 'partners'");
+		String sql = "";
+		String job_sql = "";
+		String q_sql = "";
 		
-		return count;
+		int num;
+		
+		//직종 & 검색어
+		if(Validator.hasValue(job) && Validator.hasValue(q))
+		{
+			sql = "select count(*) from account, partners_info, technique where account.account_type = 'partners'";
+			if(job.equals("개발자"))
+				{
+				job_sql = "(account.pk = partners_info.account_pk and partners_info.job = '개발자')";
+				sql += " and " + job_sql;
+				}
+			else if(job.equals("디자이너"))
+			{
+				job_sql = "(account.pk = partners_info.account_pk and partners_info.job = '디자이너')";
+				sql += " and " + job_sql;
+			}
+			
+			q_sql = "((account.pk = technique.account_pk and technique.name LIKE ?) or account.id LIKE ?)";
+			
+			logger.info("명령어 : "+sql+" and "+q_sql);
+			
+			num = jdbcTemplate.queryForInt(sql + " and " + q_sql
+					, new Object[] { "%"+q+"%", "%"+q+"%" });
+		}
+		else if(Validator.hasValue(q))
+		{
+			sql = "select count(*) from account, technique where account.account_type = 'partners'";
+			q_sql = "((account.pk = technique.account_pk and technique.name LIKE ?) or account.id LIKE ?)";
+			
+			logger.info("명령어 : "+sql+" and "+q_sql);
+			
+			num = jdbcTemplate.queryForInt(sql + " and " + q_sql
+					, new Object[] { "%"+q+"%", "%"+q+"%" });
+		}
+		else if(Validator.hasValue(job))
+		{
+			sql = "select count(*) from account, partners_info where account.account_type = 'partners'";
+			if(job.equals("개발자"))
+				{
+				job_sql = "(account.pk = partners_info.account_pk and partners_info.job = '개발자')";
+				sql += " and " + job_sql;
+				}
+			else if(job.equals("디자이너"))
+			{
+				job_sql = "(account.pk = partners_info.account_pk and partners_info.job = '디자이너')";
+				sql += " and " + job_sql;
+			}
+			logger.info("명령어 : "+sql);
+
+			num = jdbcTemplate.queryForInt(sql);
+		}
+		else
+		{
+			sql = "select count(*) from account where account.account_type = 'partners'";
+			
+			logger.info("명령어 : "+sql);
+
+			num = jdbcTemplate.queryForInt(sql);
+		}
+		
+		return num;
 	}
 	
 	public List<AccountInfo> selectPartners(String page, String q, String job)
@@ -105,12 +167,12 @@ public class AccountDao implements AccountIDao {
 				sql += " and " + job_sql;
 			}
 			
-			q_sql = "((account.pk = technique.account_pk and technique.name LIKE '%?%') or account.id LIKE '%?%')";
+			q_sql = "((account.pk = technique.account_pk and technique.name LIKE ?) or account.id LIKE ?)";
 			
 			logger.info("명령어 : "+sql+" and "+q_sql);
 			
 			accountlist = jdbcTemplate.query(sql + " and " + q_sql
-					, new Object[] { q, q }
+					, new Object[] { "%"+q+"%", "%"+q+"%" }
 					,new RowMapper<AccountInfo>() {
 			    	public AccountInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 			    	{
@@ -139,12 +201,12 @@ public class AccountDao implements AccountIDao {
 		else if(Validator.hasValue(q))
 		{
 			sql = "select account.* from account, technique where account.account_type = 'partners'";
-			q_sql = "((account.pk = technique.account_pk and technique.name LIKE '%?%') or account.id LIKE '%?%')";
+			q_sql = "((account.pk = technique.account_pk and technique.name LIKE ?) or account.id LIKE ?)";
 			
 			logger.info("명령어 : "+sql+" and "+q_sql);
 			
 			accountlist = jdbcTemplate.query(sql + " and " + q_sql
-					, new Object[] { q, q }
+					, new Object[] { "%"+q+"%", "%"+q+"%" }
 					,new RowMapper<AccountInfo>() {
 			    	public AccountInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 			    	{
@@ -247,12 +309,21 @@ public class AccountDao implements AccountIDao {
 		if(accountlist != null)
 		{
 			if(accountlist.isEmpty())
+			{
+				logger.info("파트너스 목록 0개");
 				return null;
+			}
 			else
+			{
+				logger.info("파트너스 목록 "+accountlist.size()+"개");
 				return accountlist;
+			}
 		}
 		else
+		{
+			logger.info("파트너스 목록 0개");
 			return null;
+		}
 	}
 	
 	public int select_account(String account_type)
