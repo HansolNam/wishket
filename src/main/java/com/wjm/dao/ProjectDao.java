@@ -152,7 +152,7 @@ public class ProjectDao implements ProjectIDao {
 	}
 	public List<ProjectInfo> select(int account_pk)
 	{
-		return jdbcTemplate.query("select * from project where account_pk = ?",
+		return jdbcTemplate.query("select * from project where account_pk = ? order by reg_date desc",
 		    	new Object[] { account_pk }, new RowMapper<ProjectInfo>() {
 	    	public ProjectInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{
@@ -320,7 +320,7 @@ public class ProjectDao implements ProjectIDao {
 	
 	public List<ProjectInfo> selectStatus(int account_pk,String status)
 	{
-		return jdbcTemplate.query("select * from project where account_pk = ? and status = ?",
+		return jdbcTemplate.query("select * from project where account_pk = ? and status = ? order by reg_date desc",
 		    	new Object[] { account_pk,status }, new RowMapper<ProjectInfo>() {
 	    	public ProjectInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{

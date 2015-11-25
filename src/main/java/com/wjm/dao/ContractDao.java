@@ -148,7 +148,7 @@ public class ContractDao implements ContractIDao {
 
 	public List<ContractInfo> selectProgressClient(int client_pk, String project_status)
 	{
-		List<ContractInfo> list = jdbcTemplate.query("select contract.* from contract,project where contract.client_pk = ? and contract.project_pk = project.pk and project.status=?",
+		List<ContractInfo> list = jdbcTemplate.query("select contract.* from contract,project where contract.client_pk = ? and contract.project_pk = project.pk and project.status=? order by reg_date desc",
 		    	new Object[] { client_pk, project_status }, new RowMapper<ContractInfo>() {
 		    	public ContractInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{
@@ -180,7 +180,7 @@ public class ContractDao implements ContractIDao {
 
 	public List<ContractInfo> selectReviewClient(int client_pk, String project_status)
 	{
-		List<ContractInfo> list = jdbcTemplate.query("select contract.* from contract,project where contract.client_pk = ? and contract.project_pk = project.pk and project.status=?",
+		List<ContractInfo> list = jdbcTemplate.query("select contract.* from contract,project where contract.client_pk = ? and contract.project_pk = project.pk and project.status=? order by reg_date desc",
 		    	new Object[] { client_pk, project_status }, new RowMapper<ContractInfo>() {
 		    	public ContractInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{
@@ -226,7 +226,7 @@ public class ContractDao implements ContractIDao {
 
 	public List<ContractInfo> selectCompletedClient(int client_pk, String project_status)
 	{
-		List<ContractInfo> list = jdbcTemplate.query("select contract.* from contract,project where contract.client_pk = ? and contract.project_pk = project.pk and project.status=?",
+		List<ContractInfo> list = jdbcTemplate.query("select contract.* from contract,project where contract.client_pk = ? and contract.project_pk = project.pk and project.status=? order by reg_date desc",
 		    	new Object[] { client_pk, project_status }, new RowMapper<ContractInfo>() {
 		    	public ContractInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{
@@ -269,7 +269,7 @@ public class ContractDao implements ContractIDao {
 	}	
 	public List<ContractInfo> selectProgressPartners(int partners_pk, String project_status)
 	{
-		List<ContractInfo> list = jdbcTemplate.query("select contract.* from contract,project where contract.partners_pk = ? and contract.project_pk = project.pk and project.status=?",
+		List<ContractInfo> list = jdbcTemplate.query("select contract.* from contract,project where contract.partners_pk = ? and contract.project_pk = project.pk and project.status=? order by reg_date desc",
 		    	new Object[] { partners_pk, project_status }, new RowMapper<ContractInfo>() {
 		    	public ContractInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{
@@ -300,7 +300,7 @@ public class ContractDao implements ContractIDao {
 
 	public List<ContractInfo> selectReviewPartners(int partners_pk, String project_status)
 	{
-		List<ContractInfo> list = jdbcTemplate.query("select contract.* from contract,project where contract.partners_pk = ? and contract.project_pk = project.pk and project.status=?",
+		List<ContractInfo> list = jdbcTemplate.query("select contract.* from contract,project where contract.partners_pk = ? and contract.project_pk = project.pk and project.status=? order by reg_date desc",
 		    	new Object[] { partners_pk, project_status }, new RowMapper<ContractInfo>() {
 		    	public ContractInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{
@@ -346,7 +346,7 @@ public class ContractDao implements ContractIDao {
 
 	public List<ContractInfo> selectCompletedPartners(int partners_pk, String project_status)
 	{
-		List<ContractInfo> list = jdbcTemplate.query("select contract.* from contract,project where contract.partners_pk = ? and contract.project_pk = project.pk and project.status=?",
+		List<ContractInfo> list = jdbcTemplate.query("select contract.* from contract,project where contract.partners_pk = ? and contract.project_pk = project.pk and project.status=? order by reg_date desc",
 		    	new Object[] { partners_pk, project_status }, new RowMapper<ContractInfo>() {
 		    	public ContractInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{
