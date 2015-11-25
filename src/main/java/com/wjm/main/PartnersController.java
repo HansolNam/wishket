@@ -223,8 +223,6 @@ public class PartnersController {
 				
 			}
 			
-			
-		        
 			logger.info("hashmap size : "+ map.size());
 			
 			//해쉬맵을 리스트로 변환하여 value 정렬

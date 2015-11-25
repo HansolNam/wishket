@@ -112,7 +112,7 @@ public class AssessmentDao implements AssessmentIDao {
 
 	public AssessmentInfo select_assessed(int project_pk, int assessed_pk)
 	{
-		List<AssessmentInfo> list = jdbcTemplate.query("select * from assessment where project_pk = ? and assessed_pk = ?",
+		List<AssessmentInfo> list = jdbcTemplate.query("select * from assessment where project_pk = ? and assessed_pk = ? order by reg_date desc",
 		    	new Object[] { project_pk, assessed_pk }, new RowMapper<AssessmentInfo>() {
 	    	public AssessmentInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{
@@ -154,7 +154,7 @@ public class AssessmentDao implements AssessmentIDao {
 	
 	public List<AssessmentInfo> select_assessed(int assessed_pk)
 	{
-		List<AssessmentInfo> list = jdbcTemplate.query("select * from assessment where assessed_pk = ?",
+		List<AssessmentInfo> list = jdbcTemplate.query("select * from assessment where assessed_pk = ? order by reg_date desc",
 		    	new Object[] { assessed_pk }, new RowMapper<AssessmentInfo>() {
 	    	public AssessmentInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{

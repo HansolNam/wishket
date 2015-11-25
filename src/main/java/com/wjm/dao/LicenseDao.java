@@ -57,7 +57,7 @@ public class LicenseDao implements LicenseIDao {
 	}
 	public List<LicenseInfo> select(int account_pk)
 	{
-		return jdbcTemplate.query("select * from license where account_pk = ?",
+		return jdbcTemplate.query("select * from license where account_pk = ? order by publication_date desc",
 		    	new Object[] { account_pk }, new RowMapper<LicenseInfo>() {
 	    	public LicenseInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{

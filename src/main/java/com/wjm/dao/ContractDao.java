@@ -641,7 +641,7 @@ public class ContractDao implements ContractIDao {
 	 */
 	public List<ContractInfo> getPartnersContract(int partners_pk, String status)
 	{
-		List<ContractInfo> list = jdbcTemplate.query("select * from contract where partners_pk = ? and status = ?",
+		List<ContractInfo> list = jdbcTemplate.query("select * from contract where partners_pk = ? and status = ? order by reg_date desc",
 		    	new Object[] { partners_pk, status }, new RowMapper<ContractInfo>() {
 		    	public ContractInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{

@@ -82,7 +82,7 @@ public class PortfolioDao implements PortfolioIDao {
 	}
 	public List<PortfolioInfo> select(int account_pk)
 	{
-		List<PortfolioInfo> list = jdbcTemplate.query("select * from portfolio where account_pk = ?",
+		List<PortfolioInfo> list = jdbcTemplate.query("select * from portfolio where account_pk = ? order by reg_date desc",
 		    	new Object[] { account_pk }, new RowMapper<PortfolioInfo>() {
 	    	public PortfolioInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{

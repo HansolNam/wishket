@@ -56,7 +56,7 @@ public class CareerDao implements CareerIDao {
 	}
 	public List<CareerInfo> select(int account_pk)
 	{
-		return jdbcTemplate.query("select * from career where account_pk = ?",
+		return jdbcTemplate.query("select * from career where account_pk = ? order by start_date desc",
 		    	new Object[] { account_pk }, new RowMapper<CareerInfo>() {
 	    	public CareerInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{

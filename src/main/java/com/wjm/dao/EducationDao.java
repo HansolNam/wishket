@@ -59,7 +59,7 @@ public class EducationDao implements EducationIDao {
 	}
 	public List<EducationInfo> select(int account_pk)
 	{
-		return jdbcTemplate.query("select * from education where account_pk = ?",
+		return jdbcTemplate.query("select * from education where account_pk = ? order by start_date desc",
 		    	new Object[] { account_pk }, new RowMapper<EducationInfo>() {
 	    	public EducationInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{
