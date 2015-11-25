@@ -175,7 +175,7 @@
 							</table>
 							
 							<p class="text-right">
-								<a class="more" href="/wjm/admin/submitted/">검수 신청 
+								<a class="more" href="/wjm/client/manage/project/submitted/">검수 신청 
 									자세히 보기
 								</a>
 							</p>
@@ -225,7 +225,7 @@
 							</table>
 							
 							<p class="text-right">
-								<a class="more" href="/wjm/admin/meeting/">미팅 신청 
+								<a class="more" href="/wjm/client/manage/project/submitted/">미팅 신청 
 									자세히 보기
 								</a>
 							</p>
@@ -291,7 +291,7 @@
 							</table>
 							
 							<p class="text-right">
-								<a class="more" href="/wjm/admin/progress/">진행중인 프로젝트 
+								<a class="more" href="/wjm/client/manage/project/submitted/">진행중인 프로젝트 
 									자세히 보기
 								</a>
 							</p>
@@ -305,5 +305,50 @@
 	</div>
 	<jsp:include page="../footer.jsp" flush="false" />
 	
+	<script>
+
+$( document ).ready(function($) {
+    var p5TotalSubNavigationFlag = 0;
+
+
+	if ( $( window ).width() >= 1200 ) {
+		$( '.p5-side-nav-deactive' ).css( 'display', 'none' );
+	} else  {
+		$( '.p5-side-nav-active' ).css( 'display', 'none' );
+		$( '.p5-side-nav-deactive' ).css( 'display', 'block');
+	}
+
+	$('.content-inner').on('click', '.p5-side-nav-active-btn', function () {
+		$('.p5-side-nav-active').css( 'display', 'none' );
+		$('.p5-side-nav-deactive').css('display','block');
+	});
+
+	$('.content-inner').on('click', '.p5-side-nav-deactive-btn', function () {
+		$('.p5-side-nav-active').css( 'display', 'block' );
+		$('.p5-side-nav-deactive').css('display','none');
+	});
+
+
+    $( window ).scroll ( function () {
+		if ( $(window).scrollTop() > 87 && p5TotalSubNavigationFlag === 0) {
+			setTimeout(function() {
+				$('#p5-total-sub-navigation-wrapper').removeClass('hide fadeOut');
+				$('#p5-total-sub-navigation-wrapper').addClass('fadeInDown');
+			}, 200 );
+			flag = 1;
+
+
+		} else if ( $(window).scrollTop() <= 87 ){
+			p5TotalSubNavigationFlag = 0;
+			$('#p5-total-sub-navigation-wrapper').removeClass('fadeInDown');
+			$('#p5-total-sub-navigation-wrapper').addClass('fadeOut');
+			setTimeout(function() {
+				$('#p5-total-sub-navigation-wrapper').addClass('hide');
+			}, 200 );
+		}
+	});
+});
+
+</script>
 </body>
 </html>

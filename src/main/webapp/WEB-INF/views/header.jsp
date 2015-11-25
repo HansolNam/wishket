@@ -233,15 +233,15 @@
 					<ul class="nav navbar-nav">
 						<li class=""><a href="/wjm/admin/notice/"
 							style="color: #333; font-weight: 500 !important;">공지사항</a></li>
-						<li class=""><a href="/wjm/client/manage/past/review-contract/"
+						<li class=""><a href="/wjm/admin/identity/"
 							style="color: #333; font-weight: 500 !important;">신원인증 신청</a></li>
-						<li class=""><a href="/wjm/client/manage/recruiting/"
+						<li class=""><a href="/wjm/admin/submitted/"
 							style="color: #333; font-weight: 500 !important;">검수신청</a></li>
-						<li class=""><a href="/wjm/client/manage/contract-in-progress/"
+						<li class=""><a href="/wjm/admin/meeting/"
 							style="color: #333; font-weight: 500 !important;">미팅신청</a></li>
-						<li class=""><a href="/wjm/client/manage/past/review-contract/"
+						<li class=""><a href="/wjm/admin/progress/"
 							style="color: #333; font-weight: 500 !important;">진행중인 프로젝트</a></li>
-						<li class=""><a href="/wjm/client/manage/past/review-contract/"
+						<li class=""><a href="/wjm/admin/wait/"
 							style="color: #333; font-weight: 500 !important;">결제 대기중인 프로젝트</a></li>
 					</ul>
 				</nav>

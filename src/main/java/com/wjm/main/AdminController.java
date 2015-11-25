@@ -106,16 +106,20 @@ public class AdminController {
 	public ModelAndView AdminController_home(HttpServletRequest request, ModelAndView mv) {
 		logger.info("/admin/home Page");
 		
-		List<ProjectInfo> projectlist = projectDao.selectStatusAdmin("검수중");
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
+		
+		List<ProjectInfo> projectlist = projectDao.selectStatusAdminLimit("검수중", 5);
 		mv.addObject("submitted",projectlist);
 		
-		List<AccountInfo> authenticationlist = accountInformationDao.selecIdentity_authenticationt("검수중");
+		List<AccountInfo> authenticationlist = accountInformationDao.selecIdentity_authenticationtLimit("검수중",5);
 		mv.addObject("authenticationlist",authenticationlist);
 		
-		List<ContractInfo> contractlist = contractDao.selectStatusAdmin("계약진행중");
+		List<ContractInfo> contractlist = contractDao.selectStatusAdminLimit("계약진행중", 5);
 		mv.addObject("contractlist",contractlist);
 
-		List<ContractInfo> progresslist = contractDao.selectProgressProjectAdmin();
+		List<ContractInfo> progresslist = contractDao.selectProgressProjectAdminLimit(5);
 		mv.addObject("progresslist",progresslist);
 		
 		List<NoticeInfo> noticelist = noticeDao.select_limit(3);
@@ -126,7 +130,23 @@ public class AdminController {
 	}
 	
 	////////////////////////////////////////프로젝트 검수//////////////////////////////////////////
-	
+	/**
+	 * 관리자 검수중 페이지
+	 */
+	@RequestMapping(value = "/admin/submitted", method = RequestMethod.GET)
+	public ModelAndView AdminController_submitted(HttpServletRequest request, ModelAndView mv) {
+		logger.info("/admin/submitted Page");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
+		
+		List<ProjectInfo> projectlist = projectDao.selectStatusAdmin("검수중");
+		mv.addObject("submitted",projectlist);
+
+		mv.setViewName("/admin/submitted");
+		return mv;
+	}
 	/**
 	 * 프로젝트 미리보기
 	 */
@@ -136,6 +156,10 @@ public class AdminController {
 			@PathVariable("name") String name, 
 			ModelAndView mv) {
 		logger.info("project preview Page");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
 		
 		logger.info("name = "+name);
 		logger.info("pk = "+pk);
@@ -166,6 +190,10 @@ public class AdminController {
 			@PathVariable("name") String name, 
 			ModelAndView mv) {
 		logger.info("/admin/project/{name}/{pk}/exam/success Page");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
 		
 		logger.info("name = "+name);
 		logger.info("pk = "+pk);
@@ -196,6 +224,10 @@ public class AdminController {
 			@PathVariable("name") String name, 
 			ModelAndView mv) {
 		logger.info("/admin/project/{name}/{pk}/exam/fail Page");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
 		
 		logger.info("name = "+name);
 		logger.info("pk = "+pk);
@@ -217,7 +249,23 @@ public class AdminController {
 	}
 	
 	////////////////////////////////////사용자 계정 정보////////////////////////////////////////
-	
+	/**
+	 * 관리자 신원인증 페이지
+	 */
+	@RequestMapping(value = "/admin/identity", method = RequestMethod.GET)
+	public ModelAndView AdminController_identity(HttpServletRequest request, ModelAndView mv) {
+		logger.info("/admin/identity Page");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
+		
+		List<AccountInfo> authenticationlist = accountInformationDao.selecIdentity_authenticationt("검수중");
+		mv.addObject("authenticationlist",authenticationlist);
+		
+		mv.setViewName("/admin/identity");
+		return mv;
+	}
 	/**
 	 * 계정 정보 페이지
 	 */
@@ -226,6 +274,10 @@ public class AdminController {
 			ModelAndView mv,
 			@PathVariable("pk") int pk) {
 		logger.info("/admin/accounts/profile Page");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
 		
 		AccountInfo this_account = accountDao.select(pk);
 		
@@ -252,6 +304,10 @@ public class AdminController {
 			, ModelAndView mv,
 			@PathVariable("pk") int pk ) {
 		logger.info("/admin/accounts/verify_identity Page");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
 		
 		AccountInfo this_account = accountDao.select(pk);
 		
@@ -275,8 +331,14 @@ public class AdminController {
 			@PathVariable("pk") int pk,  
 			ModelAndView mv) {
 		logger.info("/admin/verify_identity/success/{pk} Page");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
+		
+		
 		//알림
-		AccountInfo account = accountInformationDao.selecIdentity_authenticationt(pk, "검수중");
+		account = accountInformationDao.selecIdentity_authenticationt(pk, "검수중");
 		
 		if(account != null)
 		{
@@ -296,8 +358,14 @@ public class AdminController {
 			@PathVariable("pk") int pk, 
 			ModelAndView mv) {
 		logger.info("/admin/verify_identity/fail/{pk} Page");
+		
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
+		
 		//알림
-		AccountInfo account = accountInformationDao.selecIdentity_authenticationt(pk, "검수중");
+		account = accountInformationDao.selecIdentity_authenticationt(pk, "검수중");
 		
 		if(account != null)
 		{
@@ -316,6 +384,10 @@ public class AdminController {
 			@PathVariable("pk") int pk) {
 		logger.info("/admin/accounts/bank_account Page");
 
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
+		
 		AccountInfo this_account = accountDao.select(pk);
 		
 		if(this_account == null)
@@ -335,7 +407,40 @@ public class AdminController {
 	
 	
 	/////////////////////////////////////////////계약/////////////////////////////////////////////
-	
+	/**
+	 * 진행중인 프로젝트 페이지
+	 */
+	@RequestMapping(value = "/admin/progress", method = RequestMethod.GET)
+	public ModelAndView AdminController_progress(HttpServletRequest request, ModelAndView mv) {
+		logger.info("/admin/progress Page");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
+		
+		List<ContractInfo> progresslist = contractDao.selectProgressProjectAdmin();
+		mv.addObject("progresslist",progresslist);
+		
+		mv.setViewName("/admin/progress");
+		return mv;
+	}
+	/**
+	 * 관리자 미팅 페이지
+	 */
+	@RequestMapping(value = "/admin/meeting", method = RequestMethod.GET)
+	public ModelAndView AdminController_meeting(HttpServletRequest request, ModelAndView mv) {
+		logger.info("/admin/meeting Page");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
+		
+		List<ContractInfo> contractlist = contractDao.selectStatusAdmin("계약진행중");
+		mv.addObject("contractlist",contractlist);
+
+		mv.setViewName("/admin/meeting");
+		return mv;
+	}
 	/**
 	 * 미팅 후 계약 성공
 	 */
@@ -346,6 +451,10 @@ public class AdminController {
 			@PathVariable("partners_pk") int partners_pk, 
 			ModelAndView mv) {
 		logger.info("/admin/contract/success/{project_pk}/{client_pk}/{partners_pk}");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
 		
 		logger.info("project_pk = "+project_pk);
 		logger.info("client_pk = "+client_pk);
@@ -379,6 +488,10 @@ public class AdminController {
 			 @RequestParam("budget") int budget,
 			 @RequestParam("term") int term) {
 		logger.info("/admin/contract/success/{project_pk}/{client_pk}/{partners_pk} post page");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
 		
 		logger.info("project_pk = "+project_pk);
 		logger.info("client_pk = "+client_pk);
@@ -445,6 +558,10 @@ public class AdminController {
 			ModelAndView mv) {
 		
 		logger.info("/admin/project/complete/success/{project_pk}/{client_pk}/{partners_pk} post page");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
 		
 		logger.info("project_pk = "+project_pk);
 		logger.info("client_pk = "+client_pk);
@@ -489,6 +606,10 @@ public class AdminController {
 	@RequestMapping(value = "/admin/notice", method = RequestMethod.GET)
 	public ModelAndView AdminController_notice(HttpServletRequest request, ModelAndView mv) {
 		logger.info("/admin/notice Page");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
 		
 		List<NoticeInfo> noticelist = noticeDao.selectAll();
 		mv.addObject("noticelist",noticelist);
@@ -503,6 +624,10 @@ public class AdminController {
 	@RequestMapping(value = "/admin/notice/add", method = RequestMethod.GET)
 	public ModelAndView AdminController_notice_add(HttpServletRequest request, ModelAndView mv) {
 		logger.info("/admin/notice/add Page");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
 		
 		mv.setViewName("/admin/notice/add");
 		return mv;
@@ -520,6 +645,10 @@ public class AdminController {
              defaultValue = "off") String flag) {
 		
 		logger.info("/admin/notice/add post Page");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
 		
 		logger.info("title = "+title);
 		logger.info("editor : "+editor);
@@ -580,6 +709,10 @@ public class AdminController {
 	public ModelAndView AdminController_notice_preview(HttpServletRequest request, ModelAndView mv,
 			@PathVariable("pk") int pk) {
 		logger.info("/admin/notice/preview/{pk} Page");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
 		
 		NoticeInfo notice = noticeDao.select(pk);
 		
@@ -602,6 +735,10 @@ public class AdminController {
 	public ModelAndView AdminController_notice_edit(HttpServletRequest request, ModelAndView mv,
 			@PathVariable("pk") int pk) {
 		logger.info("/admin/notice/preview/{pk} Page");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
 		
 		NoticeInfo notice = noticeDao.select(pk);
 		
@@ -628,6 +765,10 @@ public class AdminController {
 			 @RequestParam(value = "flag", required = false, 
              defaultValue = "off") String flag) {
 		logger.info("/admin/notice/add post Page");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
 		
 		logger.info("pk = "+pk);
 		logger.info("title = "+title);

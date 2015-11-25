@@ -80,9 +80,41 @@ public class ContractDao implements ContractIDao {
 		    });
 	}
 
+	public List<ContractInfo> selectStatusAdminLimit(String status, int num)
+	{
+		List<ContractInfo> list = jdbcTemplate.query("select * from contract where status = ? order by reg_date desc limit ?",
+		    	new Object[] { status, num }, new RowMapper<ContractInfo>() {
+		    	public ContractInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		ContractInfo contract = new ContractInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getInt("project_pk")
+		    				, resultSet.getInt("client_pk")
+		    				, resultSet.getInt("partners_pk")
+		    				, resultSet.getString("name")
+		    				, resultSet.getString("partners_id")
+		    				, resultSet.getString("client_id")
+		    				, resultSet.getInt("budget")
+		    				, resultSet.getInt("term")
+		    				, resultSet.getString("status")
+		    				, resultSet.getTimestamp("reg_date"));
+		    		
+		    		contract.setClient(accountDao.select(contract.getClient_pk()));
+		    		contract.setPartners(accountDao.select(contract.getPartners_pk()));
+		    		contract.setProject(projectDao.select_project(contract.getProject_pk()));
+		    		
+		    		return contract;
+		    	}
+		    });
+		
+		if(list!=null && list.isEmpty())
+			return null;
+		else
+			return list;
+	}	
 	public List<ContractInfo> selectStatusAdmin(String status)
 	{
-		List<ContractInfo> list = jdbcTemplate.query("select * from contract where status = ?",
+		List<ContractInfo> list = jdbcTemplate.query("select * from contract where status = ? order by reg_date desc",
 		    	new Object[] { status }, new RowMapper<ContractInfo>() {
 		    	public ContractInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{
@@ -542,7 +574,7 @@ public class ContractDao implements ContractIDao {
 	 */
 	public List<ContractInfo> selectProgressProjectAdmin()
 	{
-		List<ContractInfo> list = jdbcTemplate.query("select contract.* from contract,project where contract.project_pk = project.pk and project.status='진행중'", new RowMapper<ContractInfo>() {
+		List<ContractInfo> list = jdbcTemplate.query("select contract.* from contract,project where contract.project_pk = project.pk and project.status='진행중'  order by reg_date desc", new RowMapper<ContractInfo>() {
 		    	public ContractInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{
 		    		return new ContractInfo(
@@ -565,7 +597,33 @@ public class ContractDao implements ContractIDao {
 		else
 			return list;
 	}
-	
+	public List<ContractInfo> selectProgressProjectAdminLimit(int num)
+	{
+		List<ContractInfo> list = jdbcTemplate.query("select contract.* from contract,project where contract.project_pk = project.pk and project.status='진행중'  order by reg_date desc limit ?"
+				, new Object[] { num }
+				, new RowMapper<ContractInfo>() {
+		    	public ContractInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new ContractInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getInt("project_pk")
+		    				, resultSet.getInt("client_pk")
+		    				, resultSet.getInt("partners_pk")
+		    				, resultSet.getString("name")
+		    				, resultSet.getString("partners_id")
+		    				, resultSet.getString("client_id")
+		    				, resultSet.getInt("budget")
+		    				, resultSet.getInt("term")
+		    				, resultSet.getString("status")
+		    				, resultSet.getTimestamp("reg_date"));
+		    	}
+		    });
+
+		if(list!=null && list.isEmpty())
+			return null;
+		else
+			return list;
+	}
 
 	/*
 	 * 특정 파트너스의 계약 개수

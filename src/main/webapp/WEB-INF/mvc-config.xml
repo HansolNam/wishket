@@ -159,6 +159,7 @@
            <mapping path="/project/about"/>
            <mapping path="/project/faq"/>
            <mapping path="/project/preview"/>
+           <mapping path="/admin/**" />
                 <beans:bean class="com.wjm.interceptor.Interceptor"/>
         </interceptor>
         

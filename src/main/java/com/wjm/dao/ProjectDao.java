@@ -227,9 +227,55 @@ public class ProjectDao implements ProjectIDao {
 			return null;
 	}
 	
+
+	public List<ProjectInfo> selectStatusAdminLimit(String status, int num)
+	{
+		List<ProjectInfo> projectlist = jdbcTemplate.query("select * from project where status = ? order by reg_date desc limit ?",
+		    	new Object[] { status, num }, new RowMapper<ProjectInfo>() {
+	    	public ProjectInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+	    	{
+	    		ProjectInfo project =  new ProjectInfo(
+	    				resultSet.getInt("pk")
+	    				, resultSet.getInt("account_pk")
+	    				, resultSet.getString("categoryL")
+	    				, resultSet.getString("categoryM")
+	    				, resultSet.getInt("another")
+	    				, resultSet.getInt("applicantnum")
+	    				, resultSet.getString("name")
+	    				, resultSet.getInt("period")
+	    				, resultSet.getInt("budget")
+	    				, resultSet.getString("plan_status")
+	    				, resultSet.getString("description")
+	    				, resultSet.getString("technique")
+	    				, resultSet.getTimestamp("deadline")
+	    				, resultSet.getString("meeting_type")
+	    				, resultSet.getString("meeting_area")
+	    				, resultSet.getString("meeting_area_detail")
+	    				, resultSet.getTimestamp("start_date")
+	    				, resultSet.getInt("managing")
+	    				, resultSet.getString("partner_type")
+	    				, resultSet.getString("purpose")
+	    				, resultSet.getString("status")
+	    				, resultSet.getTimestamp("reg_date"));
+	    		
+	    		project.setAccount(accountDao.select(project.getAccount_pk()) );
+	    		
+	    		return project;
+	    	}
+	    });
+		
+		if(projectlist == null)
+			return null;
+		if(projectlist != null && projectlist.size() == 0)
+			return null;
+		else
+			return projectlist;
+		
+	}
+	
 	public List<ProjectInfo> selectStatusAdmin(String status)
 	{
-		List<ProjectInfo> projectlist = jdbcTemplate.query("select * from project where status = ?",
+		List<ProjectInfo> projectlist = jdbcTemplate.query("select * from project where status = ? order by reg_date desc",
 		    	new Object[] { status }, new RowMapper<ProjectInfo>() {
 	    	public ProjectInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{

@@ -4,13 +4,9 @@
 <%@ page import="com.wjm.models.NoticeInfo"%>
 
 <%
-	List<NoticeInfo> noticelist = (List<NoticeInfo>)request.getAttribute("noticelist");
-	int noticenum = 0;
-	
-	if(noticelist == null)
-		noticenum = 0;
-	else
-		noticenum = noticelist.size();
+	AccountInfo account = (AccountInfo)session.getAttribute("account");
+	List<ContractInfo> progresslist = (List<ContractInfo>)request.getAttribute("progresslist");
+
 	%>
 <!DOCTYPE html>
 <html class="no-js modern" lang="ko">
@@ -55,42 +51,77 @@
 			<div class="content">
 				<div class="content-header">
 					<h3 class="header-text">
-						공지사항 
+						진행중인 프로젝트 페이지 
 					</h3>
 				</div>
 				<div class="content-inner">
-					<div class="notice">
-						<h4 class="notice-heading"><small class="small-text pull-right">
-						<a href="/wjm/admin/notice/add">공지사항 등록하기</a>
-						</small></h4>
-						<br>
-						<ul class="notice-list list-unstyled">
-							<%
-								if(noticenum > 0)
-								{
-									for(int i=0;i<noticenum;i++)
+						<div class="proposal-project">
+							<h5 class="proposal-project-heading">
+								<a href="#">진행중인 프로젝트</a>
+							</h5>
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th>프로젝트 제목</th>
+										<th>클라이언트</th>
+										<th>파트너스</th>
+										<th>남은기간</th>
+										<th>도구1</th>
+										<th>도구2</th>
+									</tr>
+								</thead>
+								<tbody>
+								<%
+									if(progresslist == null)
 									{
-							%>
-							<li>
-								<%if(Time.remainDate(Time.getCurrentTimestamp(), noticelist.get(i).getReg_date())/(60*24) < 7) out.print("<span class='label label-notice'>새소식</span>");%>
-								<a href="/wjm/admin/notice/preview/<%=noticelist.get(i).getPk() %>" target="_blank"><%=noticelist.get(i).getName() %> <%if(noticelist.get(i).getFlag() == 1) out.print(" (비공개)"); %></a> 
-								<a class='btn btn-sm btn-client' href='/wjm/admin/notice/edit/<%=noticelist.get(i).getPk()%>'>수정</a>
-								<span class="notice-date"><%=Time.toString3(noticelist.get(i).getReg_date()) %></span>
-							</li>
-							<%
+								%>
+								<tr>
+								<td class='text-muted' colspan='6'>진행중인 프로젝트 리스트가 없습니다.</td>
+								</tr>
+								<%
 									}
-								}
-								else
-								{
-							%>
-							<li>
-								<p>등록된 공지사항이 없습니다.</p>
-							</li>
+									else
+									{
+										for(int i=0;i<progresslist.size();i++)
+										{
+								%>
+								<tr>
+									<td><a href="/wjm/project/<%=progresslist.get(i).getName() %>/<%=progresslist.get(i).getProject_pk() %>"><%=progresslist.get(i).getName() %></a></td>
+									<td><a href="/wjm/admin/accounts/profile/<%=progresslist.get(i).getClient_pk() %>"><%=progresslist.get(i).getClient_id() %></a></td>
+									<td><a href="/wjm/admin/accounts/profile/<%=progresslist.get(i).getPartners_pk() %>"><%=progresslist.get(i).getPartners_id() %></a></td>
+									<td><%
+									Timestamp now = Time.getCurrentTimestamp();
+									now = Time.dateToTimestamp(Time.TimestampToString(now));
+									Timestamp reg_date = progresslist.get(i).getReg_date();
+									reg_date = Time.dateToTimestamp(Time.TimestampToString(reg_date));
+									
+									int remain = Time.remainDate(now, reg_date)/(60*24);
+									
+									if(progresslist.get(i).getTerm() - remain>=0)
+										out.print(progresslist.get(i).getTerm() - remain+" 일 전");
+									else
+										out.print(progresslist.get(i).getTerm() - remain*(-1)+"일 초과");
+									
+									%>/<%=progresslist.get(i).getTerm() %>일</td>
+									<td><a class='btn btn-sm btn-client' href='/wjm/admin/project/complete/success/<%=progresslist.get(i).getProject_pk()%>/<%=progresslist.get(i).getClient_pk()%>/<%=progresslist.get(i).getPartners_pk()%>'>완료</a></td>
+									<td><a class='btn btn-sm btn-client' href='/wjm/admin/project/complete/fail/<%=progresslist.get(i).getProject_pk()%>/<%=progresslist.get(i).getClient_pk()%>/<%=progresslist.get(i).getPartners_pk()%>'>취소</a></td>
+									
+								</tr>
+								<%
+										}
+									}
+								%>
+								</tbody>
+								
+							</table>
 							
-							<%
-								}
-							%>
-						</ul>
+							<p class="text-right">
+								<a class="more" href="/wjm/client/manage/project/submitted/">진행중인 프로젝트 
+									자세히 보기
+								</a>
+							</p>
+						</div>
+						
 					</div>
 				</div>
 			</div>
@@ -98,6 +129,5 @@
 		<div id="push"></div>
 	</div>
 	<jsp:include page="../footer.jsp" flush="false" />
-
 </body>
 </html>

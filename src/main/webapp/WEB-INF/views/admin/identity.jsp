@@ -4,13 +4,9 @@
 <%@ page import="com.wjm.models.NoticeInfo"%>
 
 <%
-	List<NoticeInfo> noticelist = (List<NoticeInfo>)request.getAttribute("noticelist");
-	int noticenum = 0;
-	
-	if(noticelist == null)
-		noticenum = 0;
-	else
-		noticenum = noticelist.size();
+	AccountInfo account = (AccountInfo)session.getAttribute("account");
+	List<AccountInfo> authenticationlist = (List<AccountInfo>)request.getAttribute("authenticationlist");
+
 	%>
 <!DOCTYPE html>
 <html class="no-js modern" lang="ko">
@@ -55,42 +51,50 @@
 			<div class="content">
 				<div class="content-header">
 					<h3 class="header-text">
-						공지사항 
+						신원 인증 신청 페이지
 					</h3>
 				</div>
 				<div class="content-inner">
-					<div class="notice">
-						<h4 class="notice-heading"><small class="small-text pull-right">
-						<a href="/wjm/admin/notice/add">공지사항 등록하기</a>
-						</small></h4>
-						<br>
-						<ul class="notice-list list-unstyled">
-							<%
-								if(noticenum > 0)
-								{
-									for(int i=0;i<noticenum;i++)
+					<div class="mywishket-project">
+						<div class="contract-project">
+							<h5 class="contract-project-heading">
+								<a href="#">신원 인증 신청</a>
+							</h5>
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th>ID</th>
+										<th>타입</th>
+										<th>도구</th>
+									</tr>
+								</thead>
+								<tbody>
+								<%
+									if(authenticationlist != null)
 									{
-							%>
-							<li>
-								<%if(Time.remainDate(Time.getCurrentTimestamp(), noticelist.get(i).getReg_date())/(60*24) < 7) out.print("<span class='label label-notice'>새소식</span>");%>
-								<a href="/wjm/admin/notice/preview/<%=noticelist.get(i).getPk() %>" target="_blank"><%=noticelist.get(i).getName() %> <%if(noticelist.get(i).getFlag() == 1) out.print(" (비공개)"); %></a> 
-								<a class='btn btn-sm btn-client' href='/wjm/admin/notice/edit/<%=noticelist.get(i).getPk()%>'>수정</a>
-								<span class="notice-date"><%=Time.toString3(noticelist.get(i).getReg_date()) %></span>
-							</li>
-							<%
+										for(int i=0;i<authenticationlist.size();i++)
+										{
+								%>
+								<tr>
+									<td><%=authenticationlist.get(i).getId() %></td>
+									<td><% if(authenticationlist.get(i).getAccount_type().equals("client")) out.print("클라이언트"); else out.print("파트너스"); %></td>
+									<td><a class='btn btn-sm btn-client' href='/wjm/admin/accounts/verify_identity/<%=authenticationlist.get(i).getPk() %>/'>자세히보기</a></td>
+								</tr>
+								<%
+										}
 									}
-								}
-								else
-								{
-							%>
-							<li>
-								<p>등록된 공지사항이 없습니다.</p>
-							</li>
-							
-							<%
-								}
-							%>
-						</ul>
+									else
+									{
+								%>
+								<tr>
+								<td class='text-muted' colspan='3'>제출된 인증서류가 없습니다.</td></tr>
+								
+								<%
+									}
+								%>
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -98,6 +102,6 @@
 		<div id="push"></div>
 	</div>
 	<jsp:include page="../footer.jsp" flush="false" />
-
+	
 </body>
 </html>

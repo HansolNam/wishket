@@ -379,9 +379,32 @@ public class AccountInformationDao implements AccountInformationIDao {
 		jdbcTemplate.update("update account_information set identity_authentication=? where account_pk=?"
 				, new Object[] { identity_authentication, account_pk });
 	}
+	public List<AccountInfo> selecIdentity_authenticationtLimit(String status, int num)
+	{
+		List<AccountInfo> list = jdbcTemplate.query("select account.* from account_information,account where identity_authentication = ? and account_information.account_pk = account.pk order by reg_date desc limit ?",
+		    	new Object[] { status, num }, new RowMapper<AccountInfo>() {
+		    	public AccountInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new AccountInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getString("email")
+		    				, resultSet.getString("id")
+		    				, resultSet.getString("password")
+		    				, resultSet.getString("account_type")
+		    				, resultSet.getInt("authorized")
+		    				, resultSet.getString("authorization_key")
+		    				, resultSet.getTimestamp("reg_date"));
+		    	}
+		    });
+		
+		if(list != null && list.size() == 0)
+			return null;
+		else
+			return list;
+	}
 	public List<AccountInfo> selecIdentity_authenticationt(String status)
 	{
-		List<AccountInfo> list = jdbcTemplate.query("select account.* from account_information,account where identity_authentication = ? and account_information.account_pk = account.pk;",
+		List<AccountInfo> list = jdbcTemplate.query("select account.* from account_information,account where identity_authentication = ? and account_information.account_pk = account.pk order by reg_date desc;",
 		    	new Object[] { status }, new RowMapper<AccountInfo>() {
 		    	public AccountInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{
