@@ -129,67 +129,13 @@
 							%>
 							</div>
 						</div>
-						<div class="data-expand-btn" data-status="close"
-							onclick="toggle_data_size(this)">
-							자세히보기 <b class="fa fa-caret-down"></b>
-						</div>
 						<p class="text-danger" style="margin-bottom: 0;">
 							<span class="label label-danger">주의</span> 위 내용은 클라이언트의 제시 기간 및
 							금액으로 충분히 변동 가능합니다.
 						</p>
 					</div>
 				</div>
-				<div class="sidebar" style="float: right !important;">
-					<div class="inner">
-						<div class="proposal-guide-box">
-							<div class="guide-box">
-								<div class="number-box">
-									<img src="${pageContext.request.contextPath}/resources/static/img/proposal/guide_number_one.png" />
-								</div>
-								<div class="text-box">
-									<p class="guide-title">프로필</p>
-									<p class="guide-body">
-										<strong>프로필과 포트폴리오</strong>가 매력적일수록 프로젝트를 진행할 기회가 많아집니다.
-									</p>
-								</div>
-							</div>
-							<div class="guide-box">
-								<div class="number-box">
-									<img src="${pageContext.request.contextPath}/resources/static/img/proposal/guide_number_two.png" />
-								</div>
-								<div class="text-box">
-									<p class="guide-title">지원내용</p>
-									<p class="guide-body">
-										<strong>프로젝트 내용을 분석</strong>하여,<br />어떤 방식으로 프로젝트를 진행할지 구체적으로
-										설명해주세요.
-									</p>
-								</div>
-							</div>
-							<div class="guide-box">
-								<div class="number-box">
-									<img src="${pageContext.request.contextPath}/resources/static/img/proposal/guide_number_three.png" />
-								</div>
-								<div class="text-box">
-									<p class="guide-title">금액과 기간</p>
-									<p class="guide-body">
-										<strong>금액과 기간은 고정되어 있지 않습니다.</strong> 제공할 수 있는 서비스에 대한 합리적인
-										견적을 산정해주세요.
-									</p>
-								</div>
-							</div>
-							<div class="guide-box guide-alert-box"
-								style="margin-bottom: 10px;">
-								<div class="number-box">
-									<img src="${pageContext.request.contextPath}/resources/static/img/proposal/guide_alert.png" />
-								</div>
-								<div class="text-box">
-									<p class="guide-body">프로젝트와 무관한 포트폴리오의 단순 나열이나, 과도한 홍보글은
-										지원서의 신뢰를 떨어뜨릴 수 있습니다.</p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+				
 				<div class="content-inner" style="margin-top: 5px;">
 					<div class="proposal-form">
 						<div class="proposal-form-title"
@@ -206,9 +152,11 @@
 									금액</label>
 								<div class="control-wrapper">
 									<div class="input-group">
-										<span class="input-group-addon"><i class="fa fa-krw"></i></span><input
+										<input
 											class="form-control" id="estimated_budget"
 											name="estimated_budget" required="required" type="text" />
+											<span
+											class="input-group-addon">원</span>
 									</div>
 									<span class="help-block">희망 금액을 원 단위로 입력해 주세요. (예
 										100,000,000)<br />

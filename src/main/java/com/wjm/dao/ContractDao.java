@@ -690,6 +690,12 @@ public class ContractDao implements ContractIDao {
 				, new Object[] { budget, term, status, project_pk,client_pk,partners_pk });
 	}
 
+	public void updateStatusFail(int project_pk,int client_pk, int partners_pk, String status)
+	{
+		jdbcTemplate.update("update contract set status=?, reg_date=CURRENT_TIMESTAMP where project_pk=? and client_pk=? and partners_pk = ?"
+				, new Object[] { status, project_pk,client_pk,partners_pk });
+	}
+	
 	public void updateRemianContractFail(int project_pk)
 	{
 		jdbcTemplate.update("update contract set status='취소' where project_pk=? and status = '계약진행중'"

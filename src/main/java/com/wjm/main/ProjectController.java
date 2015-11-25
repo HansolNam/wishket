@@ -25,19 +25,22 @@ import com.wjm.dao.AccountDao;
 import com.wjm.dao.AccountInformationDao;
 import com.wjm.dao.ApplicantDao;
 import com.wjm.dao.AreaDetailDao;
+import com.wjm.dao.AssessmentDao;
 import com.wjm.dao.CommentDao;
+import com.wjm.dao.ContractDao;
 import com.wjm.dao.NotificationDao;
 import com.wjm.dao.Partners_infoDao;
 import com.wjm.dao.PortfolioDao;
 import com.wjm.dao.ProjectDao;
 import com.wjm.dao.TechniqueDao;
-import com.wjm.main.function.Mail;
 import com.wjm.main.function.Time;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
 import com.wjm.models.AccountInformationInfo;
 import com.wjm.models.ApplicantInfo;
+import com.wjm.models.AssessmentInfo;
 import com.wjm.models.CommentInfo;
+import com.wjm.models.ContractInfo;
 import com.wjm.models.PortfolioInfo;
 import com.wjm.models.ProjectInfo;
 
@@ -79,8 +82,13 @@ public class ProjectController {
 	private TechniqueDao techniqueDao;
 	@Autowired
 	private NotificationDao notificationDao;
-	
 
+	@Autowired
+	private ContractDao contractDao;
+
+	@Autowired
+	private AssessmentDao assessmentDao;
+	
 	@Autowired
 	private JavaMailSender mailSender;
 	//메일 전송
@@ -666,17 +674,36 @@ public class ProjectController {
 				method_pre_interview, address_sido, sigungu, Time.dateToTimestamp(date_expected_kick_off), has_manage_experience,
 				prefer_partner, submit_purpose, status);
 		if(status.equals("임시저장"))
-		{
+		{		
+			logger.info("임시저장");
+
 			jObject.put("messages", "success");
 			jObject.put("path", "redirect:/wjm/client/manage/project/saved/");
 		}
 		else if(status.equals("검수중")){
-			////////////////////알림 & 히스토리 업데이트
-
+			//notification update
+			//관리자
+			//notificationDao.create(contract.getPartners_pk(),contract.getClient_id()+"님의 "
+			//+project.getName()+" 계약이 성사되지 못했습니다. 다른 프로젝트에 지원해주세요.");
+			//클라이언트
+			notificationDao.create(account.getPk(), title+" 프로젝트가 검수중입니다. 검수는 최대 24시간이 소요됩니다.");
+			
+			//클라이언트
+			String result = sendMail("admin@wjm.com","gksthf1611@gmail.com",title+" 프로젝트가 검수중입니다. 검수는 최대 24시간이 소요됩니다."
+					, "외주몬 알림 메일입니다.");
+			logger.info("클라이언트 메일 : "+result);
+			//파트너스
+			//result = sendMail("admin@wjm.com","gksthf1611@gmail.com",contract.getClient_id()+"님의 "
+			//		+project.getName()+" 계약이 성사되지 못했습니다. 다른 프로젝트에 지원해주세요.", "외주몬 알림 메일입니다.");
+			//logger.info("파트너스 메일 : "+result);
+			
+			logger.info("검수중");
+			
 			jObject.put("messages", "success");
 			jObject.put("path", "redirect:/wjm/project/add/thank-you");
 		}
 		
+		logger.info(jObject.toString());
 		return jObject.toString();
 	}
 	/**
@@ -1318,6 +1345,31 @@ public class ProjectController {
 		
 		List<CommentInfo> comment = commentDao.select(Integer.parseInt(pk));
 		mv.addObject("comment",comment);
+		
+		//완료한 프로젝트의 총 누적금액
+		List<ContractInfo> contractlist = contractDao.selectCompletedClient(project.getAccount_pk(),"완료한프로젝트");
+		int total_budget = 0;
+		
+		if(contractlist != null)
+		{
+			for(int i=0;i<contractlist.size();i++)
+			{
+				logger.info("budget"+i+" : "+contractlist.get(i).getBudget());
+				total_budget += contractlist.get(i).getBudget();
+			}
+		}
+		mv.addObject("total",total_budget);
+		
+
+		//평가받은 리스트
+		List<AssessmentInfo> assessmentlist = assessmentDao.select_assessed(project.getAccount_pk());
+		mv.addObject("assessmentlist",assessmentlist);
+		
+		if(assessmentlist != null)
+		{
+			for(int i=0;i<assessmentlist.size();i++)
+				logger.info(i + " : "+assessmentlist.get(i).getProject().getName());
+		}
 		
 		mv.setViewName("/project/about");
 		return mv;

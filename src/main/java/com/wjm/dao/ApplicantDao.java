@@ -93,6 +93,43 @@ public class ApplicantDao implements ApplicantIDao {
 	    	}
 	    });
 	}
+	
+	public ApplicantInfo select(int pk)
+	{
+		List<ApplicantInfo> list =  jdbcTemplate.query("select * from applicant where pk = ?",
+		    	new Object[] { pk },new RowMapper<ApplicantInfo>() {
+	    	public ApplicantInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+	    	{
+	    		return new ApplicantInfo(
+	    				resultSet.getInt("pk")
+	    				, resultSet.getInt("project_pk")
+	    				, resultSet.getInt("account_pk")
+	    				, resultSet.getInt("application_cost")
+	    				, resultSet.getInt("application_period")
+	    				, resultSet.getString("application_content")
+	    				, resultSet.getInt("has_portfolio")
+	    				, resultSet.getInt("portfolio_pk1")
+	    				, resultSet.getInt("portfolio_pk2")
+	    				, resultSet.getInt("portfolio_pk3")
+	    				, resultSet.getString("portfolio_description")
+	    				, resultSet.getString("status")
+	    				, resultSet.getTimestamp("reg_date")
+	    				, resultSet.getString("name")
+	    				);
+	    	}
+	    });
+		
+		if(list == null)
+			return null;
+		else
+		{
+			if(list.isEmpty())
+				return null;
+			else
+				return list.get(0);
+		}
+	}
+	
 	public List<ApplicantInfo> select_project(int project_pk)
 	{
 		List<ApplicantInfo> list =  jdbcTemplate.query("select * from applicant where project_pk = ?",
@@ -479,10 +516,10 @@ public class ApplicantDao implements ApplicantIDao {
 	}
 	
 
-	public void updateStatusSuccess(int account_pk, String status)
+	public void updateStatus(int project_pk, int account_pk, String status)
 	{
-		jdbcTemplate.update("update applicant set status=? where account_pk=?"
-				, new Object[] { status, account_pk });
+		jdbcTemplate.update("update applicant set status=? where project_pk = ? and account_pk=?"
+				, new Object[] { status, project_pk, account_pk });
 	}
 
 	public void updateRemianApplicantFail(int project_pk)

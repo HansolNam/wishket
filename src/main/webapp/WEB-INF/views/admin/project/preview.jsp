@@ -19,7 +19,7 @@
 <meta charset="utf-8" />
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
-<title>외주몬(WJM) · 프로젝트 - ㅁㅁㅁ</title>
+<title>외주몬(WJM) · 프로젝트 - <%=project.getName() %></title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
 <link
 	href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css"
@@ -172,7 +172,7 @@
 						<hr>
 						<a
 							class="btn btn-large btn-project-application btn-default btn-block"
-							href="/wjm/admin/project/<%=project.getName()%>/<%=project.getPk()%>/edit/" style="margin-bottom: 0;"><span
+							href="/wjm/admin/project/edit/<%=project.getPk()%>/" style="margin-bottom: 0;"><span
 							id="interest_action_text">프로젝트 수정하기</span></a>
 					</div>
 				</div>

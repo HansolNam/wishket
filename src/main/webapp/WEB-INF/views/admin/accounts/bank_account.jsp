@@ -70,7 +70,7 @@
 			<div class="page-inner">
 				<div class="sidebar">
 					<div class="user-name-tag">
-						<h3 class="user-name-tag-heading">클라이언트</h3>
+						<h3 class="user-name-tag-heading"><%=this_account.getAccount_type() %></h3>
 						<div class="user-name-tag-body">
 							<img alt="<%=id %> 사진" class="img-circle user-img"
 								src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=img_path %>" />

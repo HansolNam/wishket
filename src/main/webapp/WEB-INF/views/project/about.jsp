@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page
-	import="com.wjm.main.function.Validator,java.util.List, com.wjm.models.ProjectInfo, com.wjm.models.AccountInfo, com.wjm.models.CommentInfo, com.wjm.models.AccountInformationInfo, com.wjm.main.function.Time, java.sql.Timestamp"%>
+	import="com.wjm.models.AssessmentInfo, com.wjm.main.function.Validator,java.util.List, com.wjm.models.ProjectInfo, com.wjm.models.AccountInfo, com.wjm.models.CommentInfo, com.wjm.models.AccountInformationInfo, com.wjm.main.function.Time, java.sql.Timestamp"%>
 <%
 	AccountInfo account = (AccountInfo) session.getAttribute("account");
 	String profile = (String)request.getAttribute("profile");
@@ -49,6 +49,43 @@
 				finish_cnt++;
 			}
 		}
+	}
+	
+	//총 누적금액
+	Integer total_budget = (Integer)request.getAttribute("total");
+	if(total_budget == null) total_budget = 0;
+
+	//평가받은 리스트
+	List<AssessmentInfo> assessmentlist = (List<AssessmentInfo>)request.getAttribute("assessmentlist");
+	int assessmentnum;
+	int total = 0, professionalism = 0, satisfaction = 0, communication = 0, schedule_observance = 0,activeness = 0;
+	double total_avg = 0.0;
+	if(assessmentlist == null) assessmentnum = 0;
+	else
+	{
+		assessmentnum = assessmentlist.size();
+		
+		for (int i = 0; i < assessmentnum; i++) {
+			int avg = (assessmentlist.get(i).getProfessionalism() + assessmentlist.get(i).getSatisfaction()
+					+ assessmentlist.get(i).getCommunication() + assessmentlist.get(i).getSchedule_observance()
+					+ assessmentlist.get(i).getActiveness()) / 5;
+			
+			professionalism += assessmentlist.get(i).getProfessionalism();
+			satisfaction += assessmentlist.get(i).getSatisfaction();
+			communication += assessmentlist.get(i).getCommunication();
+			schedule_observance += assessmentlist.get(i).getSchedule_observance();
+			activeness += assessmentlist.get(i).getActiveness();
+		}
+			
+		if (assessmentnum != 0) {
+				total = professionalism + satisfaction + communication + schedule_observance + activeness;
+				total_avg = (double) total / (double) (assessmentnum * 5);
+				professionalism /= assessmentnum;
+				satisfaction /= assessmentnum;
+				communication /= assessmentnum;
+				schedule_observance /= assessmentnum;
+				activeness /= assessmentnum;
+			}
 	}
 %>
 <!DOCTYPE html>
@@ -329,6 +366,13 @@
 						{
 							contract_per = 100.0*(double)contract_num/(double)register_num;
 						}
+						
+						total_avg = (double) total / (double) (assessmentnum * 5);
+						professionalism /= assessmentnum;
+						satisfaction /= assessmentnum;
+						communication /= assessmentnum;
+						schedule_observance /= assessmentnum;
+						activeness /= assessmentnum;
 					%>
 					<div class="client-info-box">
 						<h3 class="client-name-tag-heading">클라이언트</h3>
@@ -340,8 +384,8 @@
 								onclick="expand_rating(this);">
 								<div class="rating star-md star-md-0"></div>
 								<div class="rating-body">
-									<span class="averageScore">0.0</span> <span
-										class="averageScore-body">/ 평가 0개</span>
+									<span class="averageScore"><%=Math.round(total_avg * 10) / 10.0%></span> <span
+										class="averageScore-body">/ 평가 <%=assessmentnum %>개</span>
 									<div class="rating-expand-arrow">
 										<span class="fa fa-sort-asc" id="rating-arrow"></span>
 									</div>
@@ -352,27 +396,27 @@
 								<div class="rating-row">
 									<span class="expanded-rating-title">전문성</span>
 									<div class="rating star-sm star-sm-0"></div>
-									<span class="expanded-rating-score">0.0</span>
+									<span class="expanded-rating-score"><%=professionalism %></span>
 								</div>
 								<div class="rating-row">
 									<span class="expanded-rating-title">일정 준수</span>
 									<div class="rating star-sm star-sm-0"></div>
-									<span class="expanded-rating-score">0.0</span>
+									<span class="expanded-rating-score"><%=schedule_observance %></span>
 								</div>
 								<div class="rating-row">
 									<span class="expanded-rating-title">사전 준비</span>
 									<div class="rating star-sm star-sm-0"></div>
-									<span class="expanded-rating-score">0.0</span>
+									<span class="expanded-rating-score"><%=satisfaction %></span>
 								</div>
 								<div class="rating-row">
 									<span class="expanded-rating-title">적극성</span>
 									<div class="rating star-sm star-sm-0"></div>
-									<span class="expanded-rating-score">0.0</span>
+									<span class="expanded-rating-score"><%=activeness %></span>
 								</div>
 								<div class="rating-row">
 									<span class="expanded-rating-title">의사소통</span>
 									<div class="rating star-sm star-sm-0"></div>
-									<span class="expanded-rating-score">0.0</span>
+									<span class="expanded-rating-score"><%=communication %></span>
 								</div>
 							</div>
 							<div class="client-history-body">
@@ -404,7 +448,7 @@
 							<div class="client-history-budget-body">
 								<div class="budget-body-title">누적 완료 금액</div>
 								<div class="pull-right budget-body-data">
-									0 <span class="budget-body-clo">원</span>
+									<%=total_budget %> <span class="budget-body-clo">원</span>
 								</div>
 							</div>
 						</div>

@@ -394,13 +394,13 @@ public class AccountController {
 			if(account.getAccount_type().equals("client"))
 			{
 				logger.info("클라이언트");
-				return_val = "/mywjm/client";
+				return_val = "redirect:/mywjm/client";
 			}
 			//파트너스의 경우
 			else if(account.getAccount_type().equals("partners"))
 			{
 				logger.info("파트너스");
-				return_val = "/mywjm/partners";
+				return_val = "redirect:/mywjm/partners";
 			}
 			else if(account.getAccount_type().equals("admin"))
 			{

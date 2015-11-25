@@ -1,11 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="java.sql.Timestamp,com.wjm.models.ContractInfo, com.wjm.models.AccountInfo, com.wjm.models.ProjectInfo, java.util.*, com.wjm.main.function.Time"%>
+<%@ page import="java.sql.Timestamp,com.wjm.models.CancellistInfo, com.wjm.models.AccountInfo, com.wjm.models.ProjectInfo, java.util.*, com.wjm.main.function.Time"%>
 <%@ page import="com.wjm.models.NoticeInfo"%>
 
 <%
 	AccountInfo account = (AccountInfo)session.getAttribute("account");
-	List<ContractInfo> contractlist = (List<ContractInfo>)request.getAttribute("contractlist");
+	List<CancellistInfo> cancellist = (List<CancellistInfo>)request.getAttribute("cancellist");
 
 	%>
 <!DOCTYPE html>
@@ -43,7 +43,7 @@
 </head>
 <body class="logged-in client mywishket">
 	<div id="wrap">
-	<jsp:include page="../header.jsp" flush="false" />
+	<jsp:include page="../../header.jsp" flush="false" />
 		<div class="container">
 			<div id="messages"></div>
 		</div>
@@ -51,16 +51,13 @@
 			<div class="content">
 				<div class="content-header">
 					<h3 class="header-text">
-						미팅 신청 페이지 
+						실패한 계약 페이지 
 					</h3>
 				</div>
 				<div class="content-inner">
-					
-					<div class="mywishket-project">
-						
 						<div class="proposal-project">
 							<h5 class="proposal-project-heading">
-								<a href="#">미팅 신청</a>
+								<a href="#">실패한 계약</a>
 							</h5>
 							<table class="table table-hover">
 								<thead>
@@ -68,52 +65,58 @@
 										<th>프로젝트 제목</th>
 										<th>클라이언트</th>
 										<th>파트너스</th>
-										<th>도구1</th>
-										<th>도구2</th>
-										<th>제출일자</th>
+										<th>취소날짜</th>
+										<th>복구</th>
 									</tr>
 								</thead>
 								<tbody>
 								<%
-									if(contractlist == null)
+									if(cancellist == null)
 									{
 								%>
-								<tr><td class='text-muted' colspan='6'>미팅 신청 리스트가 없습니다.</td></tr>
+								<tr>
+								<td class='text-muted' colspan='5'>실패한 계약 리스트가 없습니다.</td>
+								</tr>
 								<%
 									}
 									else
 									{
-										for(int i=0;i<contractlist.size();i++)
+										if(cancellist.isEmpty())
 										{
 								%>
 								<tr>
-									<td><a href="/wjm/project/<%=contractlist.get(i).getProject().getName() %>/<%=contractlist.get(i).getProject_pk() %>"><%=contractlist.get(i).getProject().getName() %></a></td>
-									<td><a href="/wjm/admin/accounts/profile/<%=contractlist.get(i).getClient_pk() %>"><%=contractlist.get(i).getClient_id() %></a></td>
-									<td><a href="/wjm/admin/accounts/profile/<%=contractlist.get(i).getPartners_pk() %>"><%=contractlist.get(i).getPartners_id() %></a></td>
-									<td><a class='btn btn-sm btn-client' href='/wjm/admin/contract/success/<%=contractlist.get(i).getProject_pk()%>/<%=contractlist.get(i).getClient_pk()%>/<%=contractlist.get(i).getPartners_pk()%>'>계약 성사</a></td>
-									<td><a class='btn btn-sm btn-client' href='/wjm/admin/contract/fail/<%=contractlist.get(i).getProject_pk()%>/<%=contractlist.get(i).getPartners_pk()%>/<%=contractlist.get(i).getPk()%>'>계약 실패</a></td>
-									<td><%=Time.toString3(contractlist.get(i).getReg_date()) %></td>
+								<td class='text-muted' colspan='5'>실패한 계약 리스트가 없습니다.</td>
 								</tr>
 								<%
+										}
+										else
+										{
+										for(int i=0;i<cancellist.size();i++)
+										{
+								%>
+								<tr>
+									<td><a href="/wjm/project/<%=cancellist.get(i).getProject().getName() %>/<%=cancellist.get(i).getProject_pk() %>"><%=cancellist.get(i).getProject().getName() %></a></td>
+									<td><a href="/wjm/admin/accounts/profile/<%=cancellist.get(i).getClient().getPk() %>"><%=cancellist.get(i).getClient().getId() %></a></td>
+									<td><a href="/wjm/admin/accounts/profile/<%=cancellist.get(i).getPartners().getPk() %>"><%=cancellist.get(i).getPartners().getId() %></a></td>
+									<td><%=Time.toString3(cancellist.get(i).getReg_date()) %></td>
+									<td><a class='btn btn-sm btn-client' href='/wjm/admin/contract/revive/<%=cancellist.get(i).getPk() %>/<%=cancellist.get(i).getProject_pk()%>/<%=cancellist.get(i).getApplicant_pk()%>/<%=cancellist.get(i).getContract_pk()%>'>복구</a></td>									
+								</tr>
+								<%
+										}
 										}
 									}
 								%>
 								</tbody>
 								
 							</table>
-							
-							<p class="text-right">
-								<a class="more" href="/wjm/client/manage/project/submitted/">미팅 신청 
-									자세히 보기
-								</a>
-							</p>
 						</div>
+						
 					</div>
 				</div>
 			</div>
 		</div>
 		<div id="push"></div>
 	</div>
-	<jsp:include page="../footer.jsp" flush="false" />
+	<jsp:include page="../../footer.jsp" flush="false" />
 </body>
 </html>

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -34,17 +36,23 @@ import com.wjm.dao.AccountDao;
 import com.wjm.dao.AccountInformationDao;
 import com.wjm.dao.ApplicantDao;
 import com.wjm.dao.AuthenticationDao;
+import com.wjm.dao.CancellistDao;
 import com.wjm.dao.ContractDao;
 import com.wjm.dao.NoticeDao;
 import com.wjm.dao.NotificationDao;
 import com.wjm.dao.ProjectDao;
 import com.wjm.main.function.Fileupload;
+import com.wjm.main.function.Time;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
 import com.wjm.models.AccountInformationInfo;
+import com.wjm.models.ApplicantInfo;
+import com.wjm.models.CancellistInfo;
 import com.wjm.models.ContractInfo;
 import com.wjm.models.NoticeInfo;
 import com.wjm.models.ProjectInfo;
+
+import net.sf.json.JSONObject;
 
 /**
  * Handles requests for the application home page.
@@ -60,6 +68,8 @@ public class AdminController {
 	@Autowired
 	private ProjectDao projectDao;
 
+	@Autowired
+	private CancellistDao cancellistDao;
 	@Autowired
 	private ApplicantDao applicantDao;
 	
@@ -247,7 +257,368 @@ public class AdminController {
 		
 		return mv;
 	}
-	
+	/**
+	 * 프로젝트 수정 페이지
+	 */
+	@RequestMapping(value = "/admin/project/edit/{project_pk}", method = RequestMethod.GET)
+	public ModelAndView AdminController_edit(HttpServletRequest request, ModelAndView mv,
+			@PathVariable("project_pk") int project_pk) {
+		logger.info("/admin/project/edit/{project_pk} Page");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
+		
+		ProjectInfo project = projectDao.select_project(project_pk);
+		
+		if(project == null)
+		{
+			mv.setViewName("redirect:/error/404error");
+			return mv;
+		}
+		else
+		{
+			mv.setViewName("/admin/project/edit");
+			mv.addObject("project",project);
+		}
+		
+		
+		return mv;
+	}
+
+	/**
+	 * 프로젝트 수정 처리 페이지
+	 * @throws ParseException 
+	 * @throws NumberFormatException 
+	 */
+	@RequestMapping(value = "/admin/project/edit/{project_pk}", method = RequestMethod.POST, produces = "text/json; charset=utf8")
+	@ResponseBody
+	public String AdminController_edit_post(HttpServletRequest request,
+ 			HttpServletResponse response,
+			@PathVariable("project_pk") int project_pk, 
+			 @RequestParam(value = "category", required = false, defaultValue = "") String category,
+			 @RequestParam(value = "sub_category", required = false, defaultValue = "") String sub_category,
+			 @RequestParam(value = "is_turnkey", required = false, defaultValue = "") String is_turnkey,
+			 @RequestParam(value = "title", required = false, defaultValue = "") String title,
+			 @RequestParam(value = "project_term", required = false, defaultValue = "") String project_term,
+			 @RequestParam(value = "budget_maximum", required = false, defaultValue = "") String budget_maximum,
+			 @RequestParam(value = "planning_status", required = false, defaultValue = "") String planning_status,
+			 @RequestParam(value = "description", required = false, defaultValue = "") String description,
+			 @RequestParam(value = "skill_required", required = false, defaultValue = "") String skill_required,
+			 @RequestParam(value = "deadline", required = false, defaultValue = "") String deadline,
+			 @RequestParam(value = "method_pre_interview", required = false, defaultValue = "") String method_pre_interview,
+			 @RequestParam(value = "address_sido", required = false, defaultValue = "") String address_sido,
+			 @RequestParam(value = "sigungu", required = false, defaultValue = "") String sigungu,
+			 @RequestParam(value = "date_expected_kick_off", required = false, defaultValue = "") String date_expected_kick_off,
+			 @RequestParam(value = "has_manage_experience", required = false, defaultValue = "") String has_manage_experience,
+			 @RequestParam(value = "prefer_partner", required = false, defaultValue = "") String prefer_partner,
+			 @RequestParam(value = "submit_purpose", required = false, defaultValue = "") String submit_purpose,
+			 @RequestParam(value = "status", required = false, defaultValue = "") String status
+			 ) throws NumberFormatException, ParseException {
+		logger.info("/admin/project/edit/{project_pk} post page");
+		
+		JSONObject jObject = new JSONObject();
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) {
+			jObject.put("messages", "error");
+			jObject.put("path", "redirect:/accounts/login");
+			return jObject.toString(); }
+		else if(!account.getAccount_type().equals("admin"))  { 
+			jObject.put("messages", "error");
+			jObject.put("path", "redirect:/index");
+			return jObject.toString(); }
+		
+		//title 체크
+		if(title.isEmpty())
+		{
+			logger.info("title!!!!");
+			jObject.put("messages", "제목은 필수입니다.");
+			return jObject.toString();
+		}
+		else if(!Validator.isValidLength(title, 1, 30))
+		{
+			logger.info("title!!!!");
+			jObject.put("messages", "프로젝트 제목은 최대 30자입니다.");
+			return jObject.toString();
+		}
+		else
+		{
+			logger.info("title = "+title);
+		}
+		
+		
+		//category 체크
+		if(category.isEmpty())
+		{
+			logger.info("category!!!!");
+			jObject.put("messages", "카테고리는 필수입니다.");
+			return jObject.toString();
+		}
+		else if(!category.equals("개발")&&!category.equals("디자인"))
+		{
+			logger.info("category!!!!");
+			jObject.put("messages", "카테고리를 올바르게 선택해주세요.");
+			return jObject.toString();
+		}
+		else
+		{
+			logger.info("category_val = "+category);
+		}
+
+		//sub category 체크
+		if(sub_category.isEmpty())
+		{
+			logger.info("sub_category!!!!");
+			jObject.put("messages", "세부 카테고리는 필수입니다.");
+			return jObject.toString();
+		}
+		else if(!Validator.isProjectCategory(category, sub_category))
+		{
+			logger.info("sub_category!!!!");
+			jObject.put("messages", "세부 카테고리를 올바르게 선택해주세요.");
+			return jObject.toString();
+		}
+		else
+		{
+			logger.info("sub_category_val = "+sub_category);
+		}
+		
+		//is_turnkey 체크
+		if(is_turnkey.isEmpty())
+		{
+			logger.info("is_turnkey!!!!");
+			jObject.put("messages", "디자인 혹은 개발도 필요하신지 선택해주세요.");
+			return jObject.toString();
+		}
+		else
+		{
+			logger.info("is_turnkey_val = "+is_turnkey);
+		}
+		
+		//project_term 체크
+		if(project_term.isEmpty())
+		{
+			logger.info("project_term!!!!");
+			jObject.put("messages", "진행 기간은 필수입니다.");
+			return jObject.toString();
+		}
+		else if(!Validator.isDigit(project_term)||!Validator.isValidLength(project_term, 1, 3))
+		{
+			logger.info("project_term!!!!");
+			jObject.put("messages", "프로젝트 진행기간을 올바르게 입력해주세요");
+			return jObject.toString();
+		}
+		else
+		{
+			logger.info("project_term_val = "+project_term);
+		}
+		
+		//budget_maximum 체크
+		if(budget_maximum.isEmpty())
+		{
+			logger.info("budget_maximum!!!!");
+			jObject.put("messages", "예산을 올바르게 입력해주세요");
+			return jObject.toString();
+		}
+		else
+		{
+			budget_maximum = budget_maximum.replace(",", "");
+			
+			if(!Validator.isDigit(budget_maximum))
+			{
+				logger.info("budget_maximum!!!!");
+				jObject.put("messages", "숫자만 입력 가능합니다.");
+				return jObject.toString();
+			}
+			else
+			{
+			logger.info("budget_maximum_val = "+budget_maximum);
+			}
+		}	
+		
+		//planning_status 체크
+		if(planning_status.isEmpty())
+		{
+			logger.info("planning_status!!!!");
+			jObject.put("messages", "기획상태는 필수입니다.");
+			return jObject.toString();
+		}
+		else if(!Validator.isPlanStatus(planning_status))
+		{
+			logger.info("planning_status!!!!");
+			jObject.put("messages", "프로젝트 기획상태를 올바르게 입력해주세요");
+			return jObject.toString();
+		}
+		else
+		{
+			logger.info("planning_status_val = "+planning_status);
+		}	
+		
+		//description 체크
+		if(description.isEmpty())
+		{
+			logger.info("description!!!!");
+			jObject.put("messages", "프로젝트 내용은 필수입니다.");
+			return jObject.toString();
+		}
+		else if(!Validator.isValidLength(description, 1, 5000))
+		{
+			logger.info("description!!!!");
+			jObject.put("messages", "프로젝트 내용이 너무 깁니다.");
+			return jObject.toString();
+		}
+		else
+		{
+			description.replace("\n", "<br/>");
+			logger.info("description_val = "+description);
+		}	
+		
+		//skill_required 체크(필수 X)
+		if(!skill_required.isEmpty())
+		{
+			if(!Validator.isValidLength(skill_required, 1, 100))
+			{
+				logger.info("skill_required!!!!");
+				jObject.put("messages", "관련 기술이 너무 깁니다.");
+				return jObject.toString();
+			}
+			else
+			{
+				logger.info("skill_required_val = "+skill_required);
+			}	
+		}
+		
+		//deadline 체크
+		if(deadline.isEmpty())
+		{
+			logger.info("deadline!!!!");
+			jObject.put("messages", "모집 마감 일자는 필수입니다.");
+			return jObject.toString();
+		}
+		else
+		{
+			logger.info("deadline_val = "+deadline);
+		}
+		
+		//method_pre_interview 체크
+		if(method_pre_interview.isEmpty())
+		{
+			logger.info("method_pre_interview!!!!");
+			jObject.put("messages", "사전 미팅은 필수입니다.");
+			return jObject.toString();
+		}
+		else if(!method_pre_interview.equals("OFFLINE")&&!method_pre_interview.equals("ONLINE"))
+		{
+			logger.info("method_pre_interview!!!!");
+			jObject.put("messages", "사전 미팅을 올바르게 선택해주세요.");
+			return jObject.toString();
+		}
+		else
+		{
+			logger.info("method_pre_interview_val = "+method_pre_interview);
+		}
+		
+		//시,도 군 체크
+		if(address_sido.isEmpty() ||sigungu.isEmpty() )
+		{
+			logger.info("address_sido||sigungu!!!!");
+			jObject.put("messages", "지역은 필수입니다.");
+			return jObject.toString();
+		}
+		else
+		{
+			logger.info("address_sido_val = "+address_sido);
+			logger.info("sigungu_val = "+sigungu);
+		}
+		
+		
+		//date_expected_kick_off
+		if(date_expected_kick_off.isEmpty() )
+		{
+			logger.info("date_expected_kick_off!!!!");
+			jObject.put("messages", "프로젝트 시작일은 필수입니다.");
+			return jObject.toString();
+		}
+		else
+		{
+			logger.info("date_expected_kick_off_val = "+date_expected_kick_off);
+		}
+		
+		//has_manage_experience
+		if(has_manage_experience.isEmpty())
+		{
+			logger.info("has_manage_experience!!!!");
+			jObject.put("messages", "매니징 경험은 필수입니다.");
+			return jObject.toString();
+		}
+		else
+		{
+			logger.info("has_manage_experience_val = "+has_manage_experience);
+		}
+		
+		//prefer_partner(필수X)
+		if(!prefer_partner.isEmpty())
+		{
+			if(!prefer_partner.equals("whatever")&&!prefer_partner.equals("corporate_business")
+					&&!prefer_partner.equals("individual_business")&&!prefer_partner.equals("team")
+					&&!prefer_partner.equals("individual"))
+			{
+				logger.info("prefer_partner!!!!");
+				jObject.put("messages", "선호하는 파트너를 올바르게 선택해주세요.");
+				return jObject.toString();
+			}
+			else
+			{
+				logger.info("prefer_partner_val = "+prefer_partner);
+			}
+		}
+		
+		//submit_purpose(필수 X)
+		if(!submit_purpose.isEmpty())
+		{
+			if(!submit_purpose.equals("request")&&!submit_purpose.equals("inquire"))
+			{
+				logger.info("submit_purpose!!!!");
+				jObject.put("messages", "프로젝트 의뢰 목적를 올바르게 선택해주세요.");
+				return jObject.toString();
+			}
+			else
+			{
+				logger.info("submit_purpose_val = "+submit_purpose);
+			}
+		}
+		
+		if(status.equals("프로젝트 수정"))
+		{	
+			status = "검수중";
+		}
+		else
+		{
+			jObject.put("messages", "error");
+			jObject.put("path", "redirect:/wjm/index");
+			return jObject.toString();
+		}
+		
+		
+		logger.info("수정 가능");
+		
+		ProjectInfo project = projectDao.select_project(project_pk);
+		
+		projectDao.Update(project_pk,project.getAccount_pk(),category,sub_category,is_turnkey,title,Integer.parseInt(project_term),
+				Integer.parseInt(budget_maximum),planning_status,description,skill_required,Time.dateToTimestamp(deadline),
+				method_pre_interview, address_sido, sigungu, Time.dateToTimestamp(date_expected_kick_off), has_manage_experience,
+				prefer_partner, submit_purpose, status);
+		
+		if(status.equals("검수중")){
+			
+			jObject.put("messages", "success");
+			jObject.put("path", "/wjm/admin/submitted/");
+		}
+		
+		logger.info(jObject.toString());
+		return jObject.toString();
+	}
 	////////////////////////////////////사용자 계정 정보////////////////////////////////////////
 	/**
 	 * 관리자 신원인증 페이지
@@ -475,7 +846,161 @@ public class AdminController {
 		}
 		return mv;
 	}
+	
+	/**
+	 * 계약 실패 프로젝트 페이지
+	 */
+	@RequestMapping(value = "/admin/contract/faillist/", method = RequestMethod.GET)
+	public ModelAndView AdminController_contract_fail(HttpServletRequest request,
+			ModelAndView mv) {
+		logger.info("/admin/contract/faillist/");
 
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
+		
+		List<CancellistInfo> cancellist = cancellistDao.selectAll();
+		
+		mv.setViewName("/admin/contract/faillist");
+		mv.addObject("cancellist",cancellist);
+		
+		return mv;
+	}
+	/**
+	 * 미팅 후 계약 실패
+	 */
+	@RequestMapping(value = "/admin/contract/fail/{project_pk}/{partners_pk}/{contract_pk}", method = RequestMethod.GET)
+	public ModelAndView AdminController_contract_fail(HttpServletRequest request,
+			@PathVariable("project_pk") int project_pk, 
+			@PathVariable("partners_pk") int partners_pk, 
+			@PathVariable("contract_pk") int contract_pk, 
+			ModelAndView mv) {
+		logger.info("/admin/contract/fail/{project_pk}/{partners_pk}/{contract_pk}");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
+		
+		logger.info("project_pk = "+project_pk);
+		logger.info("partners_pk = "+partners_pk);
+		logger.info("contract_pk = "+contract_pk);
+				
+		
+		//두개인 경우, 프로젝트 > 취소한 프로젝트
+		ProjectInfo project = projectDao.select_project(project_pk);
+		ContractInfo contract = contractDao.select_project_client_partners(project_pk, project.getAccount_pk(), partners_pk);
+
+		//해당 계약 상태 "취소"로 변경&등록일자 오늘 날짜로 업데이트
+		contractDao.updateStatusFail(project_pk, project.getAccount_pk(), partners_pk, "취소");
+		
+		//해당 파트너스의 지원자 상태 "지원종료"로 변경
+		applicantDao.updateStatus(project_pk, partners_pk, "지원종료");
+		
+		ApplicantInfo applicant = applicantDao.select(partners_pk, project_pk);
+		
+		//취소한 계약 추가
+		cancellistDao.create(project_pk, applicant.getPk(), contract_pk);
+		
+		//프로젝트의 취소한 계약이 2개 인지 체크
+		List<CancellistInfo> cancellist = cancellistDao.select_project(project_pk);
+		
+		if(cancellist != null)
+			if(cancellist.size() == 2)
+			{
+				//프로젝트의 상태 "취소한프로젝트"으로 변경
+				projectDao.updateStatus(project_pk,"취소한프로젝트");
+			}
+		
+		//notification update
+		//파트너스
+		notificationDao.create(contract.getPartners_pk(),contract.getClient_id()+"님의 "
+		+project.getName()+" 계약이 성사되지 못했습니다. 다른 프로젝트에 지원해주세요.");
+		//클라이언트
+		notificationDao.create(contract.getClient_pk(), contract.getPartners_id()+"님과의 "
+				+project.getName()+" 프로젝트 계약이 성사되지 못했습니다. 미팅 신청은 총 2 번 가능합니다.");
+		
+		//클라이언트
+		String result = sendMail("admin@wjm.com","gksthf1611@gmail.com",contract.getPartners_id()+"님과의"
+				+project.getName()+" 프로젝트 계약이 성사되지 못했습니다. 미팅 신청은 총 2 번 가능합니다.", "외주몬 알림 메일입니다.");
+		logger.info("클라이언트 메일 : "+result);
+		//파트너스
+		result = sendMail("admin@wjm.com","gksthf1611@gmail.com",contract.getClient_id()+"님의 "
+				+project.getName()+" 계약이 성사되지 못했습니다. 다른 프로젝트에 지원해주세요.", "외주몬 알림 메일입니다.");
+		logger.info("파트너스 메일 : "+result);
+		
+		mv.setViewName("redirect:/admin/contract/faillist");
+		
+		return mv;
+	}
+
+	/**
+	 * 실패 계약 복구
+	 */
+	@RequestMapping(value = "/admin/contract/revive/{cancellist_pk}/{project_pk}/{applicant_pk}/{contract_pk}", method = RequestMethod.GET)
+	public ModelAndView AdminController_contract_fail(HttpServletRequest request,
+			@PathVariable("cancellist_pk") int cancellist_pk, 
+			@PathVariable("project_pk") int project_pk, 
+			@PathVariable("applicant_pk") int applicant_pk, 
+			@PathVariable("contract_pk") int contract_pk, 
+			ModelAndView mv) {
+		logger.info("/admin/contract/revive/{cancellist_pk}/{project_pk}/{applicant_pk}/{contract_pk}");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
+
+		logger.info("cancellist_pk = "+cancellist_pk);
+		logger.info("project_pk = "+project_pk);
+		logger.info("applicant_pk = "+applicant_pk);
+		logger.info("contract_pk = "+contract_pk);
+				
+		ProjectInfo project = projectDao.select_project(project_pk);
+		ApplicantInfo applicant = applicantDao.select(applicant_pk);
+		ContractInfo contract = contractDao.select_project_client_partners(project_pk, project.getAccount_pk(), applicant.getAccount_pk());
+		
+		//해당 계약 상태 "계약진행중"로 변경&등록일자 오늘 날짜로 업데이트
+		contractDao.updateStatusFail(project_pk, project.getAccount_pk(), applicant.getAccount_pk(), "계약진행중");
+		
+		//해당 파트너스의 지원자 상태 "지원중"로 변경
+		applicantDao.updateStatus(project_pk, applicant.getAccount_pk(), "지원중");
+		
+		//프로젝트의 취소한 계약이 2개 인지 체크
+		List<CancellistInfo> cancellist = cancellistDao.select_project(project_pk);
+		
+		if(cancellist != null)
+			if(cancellist.size() == 2)
+			{
+				//프로젝트의 상태 "지원자모집중"으로 변경
+				projectDao.updateStatus(project_pk,"지원자모집중");
+			}
+
+		//취소한 계약 삭제
+		CancellistInfo cancel = cancellistDao.select(project_pk, applicant.getPk(), contract_pk);
+		cancellistDao.delete(cancel.getPk());
+		/*
+		//notification update
+		//파트너스
+		notificationDao.create(contract.getPartners_pk(),contract.getClient_id()+"님의 "
+		+project.getName()+" 계약이 성사되지 못했습니다. 다른 프로젝트에 지원해주세요.");
+		//클라이언트
+		notificationDao.create(contract.getClient_pk(), contract.getPartners_id()+"님과의 "
+				+project.getName()+" 프로젝트 계약이 성사되지 못했습니다. 미팅 신청은 총 2 번 가능합니다.");
+		
+		//클라이언트
+		String result = sendMail("admin@wjm.com","gksthf1611@gmail.com",contract.getPartners_id()+"님과의"
+				+project.getName()+" 프로젝트 계약이 성사되지 못했습니다. 미팅 신청은 총 2 번 가능합니다.", "외주몬 알림 메일입니다.");
+		logger.info("클라이언트 메일 : "+result);
+		//파트너스
+		result = sendMail("admin@wjm.com","gksthf1611@gmail.com",contract.getClient_id()+"님의 "
+				+project.getName()+" 계약이 성사되지 못했습니다. 다른 프로젝트에 지원해주세요.", "외주몬 알림 메일입니다.");
+		logger.info("파트너스 메일 : "+result);
+		*/
+		mv.setViewName("redirect:/admin/home");
+		
+		return mv;
+	}
+
+	
 	/**
 	 * 미팅 후 계약 성공 처리
 	 */
@@ -513,13 +1038,13 @@ public class AdminController {
 		contractDao.updateStatusSuccess(project_pk, client_pk, partners_pk, budget, term, "완료");
 		
 		//나머지 계약 상태 "취소"로 변경
-		contractDao.updateRemianContractFail(project_pk);
+		//contractDao.updateRemianContractFail(project_pk);
 		
 		//해당 파트너스의 지원자 상태 "완료"로 변경
-		applicantDao.updateStatusSuccess(partners_pk, "완료");
+		applicantDao.updateStatus(project_pk, partners_pk, "완료");
 		
 		//나머지 프로젝트의 지원자 상태가 "지원중"이면 "지원종료"로 변경
-		applicantDao.updateRemianApplicantFail(project_pk);
+		//applicantDao.updateRemianApplicantFail(project_pk);
 		
 		//프로젝트의 상태 "진행중"으로 변경
 		projectDao.updateStatus(project_pk,"진행중");
