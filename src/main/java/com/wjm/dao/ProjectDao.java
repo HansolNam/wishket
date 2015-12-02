@@ -412,7 +412,7 @@ public class ProjectDao implements ProjectIDao {
 		///////////////////////////////////////////////////////
 		///page filtering
 		////////////////////////////////////////////////////////
-		/*
+		
 		String page_sql = "";
 		
 		if(!Validator.isDigit(page))
@@ -423,10 +423,10 @@ public class ProjectDao implements ProjectIDao {
 		{
 			int page_num = Integer.parseInt(page);
 			
-			if(page_num < 0)
+			if(page_num <= 0)
 				return null;
 			page_sql = " limit "+(page_num*10 - 10)+",10";
-		}*/
+		}
 		///////////////////////////////////////////////////////
 		///dev filtering
 		////////////////////////////////////////////////////////
@@ -631,9 +631,9 @@ public class ProjectDao implements ProjectIDao {
 		logger.info("sql1 > "+sql1);
 		logger.info("sql2 > "+sql2);
 		
-		logger.info("sql1 + sql2 > "+ "select * from ("+sql1 + ") As a union all select * from (" + sql2 + ") As b");
+		logger.info("sql1 + sql2 > "+ "select * from ("+sql1 + ") As a union all select * from (" + sql2 + ") As b "+page_sql );
 		//진행중인 프로젝트
-		List<ProjectInfo> projectlist1 = jdbcTemplate.query("select * from ("+sql1 + ") As a union all select * from (" + sql2 + ") As b",new RowMapper<ProjectInfo>() {
+		List<ProjectInfo> projectlist1 = jdbcTemplate.query("select * from ("+sql1 + ") As a union all select * from (" + sql2 + ") As b "+page_sql,new RowMapper<ProjectInfo>() {
 	    	public ProjectInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 	    	{
 	    		ProjectInfo project =  new ProjectInfo(
@@ -665,6 +665,196 @@ public class ProjectDao implements ProjectIDao {
 	    });
 		return projectlist1;
 	}
+	
+	//프로젝트 찾기 프로젝트 개수
+	public int selectConditionCount(String q, String dev, String design, String addr)
+	{
+		///////////////////////////////////////////////////////
+		///dev filtering
+		////////////////////////////////////////////////////////
+		String dev_sql = "";
+		
+		//아무것도 선택 안한 경우
+		if(dev.equals("1111111111"))
+		{
+			dev_sql = "";
+		}
+		//개발 전체 선택
+		else if(dev.equals("2222222222"))
+		{
+			dev_sql = "(categoryL = '개발')";
+		}
+		//개별 선택
+		else
+		{
+			for(int i=0;i<dev.length();i++)
+			{
+				if(dev.charAt(i) == '2')
+				{
+					//전체 선택인 경우
+					if(i==0)
+						break;
+					
+					//전체 선택 아닌 경우
+					dev_sql+="categoryM = ";
+					if(i == 1)
+						dev_sql+="'웹'";
+					else if(i == 2)
+						dev_sql+="'애플리케이션'";
+					else if(i == 3)
+						dev_sql+="'워드프레스'";
+					else if(i == 4)
+						dev_sql+="'퍼블리싱'";
+					else if(i == 5)
+						dev_sql+="'일반소프트웨어'";
+					else if(i == 6)
+						dev_sql+="'커머스&쇼핑몰'";
+					else if(i == 7)
+						dev_sql+="'게임'";
+					else if(i == 8)
+						dev_sql+="'임베디드'";
+					else if(i == 9)
+						dev_sql+="'기타'";
+					
+					dev_sql += " or ";
+				}
+			}
+			
+			if(dev_sql.length()>4 && dev_sql.substring(dev_sql.length()-4,dev_sql.length()).equals(" or "))
+				{
+				dev_sql = dev_sql.substring(0,dev_sql.length()-4);
+				dev_sql = "(categoryL = '개발' and ("+dev_sql+"))";
+				}
+		}
+
+		logger.info("dev_sql > "+dev_sql);
+
+		///////////////////////////////////////////////////////
+		///design filtering
+		////////////////////////////////////////////////////////
+		String design_sql = "";
+		//design
+		
+		//아무것도 선택 안한 경우
+		if(design.equals("11111111111"))
+		{
+			design_sql = "";
+		}
+		//디자인 전체 선택
+		else if(design.equals("22222222222"))
+		{
+			design_sql = "(categoryL = '디자인')";
+		}
+		//개별 선택
+		else
+		{
+			for(int i=0;i<design.length();i++)
+			{
+				if(design.charAt(i) == '2')
+				{
+					//전체 선택인 경우
+					if(i==0)
+						break;
+					
+					//전체 선택 아닌 경우
+					design_sql+="categoryM = ";
+					if(i == 1)
+						design_sql+="'웹'";
+					else if(i == 2)
+						design_sql+="'애플리케이션'";
+					else if(i == 3)
+						design_sql+="'제품'";
+					else if(i == 4)
+						design_sql+="'프레젠테이션'";
+					else if(i == 5)
+						design_sql+="'인쇄물'";
+					else if(i == 6)
+						design_sql+="'커머스&쇼핑몰'";
+					else if(i == 7)
+						design_sql+="'로고'";
+					else if(i == 8)
+						design_sql+="'그래픽'";
+					else if(i == 9)
+						design_sql+="'게임'";
+					else if(i == 10)
+						design_sql+="'기타'";
+					
+					design_sql += " or ";
+				}
+			}
+			
+			if(design_sql.length()>4 && design_sql.substring(design_sql.length()-4,design_sql.length()).equals(" or "))
+				{
+				design_sql = design_sql.substring(0,design_sql.length()-4);
+				design_sql = "(categoryL = '디자인' and ("+design_sql+"))";
+				}
+		}
+
+		logger.info("design_sql > "+design_sql);
+		
+		////////////////////////////////////////////////////////////
+		//addr
+		/////////////////////////////////////////////////////////////
+		String addr_sql = "";
+		
+		//아무것도 선택 안한 경우
+		if(addr.equals("111111111111111111"))
+		{
+			addr_sql = "";
+		}
+		//addr 전체 선택
+		else if(addr.equals("122222222222222222"))
+		{
+			addr_sql = "";
+		}
+		//개별 선택
+		else
+		{
+			for(int i=0;i<addr.length();i++)
+			{
+				if(addr.charAt(i) == '2')
+				{
+					//전체 선택인 경우
+					if(i==0)
+						break;
+					
+					//전체 선택 아닌 경우
+					addr_sql+="meeting_area = ";
+					addr_sql+="'"+areaDao.select(i)+"'";
+					
+					addr_sql += " or ";
+				}
+			}
+			
+			if(addr_sql.length()>4 && addr_sql.substring(addr_sql.length()-4,addr_sql.length()).equals(" or "))
+				{
+				addr_sql = addr_sql.substring(0,addr_sql.length()-4);
+				addr_sql = "("+addr_sql+")";
+				}
+		}
+
+		logger.info("addr_sql > "+addr_sql);
+		
+		String q_sql = "";
+		if(!q.equals("None"))
+			q_sql = " (name LIKE '%"+q+"%' or description LIKE '%"+q+"%' or technique LIKE '%"+q+"%')";
+
+		String status_sql = "(status = '지원자모집중' and deadline > CURRENT_TIMESTAMP)";
+		String sql1 = getCountSQL(dev_sql, design_sql, addr_sql, status_sql, "", q_sql);
+
+		status_sql = "((status = '진행중' or status = '평가대기중' or status = '완료한프로젝트') or (status = '지원자모집중' and deadline <= CURRENT_TIMESTAMP))";
+		String sql2 = getCountSQL(dev_sql, design_sql, addr_sql, status_sql, "", q_sql);
+		
+		logger.info("sql1 > "+sql1);
+		logger.info("sql2 > "+sql2);
+				
+		//프로젝트 찾기 개수
+		int result = jdbcTemplate.queryForInt(sql1);
+		result += jdbcTemplate.queryForInt(sql2);
+	    
+		return result;
+	}
+	
 	public void Save(int account_pk, String categoryL,String categoryM,String is_turnkey, String name,
 			int period, int budget, String plan_status, String description, String technique,
 			Timestamp deadline, String meeting_type, String meeting_area, String meeting_area_detail,
@@ -762,6 +952,53 @@ public class ProjectDao implements ProjectIDao {
 		
 		return sql;
 	}
+	
+
+	public String getCountSQL(String dev_sql, String design_sql, String addr_sql, String status_sql, String sort_sql, String q_sql)
+	{
+		String sql = "select count(*) from project";
+		
+		if(!dev_sql.isEmpty() || !design_sql.isEmpty() || !addr_sql.isEmpty() || !status_sql.isEmpty())
+		{
+			sql += " where ";
+			if(!dev_sql.isEmpty() && !design_sql.isEmpty())
+			{
+				sql += "(" + dev_sql +" or "+design_sql+")";
+			}
+			else if(!dev_sql.isEmpty())
+				sql += dev_sql;
+			else if(!design_sql.isEmpty())
+				sql += design_sql;
+			
+			
+			if(!addr_sql.isEmpty())
+			{
+				if(sql.length()>4 && sql.substring(sql.length()-7, sql.length()).equals(" where "))
+					sql += addr_sql;
+				else
+					sql += " and "+addr_sql;
+			}
+			if(!status_sql.isEmpty())
+			{
+				if(sql.length()>4 && sql.substring(sql.length()-7, sql.length()).equals(" where "))
+					sql += status_sql;
+				else
+					sql += " and "+status_sql;
+			}
+
+			if(!q_sql.isEmpty())
+			{
+				if(sql.length()>4 && sql.substring(sql.length()-7, sql.length()).equals(" where "))
+					sql += q_sql;
+				else
+					sql += " and "+q_sql;
+			}
+			sql += sort_sql;
+		}
+		
+		return sql;
+	}
+	
 	
 	public int getApplicantNum(int project_pk)
 	{

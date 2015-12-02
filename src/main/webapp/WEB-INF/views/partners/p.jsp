@@ -95,21 +95,23 @@
 	String hasIntro = (String) request.getAttribute("hasIntro");
 
 	String msg = "";
-	if(hasInfo == null || hasIntro == null || hasSkill == null || hasPortfolio == null)
-	{
-		msg = "프로젝트 지원을 위해 ";
-		if(hasInfo == null)
-			msg += "<a class='alert-link' href='/wjm/partners/p/"+this_account.getId()+"/info/update/'>"+"'파트너스 정보'</a>";
-		if(hasIntro == null)
-			msg += "<a class='alert-link' href='/wjm/partners/p/"+this_account.getId()+"/introduction/update/'>"+"'자기 소개'</a>";
-		if(hasSkill == null)
-			msg += "<a class='alert-link' href='/wjm/partners/p/"+this_account.getId()+"/skill/update/'>"+"'보유 기술'</a>";		
-		if(hasPortfolio == null)
-			msg += "<a class='alert-link' href='/wjm/partners/p/"+this_account.getId()+"/portfolio/update/'>"+"'포트폴리오'</a>";
+	if (isSame != null) {
 
-    	msg += " 를 입력해주세요.";
-	}
+		if(hasInfo == null || hasIntro == null || hasSkill == null || hasPortfolio == null)
+		{
+			msg = "프로젝트 지원을 위해 ";
+			if(hasInfo == null)
+				msg += "<a class='alert-link' href='/wjm/partners/p/"+this_account.getId()+"/info/update/'>"+"'파트너스 정보'</a>";
+			if(hasIntro == null)
+				msg += "<a class='alert-link' href='/wjm/partners/p/"+this_account.getId()+"/introduction/update/'>"+"'자기 소개'</a>";
+			if(hasSkill == null)
+				msg += "<a class='alert-link' href='/wjm/partners/p/"+this_account.getId()+"/skill/update/'>"+"'보유 기술'</a>";		
+			if(hasPortfolio == null)
+				msg += "<a class='alert-link' href='/wjm/partners/p/"+this_account.getId()+"/portfolio/update/'>"+"'포트폴리오'</a>";
 	
+	    	msg += " 를 입력해주세요.";
+		}
+	}	
 
 	String profile = this_accountinfo.getProfile_img();
 	
@@ -204,7 +206,7 @@ div.ui-tooltip {
 						<div class="partners-name-tag-body">
 							<img alt="<%=this_account.getId() %> 사진"
 								class="p5-partners-img-lg"
-								src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=this_accountinfo.getProfile_img() %>" />
+								src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=profile %>" />
 							<h4 class="partners-username-bottom"><%=this_account.getId()%>
 							</h4>
 						</div>
@@ -245,6 +247,9 @@ div.ui-tooltip {
 									if (info == null)
 										out.print("황동 가능성 미입력");
 									else
+										if(!Validator.hasValue(info.getAvailability()))
+											out.print("황동 가능성 미입력");
+										else
 										out.print(info.getAvailability());
 								%>
 							</span>
@@ -265,6 +270,9 @@ div.ui-tooltip {
 											if (info == null)
 												out.print("<span class='text-muted'><span>직종 미입력</span></span>");
 											else
+												if(!Validator.hasValue(info.getJob()))
+													out.print("<span class='text-muted'><span>직종 미입력</span></span>");
+												else
 												out.print(info.getJob());
 										%>
 								</span>
@@ -506,8 +514,6 @@ div.ui-tooltip {
 						%> <span><div class="p5-partners-no-info">
 								<div class="p5-assign-component">
 									<div>
-										<img
-											src="${pageContext.request.contextPath}/resources/static/img/profile_skill.png" />
 										<div class="p5-no-partners-info-text text-center">
 											등록된 <span class="text-center p5-bold">'보유 기술'</span>이 없습니다.
 										</div>
@@ -938,7 +944,14 @@ div.ui-tooltip {
 
             $('.doughnut-legend').html('');
             <%
-            if(categorylist.isEmpty())
+            if(categorylist == null)
+            {
+            %>
+            $('.doughnut-legend').append('<li><span style="background-color: #dedede;"></span>진행한 프로젝트 없음</li>');
+
+           <%
+            }
+            else if(categorylist.isEmpty())
             {
             %>
             $('.doughnut-legend').append('<li><span style="background-color: #dedede;"></span>진행한 프로젝트 없음</li>');

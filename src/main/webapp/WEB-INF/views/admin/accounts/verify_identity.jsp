@@ -144,9 +144,13 @@
 					</div>
 					<div class="content-inner">
 						<h4>
-							사용자 신원 인증 정보<a
+							사용자 신원 인증 정보
+							
+							<a
 							class="btn btn-large btn-partners btn-project-application btn-block pull-right"
-							href="/wjm/admin/verify_identity/success/<%=this_account.getPk() %>" style="width:150px">검수 완료하기</a><a
+							href="/wjm/admin/verify_identity/success/<%=this_account.getPk() %>" style="width:150px">검수 완료하기</a>
+							
+							<a
 							class="btn btn-large btn-project-application btn-default btn-block pull-right"
 							href="/wjm/admin/verify_identity/fail/<%=this_account.getPk() %>" style="width:150px"><span
 							id="interest_action_text">인증 거부하기</span></a>
@@ -238,49 +242,6 @@
 		<div id="push"></div>
 	</div>
 	<jsp:include page="../../footer.jsp" flush="false" />
-	<script>
-$( document ).ready(function($) {
-    var p5TotalSubNavigationFlag = 0;
-
-
-	if ( $( window ).width() >= 1200 ) {
-		$( '.p5-side-nav-deactive' ).css( 'display', 'none' );
-	} else  {
-		$( '.p5-side-nav-active' ).css( 'display', 'none' );
-		$( '.p5-side-nav-deactive' ).css( 'display', 'block');
-	}
-
-	$('.content-inner').on('click', '.p5-side-nav-active-btn', function () {
-		$('.p5-side-nav-active').css( 'display', 'none' );
-		$('.p5-side-nav-deactive').css('display','block');
-	});
-
-	$('.content-inner').on('click', '.p5-side-nav-deactive-btn', function () {
-		$('.p5-side-nav-active').css( 'display', 'block' );
-		$('.p5-side-nav-deactive').css('display','none');
-	});
-
-
-    $( window ).scroll ( function () {
-		if ( $(window).scrollTop() > 87 && p5TotalSubNavigationFlag === 0) {
-			setTimeout(function() {
-				$('#p5-total-sub-navigation-wrapper').removeClass('hide fadeOut');
-				$('#p5-total-sub-navigation-wrapper').addClass('fadeInDown');
-			}, 200 );
-			flag = 1;
-
-
-		} else if ( $(window).scrollTop() <= 87 ){
-			p5TotalSubNavigationFlag = 0;
-			$('#p5-total-sub-navigation-wrapper').removeClass('fadeInDown');
-			$('#p5-total-sub-navigation-wrapper').addClass('fadeOut');
-			setTimeout(function() {
-				$('#p5-total-sub-navigation-wrapper').addClass('hide');
-			}, 200 );
-		}
-	});
-});
-
-</script>
+	
 </body>
 </html>

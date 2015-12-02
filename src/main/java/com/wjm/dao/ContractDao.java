@@ -570,6 +570,65 @@ public class ContractDao implements ContractIDao {
 	}
 
 	/*
+	 * 결제대기중인 프로젝트의 모든 계약 리스트
+	 */
+	public List<ContractInfo> selectReadyProjectAdmin()
+	{
+		List<ContractInfo> list = jdbcTemplate.query("select contract.* from contract,project where contract.project_pk = project.pk and project.status='결제대기중'  order by reg_date desc", new RowMapper<ContractInfo>() {
+		    	public ContractInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new ContractInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getInt("project_pk")
+		    				, resultSet.getInt("client_pk")
+		    				, resultSet.getInt("partners_pk")
+		    				, resultSet.getString("name")
+		    				, resultSet.getString("partners_id")
+		    				, resultSet.getString("client_id")
+		    				, resultSet.getInt("budget")
+		    				, resultSet.getInt("term")
+		    				, resultSet.getString("status")
+		    				, resultSet.getTimestamp("reg_date"));
+		    	}
+		    });
+
+		if(list!=null && list.isEmpty())
+			return null;
+		else
+			return list;
+	}
+
+	/*
+	 * 결제대기중인 프로젝트의 몇개의 리스트
+	 */
+	public List<ContractInfo> selectReadyProjectAdminLimit(int num)
+	{
+		List<ContractInfo> list = jdbcTemplate.query("select contract.* from contract,project where contract.project_pk = project.pk and project.status='결제대기중'  order by reg_date desc limit ?"
+				, new Object[] { num }
+				, new RowMapper<ContractInfo>() {
+		    	public ContractInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new ContractInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getInt("project_pk")
+		    				, resultSet.getInt("client_pk")
+		    				, resultSet.getInt("partners_pk")
+		    				, resultSet.getString("name")
+		    				, resultSet.getString("partners_id")
+		    				, resultSet.getString("client_id")
+		    				, resultSet.getInt("budget")
+		    				, resultSet.getInt("term")
+		    				, resultSet.getString("status")
+		    				, resultSet.getTimestamp("reg_date"));
+		    	}
+		    });
+
+		if(list!=null && list.isEmpty())
+			return null;
+		else
+			return list;
+	}
+	/*
 	 * 진행중인 프로젝트의 모든 계약 리스트
 	 */
 	public List<ContractInfo> selectProgressProjectAdmin()

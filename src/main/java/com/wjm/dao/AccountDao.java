@@ -149,6 +149,21 @@ public class AccountDao implements AccountIDao {
 		String sql = "";
 		String job_sql = "";
 		String q_sql = "";
+		String page_sql = "";
+		
+		//page
+		if(!Validator.isDigit(page))
+		{
+			return null;
+		}
+		else
+		{
+			int page_num = Integer.parseInt(page);
+			
+			if(page_num <= 0)
+				return null;
+			page_sql = " limit "+(page_num*10 - 10)+",10";
+		}
 		
 		List<AccountInfo> accountlist;
 
@@ -171,7 +186,7 @@ public class AccountDao implements AccountIDao {
 			
 			logger.info("명령어 : "+sql+" and "+q_sql);
 			
-			accountlist = jdbcTemplate.query(sql + " and " + q_sql
+			accountlist = jdbcTemplate.query(sql + " and " + q_sql + page_sql
 					, new Object[] { "%"+q+"%", "%"+q+"%" }
 					,new RowMapper<AccountInfo>() {
 			    	public AccountInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
@@ -205,7 +220,7 @@ public class AccountDao implements AccountIDao {
 			
 			logger.info("명령어 : "+sql+" and "+q_sql);
 			
-			accountlist = jdbcTemplate.query(sql + " and " + q_sql
+			accountlist = jdbcTemplate.query(sql + " and " + q_sql + page_sql
 					, new Object[] { "%"+q+"%", "%"+q+"%" }
 					,new RowMapper<AccountInfo>() {
 			    	public AccountInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
@@ -247,7 +262,7 @@ public class AccountDao implements AccountIDao {
 			}
 			logger.info("명령어 : "+sql);
 
-			accountlist = jdbcTemplate.query(sql
+			accountlist = jdbcTemplate.query(sql + page_sql
 					,new RowMapper<AccountInfo>() {
 			    	public AccountInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 			    	{
@@ -279,7 +294,7 @@ public class AccountDao implements AccountIDao {
 			
 			logger.info("명령어 : "+sql);
 
-			accountlist = jdbcTemplate.query(sql
+			accountlist = jdbcTemplate.query(sql + page_sql
 					,new RowMapper<AccountInfo>() {
 			    	public AccountInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 			    	{

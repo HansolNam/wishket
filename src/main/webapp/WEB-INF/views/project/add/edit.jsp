@@ -36,6 +36,17 @@
 	sizes="152x152" />
 <script src="${pageContext.request.contextPath}/resources/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/resources/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
+
+<style>
+div.backLayer {
+	display:none;
+	background-color:black;
+	position:absolute;
+	left:0px;
+	top:0px;
+}
+
+</style>
 </head>
 <body class="logged-in client project-add-detail">
 	<div id="wrap">
@@ -400,6 +411,13 @@
 									클라이언트님의 <strong>승인 후에 파트너에게 대금이 지급</strong>됩니다.
 								</div>
 							</div>
+							
+								<!-- 로딩 이미지 -->
+							<div id="viewLoading">
+								<img src="${pageContext.request.contextPath}/resources/upload/viewLoading.gif" />
+							</div>
+							<!-- 불투명 이미지 -->
+							<div class='backLayer' style='' > </div>
 						</div>
 					</div>
 				</div>
@@ -409,16 +427,59 @@
 	</div>
 	<jsp:include page="../../footer.jsp" flush="false" />
 	<script type="text/javascript">
+	function LoadingScreenFunc()
+	{
+		var width = $(window).width();
+		var height = $(window).height();
+		
+		var scrollLeft = $(window).scrollLeft();
+		var scrollTop = $(window).scrollTop();
+		
+		var backLayerObj = $(".backLayer");
+		var loadingDivObj = $("#viewLoading");
+		
+		//화면을 가리는 레이어의 사이즈 조정
+		backLayerObj.width(width);
+		backLayerObj.height(height);
 
+		var left = scrollLeft;
+		var top = scrollTop;
+		
+		//화면을 가리는 레이어를 보여준다 (0.5초동안 30%의 농도의 투명도)
+		backLayerObj.css( {
+    		'display':'block',
+    		'background-color':'black',
+    		'opacity':'0.3',
+    		'position':'absolute',
+    		'left':left,
+    		'top':top
+    	});
+		
+		left = ( scrollLeft + (width - loadingDivObj.width()) / 2 );
+		top = ( scrollTop + (height - loadingDivObj.height()) / 2 );
+		
+		//팝업 레이어 보이게
+		loadingDivObj.css( {
+    		'display':'block',
+    		'position':'absolute',
+    		'left':left,
+    		'top':top
+    	});
+	}
 	$(document).ready(function(){
+		// 페이지가 로딩될 때 'Loading 이미지'를 숨긴다.
+		$('#viewLoading').hide();
 
 		$( "#post_a_job_id" ).click(function() {
+			// 페이지가 로딩될 때 'Loading 이미지'를 숨긴다.
+			$('#viewLoading').hide();
 			
 			$("#status").val("프로젝트 등록");
 			$.ajax({
 				url : "/wjm/project/add/edit/<%=project.getPk()%>",
 				type : "POST",
 				data : $('#project-edit-form').serialize(),
+    		    async: true,
 				dataType : "JSON",
 				success : function(data) {
 					var messages = data.messages;
@@ -436,6 +497,16 @@
 							alert(messages);
 			        	}
 				},
+			    beforeSend:function(){
+		    		LoadingScreenFunc();
+	
+			    }
+			    ,complete:function(){
+	
+					$('#viewLoading').hide();
+					$(".backLayer").hide();
+			 
+			    },
 		
 				error : function(request, status, error) {
 					if (request.status != '0') {

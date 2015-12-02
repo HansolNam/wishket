@@ -286,10 +286,10 @@
             }
 
             if(present != 1){
-                html += "<li><a style='cursor:pointer' href='?page='"+prev+" class='prev'><i class='fa fa-arrow-left'></i></a></li>";
+                html += "<li><a style='cursor:pointer' href='?page="+prev+"' class='prev'><i class='fa fa-arrow-left'></i></a></li>";
             }
             for(var i = min_page; i<=max_page; ++i){
-                html +="<li id='page_" + i + "'><a style='cursor:pointer' href='?page='"+i+">"+i+"</a></li>";
+                html +="<li id='page_" + i + "'><a style='cursor:pointer' href='?page="+i+"'>"+i+"</a></li>";
             }
             //html +="<li id='page_" + i + "'><a style='cursor:pointer' onclick='setPage(" + total + ");'>" + total + "</a></li>";
             if(present != total){

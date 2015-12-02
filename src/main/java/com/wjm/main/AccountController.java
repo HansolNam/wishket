@@ -309,7 +309,7 @@ public class AccountController {
 			if(account.getAuthorized() == 0)
 			{
 				logger.info("이메일 미인증");
-				return "redirect:/accounts/signup_verify";
+				return "/accounts/signup_verify";
 			}
 			//클라이언트의 경우
 			if(account.getAccount_type().equals("client"))
@@ -1302,6 +1302,7 @@ public class AccountController {
 
 				accountInformationDao.updateIdentity_authentication(account.getPk(),"검수중");
 
+				//관리자 알림 메일
 				String result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", account.getId()+" 님이 신원 인증을 요청했습니다.", "외주몬 알림 메일입니다");
 				logger.info("이메일 전송 결과 = "+result);
 				

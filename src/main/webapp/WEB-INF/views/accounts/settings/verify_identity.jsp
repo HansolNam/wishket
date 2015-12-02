@@ -89,13 +89,14 @@
 <script src="${pageContext.request.contextPath}/resources/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/resources/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
 <style>
-	/* 로딩이미지 박스 꾸미기 */
-	#viewLoading {
-		text-align: center;
-		background: #FFFFF0;
-		filter: alpha(opacity=60);
-		opacity: alpha*0.6;
-	}
+div.backLayer {
+	display:none;
+	background-color:black;
+	position:absolute;
+	left:0px;
+	top:0px;
+}
+
 </style>
 
 </head>
@@ -371,6 +372,9 @@
 	<div id="viewLoading">
 		<img src="${pageContext.request.contextPath}/resources/upload/viewLoading.gif" />
 	</div>
+	<!-- 불투명 이미지 -->
+	<div class='backLayer' style='' > </div>
+	
 					</div>
 				</div>
 			</div>
@@ -384,40 +388,58 @@
     	// 페이지가 로딩될 때 'Loading 이미지'를 숨긴다.
 		$('#viewLoading').hide();
 			
-		// ajax 실행 및 완료시 'Loading 이미지'의 동작을 컨트롤하자.
-		$(document)
-		.ajaxStart(function()
-		{
-			// 로딩이미지의 위치 및 크기조절	
-			//$('#viewLoading').css('position', 'absolute');
-			//$('#viewLoading').css('top', '50%');
-			//$('#viewLoading').css('left','50%');
-			
-			//$('#viewLoading').show();
-		})
-		.ajaxStop(function()
-		{
-			//$(this).hide();
-			$('#viewLoading').fadeOut(500);
-		});
 	});
-    $(document).ready(function(){
+	
+	function LoadingScreenFunc()
+	{
+		var width = $(window).width();
+		var height = $(window).height();
 		
+		var scrollLeft = $(window).scrollLeft();
+		var scrollTop = $(window).scrollTop();
+		
+		var backLayerObj = $(".backLayer");
+		var loadingDivObj = $("#viewLoading");
+		
+		//화면을 가리는 레이어의 사이즈 조정
+		backLayerObj.width(width);
+		backLayerObj.height(height);
+
+		var left = scrollLeft;
+		var top = scrollTop;
+		
+		//화면을 가리는 레이어를 보여준다 (0.5초동안 30%의 농도의 투명도)
+		backLayerObj.css( {
+    		'display':'block',
+    		'background-color':'black',
+    		'opacity':'0.3',
+    		'position':'absolute',
+    		'left':left,
+    		'top':top
+    	});
+		
+		left = ( scrollLeft + (width - loadingDivObj.width()) / 2 );
+		top = ( scrollTop + (height - loadingDivObj.height()) / 2 );
+		
+		//팝업 레이어 보이게
+		loadingDivObj.css( {
+    		'display':'block',
+    		'position':'absolute',
+    		'left':left,
+    		'top':top
+    	});
+	}
+	
+    $(document).ready(function(){
+    	
     	$('#submit-btn').click(function(){
-			//$('#viewLoading').fadeIn(500);
-			$('#viewLoading').css('position', 'absolute');
-			$('#viewLoading').css('top', '50%');
-			$('#viewLoading').css('left','50%');
-			$('#viewLoading').show();
-			//alert(a);
 			
-			//$('#viewLoading').css('display','block');
-    		/*var formData = new FormData($('#verify-identity-form')[0]);
+    		var formData = new FormData($('#verify-identity-form')[0]);
     		$.ajax({
     		    type: "POST",
     		    url: "/wjm/accounts/settings/verify_identity",
     		    data: formData,  // 폼데이터 직렬화
-    		    async: false,
+    		    async: true,
     		    cache: false,
     		    contentType: false,
     		    processData: false,
@@ -440,12 +462,22 @@
     	        	}
             
     		    },
+    		    beforeSend:function(){
+    	    		LoadingScreenFunc();
+
+    		    }
+    		    ,complete:function(){
+
+    				$('#viewLoading').hide();
+    				$(".backLayer").hide();
+    		 
+    		    },
     		    error: function(jqXHR, textStatus, errorThrown) {
     		        //에러코드
 					$(this).fadeOut(500);
     		        alert('에러가 발생했습니다.');
     		    }
-    		});*/
+    		});
     	});
 		
 		

@@ -48,6 +48,17 @@
 	sizes="152x152" />
 <script src="${pageContext.request.contextPath}/resources/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/resources/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
+
+<style>
+div.backLayer {
+	display:none;
+	background-color:black;
+	position:absolute;
+	left:0px;
+	top:0px;
+}
+
+</style>
 </head>
 <body class="logged-in partners proposal-applicant  proposal-applicant ">
 	<jsp:include page="../../header.jsp" flush="false" />
@@ -430,6 +441,7 @@
 									<button class="btn btn-cancel"
 										id="related-portfolio-select-modal-cancel-btn" type="button">취소</button>
 								</div>
+								
 							</div>
 						</div>
 					</div>
@@ -438,9 +450,61 @@
 		</div>
 		<div id="push"></div>
 	</div>
+	<!-- 로딩 이미지 -->
+	<div id="viewLoading">
+		<img src="${pageContext.request.contextPath}/resources/upload/viewLoading.gif" />
+	</div>
+	<!-- 불투명 이미지 -->
+	<div class='backLayer' style='' > </div>
+	
 	<jsp:include page="../../footer.jsp" flush="false" />
 
 	<script type="text/javascript">
+	
+	function LoadingScreenFunc()
+	{
+		var width = $(window).width();
+		var height = $(window).height();
+		
+		var scrollLeft = $(window).scrollLeft();
+		var scrollTop = $(window).scrollTop();
+		
+		var backLayerObj = $(".backLayer");
+		var loadingDivObj = $("#viewLoading");
+		
+		//화면을 가리는 레이어의 사이즈 조정
+		backLayerObj.width(width);
+		backLayerObj.height(height);
+
+		var left = scrollLeft;
+		var top = scrollTop;
+		
+		//화면을 가리는 레이어를 보여준다 (0.5초동안 30%의 농도의 투명도)
+		backLayerObj.css( {
+    		'display':'block',
+    		'background-color':'black',
+    		'opacity':'0.3',
+    		'position':'absolute',
+    		'left':left,
+    		'top':top
+    	});
+		
+		left = ( scrollLeft + (width - loadingDivObj.width()) / 2 );
+		top = ( scrollTop + (height - loadingDivObj.height()) / 2 );
+		
+		//팝업 레이어 보이게
+		loadingDivObj.css( {
+    		'display':'block',
+    		'position':'absolute',
+    		'left':left,
+    		'top':top
+    	});
+	}
+	$(document).ready(function(){
+		// 페이지가 로딩될 때 'Loading 이미지'를 숨긴다.
+		$('#viewLoading').hide();
+	});
+	
         $(function() {
             $('#estimated_budget').priceFormat({
                 prefix: "",
@@ -457,6 +521,7 @@
      		    url: "/wjm/project/<%=project.getName() %>/<%=project.getPk() %>/proposal/apply",
      		    data: $('#apply-form').serialize(),  // 폼데이터 직렬화
      		    dataType: "json",   // 데이터타입을 JSON형식으로 지정
+    		    async: true,
      		    contentType: "application/x-www-form-urlencoded; charset=utf-8",
      		    success: function(data) { // data: 백엔드에서 requestBody 형식으로 보낸 데이터를 받는다.
      		        var messages = data.messages;
@@ -475,6 +540,16 @@
      		        	}
      		        
      		    },
+			    beforeSend:function(){
+		    		LoadingScreenFunc();
+	
+			    }
+			    ,complete:function(){
+	
+					$('#viewLoading').hide();
+					$(".backLayer").hide();
+			 
+			    },
      		    error: function(jqXHR, textStatus, errorThrown) 
      		    {
      		        //에러코드
@@ -1046,57 +1121,5 @@
         })
 
     </script>
-	<script type="text/javascript">
-  $(function() {
-    wishket.init();
-    
-    svgeezy.init(false, 'png');
-  });
-</script>
-	<script>
-
-$( document ).ready(function($) {
-    var p5TotalSubNavigationFlag = 0;
-
-
-	if ( $( window ).width() >= 1200 ) {
-		$( '.p5-side-nav-deactive' ).css( 'display', 'none' );
-	} else  {
-		$( '.p5-side-nav-active' ).css( 'display', 'none' );
-		$( '.p5-side-nav-deactive' ).css( 'display', 'block');
-	}
-
-	$('.content-inner').on('click', '.p5-side-nav-active-btn', function () {
-		$('.p5-side-nav-active').css( 'display', 'none' );
-		$('.p5-side-nav-deactive').css('display','block');
-	});
-
-	$('.content-inner').on('click', '.p5-side-nav-deactive-btn', function () {
-		$('.p5-side-nav-active').css( 'display', 'block' );
-		$('.p5-side-nav-deactive').css('display','none');
-	});
-
-
-    $( window ).scroll ( function () {
-		if ( $(window).scrollTop() > 87 && p5TotalSubNavigationFlag === 0) {
-			setTimeout(function() {
-				$('#p5-total-sub-navigation-wrapper').removeClass('hide fadeOut');
-				$('#p5-total-sub-navigation-wrapper').addClass('fadeInDown');
-			}, 200 );
-			flag = 1;
-
-
-		} else if ( $(window).scrollTop() <= 87 ){
-			p5TotalSubNavigationFlag = 0;
-			$('#p5-total-sub-navigation-wrapper').removeClass('fadeInDown');
-			$('#p5-total-sub-navigation-wrapper').addClass('fadeOut');
-			setTimeout(function() {
-				$('#p5-total-sub-navigation-wrapper').addClass('hide');
-			}, 200 );
-		}
-	});
-});
-
-</script>
 </body>
 </html>

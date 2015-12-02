@@ -19,9 +19,9 @@ public class Scheduler {
 
 	/**
 	 * 초 분 시 일 월
-	 * 00:42:01에 호출이 되는 스케쥴러 
+	 * 00:00:00에 호출이 되는 스케쥴러 
 	 */
-	@Scheduled(cron = "0 44 01 * * *")
+	@Scheduled(cron = "0 00 00 * * *")
 	public void projectScheduler(){
 		logger.info("스케쥴러 호출");
 		

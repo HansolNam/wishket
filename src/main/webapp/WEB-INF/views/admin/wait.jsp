@@ -5,13 +5,9 @@
 
 <%
 	AccountInfo account = (AccountInfo)session.getAttribute("account");
-	List<ProjectInfo> submitted = (List<ProjectInfo>)request.getAttribute("submitted");
-	List<AccountInfo> authenticationlist = (List<AccountInfo>)request.getAttribute("authenticationlist");
-	List<ContractInfo> contractlist = (List<ContractInfo>)request.getAttribute("contractlist");
-	List<ContractInfo> progresslist = (List<ContractInfo>)request.getAttribute("progresslist");
-	List<NoticeInfo> noticelist = (List<NoticeInfo>)request.getAttribute("noticelist");
+	List<ContractInfo> waitlist = (List<ContractInfo>)request.getAttribute("waitlist");
 
-	%>
+%>
 <!DOCTYPE html>
 <html class="no-js modern" lang="ko">
 <head
@@ -59,130 +55,12 @@
 					</h3>
 				</div>
 				<div class="content-inner">
-					<div class="notice">
-						<h4 class="notice-heading">공지사항<small class="small-text pull-right">
-						<a class="more" href="/wjm/admin/notice/">더
-							자세히 보기
-						</a>
-						</small></h4>
-						<ul class="notice-list list-unstyled">
-							<%
-								if(noticelist != null && !noticelist.isEmpty())
-								{
-									for(int i=0;i<noticelist.size();i++)
-									{
-							%>
-							<li>
-								<%if(Time.remainDate(Time.getCurrentTimestamp(), noticelist.get(i).getReg_date())/(60*24) < 7) out.print("<span class='label label-notice'>새소식</span>");%>
-								<a href="/wjm/admin/notice/preview/<%=noticelist.get(i).getPk() %>" target="_blank"><%=noticelist.get(i).getName() %></a> 
-								<a class='btn btn-sm btn-client' href='/wjm/admin/notice/edit/<%=noticelist.get(i).getPk()%>'>수정</a>
-								<span class="notice-date"><%=Time.toString3(noticelist.get(i).getReg_date()) %></span>
-							</li>
-							<%
-									}
-								}
-							%>
-						</ul>
-					</div>
 					
 					<div class="mywishket-project">
-						<h4 class="mywishket-project-heading">관리 목록</h4>
 						
-						
-						<div class="contract-project">
-							<h5 class="contract-project-heading">
-								<a href="#">신원 인증 신청</a>
-							</h5>
-							<table class="table table-hover">
-								<thead>
-									<tr>
-										<th>ID</th>
-										<th>타입</th>
-										<th>도구</th>
-									</tr>
-								</thead>
-								<tbody>
-								<%
-									if(authenticationlist != null)
-									{
-										for(int i=0;i<authenticationlist.size();i++)
-										{
-								%>
-								<tr>
-									<td><%=authenticationlist.get(i).getId() %></td>
-									<td><% if(authenticationlist.get(i).getAccount_type().equals("client")) out.print("클라이언트"); else out.print("파트너스"); %></td>
-									<td><a class='btn btn-sm btn-client' href='/wjm/admin/accounts/verify_identity/<%=authenticationlist.get(i).getPk() %>/'>자세히보기</a></td>
-								</tr>
-								<%
-										}
-									}
-									else
-									{
-								%>
-								<tr>
-								<td class='text-muted' colspan='3'>제출된 인증서류가 없습니다.</td></tr>
-								
-								<%
-									}
-								%>
-								</tbody>
-							</table>
-							
-							<p class="text-right">
-								<a class="more" href="/wjm/admin/identity/">신원인증 신청 
-									자세히 보기
-								</a>
-							</p>
-						</div>
-						<div class="submitted-project">
-							<h5 class="submitted-project-heading">
-								<a href="#">검수 신청</a>
-							</h5>
-							<table class="table table-hover">
-								<thead>
-									<tr>
-										<th>프로젝트 제목</th>
-										<th>클라이언트</th>
-										<th>제출일자</th>
-										<th>도구</th>
-									</tr>
-								</thead>
-								<tbody>
-								<%
-									if(submitted == null)
-									{
-								%>
-								<tr><td class='text-muted' colspan='4'>검수 신청중인 프로젝트가 없습니다.</td></tr>
-								<%
-									}
-									else
-									{
-										for(int i=0;i<submitted.size();i++)
-										{
-								%>
-								<tr>
-									<td><%=submitted.get(i).getName() %></td>	
-									<td><a href="/wjm/admin/accounts/profile/<%=submitted.get(i).getAccount_pk() %>"><%=submitted.get(i).getAccount().getId() %></a></td>
-
-									<td><%= Time.toString3(submitted.get(i).getReg_date()) %></td>
-									<td><a class='btn btn-sm btn-client' href='/wjm/admin/project/preview/<%=submitted.get(i).getName()%>/<%= submitted.get(i).getPk()%>/'>자세히보기</a></td>
-								</tr>
-								<%
-										}
-									}
-								%>
-								</tbody>
-							</table>
-							
-							<p class="text-right">
-								<a class="more" href="/wjm/client/manage/project/submitted/">검수 신청 
-									자세히 보기
-								</a>
-							</p>
-						</div>
 						<div class="proposal-project">
 							<h5 class="proposal-project-heading">
-								<a href="#">미팅 신청</a>
+								<a href="#">결제 대기중인 프로젝트</a>
 							</h5>
 							<table class="table table-hover">
 								<thead>
@@ -190,96 +68,30 @@
 										<th>프로젝트 제목</th>
 										<th>클라이언트</th>
 										<th>파트너스</th>
-										<th>도구1</th>
-										<th>도구2</th>
-										<th>제출일자</th>
+										<th>계약일자</th>
 									</tr>
 								</thead>
 								<tbody>
 								<%
-									if(contractlist == null)
-									{
-								%>
-								<tr><td class='text-muted' colspan='6'>미팅 신청 리스트가 없습니다.</td></tr>
-								<%
-									}
-									else
-									{
-										for(int i=0;i<contractlist.size();i++)
-										{
-								%>
-								<tr>
-									<td><a href="/wjm/project/<%=contractlist.get(i).getProject().getName() %>/<%=contractlist.get(i).getProject_pk() %>"><%=contractlist.get(i).getProject().getName() %></a></td>
-									<td><a href="/wjm/admin/accounts/profile/<%=contractlist.get(i).getClient_pk() %>"><%=contractlist.get(i).getClient_id() %></a></td>
-									<td><a href="/wjm/admin/accounts/profile/<%=contractlist.get(i).getPartners_pk() %>"><%=contractlist.get(i).getPartners_id() %></a></td>
-									<td><a class='btn btn-sm btn-client' href='/wjm/admin/contract/success/<%=contractlist.get(i).getProject_pk()%>/<%=contractlist.get(i).getClient_pk()%>/<%=contractlist.get(i).getPartners_pk()%>'>계약 성사</a></td>
-									<td><a class='btn btn-sm btn-client' href='/wjm/admin/contract/fail/<%=contractlist.get(i).getProject_pk()%>/<%=contractlist.get(i).getClient_pk()%>/<%=contractlist.get(i).getPartners_pk()%>'>계약 실패</a></td>
-									<td><%=Time.toString3(contractlist.get(i).getReg_date()) %></td>
-								</tr>
-								<%
-										}
-									}
-								%>
-								</tbody>
-								
-							</table>
-							
-							<p class="text-right">
-								<a class="more" href="/wjm/client/manage/project/submitted/">미팅 신청 
-									자세히 보기
-								</a>
-							</p>
-						</div>
-						<div class="proposal-project">
-							<h5 class="proposal-project-heading">
-								<a href="#">진행중인 프로젝트</a>
-							</h5>
-							<table class="table table-hover">
-								<thead>
-									<tr>
-										<th>프로젝트 제목</th>
-										<th>클라이언트</th>
-										<th>파트너스</th>
-										<th>남은기간</th>
-										<th>도구1</th>
-										<th>도구2</th>
-									</tr>
-								</thead>
-								<tbody>
-								<%
-									if(progresslist == null)
+									if(waitlist == null)
 									{
 								%>
 								<tr>
-								<td class='text-muted' colspan='6'>진행중인 프로젝트 리스트가 없습니다.</td>
+								<td class='text-muted' colspan='4'>결제대기중인 프로젝트 리스트가 없습니다.</td>
 								</tr>
 								<%
 									}
 									else
 									{
-										for(int i=0;i<progresslist.size();i++)
+										for(int i=0;i<waitlist.size();i++)
 										{
 								%>
 								<tr>
-									<td><a href="/wjm/project/<%=progresslist.get(i).getName() %>/<%=progresslist.get(i).getProject_pk() %>"><%=progresslist.get(i).getName() %></a></td>
-									<td><a href="/wjm/admin/accounts/profile/<%=progresslist.get(i).getClient_pk() %>"><%=progresslist.get(i).getClient_id() %></a></td>
-									<td><a href="/wjm/admin/accounts/profile/<%=progresslist.get(i).getPartners_pk() %>"><%=progresslist.get(i).getPartners_id() %></a></td>
-									<td><%
-									Timestamp now = Time.getCurrentTimestamp();
-									now = Time.dateToTimestamp(Time.TimestampToString(now));
-									Timestamp reg_date = progresslist.get(i).getReg_date();
-									reg_date = Time.dateToTimestamp(Time.TimestampToString(reg_date));
+									<td><a href="/wjm/project/<%=waitlist.get(i).getName() %>/<%=waitlist.get(i).getProject_pk() %>"><%=waitlist.get(i).getName() %></a></td>
+									<td><a href="/wjm/admin/accounts/profile/<%=waitlist.get(i).getClient_pk() %>"><%=waitlist.get(i).getClient_id() %></a></td>
+									<td><a href="/wjm/admin/accounts/profile/<%=waitlist.get(i).getPartners_pk() %>"><%=waitlist.get(i).getPartners_id() %></a></td>
+									<td><%out.print(Time.toString3(waitlist.get(i).getReg_date()));%></td>
 									
-									int remain = Time.remainDate(now, reg_date)/(60*24);
-									
-									if(progresslist.get(i).getTerm() - remain>=0)
-										out.print(progresslist.get(i).getTerm() - remain+" 일 전");
-									else
-										out.print(progresslist.get(i).getTerm() - remain*(-1)+"일 초과");
-									
-									%>/<%=progresslist.get(i).getTerm() %>일</td>
-									<td><a class='btn btn-sm btn-client' href='/wjm/admin/project/complete/success/<%=progresslist.get(i).getProject_pk()%>/<%=progresslist.get(i).getClient_pk()%>/<%=progresslist.get(i).getPartners_pk()%>'>완료</a></td>
-									<td><a class='btn btn-sm btn-client' href='/wjm/admin/project/complete/fail/<%=progresslist.get(i).getProject_pk()%>/<%=progresslist.get(i).getClient_pk()%>/<%=progresslist.get(i).getPartners_pk()%>'>취소</a></td>
 									
 								</tr>
 								<%
@@ -289,12 +101,6 @@
 								</tbody>
 								
 							</table>
-							
-							<p class="text-right">
-								<a class="more" href="/wjm/client/manage/project/submitted/">진행중인 프로젝트 
-									자세히 보기
-								</a>
-							</p>
 						</div>
 						
 					</div>
@@ -305,50 +111,5 @@
 	</div>
 	<jsp:include page="../footer.jsp" flush="false" />
 	
-	<script>
-
-$( document ).ready(function($) {
-    var p5TotalSubNavigationFlag = 0;
-
-
-	if ( $( window ).width() >= 1200 ) {
-		$( '.p5-side-nav-deactive' ).css( 'display', 'none' );
-	} else  {
-		$( '.p5-side-nav-active' ).css( 'display', 'none' );
-		$( '.p5-side-nav-deactive' ).css( 'display', 'block');
-	}
-
-	$('.content-inner').on('click', '.p5-side-nav-active-btn', function () {
-		$('.p5-side-nav-active').css( 'display', 'none' );
-		$('.p5-side-nav-deactive').css('display','block');
-	});
-
-	$('.content-inner').on('click', '.p5-side-nav-deactive-btn', function () {
-		$('.p5-side-nav-active').css( 'display', 'block' );
-		$('.p5-side-nav-deactive').css('display','none');
-	});
-
-
-    $( window ).scroll ( function () {
-		if ( $(window).scrollTop() > 87 && p5TotalSubNavigationFlag === 0) {
-			setTimeout(function() {
-				$('#p5-total-sub-navigation-wrapper').removeClass('hide fadeOut');
-				$('#p5-total-sub-navigation-wrapper').addClass('fadeInDown');
-			}, 200 );
-			flag = 1;
-
-
-		} else if ( $(window).scrollTop() <= 87 ){
-			p5TotalSubNavigationFlag = 0;
-			$('#p5-total-sub-navigation-wrapper').removeClass('fadeInDown');
-			$('#p5-total-sub-navigation-wrapper').addClass('fadeOut');
-			setTimeout(function() {
-				$('#p5-total-sub-navigation-wrapper').addClass('hide');
-			}, 200 );
-		}
-	});
-});
-
-</script>
 </body>
 </html>

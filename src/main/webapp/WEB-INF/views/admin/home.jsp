@@ -10,6 +10,7 @@
 	List<ContractInfo> contractlist = (List<ContractInfo>)request.getAttribute("contractlist");
 	List<ContractInfo> progresslist = (List<ContractInfo>)request.getAttribute("progresslist");
 	List<NoticeInfo> noticelist = (List<NoticeInfo>)request.getAttribute("noticelist");
+	List<ContractInfo> waitlist = (List<ContractInfo>)request.getAttribute("waitlist");
 
 	%>
 <!DOCTYPE html>
@@ -190,8 +191,6 @@
 										<th>프로젝트 제목</th>
 										<th>클라이언트</th>
 										<th>파트너스</th>
-										<th>도구1</th>
-										<th>도구2</th>
 										<th>제출일자</th>
 									</tr>
 								</thead>
@@ -200,7 +199,7 @@
 									if(contractlist == null)
 									{
 								%>
-								<tr><td class='text-muted' colspan='6'>미팅 신청 리스트가 없습니다.</td></tr>
+								<tr><td class='text-muted' colspan='4'>미팅 신청 리스트가 없습니다.</td></tr>
 								<%
 									}
 									else
@@ -212,8 +211,6 @@
 									<td><a href="/wjm/project/<%=contractlist.get(i).getProject().getName() %>/<%=contractlist.get(i).getProject_pk() %>"><%=contractlist.get(i).getProject().getName() %></a></td>
 									<td><a href="/wjm/admin/accounts/profile/<%=contractlist.get(i).getClient_pk() %>"><%=contractlist.get(i).getClient_id() %></a></td>
 									<td><a href="/wjm/admin/accounts/profile/<%=contractlist.get(i).getPartners_pk() %>"><%=contractlist.get(i).getPartners_id() %></a></td>
-									<td><a class='btn btn-sm btn-client' href='/wjm/admin/contract/success/<%=contractlist.get(i).getProject_pk()%>/<%=contractlist.get(i).getClient_pk()%>/<%=contractlist.get(i).getPartners_pk()%>'>계약 성사</a></td>
-									<td><a class='btn btn-sm btn-client' href='/wjm/admin/contract/fail/<%=contractlist.get(i).getProject_pk()%>/<%=contractlist.get(i).getClient_pk()%>/<%=contractlist.get(i).getPartners_pk()%>'>계약 실패</a></td>
 									<td><%=Time.toString3(contractlist.get(i).getReg_date()) %></td>
 								</tr>
 								<%
@@ -230,6 +227,57 @@
 								</a>
 							</p>
 						</div>
+						
+						<div class="proposal-project">
+							<h5 class="proposal-project-heading">
+								<a href="#">결제 대기중인 프로젝트</a>
+							</h5>
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th>프로젝트 제목</th>
+										<th>클라이언트</th>
+										<th>파트너스</th>
+										<th>계약일자</th>
+									</tr>
+								</thead>
+								<tbody>
+								<%
+									if(waitlist == null)
+									{
+								%>
+								<tr>
+								<td class='text-muted' colspan='4'>결제대기중인 프로젝트 리스트가 없습니다.</td>
+								</tr>
+								<%
+									}
+									else
+									{
+										for(int i=0;i<waitlist.size();i++)
+										{
+								%>
+								<tr>
+									<td><a href="/wjm/project/<%=waitlist.get(i).getName() %>/<%=waitlist.get(i).getProject_pk() %>"><%=waitlist.get(i).getName() %></a></td>
+									<td><a href="/wjm/admin/accounts/profile/<%=waitlist.get(i).getClient_pk() %>"><%=waitlist.get(i).getClient_id() %></a></td>
+									<td><a href="/wjm/admin/accounts/profile/<%=waitlist.get(i).getPartners_pk() %>"><%=waitlist.get(i).getPartners_id() %></a></td>
+									<td><%out.print(Time.toString3(waitlist.get(i).getReg_date()));%></td>
+									
+									
+								</tr>
+								<%
+										}
+									}
+								%>
+								</tbody>
+								
+							</table>
+						</div>
+						
+							<p class="text-right">
+								<a class="more" href="/wjm/admin/wait/">결제 대기중인 프로젝트 
+									자세히 보기
+								</a>
+							</p>
 						<div class="proposal-project">
 							<h5 class="proposal-project-heading">
 								<a href="#">진행중인 프로젝트</a>
@@ -241,8 +289,6 @@
 										<th>클라이언트</th>
 										<th>파트너스</th>
 										<th>남은기간</th>
-										<th>도구1</th>
-										<th>도구2</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -251,7 +297,7 @@
 									{
 								%>
 								<tr>
-								<td class='text-muted' colspan='6'>진행중인 프로젝트 리스트가 없습니다.</td>
+								<td class='text-muted' colspan='4'>진행중인 프로젝트 리스트가 없습니다.</td>
 								</tr>
 								<%
 									}
@@ -278,8 +324,6 @@
 										out.print(progresslist.get(i).getTerm() - remain*(-1)+"일 초과");
 									
 									%>/<%=progresslist.get(i).getTerm() %>일</td>
-									<td><a class='btn btn-sm btn-client' href='/wjm/admin/project/complete/success/<%=progresslist.get(i).getProject_pk()%>/<%=progresslist.get(i).getClient_pk()%>/<%=progresslist.get(i).getPartners_pk()%>'>완료</a></td>
-									<td><a class='btn btn-sm btn-client' href='/wjm/admin/project/complete/fail/<%=progresslist.get(i).getProject_pk()%>/<%=progresslist.get(i).getClient_pk()%>/<%=progresslist.get(i).getPartners_pk()%>'>취소</a></td>
 									
 								</tr>
 								<%

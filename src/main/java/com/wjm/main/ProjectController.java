@@ -654,7 +654,7 @@ public class ProjectController {
 		else
 		{
 			jObject.put("messages", "error");
-			jObject.put("path", "redirect:/wjm/index");
+			jObject.put("path", "/wjm/index");
 			return jObject.toString();
 		}
 		
@@ -665,7 +665,7 @@ public class ProjectController {
 		if(account==null)
 		{
 			jObject.put("messages", "error");
-			jObject.put("path", "redirect:/wjm/accounts/login");
+			jObject.put("path", "/wjm/accounts/login");
 			return jObject.toString();
 		}
 		
@@ -678,18 +678,20 @@ public class ProjectController {
 			logger.info("임시저장");
 
 			jObject.put("messages", "success");
-			jObject.put("path", "redirect:/wjm/client/manage/project/saved/");
+			jObject.put("path", "/wjm/client/manage/project/saved/");
 		}
 		else if(status.equals("검수중")){
 			//notification update
 			//관리자
-			//notificationDao.create(contract.getPartners_pk(),contract.getClient_id()+"님의 "
-			//+project.getName()+" 계약이 성사되지 못했습니다. 다른 프로젝트에 지원해주세요.");
+			String result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", 
+					title+" 프로젝트가 검수를 요청하였습니다.", "외주몬 알림 메일입니다");
+			logger.info("이메일 전송 결과 = "+result);
+			
 			//클라이언트
 			notificationDao.create(account.getPk(), title+" 프로젝트가 검수중입니다. 검수는 최대 24시간이 소요됩니다.");
 			
 			//클라이언트
-			String result = sendMail("admin@wjm.com","gksthf1611@gmail.com",title+" 프로젝트가 검수중입니다. 검수는 최대 24시간이 소요됩니다."
+			result = sendMail("admin@wjm.com","gksthf1611@gmail.com",title+" 프로젝트가 검수중입니다. 검수는 최대 24시간이 소요됩니다."
 					, "외주몬 알림 메일입니다.");
 			logger.info("클라이언트 메일 : "+result);
 			//파트너스
@@ -700,7 +702,7 @@ public class ProjectController {
 			logger.info("검수중");
 			
 			jObject.put("messages", "success");
-			jObject.put("path", "redirect:/wjm/project/add/thank-you");
+			jObject.put("path", "/wjm/project/add/thank-you");
 		}
 		
 		logger.info(jObject.toString());
@@ -1018,7 +1020,7 @@ public class ProjectController {
 		else
 		{
 			jObject.put("messages", "error");
-			jObject.put("path", "redirect:/wjm/index");
+			jObject.put("path", "/wjm/index");
 			return jObject.toString();
 		}
 		
@@ -1029,7 +1031,7 @@ public class ProjectController {
 		if(account==null)
 		{
 			jObject.put("messages", "error");
-			jObject.put("path", "redirect:/wjm/accounts/login");
+			jObject.put("path", "/wjm/accounts/login");
 			return jObject.toString();
 		}
 		
@@ -1045,8 +1047,15 @@ public class ProjectController {
 		}
 		else if(status.equals("검수중")){
 			//notification update
+
+			//관리자
+			String result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", 
+					title+" 프로젝트가 검수를 요청하였습니다.", "외주몬 알림 메일입니다");
+			logger.info("이메일 전송 결과 = "+result);
+			
+			//클라이언트
 			notificationDao.create(account.getPk(), title+" 프로젝트가 등록되어 검수중입니다. 검수에는 최대 24시간이 소요됩니다.");
-			String result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", title+" 프로젝트가 등록되어 검수중입니다. 검수에는 최대 24시간이 소요됩니다.", "외주몬 알림 메일입니다");
+			result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", title+" 프로젝트가 등록되어 검수중입니다. 검수에는 최대 24시간이 소요됩니다.", "외주몬 알림 메일입니다");
 			logger.info("이메일 전송 결과 = "+result);
 			
 			jObject.put("messages", "success");
@@ -1218,6 +1227,7 @@ public class ProjectController {
 		int page_num = 1;
 		if(!Validator.isDigit(page))
 		{
+			
 			mv.addObject("projectnum",0);
 			return mv;
 		}
@@ -1230,24 +1240,16 @@ public class ProjectController {
 				mv.addObject("projectnum",0);
 				return mv;
 			}
+			else
+				mv.addObject("pagenum", page_num);
+			
 		}
 		
 		List<ProjectInfo> projectlist = projectDao.selectCondition(page, q,cat_dev,cat_design,addr,sort);
-		logger.info("project size : "+projectlist.size());
-		mv.addObject("projectnum",projectlist.size());
-		
-		int from = page_num*10-10, to = page_num*10;
-		if(projectlist.size() <= from)
-			projectlist = null;
-		else
-		{
-			if(projectlist.size() <= to)
-				to = projectlist.size()-1;
-			
-			logger.info("from : "+from + " , to : "+to);
-			
-			projectlist = projectlist.subList(from, to);
-		}
+				
+		int project_num = projectDao.selectConditionCount(q,cat_dev,cat_design,addr);
+		logger.info("project size : "+project_num);
+		mv.addObject("totalnum",project_num);
 		
 		mv.addObject("projectlist",projectlist);
 		
@@ -1399,6 +1401,11 @@ public class ProjectController {
 		
 		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
 		if(account == null)
+		{
+			mv.setViewName("/accounts/login");
+			return mv;
+		}
+		else if(!account.getAccount_type().equals("partners"))
 		{
 			mv.setViewName("/accounts/login");
 			return mv;

@@ -112,6 +112,8 @@
 								for(int i =0;i<cnt;i++)
 								{
 									description = apply.get(i).getApplication_content();
+									
+									if(description == null) description="";
 									description = description.replace("\r\n", "<br/>");
 						%>	
 						

@@ -132,6 +132,9 @@ public class AdminController {
 		List<ContractInfo> progresslist = contractDao.selectProgressProjectAdminLimit(5);
 		mv.addObject("progresslist",progresslist);
 		
+		List<ContractInfo> waitlist = contractDao.selectReadyProjectAdminLimit(5);
+		mv.addObject("waitlist",waitlist);
+		
 		List<NoticeInfo> noticelist = noticeDao.select_limit(3);
 		mv.addObject("noticelist",noticelist);
 
@@ -779,6 +782,25 @@ public class AdminController {
 	
 	/////////////////////////////////////////////계약/////////////////////////////////////////////
 	/**
+	 * 결제대기중인 프로젝트 페이지
+	 */
+	@RequestMapping(value = "/admin/wait", method = RequestMethod.GET)
+	public ModelAndView AdminController_wait(HttpServletRequest request, ModelAndView mv) {
+		logger.info("/admin/wait Page");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
+		
+		//결제대기중인 계약 리스트
+		List<ContractInfo> waitlist = contractDao.selectReadyProjectAdmin();
+		mv.addObject("waitlist",waitlist);
+		
+		mv.setViewName("/admin/wait");
+		return mv;
+	}
+	
+	/**
 	 * 진행중인 프로젝트 페이지
 	 */
 	@RequestMapping(value = "/admin/progress", method = RequestMethod.GET)
@@ -928,7 +950,7 @@ public class AdminController {
 				+project.getName()+" 계약이 성사되지 못했습니다. 다른 프로젝트에 지원해주세요.", "외주몬 알림 메일입니다.");
 		logger.info("파트너스 메일 : "+result);
 		
-		mv.setViewName("redirect:/admin/contract/faillist");
+		mv.setViewName("/admin/contract/faillist");
 		
 		return mv;
 	}
@@ -1047,24 +1069,24 @@ public class AdminController {
 		//applicantDao.updateRemianApplicantFail(project_pk);
 		
 		//프로젝트의 상태 "진행중"으로 변경
-		projectDao.updateStatus(project_pk,"진행중");
+		projectDao.updateStatus(project_pk,"결제대기중");
 		
 		ProjectInfo project = projectDao.select_project(contract.getProject_pk());
 		
 		//notification update
 		//파트너스
-		notificationDao.create(contract.getPartners_pk(),contract.getClient_id()+"와의 계약이 성사되어 "
+		notificationDao.create(contract.getPartners_pk(),contract.getClient_id()+"와의 계약이 성사되었습니다. 클라이언트가 결제를 완료하면 "
 				+project.getName()+" 프로젝트가 진행됩니다.");
 		//클라이언트
-		notificationDao.create(contract.getClient_pk(), contract.getPartners_id()+"와의 계약이 성사되어 "
+		notificationDao.create(contract.getClient_pk(), contract.getPartners_id()+"와의 계약이 성사되었습니다. 결제 대기중인 프로젝트의 결제를 완료하면 "
 				+project.getName()+" 프로젝트가 진행됩니다.");
 		
 		//클라이언트
-		String result = sendMail("admin@wjm.com","gksthf1611@gmail.com",contract.getPartners_id()+"와의 계약이 성사되어 "
+		String result = sendMail("admin@wjm.com","gksthf1611@gmail.com",contract.getPartners_id()+"와의 계약이 성사되었습니다. 결제 대기중인 프로젝트의 결제를 완료하면 "
 				+project.getName()+" 프로젝트가 진행됩니다.", "외주몬 알림 메일입니다.");
 		logger.info("클라이언트 메일 : "+result);
 		//파트너스
-		result = sendMail("admin@wjm.com","gksthf1611@gmail.com",contract.getClient_id()+"와의 계약이 성사되어 "
+		result = sendMail("admin@wjm.com","gksthf1611@gmail.com",contract.getClient_id()+"와의 계약이 성사되었습니다. 클라이언트가 결제를 완료하면 "
 				+project.getName()+" 프로젝트가 진행됩니다.", "외주몬 알림 메일입니다.");
 		logger.info("파트너스 메일 : "+result);
 		

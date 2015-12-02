@@ -35,6 +35,16 @@ response.setContentType("text/html; charset=UTF-8");
 	sizes="152x152" />
 <script src="${pageContext.request.contextPath}/resources/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/resources/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
+<style>
+div.backLayer {
+	display:none;
+	background-color:black;
+	position:absolute;
+	left:0px;
+	top:0px;
+}
+
+</style>
 </head>
 <body class="logged-in client project-add-detail">
 	<div id="wrap">
@@ -232,7 +242,7 @@ response.setContentType("text/html; charset=UTF-8");
 											value="OFFLINE">오프라인 미팅</option>
 										<option value="ONLINE">온라인 미팅 (카카오톡, skype, 구글 행아웃)</option></select><span
 										class="help-block">사전 미팅 방식을 선택해주세요.<br />마음에 드는 지원자와의
-										미팅을 위시켓에서 주선해드립니다.
+										미팅을 외주몬에서 주선해드립니다.
 									</span>
 									<span class="help-block">${method_pre_interview_msg}</span>
 								</div>
@@ -377,7 +387,7 @@ response.setContentType("text/html; charset=UTF-8");
 								<img class="info-data-img"
 									src="${pageContext.request.contextPath}/resources/static/img/project-add-process-one.png" />
 								<div class="info-data-letter">
-									위시켓은 <strong>클라이언트님께 무료</strong>로 제공 됩니다.
+									외주몬은 <strong>클라이언트님께 무료</strong>로 제공 됩니다.
 								</div>
 							</div>
 							<div class="project-add-info-data">
@@ -408,6 +418,13 @@ response.setContentType("text/html; charset=UTF-8");
 									클라이언트님의 <strong>승인 후에 파트너에게 대금이 지급</strong>됩니다.
 								</div>
 							</div>
+							
+								<!-- 로딩 이미지 -->
+							<div id="viewLoading">
+								<img src="${pageContext.request.contextPath}/resources/upload/viewLoading.gif" />
+							</div>
+							<!-- 불투명 이미지 -->
+							<div class='backLayer' style='' > </div>
 						</div>
 					</div>
 				</div>
@@ -419,8 +436,48 @@ response.setContentType("text/html; charset=UTF-8");
 
 	<script type="text/javascript">
 
-	$(document).ready(function(){
+	function LoadingScreenFunc()
+	{
+		var width = $(window).width();
+		var height = $(window).height();
+		
+		var scrollLeft = $(window).scrollLeft();
+		var scrollTop = $(window).scrollTop();
+		
+		var backLayerObj = $(".backLayer");
+		var loadingDivObj = $("#viewLoading");
+		
+		//화면을 가리는 레이어의 사이즈 조정
+		backLayerObj.width(width);
+		backLayerObj.height(height);
 
+		var left = scrollLeft;
+		var top = scrollTop;
+		
+		//화면을 가리는 레이어를 보여준다 (0.5초동안 30%의 농도의 투명도)
+		backLayerObj.css( {
+    		'display':'block',
+    		'background-color':'black',
+    		'opacity':'0.3',
+    		'position':'absolute',
+    		'left':left,
+    		'top':top
+    	});
+		
+		left = ( scrollLeft + (width - loadingDivObj.width()) / 2 );
+		top = ( scrollTop + (height - loadingDivObj.height()) / 2 );
+		
+		//팝업 레이어 보이게
+		loadingDivObj.css( {
+    		'display':'block',
+    		'position':'absolute',
+    		'left':left,
+    		'top':top
+    	});
+	}
+	$(document).ready(function(){
+		// 페이지가 로딩될 때 'Loading 이미지'를 숨긴다.
+		$('#viewLoading').hide();
 
 		$( "#post_a_job_id" ).click(function() {
 			
@@ -429,6 +486,7 @@ response.setContentType("text/html; charset=UTF-8");
 				url : "/wjm/project/add/detail/",
 				type : "POST",
 				data : $('#project-add-form').serialize(),
+    		    async: true,
 				dataType : "JSON",
 				success : function(data) {
 					var messages = data.messages;
@@ -446,7 +504,16 @@ response.setContentType("text/html; charset=UTF-8");
 							alert(messages);
 			        	}
 				},
-		
+			    beforeSend:function(){
+		    		LoadingScreenFunc();
+	
+			    }
+			    ,complete:function(){
+	
+					$('#viewLoading').hide();
+					$(".backLayer").hide();
+			 
+			    },
 				error : function(request, status, error) {
 					if (request.status != '0') {
 						alert("code : " + request.status + "\r\nmessage : "

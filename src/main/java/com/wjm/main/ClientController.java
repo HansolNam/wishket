@@ -691,10 +691,13 @@ public class ClientController {
 		
 		AccountInfo applicant_account = accountDao.select(applicant_pk);
 		//미팅 신청을 완료했습니다.알림
-		
 		contractDao.createMeeting(project_pk, account.getPk(), applicant_pk, project.getName()
 				, account.getId(), applicant_account.getId(),"계약진행중");
 		
+		//알림(관리자)
+		String result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", account.getId()+" 클라이언트가 "+
+				applicant_account.getId()+ " 파트너스와 미팅을 요청하였습니다.", "외주몬 알림 메일입니다");
+		logger.info("이메일 전송 결과 = "+result);
 		
 		jObject.put("messages", "success");
 		logger.info(jObject.toString());
