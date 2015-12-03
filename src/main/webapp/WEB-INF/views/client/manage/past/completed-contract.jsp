@@ -150,7 +150,7 @@
 							<div class="p5-partners-project-evaluation-header">
 								<div class="p5-partners-project-evaluation-title">
 									<h4>
-										<a href="/project/<%=completedlist.get(i).getName() %>/<%=completedlist.get(i).getProject_pk() %>/"><%=completedlist.get(i).getName() %></a>
+										<a href="/wjm/project/<%=completedlist.get(i).getName() %>/<%=completedlist.get(i).getProject_pk() %>/"><%=completedlist.get(i).getName() %></a>
 									</h4>
 								</div>
 								<div class="p5-partners-project-evaluation-info">
@@ -204,7 +204,7 @@
 								</div>
 								<div class="p5-user-comment">
 									<span class="p5-user-img-box"><h6>추천 한마디</h6>
-										<img alt="<%=completedlist.get(i).getClient().getId() %> 사진" class="p5-user-comment-img"
+										<img alt="<%=completedlist.get(i).getPartners().getId() %> 사진" class="p5-user-comment-img"
 										src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=completedlist.get(i).getAssessed().getProfile() %>"></span>
 									<span class="p5-user-comment-box"><div>
 											<span class="label label-default label-role">파트너스</span> <span><span
@@ -250,71 +250,6 @@
 		<div id="push"></div>
 	</div>
 	<jsp:include page="../../../footer.jsp" flush="false" />
-	<script type="text/javascript">
-		$(function() {
-			wishket.init();
-
-			svgeezy.init(false, 'png');
-		});
-	</script>
-	<script>
-		$(document).ready(
-				function($) {
-					var p5TotalSubNavigationFlag = 0;
-
-					if ($(window).width() >= 1200) {
-						$('.p5-side-nav-deactive').css('display', 'none');
-					} else {
-						$('.p5-side-nav-active').css('display', 'none');
-						$('.p5-side-nav-deactive').css('display', 'block');
-					}
-
-					$('.content-inner')
-							.on(
-									'click',
-									'.p5-side-nav-active-btn',
-									function() {
-										$('.p5-side-nav-active').css('display',
-												'none');
-										$('.p5-side-nav-deactive').css(
-												'display', 'block');
-									});
-
-					$('.content-inner').on(
-							'click',
-							'.p5-side-nav-deactive-btn',
-							function() {
-								$('.p5-side-nav-active')
-										.css('display', 'block');
-								$('.p5-side-nav-deactive').css('display',
-										'none');
-							});
-
-					$(window).scroll(
-							function() {
-								if ($(window).scrollTop() > 87
-										&& p5TotalSubNavigationFlag === 0) {
-									setTimeout(function() {
-										$('#p5-total-sub-navigation-wrapper')
-												.removeClass('hide fadeOut');
-										$('#p5-total-sub-navigation-wrapper')
-												.addClass('fadeInDown');
-									}, 200);
-									flag = 1;
-
-								} else if ($(window).scrollTop() <= 87) {
-									p5TotalSubNavigationFlag = 0;
-									$('#p5-total-sub-navigation-wrapper')
-											.removeClass('fadeInDown');
-									$('#p5-total-sub-navigation-wrapper')
-											.addClass('fadeOut');
-									setTimeout(function() {
-										$('#p5-total-sub-navigation-wrapper')
-												.addClass('hide');
-									}, 200);
-								}
-							});
-				});
-	</script>
+	
 </body>
 </html>

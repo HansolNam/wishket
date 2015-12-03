@@ -155,7 +155,7 @@ public class AccountInformationDao implements AccountInformationIDao {
 		
 		if(accountinfolist.size()>1)
 		{
-			logger.info("기본정보가 2개, 에러");
+			logger.info("프로필 : default_avatar.png");
 			return "default_avatar.png";
 		}
 		else if(accountinfolist.size() == 0)
@@ -163,17 +163,31 @@ public class AccountInformationDao implements AccountInformationIDao {
 			create(account_pk);
 			AccountInformationInfo accountinfo =  select(account_pk);
 			if(Validator.hasValue(accountinfo.getProfile_img()))
+			{
+				logger.info("프로필 : "+accountinfo.getProfile_img());
 				return accountinfo.getProfile_img();
+			}
 			else
+			{
+				logger.info("프로필 : default_avatar.png");
 				return "default_avatar.png";
+
+			}
 		}
 		else
 		{
 			AccountInformationInfo accountinfo =accountinfolist.get(0);
 			if(Validator.hasValue(accountinfo.getProfile_img()))
-					return accountinfo.getProfile_img();
-				else
-					return "default_avatar.png";
+			{
+				logger.info("프로필 : "+accountinfo.getProfile_img());
+				return accountinfo.getProfile_img();
+			}
+			else
+			{
+				logger.info("프로필 : default_avatar.png");
+				return "default_avatar.png";
+
+			}
 		}
 	}	
 	public List<AccountInformationInfo> select(String id)

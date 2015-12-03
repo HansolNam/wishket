@@ -1,15 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="com.wjm.main.function.Validator,com.wjm.models.AccountInfo, com.wjm.models.ContractInfo, java.util.*,java.sql.Timestamp, com.wjm.main.function.Time"%>
+<%@ page import="com.wjm.main.function.Validator,com.wjm.models.AccountInfo,com.wjm.models.ContractInfo , com.wjm.models.AdditionInfo, java.util.*,java.sql.Timestamp, com.wjm.main.function.Time"%>
 <%
 	AccountInfo account = (AccountInfo)session.getAttribute("account");
-	List<ContractInfo> contractlist = (List<ContractInfo>)request.getAttribute("contractlist");
-	int contractCnt = 0;
-	
-	if(contractlist != null)
-		contractCnt = contractlist.size();
-	
+	ContractInfo contract = (ContractInfo) request.getAttribute("contract");
 
+	List<AdditionInfo> additionlist = (List<AdditionInfo>)request.getAttribute("additionlist");
+	int additionCnt = 0;
+	
+	if(additionlist != null)
+		additionCnt = additionlist.size();
+	
 	String profile = (String)request.getAttribute("profile");
 	
 	if(!Validator.hasValue(profile))
@@ -25,7 +26,7 @@
 	prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#">
 <meta charset="utf-8" />
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<title>외주몬(WJM) · 관리 - 진행 중인 프로젝트</title>
+<title>외주몬(WJM) · 프로젝트 - 추가요청 리스트</title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
 <link href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
 	type="text/css" />
@@ -62,7 +63,7 @@
 			<div class="page-inner">
 				<div class="sidebar">
 					<div class="user-name-tag">
-						<h3 class="user-name-tag-heading">클라이언트</h3>
+						<h3 class="user-name-tag-heading"><%if(account.getAccount_type().equals("client")) out.print("클라이언트"); else out.print("파트너스"); %></h3>
 						<div class="user-name-tag-body">
 							<img alt="<%=account.getId() %> 사진" class="img-circle user-img"
 								src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=profile %>" />
@@ -74,58 +75,59 @@
 					<div class="sidebar-nav">
 						<ul>
 							<li class="active"><a
-								href="/wjm/client/manage/contract-in-progress/"><span
-									class="badge badge-info pull-right"><%=contractCnt %></span>진행 중인 프로젝트</a></li>
+								href="#"><span
+									class="badge badge-info pull-right"><%=additionCnt %></span>추가 요청 리스트</a></li>
 						</ul>
 					</div>
 				</div>
 				<div class="content">
 					<div class="content-header action">
 						<h3 class="header-text">
-							진행 중인 프로젝트 <small class="small-text">계약 진행 중인 프로젝트를 확인할 수
-								있습니다.</small>
+							"<%=contract.getName() %>" 추가요청 리스트 <small class="small-text">진행중인 프로젝트에서 추가 요청 사항을 확인할 수 있습니다.</small>
 						</h3>
 					</div>
+					
 					<div class="content-inner">
+					
 						<div class="process-guide-box">
 							<img src="${pageContext.request.contextPath}/resources/static/img/process-guide-success.png"
 								style="float: left" />
 							<p class="process-guide-text" style="float: left">
-								1. <strong>현재 진행 중</strong>인 프로젝트 목록입니다.<br /> 2. 프로젝트는 <strong>대금
+								1. <strong>현재 진행 중</strong>인 프로젝트의 추가요청 목록입니다.<br /> 2. 추가요청은 <strong>대금
 									결제 후</strong>에 진행됩니다.<br /> 3. 외주몬은 대금 보호 시스템을 통해 <strong>프로젝트가
-									끝날 때까지 대금을 안전하게 보호</strong>합니다.<br /> 4. 프로젝트가 성공적으로 끝나면, <strong>파트너를
-									평가</strong>하고 프로젝트를 완료할 수 있습니다.<br /> 5. 관련 문의사항은 <strong>고객센터(02-6925-4849,
+									끝날 때까지 대금을 안전하게 보호</strong>합니다.<br /> 4. 관련 문의사항은 <strong>고객센터(02-6925-4849,
 									help@wishket.com)</strong>를 이용해주세요.<br />
 							</p>
 							<div style="clear: both;"></div>
 						</div>
+						<div class="management-tools" style="float:right;">
+							<a class='btn btn-sm btn-client' href='/wjm/project/addition/add/<%=contract.getPk() %>'>추가요청 등록</a>
+						</div>
+						<br>
+						<br>
 						<section>
 						<%
 						
-							if(contractCnt != 0)
+							if(additionCnt != 0)
 							{
-								for(int i=0;i<contractCnt;i++)
+								for(int i=0;i<additionCnt;i++)
 								{
 								
 						%>
 							<section class="project-unit">
 								<section class="project-unit-heading">
 									<h4 class="project-title">
-									<a href="/wjm/project/<%=contractlist.get(i).getName() %>/<%=contractlist.get(i).getProject_pk()%>/"><%=contractlist.get(i).getName() %></a>
+									<%=additionlist.get(i).getTitle() %>
 									</h4>
-									
-									<div class="management-tools">
-										<a class='btn btn-sm btn-client' href='/wjm/project/addition/list/<%=contractlist.get(i).getPk() %>'>추가요청 목록</a>
-									</div>
 								</section>
 								<section class="project-unit-body">
 									<ul class="project-info list-item-narrow">
 										<li><h5 class="label-item"
 												style="min-width: 80px !important;">
-												<i class="fa fa-won"></i> 파트너스
+												<i class="fa fa-won"></i> 진행상태
 											</h5>
 											<span>									
-											<a href="/wjm/partners/p/<%=contractlist.get(i).getPartners_id()%>"><%=contractlist.get(i).getPartners_id()%></a>
+											<%=additionlist.get(i).getStatus() %>
 											</span></li>
 										<li><h5 class="label-item"
 												style="min-width: 80px !important;">
@@ -134,22 +136,22 @@
 											<span><%
 									Timestamp now = Time.getCurrentTimestamp();
 									now = Time.dateToTimestamp(Time.TimestampToString(now));
-									Timestamp reg_date = contractlist.get(i).getReg_date();
+									Timestamp reg_date = additionlist.get(i).getReg_date();
 									reg_date = Time.dateToTimestamp(Time.TimestampToString(reg_date));
 									
 									int remain = Time.remainDate(now, reg_date)/(60*24);
 									
-									if(contractlist.get(i).getTerm() - remain>=0)
-										out.print(contractlist.get(i).getTerm() - remain+" 일 전");
+									if(additionlist.get(i).getTerm() - remain>=0)
+										out.print(additionlist.get(i).getTerm() - remain+" 일 전");
 									else
-										out.print(contractlist.get(i).getTerm() - remain*(-1)+"일 초과");
+										out.print(additionlist.get(i).getTerm() - remain*(-1)+"일 초과");
 									
-									%>/<%=contractlist.get(i).getTerm() %>일</span></li>
+									%>/<%=additionlist.get(i).getTerm() %>일</span></li>
 										<li><h5 class="label-item"
 												style="min-width: 80px !important;">
 												<i class="fa fa-calendar-o"></i> 비용
 											</h5>
-											<span><%=contractlist.get(i).getBudget() %> 원</span></li>
+											<span><%=additionlist.get(i).getBudget() %> 원</span></li>
 									</ul>
 								</section>
 							</section>
@@ -160,7 +162,7 @@
 							{
 							%>
 						<section>
-						<p class="text-muted">진행 중인 프로젝트가 없습니다.</p>
+						<p class="text-muted">추가요청 목록이 없습니다.</p>
 						</section>
 							<%
 							}
@@ -173,6 +175,6 @@
 		<div id="push"></div>
 	</div>
 	<jsp:include page="../../footer.jsp" flush="false" />
-
+	
 </body>
 </html>

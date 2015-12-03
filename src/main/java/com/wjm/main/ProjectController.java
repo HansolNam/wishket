@@ -23,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.wjm.dao.AccountDao;
 import com.wjm.dao.AccountInformationDao;
+import com.wjm.dao.AdditionDao;
 import com.wjm.dao.ApplicantDao;
 import com.wjm.dao.AreaDetailDao;
 import com.wjm.dao.AssessmentDao;
@@ -37,6 +38,7 @@ import com.wjm.main.function.Time;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
 import com.wjm.models.AccountInformationInfo;
+import com.wjm.models.AdditionInfo;
 import com.wjm.models.ApplicantInfo;
 import com.wjm.models.AssessmentInfo;
 import com.wjm.models.CommentInfo;
@@ -88,6 +90,9 @@ public class ProjectController {
 
 	@Autowired
 	private AssessmentDao assessmentDao;
+
+	@Autowired
+	private AdditionDao additionDao;
 	
 	@Autowired
 	private JavaMailSender mailSender;
@@ -1646,6 +1651,237 @@ public class ProjectController {
 			jObject.put("messages", result);
 		}
 
+		return jObject.toString();
+	}
+	
+
+	/**
+	 * 추가 요청 리스트 화면
+	 */
+
+	@RequestMapping(value = "/project/addition/list/{contract_pk}", method = RequestMethod.GET)
+	public ModelAndView ProjectController_addition_list(HttpServletRequest request, 
+			@PathVariable("contract_pk") int contract_pk, ModelAndView mv) {
+		logger.info("project addition list get Page");
+		
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null)
+		{
+			mv.setViewName("/accounts/login");
+			return mv;
+		}
+		
+		ContractInfo contract = contractDao.select(contract_pk);
+		
+		if(contract == null)
+		{
+			logger.info("계약이 존재하지 않습니다.");
+			mv.setViewName("/mywjm/"+account.getAccount_type());
+			return mv;
+		}
+		else
+		{
+			//해당 계약 소유자인지 권한 체크
+			if(account.getAccount_type().equals("client"))
+			{
+				if(account.getPk() != contract.getClient_pk())
+				{
+					logger.info("해당 계약의 client가 아님");
+					mv.setViewName("/index");
+					return mv;
+				}
+			}
+			else if(account.getAccount_type().equals("partners"))
+			{
+				if(account.getPk() != contract.getPartners_pk())
+				{
+					logger.info("해당 계약의 partners가 아님");
+					mv.setViewName("/index");
+					return mv;
+				}
+			}
+			
+		}
+		
+		List<AdditionInfo> additionlist = additionDao.select_contract(contract.getPk());
+		
+		mv.addObject("contract", contract);
+		mv.addObject("additionlist", additionlist);
+		mv.setViewName("/project/addition/list");
+		
+		return mv;
+	}
+	
+
+	/**
+	 * 추가 요청 등록 화면
+	 */
+
+	@RequestMapping(value = "/project/addition/add/{contract_pk}", method = RequestMethod.GET)
+	public ModelAndView ProjectController_addition_add(HttpServletRequest request, 
+			@PathVariable("contract_pk") int contract_pk, ModelAndView mv) {
+		logger.info("project addition add get Page");
+		
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null)
+		{
+			mv.setViewName("/accounts/login");
+			return mv;
+		}
+		
+		ContractInfo contract = contractDao.select(contract_pk);
+		
+		if(contract == null)
+		{
+			logger.info("계약이 존재하지 않습니다.");
+			mv.setViewName("/mywjm/"+account.getAccount_type());
+			return mv;
+		}
+		else
+		{
+			//해당 계약 소유자인지 권한 체크
+			if(account.getAccount_type().equals("client"))
+			{
+				if(account.getPk() != contract.getClient_pk())
+				{
+					logger.info("해당 계약의 client가 아님");
+					mv.setViewName("/index");
+					return mv;
+				}
+			}
+			else
+			{
+				logger.info("클라이언트가 아니면 등록할 수 없음");
+				mv.setViewName("/index");
+				return mv;
+			}
+			
+		}
+				
+		mv.addObject("contract", contract);
+		mv.setViewName("/project/addition/add");
+		
+		return mv;
+	}
+	
+
+	/**
+	 * 추가 요청 등록 처리
+	 */
+
+	@RequestMapping(value = "/project/addition/add/{contract_pk}", method = RequestMethod.POST, produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public String ProjectController_addition_add_post(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable("contract_pk") int contract_pk,
+			@RequestParam("title") String title,
+			@RequestParam("term") int term,
+			@RequestParam("budget") int budget,
+			ModelAndView mv) {
+		logger.info("project addition add post Page");
+
+		JSONObject jObject = new JSONObject();
+		
+		logger.info("title = "+title);
+		logger.info("term = "+term);
+		logger.info("budget = "+budget);
+		
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null)
+		{
+			logger.info("error!!!!");
+			jObject.put("messages", "error");
+			jObject.put("path","/wjm/accounts/login");
+			return jObject.toString();
+		}
+		
+		ContractInfo contract = contractDao.select(contract_pk);
+		
+		if(contract == null)
+		{
+			logger.info("error!!!!");
+			jObject.put("messages", "error");
+			jObject.put("path","/wjm/index");
+			return jObject.toString();
+		}
+		else
+		{
+			//해당 계약 소유자인지 권한 체크
+			if(account.getAccount_type().equals("client"))
+			{
+				if(account.getPk() != contract.getClient_pk())
+				{
+					logger.info("error!!!!");
+					jObject.put("messages", "error");
+					jObject.put("path","/wjm/index");
+					return jObject.toString();
+				}
+			}
+			else
+			{
+				logger.info("error!!!!");
+				jObject.put("messages", "error");
+				jObject.put("path","/wjm/index");
+				return jObject.toString();
+			}
+			
+		}
+		
+
+		//title 체크
+		if(!Validator.hasValue(title))
+		{
+			logger.info("title!!!!");
+			jObject.put("messages", "제목은 필수입니다.");
+			return jObject.toString();
+		}
+		else if(!Validator.isValidLength(title, 1, 250))
+		{
+			logger.info("title!!!!");
+			jObject.put("messages", "추가요청 제목은 최대 250자입니다.");
+			return jObject.toString();
+		}
+		else
+		{
+			logger.info("title = "+title);
+		}
+		
+		//budget
+		if(budget<0)
+		{
+			logger.info("budget!!!!");
+			jObject.put("messages", "예산은 양수만 입력 가능합니다.");
+			return jObject.toString();
+		}
+		else
+		{
+			logger.info("budget = "+budget);
+		}
+
+		//term
+		if(term<0)
+		{
+			logger.info("term!!!!");
+			jObject.put("messages", "기간은 양수만 입력 가능합니다.");
+			return jObject.toString();
+		}
+		else if(term > 999)
+		{
+			logger.info("term!!!!");
+			jObject.put("messages", "기간은 최대 세자리입니다.");
+			return jObject.toString();
+		}
+		else
+		{
+			logger.info("budget = "+budget);
+		}	
+		
+		additionDao.create(contract_pk, title, budget, term, "검수중");
+		
+		jObject.put("messages", "success");
+		jObject.put("path", "/wjm/project/addition/list");
+		
+		logger.info(jObject.toString());
+		
 		return jObject.toString();
 	}
 }
