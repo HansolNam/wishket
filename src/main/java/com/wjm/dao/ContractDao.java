@@ -80,6 +80,40 @@ public class ContractDao implements ContractIDao {
 		    });
 	}
 
+	public ContractInfo select(int pk)
+	{
+		List<ContractInfo> list = jdbcTemplate.query("select * from contract where pk = ?",
+		    	new Object[] { pk }, new RowMapper<ContractInfo>() {
+		    	public ContractInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		ContractInfo contract = new ContractInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getInt("project_pk")
+		    				, resultSet.getInt("client_pk")
+		    				, resultSet.getInt("partners_pk")
+		    				, resultSet.getString("name")
+		    				, resultSet.getString("partners_id")
+		    				, resultSet.getString("client_id")
+		    				, resultSet.getInt("budget")
+		    				, resultSet.getInt("term")
+		    				, resultSet.getString("status")
+		    				, resultSet.getTimestamp("reg_date"));
+		    		
+		    		contract.setClient(accountDao.select(contract.getClient_pk()));
+		    		contract.setPartners(accountDao.select(contract.getPartners_pk()));
+		    		contract.setProject(projectDao.select_project(contract.getProject_pk()));
+		    		
+		    		return contract;
+		    	}
+		    });
+		if(list == null)
+			return null;
+		else if(list.isEmpty())
+			return null;
+		else
+			return list.get(0);
+	}	
+	
 	public List<ContractInfo> selectStatusAdminLimit(String status, int num)
 	{
 		List<ContractInfo> list = jdbcTemplate.query("select * from contract where status = ? order by reg_date desc limit ?",
@@ -144,7 +178,37 @@ public class ContractDao implements ContractIDao {
 		else
 			return list;
 	}	
-	
+
+	public List<ContractInfo> selectReadyClient(int client_pk, String project_status)
+	{
+		List<ContractInfo> list = jdbcTemplate.query("select contract.* from contract,project where contract.client_pk = ? and contract.project_pk = project.pk and project.status=? order by reg_date desc",
+		    	new Object[] { client_pk, project_status }, new RowMapper<ContractInfo>() {
+		    	public ContractInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		ContractInfo contract = new ContractInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getInt("project_pk")
+		    				, resultSet.getInt("client_pk")
+		    				, resultSet.getInt("partners_pk")
+		    				, resultSet.getString("name")
+		    				, resultSet.getString("partners_id")
+		    				, resultSet.getString("client_id")
+		    				, resultSet.getInt("budget")
+		    				, resultSet.getInt("term")
+		    				, resultSet.getString("status")
+		    				, resultSet.getTimestamp("reg_date"));
+		    		
+		    		contract.setPartners(accountDao.select(contract.getPartners_pk()));
+		    		
+		    		return contract;
+		    	}
+		    });
+		
+		if(list!=null && list.isEmpty())
+			return null;
+		else
+			return list;
+	}
 
 	public List<ContractInfo> selectProgressClient(int client_pk, String project_status)
 	{

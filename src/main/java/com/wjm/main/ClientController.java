@@ -541,6 +541,37 @@ public class ClientController {
 		
 		return mv;
 	}
+	
+	/**
+	 * 결제 대기중인 프로젝트
+	 */
+	@RequestMapping(value = "/client/manage/wait", method = RequestMethod.GET)
+	public ModelAndView ClientController_wait(HttpServletRequest request, ModelAndView mv) {
+		logger.info("결제 대기중인 프로젝트 페이지");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+
+		if(account == null)
+		{
+			mv.setViewName("redirect:/accounts/login");
+			return mv;
+		}
+		if(!AccountCheck(account))
+		{
+			mv.setViewName("redirect:/error/404error");
+			return mv;
+		}
+		
+		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
+
+		
+		List<ContractInfo> waitlist = contractDao.selectReadyClient(account.getPk(),"결제대기중");
+		mv.addObject("waitlist",waitlist);
+		
+		return mv;
+	}
+	
+	
 	/**
 	 * 진행 중인 프로젝트
 	 */
@@ -703,6 +734,48 @@ public class ClientController {
 		logger.info(jObject.toString());
 
 		return jObject.toString();
+	}
+	
+	/**
+	 * 프로젝트 결제
+	 */
+	
+	@RequestMapping(value = "/client/payment/{contract_pk}", method = RequestMethod.GET)
+	public ModelAndView ClientController_payment(HttpServletRequest request, 
+			@PathVariable("contract_pk") int contract_pk, 
+			ModelAndView mv) {
+		logger.info("프로젝트 결제 페이지");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+
+		if(account == null)
+		{
+			mv.setViewName("redirect:/accounts/login");
+			return mv;
+		}
+		if(!AccountCheck(account))
+		{
+			mv.setViewName("redirect:/error/404error");
+			return mv;
+		}
+		
+		ContractInfo contract = contractDao.select(contract_pk);
+		
+		//결제 하는 사람과 계약 클라이언트 일치 확인
+		if(account.getPk() != contract.getClient_pk())
+		{
+			mv.setViewName("redirect:/error/400error");
+			return mv;
+		}
+		
+		//////////////////////////결제 처리
+
+		//진행중으로 상태 변경
+		projectDao.updateStatus(contract.getProject_pk(),"진행중");
+
+		mv.setViewName("redirect:/mywjm/client");
+		
+		return mv;
 	}
 	
 }

@@ -77,6 +77,10 @@ public class MywjmController {
 		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
 
 		mv.addObject("projectlist",projectlist);
+
+		//결제 대기중인 프로젝트
+		List<ContractInfo> waitlist = contractDao.selectReadyClient(account.getPk(),"결제대기중");
+		mv.addObject("waitlist",waitlist);
 		
 		//진행중인 프로젝트
 		List<ContractInfo> contractlist = contractDao.selectProgressClient(account.getPk(),"진행중");

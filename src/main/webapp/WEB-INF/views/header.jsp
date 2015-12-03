@@ -95,6 +95,8 @@
 							style="color: #333; font-weight: 500 !important;">검수 중</a></li>
 						<li class=""><a href="/wjm/client/manage/recruiting/"
 							style="color: #333; font-weight: 500 !important;">지원자 모집 중</a></li>
+						<li class=""><a href="/wjm/client/manage/wait/"
+							style="color: #333; font-weight: 500 !important;">결제 대기중인 프로젝트</a></li>
 						<li class=""><a href="/wjm/client/manage/contract-in-progress/"
 							style="color: #333; font-weight: 500 !important;">진행 중인
 								프로젝트</a></li>

@@ -4,7 +4,8 @@
 <%
 	AccountInfo account = (AccountInfo)session.getAttribute("account");
 	List<NoticeInfo> notice = (List<NoticeInfo>)request.getAttribute("notice");
-	
+
+	List<ContractInfo> waitlist = (List<ContractInfo>)request.getAttribute("waitlist");
 	List<ContractInfo> contractlist = (List<ContractInfo>)request.getAttribute("contractlist");
 	List<ProjectInfo> projectlist = (List<ProjectInfo>)request.getAttribute("projectlist");
 	int check_cnt = 0;
@@ -152,7 +153,7 @@
 							</table>
 							<p class="text-right">
 								<a class="more" href="/wjm/client/manage/project/submitted/">더
-									자세히 보기 <i class="fa fa-chevron-right"></i>
+									자세히 보기
 								</a>
 							</p>
 						</div>
@@ -191,10 +192,60 @@
 								%>
 							</table>
 							<p class="text-right">
-								<a class="more" href="/wjm/client/manage/recruiting/">더 자세히 보기 <i
-									class="fa fa-chevron-right"></i></a>
+								<a class="more" href="/wjm/client/manage/recruiting/">더 자세히 보기 </a>
 							</p>
 						</div>
+						<div class="proposal-project">
+							<h5 class="proposal-project-heading">
+								<a href="#">결제 대기중인 프로젝트</a>
+							</h5>
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th>프로젝트 제목</th>
+										<th>파트너스</th>
+										<th>금액</th>
+										<th>기간</th>
+										<th>계약일자</th>
+									</tr>
+								</thead>
+								<tbody>
+								<%
+									if(waitlist == null)
+									{
+								%>
+								<tr>
+								<td class='text-muted' colspan='4'>결제대기중인 프로젝트 리스트가 없습니다.</td>
+								</tr>
+								<%
+									}
+									else
+									{
+										for(int i=0;i<waitlist.size();i++)
+										{
+								%>
+								<tr>
+									<td><a href="/wjm/project/<%=waitlist.get(i).getName() %>/<%=waitlist.get(i).getProject_pk() %>"><%=waitlist.get(i).getName() %></a></td>
+									<td><a href='/wjm/partners/p/<%=waitlist.get(i).getPartners_id()%>'/><%= waitlist.get(i).getPartners_id()%></a></td>
+									<td><%=waitlist.get(i).getBudget() %> 원</td>
+									<td><%=waitlist.get(i).getTerm() %> 일</td>
+									<td><%out.print(Time.toString3(waitlist.get(i).getReg_date()));%></td>
+									
+									
+								</tr>
+								<%
+										}
+									}
+								%>
+								</tbody>
+								
+							</table>
+							<p class="text-right">
+								<a class="more" href="/wjm/client/manage/wait/">더 자세히 보기
+								</a>
+							</p>
+						</div>
+						
 						<div class="contract-project">
 							<h5 class="contract-project-heading">
 								<a href="/wjm/client/manage/contract-in-progress/">진행 중인 프로젝트</a>
@@ -216,7 +267,7 @@
 											out.print("<tbody><tr><td><a href='/wjm/project/"+contractlist.get(i).getName()+"/"
 												+contractlist.get(i).getProject_pk()+"'>"+contractlist.get(i).getName()+"</a></td>");
 											out.print("<td><a href='/wjm/partners/p/"+contractlist.get(i).getPartners_id()+"'/>"+contractlist.get(i).getPartners_id()+"</a></td>");
-											out.print("<td>"+contractlist.get(i).getBudget()+"</td>");
+											out.print("<td>"+contractlist.get(i).getBudget()+" 원</td>");
 
 											Timestamp now = Time.getCurrentTimestamp();
 											now = Time.dateToTimestamp(Time.TimestampToString(now));
@@ -240,10 +291,12 @@
 							</table>
 							<p class="text-right">
 								<a class="more" href="/wjm/client/manage/contract-in-progress/">더
-									자세히 보기 <i class="fa fa-chevron-right"></i>
+									자세히 보기
 								</a>
 							</p>
 						</div>
+						
+						
 					</div>
 				</div>
 			</div>

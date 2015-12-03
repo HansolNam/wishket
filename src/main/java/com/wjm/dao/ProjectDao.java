@@ -18,6 +18,7 @@ import com.wjm.idao.ProjectIDao;
 import com.wjm.main.function.Time;
 import com.wjm.main.function.Validator;
 import com.wjm.models.ApplicantInfo;
+import com.wjm.models.ContractInfo;
 import com.wjm.models.ProjectInfo;
 
 @Repository
@@ -30,6 +31,9 @@ public class ProjectDao implements ProjectIDao {
 
 	@Autowired
 	private ApplicantDao applicantDao;
+
+	@Autowired
+	private ContractDao contractDao;
 	
 	@Autowired
 	private AccountDao accountDao;
@@ -62,21 +66,21 @@ public class ProjectDao implements ProjectIDao {
 
 	public int countAll()
 	{
-		int num = jdbcTemplate.queryForInt("select count(*) from project where status = '진행중' or status = '평가대기중' or status = '완료한프로젝트' or status = '지원자모집중'");
+		int num = jdbcTemplate.queryForInt("select count(*) from project where status = '결제대기중' or status = '진행중' or status = '평가대기중' or status = '완료한프로젝트' or status = '지원자모집중'");
 		
 		return num;
 	}
 	
 	public int getAllBudget()
 	{
-		int num = jdbcTemplate.queryForInt("select sum(budget) from project where status = '진행중' or status = '평가대기중' or status = '완료한프로젝트' or status = '지원자모집중'");
+		int num = jdbcTemplate.queryForInt("select sum(budget) from project where status = '결제대기중' or status = '진행중' or status = '평가대기중' or status = '완료한프로젝트' or status = '지원자모집중'");
 		
 		return num;
 	}
 	
 	public List<ProjectInfo> selectRecentProject(int num)
 	{
-		List<ProjectInfo> list =  jdbcTemplate.query("select * from project where status = '진행중' or status = '평가대기중' or status = '완료한프로젝트' or status = '지원자모집중' order by reg_date desc limit ?",
+		List<ProjectInfo> list =  jdbcTemplate.query("select * from project where status = '결제대기중' or status = '진행중' or status = '평가대기중' or status = '완료한프로젝트' or status = '지원자모집중' order by reg_date desc limit ?",
 				new Object[] { num }, 
 				new RowMapper<ProjectInfo>() {
 	    	public ProjectInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
@@ -625,7 +629,7 @@ public class ProjectDao implements ProjectIDao {
 		String status_sql = "(status = '지원자모집중' and deadline > CURRENT_TIMESTAMP)";
 		String sql1 = getSQL(dev_sql, design_sql, addr_sql, status_sql, sort_sql, q_sql);
 
-		status_sql = "((status = '진행중' or status = '평가대기중' or status = '완료한프로젝트') or (status = '지원자모집중' and deadline <= CURRENT_TIMESTAMP))";
+		status_sql = "((status = '결제대기중' or status = '진행중' or status = '평가대기중' or status = '완료한프로젝트') or (status = '지원자모집중' and deadline <= CURRENT_TIMESTAMP))";
 		String sql2 = getSQL(dev_sql, design_sql, addr_sql, status_sql, sort_sql, q_sql);
 		
 		logger.info("sql1 > "+sql1);
@@ -842,7 +846,7 @@ public class ProjectDao implements ProjectIDao {
 		String status_sql = "(status = '지원자모집중' and deadline > CURRENT_TIMESTAMP)";
 		String sql1 = getCountSQL(dev_sql, design_sql, addr_sql, status_sql, "", q_sql);
 
-		status_sql = "((status = '진행중' or status = '평가대기중' or status = '완료한프로젝트') or (status = '지원자모집중' and deadline <= CURRENT_TIMESTAMP))";
+		status_sql = "((status = '결제대기중' or status = '진행중' or status = '평가대기중' or status = '완료한프로젝트') or (status = '지원자모집중' and deadline <= CURRENT_TIMESTAMP))";
 		String sql2 = getCountSQL(dev_sql, design_sql, addr_sql, status_sql, "", q_sql);
 		
 		logger.info("sql1 > "+sql1);
@@ -1045,9 +1049,50 @@ public class ProjectDao implements ProjectIDao {
 		//지원자 모집중인데 지원자가 0명이고 모집기간이 지난경우
 		jdbcTemplate.update("update project set status='취소한프로젝트' where status='지원자모집중' and applicantnum=0 and deadline <= CURRENT_TIMESTAMP");
 		
-		//지원자 모집중인데 모집기간이 7일 지난경우, contract가 없는 경우 or contract 2번다 성사 안된경우
-		//jdbcTemplate.update("update project set status='취소한프로젝트' where status='지원자모집중' and applicantnum=0 and deadline <= CURRENT_TIMESTAMP");
-
+		//지원자 모집중인데 모집기간이 지나고 계약이 0개인 프로젝트
+		List<ProjectInfo> projectlist = jdbcTemplate.query("select * from project where status='지원자모집중' and deadline <= CURRENT_TIMESTAMP",new RowMapper<ProjectInfo>() {
+	    	public ProjectInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+	    	{
+	    		ProjectInfo project =  new ProjectInfo(
+	    				resultSet.getInt("pk")
+	    				, resultSet.getInt("account_pk")
+	    				, resultSet.getString("categoryL")
+	    				, resultSet.getString("categoryM")
+	    				, resultSet.getInt("another")
+	    				, resultSet.getInt("applicantnum")
+	    				, resultSet.getString("name")
+	    				, resultSet.getInt("period")
+	    				, resultSet.getInt("budget")
+	    				, resultSet.getString("plan_status")
+	    				, resultSet.getString("description")
+	    				, resultSet.getString("technique")
+	    				, resultSet.getTimestamp("deadline")
+	    				, resultSet.getString("meeting_type")
+	    				, resultSet.getString("meeting_area")
+	    				, resultSet.getString("meeting_area_detail")
+	    				, resultSet.getTimestamp("start_date")
+	    				, resultSet.getInt("managing")
+	    				, resultSet.getString("partner_type")
+	    				, resultSet.getString("purpose")
+	    				, resultSet.getString("status")
+	    				, resultSet.getTimestamp("reg_date"));
+	    		
+	    		List<ContractInfo> contractlist = contractDao.select_project(project.getPk());
+	    		
+	    		if(contractlist == null)
+    			{
+	    			//지원자 모집중인데 모집기간이 7일 지난경우, contract가 없는 경우 or contract 2번다 성사 안된경우
+	    			jdbcTemplate.update("update project set status='취소한프로젝트' where pk = ?", new Object[] { project.getPk() });
+    			}
+	    		else if(contractlist.isEmpty())
+	    		{
+	    			//지원자 모집중인데 모집기간이 7일 지난경우, contract가 없는 경우 or contract 2번다 성사 안된경우
+	    			jdbcTemplate.update("update project set status='취소한프로젝트' where pk = ?", new Object[] { project.getPk() });
+	    		}
+	    		
+	    		return project;
+	    	}
+	    });
 	}
 	
 	public void delete(int pk)
