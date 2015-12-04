@@ -10,7 +10,14 @@ public class AdditionInfo {
 	private int term;
 	private String status;
 	private Timestamp reg_date;
+	private ContractInfo contract;
 	
+	public ContractInfo getContract() {
+		return contract;
+	}
+	public void setContract(ContractInfo contract) {
+		this.contract = contract;
+	}
 	public AdditionInfo(int pk, int contract_pk, String title, int budget, int term, String status,
 			Timestamp reg_date) {
 		super();

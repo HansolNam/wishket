@@ -9,6 +9,7 @@ import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -25,6 +26,9 @@ public class AdditionDao implements AdditionIDao {
 	private DataSource dataSource;
 	private JdbcTemplate jdbcTemplate;
 
+	@Autowired
+	private ContractDao contractDao;
+	
 	public void setDataSource(DataSource ds) {
 		dataSource = ds;
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -86,7 +90,7 @@ public class AdditionDao implements AdditionIDao {
 	 */
 	public List<AdditionInfo> select_contract(int contract_pk)
 	{
-		return jdbcTemplate.query("select * from addition where contract_pk = ?",
+		return jdbcTemplate.query("select * from addition where contract_pk = ? order by reg_date desc",
 		    	new Object[] { contract_pk }, new RowMapper<AdditionInfo>() {
 		    	public AdditionInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{
@@ -101,6 +105,69 @@ public class AdditionDao implements AdditionIDao {
 		    	}
 		    });
 		
+	}	
+
+	/*
+	 * 특정 상태의 추가 리스트
+	 */
+	public List<AdditionInfo> selectStatusClient(int client_pk, String status)
+	{
+		return jdbcTemplate.query("select addition.* from addition join contract on contract.client_pk = ? and addition.contract_pk = contract.pk and addition.status = ? order by reg_date desc",
+		    	new Object[] { client_pk, status }, new RowMapper<AdditionInfo>() {
+		    	public AdditionInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		AdditionInfo addition = new AdditionInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getInt("contract_pk")
+		    				, resultSet.getString("title")
+		    				, resultSet.getInt("budget")
+		    				, resultSet.getInt("term")
+		    				, resultSet.getString("status")
+		    				, resultSet.getTimestamp("reg_date"));
+		    		
+		    		ContractInfo contract = contractDao.select(addition.getContract_pk());
+		    		addition.setContract(contract);
+		    		
+		    		return addition;
+		    	}
+		    });
+	}
+
+	/*
+	 * 특정 상태의 추가 리스트
+	 */
+	public List<AdditionInfo> selectStatusAdmin(String status)
+	{
+		return jdbcTemplate.query("select * from addition where status = ? order by reg_date desc",
+		    	new Object[] { status }, new RowMapper<AdditionInfo>() {
+		    	public AdditionInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		AdditionInfo addition = new AdditionInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getInt("contract_pk")
+		    				, resultSet.getString("title")
+		    				, resultSet.getInt("budget")
+		    				, resultSet.getInt("term")
+		    				, resultSet.getString("status")
+		    				, resultSet.getTimestamp("reg_date"));
+		    		
+		    		ContractInfo contract = contractDao.select(addition.getContract_pk());
+		    		addition.setContract(contract);
+		    		
+		    		return addition;
+		    	}
+		    });
+		
+	}	
+	
+
+	/*
+	 * 추가요청 상태 업데이트
+	 */
+	public void updateStatusAdmin(int pk, String status)
+	{
+		jdbcTemplate.update("update addition set status = ?, reg_date=CURRENT_TIMESTAMP where pk = ?",
+		    	new Object[] { status, pk });
 	}	
 	
 	public void deleteAll()

@@ -1875,13 +1875,109 @@ public class ProjectController {
 			logger.info("budget = "+budget);
 		}	
 		
+
+		//클라이언트
+		notificationDao.create(account.getPk(), title+" 추가요청이 검수중입니다. ");
+		String result = sendMail("admin@wjm.com","gksthf1611@gmail.com",title+" 추가요청이 검수중입니다. "
+				, "외주몬 알림 메일입니다.");
+		logger.info("클라이언트 메일 : "+result);
+		
+		//관리자
+		result = sendMail("admin@wjm.com","gksthf1611@gmail.com",title+" 추가요청이 검수중입니다. 파트너스와 클라이언트에게 연락하여 검수를 완료해주세요."
+				, "외주몬 알림 메일입니다.");
+		logger.info("클라이언트 메일 : "+result);
+		
 		additionDao.create(contract_pk, title, budget, term, "검수중");
 		
 		jObject.put("messages", "success");
-		jObject.put("path", "/wjm/project/addition/list");
+		jObject.put("path", "/wjm/project/addition/list/"+contract_pk);
 		
 		logger.info(jObject.toString());
 		
 		return jObject.toString();
 	}
+	
+
+	/**
+	 * 추가요청 결제
+	 */
+	@RequestMapping(value = "/project/addition/pay/{addition_pk}", method = RequestMethod.POST, produces = "text/json; charset=utf8")
+	@ResponseBody
+	public String Admincontroller_addition_cancel(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable("addition_pk") int addition_pk) {
+
+		logger.info("/project/addition/pay/{addition_pk} Post Page");
+		logger.info("addition_pk = " + addition_pk);
+
+		JSONObject jObject = new JSONObject();
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null)
+		{
+			jObject.put("messages", "error");
+			jObject.put("path", "/wjm/accounts/login");
+			logger.info("jobject = " + jObject.toString());
+			return jObject.toString();
+		} 
+		else if(!account.getAccount_type().equals("client"))
+		{
+			jObject.put("messages", "error");
+			jObject.put("path", "/wjm/index");
+			logger.info("jobject = " + jObject.toString());
+			return jObject.toString();
+		} 
+		
+		AdditionInfo addition = additionDao.select(addition_pk);
+		
+		if(addition == null)
+		{
+			jObject.put("messages", "error");
+			jObject.put("path", "/wjm/accounts/login");
+			logger.info("jobject = " + jObject.toString());
+			return jObject.toString();
+		} 
+		
+		ContractInfo contract = contractDao.select(addition.getContract_pk());
+		
+		if(contract == null)
+		{
+			jObject.put("messages", "error");
+			jObject.put("path", "/wjm/accounts/login");
+			logger.info("jobject = " + jObject.toString());
+			return jObject.toString();
+		}
+		else if(contract.getClient_pk() != account.getPk())
+		{
+			jObject.put("messages", "error");
+			jObject.put("path", "/wjm/accounts/login");
+			logger.info("jobject = " + jObject.toString());
+			return jObject.toString();
+		}
+		
+		///////결제 처리
+		
+		//상태 업데이트
+		additionDao.updateStatusAdmin(addition_pk, "진행중");
+		
+
+		//클라이언트
+		notificationDao.create(contract.getClient_pk(), addition.getTitle()+" 추가요청이 결제완료되어 진행중입니다. ");
+		String result = sendMail("admin@wjm.com","gksthf1611@gmail.com", addition.getTitle()+" 추가요청이 결제완료되어 진행중입니다. "
+				, "외주몬 알림 메일입니다.");
+		logger.info("클라이언트 메일 : "+result);
+
+		//클라이언트
+		notificationDao.create(contract.getPartners_pk(), addition.getTitle()+" 추가요청이 결제완료되어 진행중입니다. ");
+		result = sendMail("admin@wjm.com","gksthf1611@gmail.com", addition.getTitle()+" 추가요청이 결제완료되어 진행중입니다. "
+				, "외주몬 알림 메일입니다.");
+		logger.info("파트너스 메일 : "+result);
+		
+		jObject.put("messages", "success");
+		jObject.put("path", "/wjm/project/addition/list/"+contract.getPk());
+		logger.info(jObject.toString());
+		
+		return jObject.toString();
+	}
+	
+	
 }

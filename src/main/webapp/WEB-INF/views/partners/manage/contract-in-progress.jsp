@@ -114,12 +114,16 @@
 									<h4 class="project-title">
 									<a href="/wjm/project/<%=contractlist.get(i).getName() %>/<%=contractlist.get(i).getProject_pk()%>/"><%=contractlist.get(i).getName() %></a>
 									</h4>
+									
+									<div class="management-tools" style="float:right;">
+										<a class='btn btn-sm btn-client' href='/wjm/project/addition/list/<%=contractlist.get(i).getPk() %>'>추가요청 목록</a>
+									</div>
 								</section>
 								<section class="proposal-unit-body">
 									<ul class="interest-summary-info">
 										<li><h5 class="label-item"
 												style="min-width: 80px !important;">
-												<i class="fa fa-won"></i> 클라이언트
+												<i class="fa fa-won"></i> 파트너스
 											</h5>
 											<span><%=contractlist.get(i).getClient_id() %></span></li>
 										<li><h5 class="label-item"
@@ -169,57 +173,5 @@
 	</div>
 		<jsp:include page="../../footer.jsp" flush="false" />
 
-	<script type="text/javascript">
-  $(function() {
-    wishket.init();
-    
-    svgeezy.init(false, 'png');
-  });
-</script>
-	<script>
-
-$( document ).ready(function($) {
-    var p5TotalSubNavigationFlag = 0;
-
-
-	if ( $( window ).width() >= 1200 ) {
-		$( '.p5-side-nav-deactive' ).css( 'display', 'none' );
-	} else  {
-		$( '.p5-side-nav-active' ).css( 'display', 'none' );
-		$( '.p5-side-nav-deactive' ).css( 'display', 'block');
-	}
-
-	$('.content-inner').on('click', '.p5-side-nav-active-btn', function () {
-		$('.p5-side-nav-active').css( 'display', 'none' );
-		$('.p5-side-nav-deactive').css('display','block');
-	});
-
-	$('.content-inner').on('click', '.p5-side-nav-deactive-btn', function () {
-		$('.p5-side-nav-active').css( 'display', 'block' );
-		$('.p5-side-nav-deactive').css('display','none');
-	});
-
-
-    $( window ).scroll ( function () {
-		if ( $(window).scrollTop() > 87 && p5TotalSubNavigationFlag === 0) {
-			setTimeout(function() {
-				$('#p5-total-sub-navigation-wrapper').removeClass('hide fadeOut');
-				$('#p5-total-sub-navigation-wrapper').addClass('fadeInDown');
-			}, 200 );
-			flag = 1;
-
-
-		} else if ( $(window).scrollTop() <= 87 ){
-			p5TotalSubNavigationFlag = 0;
-			$('#p5-total-sub-navigation-wrapper').removeClass('fadeInDown');
-			$('#p5-total-sub-navigation-wrapper').addClass('fadeOut');
-			setTimeout(function() {
-				$('#p5-total-sub-navigation-wrapper').addClass('hide');
-			}, 200 );
-		}
-	});
-});
-
-</script>
 </body>
 </html>

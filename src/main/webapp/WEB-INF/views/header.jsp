@@ -243,6 +243,8 @@
 							style="color: #333; font-weight: 500 !important;">미팅신청</a></li>
 						<li class=""><a href="/wjm/admin/progress/"
 							style="color: #333; font-weight: 500 !important;">진행중인 프로젝트</a></li>
+						<li class=""><a href="/wjm/admin/contract/addition/list/"
+							style="color: #333; font-weight: 500 !important;">추가요청리스트</a></li>
 						<li class=""><a href="/wjm/admin/wait/"
 							style="color: #333; font-weight: 500 !important;">결제 대기중인 프로젝트</a></li>
 						<li class=""><a href="/wjm/admin/contract/faillist/"

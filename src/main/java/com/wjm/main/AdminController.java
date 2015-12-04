@@ -34,6 +34,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.wjm.dao.AccountDao;
 import com.wjm.dao.AccountInformationDao;
+import com.wjm.dao.AdditionDao;
 import com.wjm.dao.ApplicantDao;
 import com.wjm.dao.AuthenticationDao;
 import com.wjm.dao.CancellistDao;
@@ -46,6 +47,7 @@ import com.wjm.main.function.Time;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
 import com.wjm.models.AccountInformationInfo;
+import com.wjm.models.AdditionInfo;
 import com.wjm.models.ApplicantInfo;
 import com.wjm.models.CancellistInfo;
 import com.wjm.models.ContractInfo;
@@ -83,6 +85,8 @@ public class AdminController {
 	private NoticeDao noticeDao;
 	@Autowired
 	private NotificationDao notificationDao;
+	@Autowired
+	private AdditionDao additionDao;
 
 	@Autowired
 	private JavaMailSender mailSender;
@@ -1366,6 +1370,222 @@ public class AdminController {
 		mv.setViewName("redirect:/admin/home");
 		return mv;
 	}
+	
+
+
+	/**
+	 * 추가 요청 리스트 화면
+	 */
+
+	@RequestMapping(value = "/admin/contract/addition/list", method = RequestMethod.GET)
+	public ModelAndView AdminController_addition_list(HttpServletRequest request, 
+			ModelAndView mv) {
+		logger.info("admin addition list get Page");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
+		
+		List<AdditionInfo> additionlist = additionDao.selectStatusAdmin("검수중");
+		List<AdditionInfo> progresslist = additionDao.selectStatusAdmin("진행중");
+		
+		mv.addObject("additionlist", additionlist);
+		mv.addObject("progresslist", progresslist);
+		mv.setViewName("/admin/contract/addition/list");
+		
+		return mv;
+	}
+	
+
+	/**
+	 * 추가 요청 진행중인 리스트 화면
+	 */
+
+	@RequestMapping(value = "/admin/contract/addition/progress", method = RequestMethod.GET)
+	public ModelAndView AdminController_addition_progress(HttpServletRequest request, 
+			ModelAndView mv) {
+		logger.info("admin addition progress get Page");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
+		
+		List<AdditionInfo> additionlist = additionDao.selectStatusAdmin("검수중");
+		List<AdditionInfo> progresslist = additionDao.selectStatusAdmin("진행중");
+		
+		mv.addObject("additionlist", additionlist);
+		mv.addObject("progresslist", progresslist);
+		mv.setViewName("/admin/contract/addition/progress");
+		
+		return mv;
+	}
+	
+
+	/**
+	 * 추가요청 승인
+	 */
+	@RequestMapping(value = "/admin/addition/submit/{addition_pk}", method = RequestMethod.POST, produces = "text/json; charset=utf8")
+	@ResponseBody
+	public String Admincontroller_addition_submit(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable("addition_pk") int addition_pk) {
+
+		logger.info("/admin/addition/submit/{addition_pk} Post Page");
+		logger.info("addition_pk = " + addition_pk);
+
+		JSONObject jObject = new JSONObject();
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null)
+		{
+			jObject.put("messages", "error");
+			jObject.put("path", "/wjm/accounts/login");
+			logger.info("jobject = " + jObject.toString());
+			return jObject.toString();
+		} 
+		else if(!account.getAccount_type().equals("admin"))
+		{
+			jObject.put("messages", "error");
+			jObject.put("path", "/wjm/index");
+			logger.info("jobject = " + jObject.toString());
+			return jObject.toString();
+		} 
+		
+		AdditionInfo addition = additionDao.select(addition_pk);
+		
+		if(addition == null)
+		{
+			jObject.put("messages", "error");
+			jObject.put("path", "/wjm/accounts/login");
+			logger.info("jobject = " + jObject.toString());
+			return jObject.toString();
+		} 
+		
+		//상태 업데이트
+		additionDao.updateStatusAdmin(addition_pk, "결제대기중");
+		
+		ContractInfo contract = contractDao.select(addition.getContract_pk());
+
+		//클라이언트
+		notificationDao.create(contract.getClient_pk(), addition.getTitle()+" 추가요청이 결제대기중입니다. 결제를 완료하면 진행중으로 상태가 변경됩니다.");
+		String result = sendMail("admin@wjm.com","gksthf1611@gmail.com",addition.getTitle()+" 추가요청이 결제대기중입니다. 결제를 완료하면 진행중으로 상태가 변경됩니다."
+				, "외주몬 알림 메일입니다.");
+		logger.info("클라이언트 메일 : "+result);
+		
+		jObject.put("messages", "success");
+		jObject.put("path", "/wjm/admin/contract/addition/list");
+		logger.info(jObject.toString());
+		
+		return jObject.toString();
+	}
+	
+
+	/**
+	 * 추가요청 취소
+	 */
+	@RequestMapping(value = "/admin/addition/cancel/{addition_pk}", method = RequestMethod.POST, produces = "text/json; charset=utf8")
+	@ResponseBody
+	public String Admincontroller_addition_cancel(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable("addition_pk") int addition_pk) {
+
+		logger.info("/admin/addition/cancel/{addition_pk} Post Page");
+		logger.info("addition_pk = " + addition_pk);
+
+		JSONObject jObject = new JSONObject();
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null)
+		{
+			jObject.put("messages", "error");
+			jObject.put("path", "/wjm/accounts/login");
+			logger.info("jobject = " + jObject.toString());
+			return jObject.toString();
+		} 
+		else if(!account.getAccount_type().equals("admin"))
+		{
+			jObject.put("messages", "error");
+			jObject.put("path", "/wjm/index");
+			logger.info("jobject = " + jObject.toString());
+			return jObject.toString();
+		} 
+		
+		AdditionInfo addition = additionDao.select(addition_pk);
+		
+		if(addition == null)
+		{
+			jObject.put("messages", "error");
+			jObject.put("path", "/wjm/accounts/login");
+			logger.info("jobject = " + jObject.toString());
+			return jObject.toString();
+		} 
+		
+		//상태 업데이트
+		additionDao.updateStatusAdmin(addition_pk, "취소");
+
+		
+		ContractInfo contract = contractDao.select(addition.getContract_pk());
+
+		//클라이언트
+		notificationDao.create(contract.getClient_pk(), addition.getTitle()+" 추가요청이 취소되었습니다. ");
+		String result = sendMail("admin@wjm.com","gksthf1611@gmail.com",addition.getTitle()+" 추가요청이 취소되었습니다. "
+				, "외주몬 알림 메일입니다.");
+		logger.info("클라이언트 메일 : "+result);
+		
+		jObject.put("messages", "success");
+		jObject.put("path", "/wjm/admin/contract/addition/list");
+		logger.info(jObject.toString());
+		
+		return jObject.toString();
+	}
+
+	/**
+	 * 추가요청 완료
+	 */
+	@RequestMapping(value = "/admin/addition/complete/{addition_pk}", method = RequestMethod.POST, produces = "text/json; charset=utf8")
+	@ResponseBody
+	public String Admincontroller_addition_complete(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable("addition_pk") int addition_pk) {
+
+		logger.info("/admin/addition/complete/{addition_pk} Post Page");
+		logger.info("addition_pk = " + addition_pk);
+
+		JSONObject jObject = new JSONObject();
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null)
+		{
+			jObject.put("messages", "error");
+			jObject.put("path", "/wjm/accounts/login");
+			logger.info("jobject = " + jObject.toString());
+			return jObject.toString();
+		} 
+		else if(!account.getAccount_type().equals("admin"))
+		{
+			jObject.put("messages", "error");
+			jObject.put("path", "/wjm/index");
+			logger.info("jobject = " + jObject.toString());
+			return jObject.toString();
+		} 
+		
+		AdditionInfo addition = additionDao.select(addition_pk);
+		
+		if(addition == null)
+		{
+			jObject.put("messages", "error");
+			jObject.put("path", "/wjm/accounts/login");
+			logger.info("jobject = " + jObject.toString());
+			return jObject.toString();
+		} 
+		
+		//상태 업데이트
+		additionDao.updateStatusAdmin(addition_pk, "완료");
+		
+		jObject.put("messages", "success");
+		jObject.put("path", "/wjm/admin/contract/addition/progress");
+		logger.info(jObject.toString());
+		
+		return jObject.toString();
+	}
+	
 	
 	@RequestMapping(value = "/fileUpload", method = RequestMethod.POST)
 	 public String fileUpload(MultipartRequest multipartRequest, 

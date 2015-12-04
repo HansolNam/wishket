@@ -100,11 +100,18 @@
 							</p>
 							<div style="clear: both;"></div>
 						</div>
+						<%
+							if(account.getAccount_type().equals("client"))
+							{
+						%>
 						<div class="management-tools" style="float:right;">
 							<a class='btn btn-sm btn-client' href='/wjm/project/addition/add/<%=contract.getPk() %>'>추가요청 등록</a>
 						</div>
 						<br>
 						<br>
+						<%
+							}
+						%>
 						<section>
 						<%
 						

@@ -21,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.wjm.dao.AccountDao;
 import com.wjm.dao.AccountInformationDao;
+import com.wjm.dao.AdditionDao;
 import com.wjm.dao.ApplicantDao;
 import com.wjm.dao.AssessmentDao;
 import com.wjm.dao.ContractDao;
@@ -28,6 +29,7 @@ import com.wjm.dao.NotificationDao;
 import com.wjm.dao.ProjectDao;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
+import com.wjm.models.AdditionInfo;
 import com.wjm.models.ApplicantInfo;
 import com.wjm.models.ContractInfo;
 import com.wjm.models.ProjectInfo;
@@ -58,6 +60,8 @@ public class ClientController {
 	private AssessmentDao assessmentDao;
 	@Autowired
 	private NotificationDao notificationDao;
+	@Autowired
+	private AdditionDao additionDao;
 
 	@Autowired
 	private JavaMailSender mailSender;
@@ -563,8 +567,10 @@ public class ClientController {
 		}
 		
 		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
-
 		
+		List<AdditionInfo> additionlist = additionDao.selectStatusClient(account.getPk(), "결제대기중");
+		mv.addObject("additionlist",additionlist);
+
 		List<ContractInfo> waitlist = contractDao.selectReadyClient(account.getPk(),"결제대기중");
 		mv.addObject("waitlist",waitlist);
 		

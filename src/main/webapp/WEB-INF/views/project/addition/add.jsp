@@ -80,6 +80,16 @@
 <script
 	src="${pageContext.request.contextPath}/resources/static/CACHE/js/c3617c8217d0.js"
 	type="text/javascript"></script>
+<style>
+div.backLayer {
+	display:none;
+	background-color:black;
+	position:absolute;
+	left:0px;
+	top:0px;
+}
+
+</style>
 </head>
 <body class="logged-in client account-setting profile">
 	<div id="wrap">
@@ -161,6 +171,13 @@
 									value="등록" /></span>
 						</form>
 						</section>
+						
+								<!-- 로딩 이미지 -->
+							<div id="viewLoading">
+								<img src="${pageContext.request.contextPath}/resources/upload/viewLoading.gif" />
+							</div>
+							<!-- 불투명 이미지 -->
+							<div class='backLayer' style='' > </div>
 					</div>
 				</div>
 			</div>
@@ -171,39 +188,118 @@
 		<script type="text/javascript">
 		$(document).ready(function(){
 
+
+			// 페이지가 로딩될 때 'Loading 이미지'를 숨긴다.
+			$('#viewLoading').hide();
+			function LoadingScreenFunc()
+			{
+				var width = $(window).width();
+				var height = $(window).height();
+				
+				var scrollLeft = $(window).scrollLeft();
+				var scrollTop = $(window).scrollTop();
+				
+				var backLayerObj = $(".backLayer");
+				var loadingDivObj = $("#viewLoading");
+				
+				//화면을 가리는 레이어의 사이즈 조정
+				backLayerObj.width(width);
+				backLayerObj.height(height);
+
+				var left = scrollLeft;
+				var top = scrollTop;
+				
+				//화면을 가리는 레이어를 보여준다 (0.5초동안 30%의 농도의 투명도)
+				backLayerObj.css( {
+		    		'display':'block',
+		    		'background-color':'black',
+		    		'opacity':'0.3',
+		    		'position':'absolute',
+		    		'left':left,
+		    		'top':top
+		    	});
+				
+				left = ( scrollLeft + (width - loadingDivObj.width()) / 2 );
+				top = ( scrollTop + (height - loadingDivObj.height()) / 2 );
+				
+				//팝업 레이어 보이게
+				loadingDivObj.css( {
+		    		'display':'block',
+		    		'position':'absolute',
+		    		'left':left,
+		    		'top':top
+		    	});
+			}
+			function form_check()
+			{
+				if($( "#title-input" ).val() == "")
+					{
+						alert("내용을 입력하세요.");
+						return false;
+					}
+				
+
+				if($( "#budget-input" ).val() == "")
+					{
+						alert("예산을 입력하세요.");
+						return false;
+					}
+				
+
+				if($( "#term-input" ).val() == "")
+					{
+						alert("기간을 입력하세요.");
+						return false;
+					}
+				
+				return true;
+			}
 			$( "#submit_btn_id" ).click(function() {
 				
-				$.ajax({
-					url : "/wjm/project/addition/add/<%=contract.getPk()%>",
-					type : "POST",
-					data : $('#addition_form').serialize(),
-	    		    async: true,
-					dataType : "JSON",
-					success : function(data) {
-						var messages = data.messages;
-
-				    	if(messages == "success")
-				        	{
-				    		location.href= data.path; 
-				        	}
-				        else if(messages == "error")
-				        	{
-				        	location.href= data.path; 
-				        	}
-				        else
-				        	{
-								alert(messages);
-				        	}
-					},
-					error : function(request, status, error) {
-						if (request.status != '0') {
-							alert("code : " + request.status + "\r\nmessage : "
-									+ request.reponseText + "\r\nerror : " + error);
-						}
-					}
-				});
+				if(form_check())
+					{
+				
+						$.ajax({
+							url : "/wjm/project/addition/add/<%=contract.getPk()%>",
+							type : "POST",
+							data : $('#addition_form').serialize(),
+			    		    async: true,
+							dataType : "JSON",
+							success : function(data) {
+								var messages = data.messages;
+		
+						    	if(messages == "success")
+						        	{
+						    		location.href= data.path; 
+						        	}
+						        else if(messages == "error")
+						        	{
+						        	location.href= data.path; 
+						        	}
+						        else
+						        	{
+										alert(messages);
+						        	}
+							},
+						    beforeSend:function(){
+					    		LoadingScreenFunc();
+				
+						    }
+						    ,complete:function(){
+				
+								$('#viewLoading').hide();
+								$(".backLayer").hide();
+						 
+						    },
+							error : function(request, status, error) {
+								if (request.status != '0') {
+									alert("code : " + request.status + "\r\nmessage : "
+											+ request.reponseText + "\r\nerror : " + error);
+								}
+							}
+						});
+				}
 			});
-			
 		});
 		</script>
 </body>

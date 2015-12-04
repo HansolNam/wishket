@@ -1,12 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="java.sql.Timestamp,com.wjm.models.ContractInfo, com.wjm.models.AccountInfo, com.wjm.models.ProjectInfo, java.util.*, com.wjm.main.function.Time"%>
+<%@ page import="java.sql.Timestamp,com.wjm.models.AdditionInfo, com.wjm.models.ContractInfo, com.wjm.models.AccountInfo, com.wjm.models.ProjectInfo, java.util.*, com.wjm.main.function.Time"%>
 <%@ page import="com.wjm.models.NoticeInfo"%>
 
 <%
 	AccountInfo account = (AccountInfo)session.getAttribute("account");
-	List<ContractInfo> progresslist = (List<ContractInfo>)request.getAttribute("progresslist");
+	List<AdditionInfo> progresslist = (List<AdditionInfo>)request.getAttribute("progresslist");
+	List<AdditionInfo> additionlist = (List<AdditionInfo>)request.getAttribute("additionlist");
+	int additionCnt = 0;
+	int progressCnt = 0;
 
+
+	if(progresslist != null)
+		progressCnt = progresslist.size();
+	if(additionlist != null)
+		additionCnt = additionlist.size();
 	%>
 <!DOCTYPE html>
 <html class="no-js modern" lang="ko">
@@ -43,26 +51,39 @@
 </head>
 <body class="logged-in client mywishket">
 	<div id="wrap">
-	<jsp:include page="../header.jsp" flush="false" />
+	<jsp:include page="../../../header.jsp" flush="false" />
 		<div class="container">
 			<div id="messages"></div>
 		</div>
 		<div class="page">
+				<div class="sidebar">
+					<div class="sidebar-nav">
+						<ul>
+							<li><a
+								href="/wjm/admin/contract/addition/list/"><span
+									class="badge badge-info pull-right"><%=additionCnt %></span>추가 요청 목록</a></li>
+							<li class="active"><a
+								href="/wjm/admin/contract/addition/progress/"><span
+									class="badge badge-info pull-right"><%=progressCnt %></span>진행중인 추가요청</a></li>
+						</ul>
+					</div>
+				</div>
 			<div class="content">
 				<div class="content-header">
 					<h3 class="header-text">
-						진행중인 프로젝트 페이지 
+						진행중인 추가요청 페이지 
 					</h3>
 				</div>
 				<div class="content-inner">
 						<div class="proposal-project">
 							<h5 class="proposal-project-heading">
-								<a href="#">진행중인 프로젝트</a>
+								<a href="#">진행중인 추가요청</a>
 							</h5>
 							<table class="table table-hover">
 								<thead>
 									<tr>
 										<th>프로젝트 제목</th>
+										<th>추가요청 제목</th>
 										<th>클라이언트</th>
 										<th>파트너스</th>
 										<th>남은기간</th>
@@ -76,7 +97,7 @@
 									{
 								%>
 								<tr>
-								<td class='text-muted' colspan='6'>진행중인 프로젝트 리스트가 없습니다.</td>
+								<td class='text-muted' colspan='6'>진행중인 추가요청 리스트가 없습니다.</td>
 								</tr>
 								<%
 									}
@@ -86,9 +107,10 @@
 										{
 								%>
 								<tr>
-									<td><a href="/wjm/project/<%=progresslist.get(i).getName() %>/<%=progresslist.get(i).getProject_pk() %>"><%=progresslist.get(i).getName() %></a></td>
-									<td><a href="/wjm/admin/accounts/profile/<%=progresslist.get(i).getClient_pk() %>"><%=progresslist.get(i).getClient_id() %></a></td>
-									<td><a href="/wjm/admin/accounts/profile/<%=progresslist.get(i).getPartners_pk() %>"><%=progresslist.get(i).getPartners_id() %></a></td>
+									<td><a href="/wjm/project/<%=progresslist.get(i).getContract().getName() %>/<%=progresslist.get(i).getContract().getProject_pk() %>"><%=progresslist.get(i).getContract().getName() %></a></td>
+									<td><%=progresslist.get(i).getTitle()%></td>
+									<td><a href="/wjm/admin/accounts/profile/<%=progresslist.get(i).getContract().getClient_pk() %>"><%=progresslist.get(i).getContract().getClient_id() %></a></td>
+									<td><a href="/wjm/admin/accounts/profile/<%=progresslist.get(i).getContract().getPartners_pk() %>"><%=progresslist.get(i).getContract().getPartners_id() %></a></td>
 									<td><%
 									Timestamp now = Time.getCurrentTimestamp();
 									now = Time.dateToTimestamp(Time.TimestampToString(now));
@@ -103,8 +125,12 @@
 										out.print(progresslist.get(i).getTerm() - remain*(-1)+"일 초과");
 									
 									%>/<%=progresslist.get(i).getTerm() %>일</td>
-									<td><a class='btn btn-sm btn-client' href='/wjm/admin/project/complete/success/<%=progresslist.get(i).getProject_pk()%>/<%=progresslist.get(i).getClient_pk()%>/<%=progresslist.get(i).getPartners_pk()%>'>완료</a></td>
-									<td><a class='btn btn-sm btn-client' href='/wjm/admin/project/complete/fail/<%=progresslist.get(i).getProject_pk()%>/<%=progresslist.get(i).getClient_pk()%>/<%=progresslist.get(i).getPartners_pk()%>'>취소</a></td>
+									<td>
+										<button id="complete-btn" class='btn btn-sm btn-client' addition-pk = "<%=progresslist.get(i).getPk()%>">완료</button>				
+									</td>
+									<td>
+										<button id="cancel-btn" class="btn btn-cancel btn-sm " addition-pk = "<%=progresslist.get(i).getPk()%>">취소</button>
+									</td>
 									
 								</tr>
 								<%
@@ -114,6 +140,7 @@
 								</tbody>
 								
 							</table>
+							
 						</div>
 						
 					</div>
@@ -122,6 +149,87 @@
 		</div>
 		<div id="push"></div>
 	</div>
-	<jsp:include page="../footer.jsp" flush="false" />
+	<jsp:include page="../../../footer.jsp" flush="false" />
+	
+	<script type="text/javascript">
+		$(document).ready(function(){
+
+			$( "#complete-btn" ).click(function() {
+				
+				if(confirm("정말 완료하시겠습니까?") == true)
+					{
+						var additionPk = $(this).attr('addition-pk');
+						$.ajax({
+							url : "/wjm/admin/addition/complete/"+additionPk,
+							type : "POST",
+							data : $('#addition_form').serialize(),
+			    		    async: true,
+							dataType : "JSON",
+							success : function(data) {
+								var messages = data.messages;
+		
+						    	if(messages == "success")
+						        	{
+						    		location.href= data.path; 
+						        	}
+						        else if(messages == "error")
+						        	{
+						        	location.href= data.path; 
+						        	}
+						        else
+						        	{
+										alert(messages);
+						        	}
+							},
+							error : function(request, status, error) {
+								if (request.status != '0') {
+									alert("code : " + request.status + "\r\nmessage : "
+											+ request.reponseText + "\r\nerror : " + error);
+								}
+							}
+						});
+					}
+			});
+			
+
+			$( "#cancel-btn" ).click(function() {
+				
+				if(confirm("정말 취소하시겠습니까?") == true)
+					{
+						var additionPk = $(this).attr('addition-pk');
+						$.ajax({
+							url : "/wjm/admin/addition/cancel/"+additionPk,
+							type : "POST",
+							data : $('#addition_form').serialize(),
+			    		    async: true,
+							dataType : "JSON",
+							success : function(data) {
+								var messages = data.messages;
+		
+						    	if(messages == "success")
+						        	{
+						    		location.href= data.path; 
+						        	}
+						        else if(messages == "error")
+						        	{
+						        	location.href= data.path; 
+						        	}
+						        else
+						        	{
+										alert(messages);
+						        	}
+							},
+							error : function(request, status, error) {
+								if (request.status != '0') {
+									alert("code : " + request.status + "\r\nmessage : "
+											+ request.reponseText + "\r\nerror : " + error);
+								}
+							}
+						});
+					}
+			});
+		});
+		</script>
+	
 </body>
 </html>

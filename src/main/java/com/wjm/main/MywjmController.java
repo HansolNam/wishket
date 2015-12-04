@@ -15,11 +15,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.wjm.dao.AccountDao;
 import com.wjm.dao.AccountInformationDao;
+import com.wjm.dao.AdditionDao;
 import com.wjm.dao.ApplicantDao;
 import com.wjm.dao.ContractDao;
 import com.wjm.dao.NoticeDao;
 import com.wjm.dao.ProjectDao;
 import com.wjm.models.AccountInfo;
+import com.wjm.models.AdditionInfo;
 import com.wjm.models.ApplicantInfo;
 import com.wjm.models.ContractInfo;
 import com.wjm.models.NoticeInfo;
@@ -47,7 +49,9 @@ public class MywjmController {
 	
 	@Autowired
 	private NoticeDao noticeDao;
-	
+
+	@Autowired
+	private AdditionDao additionDao;
 	
 	@Autowired
 	private ContractDao contractDao;
@@ -77,6 +81,10 @@ public class MywjmController {
 		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
 
 		mv.addObject("projectlist",projectlist);
+
+		//결제 대기중인 추가요청
+		List<AdditionInfo> additionlist = additionDao.selectStatusClient(account.getPk(), "결제대기중");
+		mv.addObject("additionlist",additionlist);
 
 		//결제 대기중인 프로젝트
 		List<ContractInfo> waitlist = contractDao.selectReadyClient(account.getPk(),"결제대기중");

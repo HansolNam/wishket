@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="java.sql.Timestamp, com.wjm.main.function.Validator,com.wjm.models.ContractInfo ,com.wjm.models.NoticeInfo, com.wjm.models.AccountInfo, com.wjm.models.ProjectInfo, java.util.*, com.wjm.main.function.Time"%>
+<%@ page import="java.sql.Timestamp, com.wjm.main.function.Validator,com.wjm.models.AdditionInfo , com.wjm.models.ContractInfo ,com.wjm.models.NoticeInfo, com.wjm.models.AccountInfo, com.wjm.models.ProjectInfo, java.util.*, com.wjm.main.function.Time"%>
 <%
 	AccountInfo account = (AccountInfo)session.getAttribute("account");
 	List<NoticeInfo> notice = (List<NoticeInfo>)request.getAttribute("notice");
@@ -8,6 +8,11 @@
 	List<ContractInfo> waitlist = (List<ContractInfo>)request.getAttribute("waitlist");
 	List<ContractInfo> contractlist = (List<ContractInfo>)request.getAttribute("contractlist");
 	List<ProjectInfo> projectlist = (List<ProjectInfo>)request.getAttribute("projectlist");
+	List<AdditionInfo> additionlist = (List<AdditionInfo>)request.getAttribute("additionlist");
+	int addition_cnt = 0;
+	if(additionlist != null) addition_cnt = additionlist.size();
+	
+	
 	int check_cnt = 0;
 	int recruit_cnt = 0;
 	int ing_cnt = 0;
@@ -245,6 +250,58 @@
 								</a>
 							</p>
 						</div>
+						
+						<div class="proposal-project">
+							<h5 class="proposal-project-heading">
+								<a href="#">결제 대기중인 추가요청</a>
+							</h5>
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th>프로젝트 제목</th>
+										<th>추가요청 제목</th>
+										<th>금액</th>
+										<th>기간</th>
+										<th>계약일자</th>
+									</tr>
+								</thead>
+								<tbody>
+								<%
+									if(addition_cnt == 0)
+									{
+								%>
+								<tr>
+								<td class='text-muted' colspan='5'>결제대기중인 추가요청 리스트가 없습니다.</td>
+								</tr>
+								<%
+									}
+									else
+									{
+										for(int i=0;i<additionlist.size();i++)
+										{
+								%>
+								<tr>
+									<td><a href="/wjm/project/<%=additionlist.get(i).getContract().getName() %>/<%=additionlist.get(i).getContract().getProject_pk() %>"><%=additionlist.get(i).getContract().getName() %></a></td>
+									<td><%= additionlist.get(i).getTitle() %></td>
+									<td><%=additionlist.get(i).getBudget() %> 원</td>
+									<td><%=additionlist.get(i).getTerm() %> 일</td>
+									<td><%out.print(Time.toString3(additionlist.get(i).getReg_date()));%></td>
+									
+									
+								</tr>
+								<%
+										}
+									}
+								%>
+								</tbody>
+								
+							</table>
+							<p class="text-right">
+								<a class="more" href="/wjm/client/manage/wait/">더 자세히 보기
+								</a>
+							</p>
+						</div>
+						
 						
 						<div class="contract-project">
 							<h5 class="contract-project-heading">
