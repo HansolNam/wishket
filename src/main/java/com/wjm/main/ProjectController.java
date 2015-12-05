@@ -696,9 +696,14 @@ public class ProjectController {
 			notificationDao.create(account.getPk(), title+" 프로젝트가 검수중입니다. 검수는 최대 24시간이 소요됩니다.");
 			
 			//클라이언트
+			AccountInformationInfo accountinfo = accountInformationDao.select(account.getPk());
+	        
+	        if(accountinfo.getSubscription() == 1)
+	        {
 			result = sendMail("admin@wjm.com","gksthf1611@gmail.com",title+" 프로젝트가 검수중입니다. 검수는 최대 24시간이 소요됩니다."
 					, "외주몬 알림 메일입니다.");
 			logger.info("클라이언트 메일 : "+result);
+	        }
 			//파트너스
 			//result = sendMail("admin@wjm.com","gksthf1611@gmail.com",contract.getClient_id()+"님의 "
 			//		+project.getName()+" 계약이 성사되지 못했습니다. 다른 프로젝트에 지원해주세요.", "외주몬 알림 메일입니다.");
@@ -1060,9 +1065,15 @@ public class ProjectController {
 			
 			//클라이언트
 			notificationDao.create(account.getPk(), title+" 프로젝트가 등록되어 검수중입니다. 검수에는 최대 24시간이 소요됩니다.");
+			
+			AccountInformationInfo accountinfo = accountInformationDao.select(account.getPk());
+	        
+	        if(accountinfo.getSubscription() == 1)
+	        {
 			result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", title+" 프로젝트가 등록되어 검수중입니다. 검수에는 최대 24시간이 소요됩니다.", "외주몬 알림 메일입니다");
 			logger.info("이메일 전송 결과 = "+result);
-			
+	        }
+	        
 			jObject.put("messages", "success");
 			jObject.put("path", "/wjm/project/add/thank-you");
 		}
@@ -1503,10 +1514,23 @@ public class ProjectController {
 			ProjectInfo project = projectDao.select(Integer.parseInt(pk), name); 
 			notificationDao.create(project.getAccount_pk(), name+" 프로젝트에 "+account.getId()+" 님이 지원하셨습니다.");
 			
+			//파트너스
+			AccountInformationInfo accountinfo = accountInformationDao.select(account.getPk());
+	        
+	        if(accountinfo.getSubscription() == 1)
+	        {
 			String mail_result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", name+" 프로젝트에 지원하셨습니다.", "외주몬 알림 메일입니다");
 			logger.info("이메일 전송 결과1 = "+mail_result);
-			mail_result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", name+" 프로젝트에 "+account.getId()+" 님이 지원하셨습니다.", "외주몬 알림 메일입니다");
+	        }
+	        
+			//클라이언트
+			accountinfo = accountInformationDao.select(project.getAccount_pk());
+	        
+	        if(accountinfo.getSubscription() == 1)
+	        {
+	        String mail_result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", name+" 프로젝트에 "+account.getId()+" 님이 지원하셨습니다.", "외주몬 알림 메일입니다");
 			logger.info("이메일 전송 결과2 = "+mail_result);
+	        }
 			
 			jObject.put("messages", "success");
 		}
@@ -1878,12 +1902,17 @@ public class ProjectController {
 
 		//클라이언트
 		notificationDao.create(account.getPk(), title+" 추가요청이 검수중입니다. ");
-		String result = sendMail("admin@wjm.com","gksthf1611@gmail.com",title+" 추가요청이 검수중입니다. "
-				, "외주몬 알림 메일입니다.");
-		logger.info("클라이언트 메일 : "+result);
-		
+		AccountInformationInfo accountinfo = accountInformationDao.select(account.getPk());
+        
+        if(accountinfo.getSubscription() == 1)
+        {
+			String result = sendMail("admin@wjm.com","gksthf1611@gmail.com",title+" 추가요청이 검수중입니다. "
+					, "외주몬 알림 메일입니다.");
+			logger.info("클라이언트 메일 : "+result);
+        }
+        
 		//관리자
-		result = sendMail("admin@wjm.com","gksthf1611@gmail.com",title+" 추가요청이 검수중입니다. 파트너스와 클라이언트에게 연락하여 검수를 완료해주세요."
+        String result = sendMail("admin@wjm.com","gksthf1611@gmail.com",title+" 추가요청이 검수중입니다. 파트너스와 클라이언트에게 연락하여 검수를 완료해주세요."
 				, "외주몬 알림 메일입니다.");
 		logger.info("클라이언트 메일 : "+result);
 		
@@ -1962,16 +1991,29 @@ public class ProjectController {
 
 		//클라이언트
 		notificationDao.create(contract.getClient_pk(), addition.getTitle()+" 추가요청이 결제완료되어 진행중입니다. ");
+		
+		AccountInformationInfo accountinfo = accountInformationDao.select(contract.getClient_pk());
+        
+        if(accountinfo.getSubscription() == 1)
+        {
+		
 		String result = sendMail("admin@wjm.com","gksthf1611@gmail.com", addition.getTitle()+" 추가요청이 결제완료되어 진행중입니다. "
 				, "외주몬 알림 메일입니다.");
 		logger.info("클라이언트 메일 : "+result);
-
-		//클라이언트
+        }
+        
+		//파트너스
 		notificationDao.create(contract.getPartners_pk(), addition.getTitle()+" 추가요청이 결제완료되어 진행중입니다. ");
-		result = sendMail("admin@wjm.com","gksthf1611@gmail.com", addition.getTitle()+" 추가요청이 결제완료되어 진행중입니다. "
+		
+		accountinfo = accountInformationDao.select(contract.getPartners_pk());
+
+        if(accountinfo.getSubscription() == 1)
+        {
+        	String result = sendMail("admin@wjm.com","gksthf1611@gmail.com", addition.getTitle()+" 추가요청이 결제완료되어 진행중입니다. "
 				, "외주몬 알림 메일입니다.");
 		logger.info("파트너스 메일 : "+result);
-		
+        }
+        
 		jObject.put("messages", "success");
 		jObject.put("path", "/wjm/project/addition/list/"+contract.getPk());
 		logger.info(jObject.toString());

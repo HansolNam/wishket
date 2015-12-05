@@ -19,16 +19,18 @@ public class AccountInformationInfo {
 	private String telephone_num;
 	private String fax_num;
 	private int subscription;
+	private int sms_subscription;
 	private String identity_authentication;
 	private String bank_name;
 	private String account_holder;
 	private String account_number;
 	private String introduction;
+	
 	public AccountInformationInfo(int pk, int account_pk, String profile_img, String form, String company_name,
 			String company_representative, String name, String sex, String birth_date, String regionl, String regionm,
 			String regionr, String cellphone_num, String telephone_num, String fax_num, int subscription,
-			String identity_authentication, String bank_name, String account_holder, String account_number,
-			String introduction) {
+			int sms_subscription, String identity_authentication, String bank_name, String account_holder,
+			String account_number, String introduction) {
 		super();
 		this.pk = pk;
 		this.account_pk = account_pk;
@@ -46,11 +48,18 @@ public class AccountInformationInfo {
 		this.telephone_num = telephone_num;
 		this.fax_num = fax_num;
 		this.subscription = subscription;
+		this.sms_subscription = sms_subscription;
 		this.identity_authentication = identity_authentication;
 		this.bank_name = bank_name;
 		this.account_holder = account_holder;
 		this.account_number = account_number;
 		this.introduction = introduction;
+	}
+	public int getSms_subscription() {
+		return sms_subscription;
+	}
+	public void setSms_subscription(int sms_subscription) {
+		this.sms_subscription = sms_subscription;
 	}
 	public int getPk() {
 		return pk;

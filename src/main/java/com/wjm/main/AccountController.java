@@ -145,7 +145,13 @@ public class AccountController {
  			ModelAndView mv,
 			 @RequestParam("email") String email) {
 		logger.info("reset POST Page");
-		
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+
+		if(account == null)
+		{
+			mv.setViewName("/accounts/login");
+			return mv;
+		}
 		String newPassword = accountDao.reset_password(email);
 		
 		if(newPassword == null)
@@ -156,9 +162,16 @@ public class AccountController {
 		else
 		{	        
 	        logger.info("newPassword = "+newPassword);
-			String result = sendMail("admin@wjm.com","gksthf1611@gmail.com","임시비밀번호는 "
+	        
+	        AccountInformationInfo accountinfo = accountInformationDao.select(account.getPk());
+	        String result = "";
+	        
+	        if(accountinfo.getSubscription() == 1)
+	        {
+			  result = sendMail("admin@wjm.com","gksthf1611@gmail.com","임시비밀번호는 "
 					+newPassword+" 입니다.", "외주몬 임시 비밀번호 발송 메일입니다.");
 			logger.info("메일 : "+result);
+	        }
 			
 			if(result.equals("성공"))
 				mv.addObject("messages","임시 비밀번호를 발송하였습니다.");
@@ -193,9 +206,17 @@ public class AccountController {
         
         account.setAuthorization_key(key);
         logger.info("key = "+key);
-		String result = sendMail("admin@wjm.com","gksthf1611@gmail.com","인증코드는 "
-				+key+" 입니다.", "외주몬 회원가입 인증 메일입니다.");
-		logger.info("메일 : "+result);
+        
+
+        AccountInformationInfo accountinfo = accountInformationDao.select(account.getPk());
+        String result = "";
+        
+        if(accountinfo.getSubscription() == 1)
+        {
+        	result = sendMail("admin@wjm.com","gksthf1611@gmail.com","인증코드는 "
+    				+key+" 입니다.", "외주몬 회원가입 인증 메일입니다.");
+    		logger.info("메일 : "+result);
+        }
 		
 		if(result.equals("성공"))
 			jObject.put("messages", "success");
@@ -558,9 +579,16 @@ public class AccountController {
 	        
 	        account.setAuthorization_key(key);
 	        logger.info("key = "+key);
-			String result = sendMail("admin@wjm.com","gksthf1611@gmail.com","인증코드는 "
+	        
+	        AccountInformationInfo accountinfo = accountInformationDao.select(account.getPk());
+	        String result = "";
+
+	        if(accountinfo.getSubscription() == 1)
+	        {
+	        	result = sendMail("admin@wjm.com","gksthf1611@gmail.com","인증코드는 "
 					+key+" 입니다.", "외주몬 회원가입 인증 메일입니다.");
 			logger.info("메일 : "+result);
+	        }
 			
 			if(result.equals("성공"))
 			{
@@ -880,6 +908,7 @@ public class AccountController {
 				mv.addObject("phone_number_entered",list2[1]);
 				
 				mv.addObject("fax_number",accountinfo.getFax_num());
+				mv.addObject("sms_subscription", accountinfo.getSms_subscription());
 				mv.addObject("email_subscription",accountinfo.getSubscription());
 				mv.addObject("msg",msg);
 			}
@@ -1000,6 +1029,7 @@ public class AccountController {
 			 @RequestParam(value = "phone_number_code", required = false, defaultValue = "") String phone_number_code,
 			 @RequestParam(value = "phone_number_entered", required = false, defaultValue = "") String phone_number_entered,
 			 @RequestParam(value = "fax_number", required = false, defaultValue = "") String fax_number,
+			 @RequestParam(value = "sms_subscription2", required = false, defaultValue = "") String sms_subscription2,
 			 @RequestParam("submit_type") String submit_type
 			) throws IOException, FileUploadException, ParseException  {
 		logger.info("profile connect Post Page");
@@ -1013,13 +1043,17 @@ public class AccountController {
 		logger.info("phone_number_code = "+phone_number_code);
 		logger.info("phone_number_entered = "+phone_number_entered);
 		logger.info("fax_number = "+fax_number);
-		logger.info("submit_type = "+submit_type);
+		logger.info("sms_subscription2 = "+sms_subscription2);
 		
+		logger.info("submit_type = "+submit_type);
+	    JSONObject jObject = new JSONObject();
+
 		if(account == null)
 		{
-			response.sendRedirect("redirect:/accounts/login");
+			jObject.put("messages", "error");
+			jObject.put("path", "/wjm/accounts/login");
+			return jObject.toString();
 		}
-	    JSONObject jObject = new JSONObject();
 		AccountInformationInfo accountinfo = accountInformationDao.select(account.getPk());
 		
 		if(accountinfo == null)
@@ -1031,20 +1065,20 @@ public class AccountController {
 		if(submit_type.equals("connect"))
 		{
 			String msg = accountInformationDao.updateConnect(cell_phone_number_code, cell_phone_number_middle, cell_phone_number_end,
-					phone_number_code, phone_number_entered, fax_number, accountinfo.getPk());
+					phone_number_code, phone_number_entered, fax_number, accountinfo.getPk(), sms_subscription2);
 			if(msg.equals("성공"))
 			{
-				jObject.put("msg","success");
+				jObject.put("messages","success");
 			}
 			else
 			{
-				jObject.put("msg",msg);
+				jObject.put("messages",msg);
 				return jObject.toString();
 			}
 		}
 		else
 		{
-			jObject.put("msg","올바르지 않은 접근입니다");
+			jObject.put("messages","올바르지 않은 접근입니다");
 			return jObject.toString();
 		}
 
@@ -1058,8 +1092,9 @@ public class AccountController {
 
 		return jObject.toString();
 		
-		
 	}
+	
+	
 	@RequestMapping(value = "/accounts/settings/profile/email", method = RequestMethod.POST, produces = "text/json; charset=utf8")
 	@ResponseBody
 	public String AccountController_profile_post(HttpServletRequest request,

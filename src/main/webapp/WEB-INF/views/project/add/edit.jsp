@@ -768,22 +768,6 @@ div.backLayer {
 			getCategoryM();
 		}
 		
-
-		if(sub_category_val != null && sub_category_val != "")
-		{
-			var len = document.getElementById("sub_category").length;
-			for(var i=0; i<len; i++)
-				{
-					if(document.getElementById("sub_category").options[i].value == sub_category_val)
-						{
-							document.getElementById("sub_category").options[i].selected = true;
-							break;
-						}
-				}		
-			
-			$('#sub_category').selecter('refresh');
-			$('#sub_category').trigger('change');
-		}
 		
 		//다른 카테고리도 필요한지
 		if(is_turnkey_val != null && is_turnkey_val != "")
@@ -892,20 +876,6 @@ div.backLayer {
 			$('#address_sido').selecter('refresh');
 			$('#sigungu').selecter('refresh');
 		}
-		if(sigungu_val != null && sigungu_val != "")
-		{
-
-			var len = document.getElementById("sigungu").length;
-			for(var i=0; i<len; i++)
-			{
-				if(document.getElementById("sigungu").options[i].value == sigungu_val)
-					{
-						document.getElementById("sigungu").options[i].selected = true;
-						break;
-					}
-			}
-			$('#sigungu').selecter('refresh');
-		}
 		
 		//프로젝트 예상 시작일
 		if(date_expected_kick_off_val != null && date_expected_kick_off_val != "")
@@ -956,7 +926,94 @@ div.backLayer {
 			else if(submit_purpose_val == "inquire")
 				$("#submit_purpose_2").attr("checked","checked");
 		}
+
+	    
+		$('#address_sido').on('change', function() {
+			sigungu_val = "";
+			 getAddress();
+		});
 		
+	    function getAddress()
+	    {
+	        value = $('#address_sido').val();
+
+	        var $selectSigungu = $('#sigungu');
+	        options = "<option value=''>시, 군, 구</option>";
+	        
+	        $selectSigungu.html(options);
+
+	    	if(value == '')
+	    	{
+	    		return false;
+	    	}
+	    	$.ajax({
+	    		url : "/wjm/getAddress",
+	    		type : "POST",
+	    		data : 
+	    		{
+	    			area:value
+	    		},
+	    		async : true,
+	    		dataType : "JSON",
+	    		success : function(data) {
+	    			
+	    			if(data!=null || data!="")
+	    			{
+	    				var list = data.arealist;
+	    				var listLen = list.length;
+	    				
+	    				for(var i=0;i<listLen;i++)
+	    				{
+	    					$selectSigungu.append("<option value='"+list[i]+"'>"+list[i]+"</option>");
+
+	    				}
+	    				
+	    				$selectSigungu.selecter('refresh');
+	    			}
+	    		},
+				complete:function(){
+
+					if(sigungu_val != null && sigungu_val != "")
+					{
+
+						var len = document.getElementById("sigungu").length;
+						for(var i=0; i<len; i++)
+						{
+							if(document.getElementById("sigungu").options[i].value == sigungu_val)
+								{
+									document.getElementById("sigungu").options[i].selected = true;
+									break;
+								}
+						}
+						$('#sigungu').selecter('refresh');
+						$('#sigungu').next().children().first().html(sigungu_val);
+
+					}
+					else
+						{
+						$('#sigungu').next().children().first().html("시, 군, 구");
+
+						}
+			    },
+
+	    		error : function(request, status, error) {
+	    			if (request.status != '0') {
+	    				alert("code : " + request.status + "\r\nmessage : "
+	    						+ request.reponseText + "\r\nerror : " + error);
+	    			}
+	    		}
+	    	});
+	    }
+	    
+
+	    
+	    $('#category').on('change', function() {
+	    	sub_category_val = "";
+	    	getCategoryM();
+	        var check = document.getElementById('turnkey-box');
+	        check.className = "turnkey-checker turnkey-none";
+	    });
+	    
 		function getCategoryM()
 		{
 	    	$('#sub_category').html("<option value=''>세부 카테고리</option>");
@@ -972,6 +1029,7 @@ div.backLayer {
 				{
 					categoryL:document.getElementById('category').value
 				},
+    		    async: true,
 				dataType : "JSON",
 				success : function(data) {
 					
@@ -986,10 +1044,30 @@ div.backLayer {
 							
 						}
 						$('#sub_category').selecter('refresh');
-
 					}
 				},
-		
+				complete:function(){
+					
+					if(sub_category_val != null && sub_category_val != "")
+					{
+						var len = document.getElementById("sub_category").length;
+						for(var i=0; i<len; i++)
+							{
+								if(document.getElementById("sub_category").options[i].value == sub_category_val)
+									{
+										document.getElementById("sub_category").options[i].selected = true;
+										break;
+									}
+							}		
+						
+						$('#sub_category').next().children().first().html(sub_category_val);
+					}
+					else
+						{
+						$('#sub_category').next().children().first().html("세부 카테고리");
+
+						}
+			    },
 				error : function(request, status, error) {
 					if (request.status != '0') {
 						alert("code : " + request.status + "\r\nmessage : "
@@ -1000,12 +1078,6 @@ div.backLayer {
 		}
 
 		
-	    
-	    $('#category').on('change', function() {
-	    	getCategoryM();
-	        var check = document.getElementById('turnkey-box');
-	        check.className = "turnkey-checker turnkey-none";
-	    });
 	});
 	window.onload = function(){
 
@@ -1127,55 +1199,6 @@ div.backLayer {
         }
     });
 
-    function getAddress()
-    {
-        value = $('#address_sido').val();
-
-        var $selectSigungu = $('#sigungu');
-        options = "<option value=''>시, 군, 구</option>";
-        
-        $selectSigungu.html(options);
-
-    	if(value == '')
-    	{
-    		return false;
-    	}
-    	$.ajax({
-    		url : "/wjm/getAddress",
-    		type : "POST",
-    		data : 
-    		{
-    			area:value
-    		},
-    		dataType : "JSON",
-    		success : function(data) {
-    			
-    			if(data!=null || data!="")
-    			{
-    				var list = data.arealist;
-    				var listLen = list.length;
-    				
-    				for(var i=0;i<listLen;i++)
-    				{
-    					$selectSigungu.append("<option value='"+list[i]+"'>"+list[i]+"</option>");
-
-    				}
-    				$selectSigungu.selecter('refresh');
-    			}
-    		},
-
-    		error : function(request, status, error) {
-    			if (request.status != '0') {
-    				alert("code : " + request.status + "\r\nmessage : "
-    						+ request.reponseText + "\r\nerror : " + error);
-    			}
-    		}
-    	});
-    }
-    
-	$('#address_sido').on('change', function() {
-		 getAddress();
-	});
 
     $(function() {
         $('#skill_required').tagit({
@@ -1211,50 +1234,6 @@ div.backLayer {
         });
     });
 </script>
-	<script>
-
-$( document ).ready(function($) {
-    var p5TotalSubNavigationFlag = 0;
-
-
-	if ( $( window ).width() >= 1200 ) {
-		$( '.p5-side-nav-deactive' ).css( 'display', 'none' );
-	} else  {
-		$( '.p5-side-nav-active' ).css( 'display', 'none' );
-		$( '.p5-side-nav-deactive' ).css( 'display', 'block');
-	}
-
-	$('.content-inner').on('click', '.p5-side-nav-active-btn', function () {
-		$('.p5-side-nav-active').css( 'display', 'none' );
-		$('.p5-side-nav-deactive').css('display','block');
-	});
-
-	$('.content-inner').on('click', '.p5-side-nav-deactive-btn', function () {
-		$('.p5-side-nav-active').css( 'display', 'block' );
-		$('.p5-side-nav-deactive').css('display','none');
-	});
-
-
-    $( window ).scroll ( function () {
-		if ( $(window).scrollTop() > 87 && p5TotalSubNavigationFlag === 0) {
-			setTimeout(function() {
-				$('#p5-total-sub-navigation-wrapper').removeClass('hide fadeOut');
-				$('#p5-total-sub-navigation-wrapper').addClass('fadeInDown');
-			}, 200 );
-			flag = 1;
-
-
-		} else if ( $(window).scrollTop() <= 87 ){
-			p5TotalSubNavigationFlag = 0;
-			$('#p5-total-sub-navigation-wrapper').removeClass('fadeInDown');
-			$('#p5-total-sub-navigation-wrapper').addClass('fadeOut');
-			setTimeout(function() {
-				$('#p5-total-sub-navigation-wrapper').addClass('hide');
-			}, 200 );
-		}
-	});
-});
-
-</script>
+	
 </body>
 </html>

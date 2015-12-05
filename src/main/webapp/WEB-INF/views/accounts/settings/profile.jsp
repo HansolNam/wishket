@@ -405,6 +405,15 @@
 										type="text" value="${fax_number }" />
 								</div>
 							</div>
+							<div class="form-group ">
+								<div class="checkbox-wrapper">
+									<div class="checkbox">
+										<label class="" for="sms_subscription1"><input disabled=""
+											checked="checked" id="sms_subscription1"
+											name="sms_subscription1" value="true" type="checkbox" />외주몬의 프로젝트 소식을 sms로 수신합니다.</label>
+									</div>
+								</div>
+							</div>
 						</form>
 						<form  action="/wjm/accounts/settings/profile/email" class="form-horizontal"
 							enctype="multipart/form-data" id="connect_edit_form" method="POST"
@@ -464,6 +473,15 @@
 								<div class="control-wrapper">
 									<input class="form-control" id="fax_number" name="fax_number"
 										type="text" value="" />
+								</div>
+							</div>
+							<div class="form-group ">
+								<div class="checkbox-wrapper">
+									<div class="checkbox">
+										<label class="" for="sms_subscription2"><input
+											checked="checked" id="sms_subscription2"
+											name="sms_subscription2" value="true" type="checkbox" />외주몬의 프로젝트 소식을 sms로 수신합니다.</label>
+									</div>
 								</div>
 							</div>
 							<div class="form-group last-form-group"
@@ -552,7 +570,7 @@
 		    dataType: "json",   // 데이터타입을 JSON형식으로 지정
 		    contentType: "application/x-www-form-urlencoded; charset=utf-8",
 		    success: function(data) { // data: 백엔드에서 requestBody 형식으로 보낸 데이터를 받는다.
-		        var messages = data.msg;
+		        var messages = data.messages;
 
 		    if(messages == "success")
 		        	{
@@ -560,6 +578,10 @@
 					$("#messages").html("<div class='alert alert-success fade in'>연락처 정보 등록을 완료했습니다.</div>");
 
 		        	}
+	        else if(messages == "error")
+        	{
+        	location.href= data.path; 
+        	}
 		        else
 		        	{
 					$("#messages").html("<div class='alert alert-warning fade in'>"+messages+"</div>");
@@ -738,7 +760,7 @@
 	}
 	
 	function updateConnectInfo(cell_phone_number_code,cell_phone_number_middle,cell_phone_number_end,
-			phone_number_code,phone_number_entered, fax_number)
+			phone_number_code,phone_number_entered, fax_number, sms_subscription)
 	{
 		if(cell_phone_number_code != null && cell_phone_number_code != "")
 		{
@@ -779,6 +801,19 @@
 		if(fax_number != null && fax_number != "")
 		{
 			document.getElementById("fax_number").value = fax_number;
+		}
+		if(sms_subscription != null && sms_subscription != "")
+		{
+			if(sms_subscription == '1')
+				{
+				document.getElementById("sms_subscription1").checked = true;
+				document.getElementById("sms_subscription2").checked = true;
+				}
+			else
+				{
+				document.getElementById("sms_subscription1").checked = false;
+				document.getElementById("sms_subscription2").checked = false;
+				}
 		}
 	}
 	
@@ -823,6 +858,7 @@
         var phone_number_code = "${phone_number_code}";
         var phone_number_entered = "${phone_number_entered}";
         var fax_number = "${fax_number}";
+        var sms_subscription = "${sms_subscription}";
         var email_subscription = "${email_subscription}";
         
         updateBasicInfo(img_path, form_of_business, full_name, company_name, representative,
@@ -830,7 +866,7 @@
     			sigungu,address_detail);
 		
         updateConnectInfo(cell_phone_number_code,cell_phone_number_middle,cell_phone_number_end,
-    			phone_number_code,phone_number_entered, fax_number);
+    			phone_number_code,phone_number_entered, fax_number, sms_subscription);
 		
         updateEmailInfo(email_subscription);
 		

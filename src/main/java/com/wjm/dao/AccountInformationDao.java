@@ -70,6 +70,7 @@ public class AccountInformationDao implements AccountInformationIDao {
 		    				, resultSet.getString("telephone_num")
 		    				, resultSet.getString("fax_num")
 		    				, resultSet.getInt("subscription")
+		    				, resultSet.getInt("sms_subscription")
 		    				, resultSet.getString("identity_authentication")
 		    				, resultSet.getString("bank_name")
 		    				, resultSet.getString("account_holder")
@@ -101,6 +102,7 @@ public class AccountInformationDao implements AccountInformationIDao {
 		    				, resultSet.getString("telephone_num")
 		    				, resultSet.getString("fax_num")
 		    				, resultSet.getInt("subscription")
+		    				, resultSet.getInt("sms_subscription")
 		    				, resultSet.getString("identity_authentication")
 		    				, resultSet.getString("bank_name")
 		    				, resultSet.getString("account_holder")
@@ -145,6 +147,7 @@ public class AccountInformationDao implements AccountInformationIDao {
 		    				, resultSet.getString("telephone_num")
 		    				, resultSet.getString("fax_num")
 		    				, resultSet.getInt("subscription")
+		    				, resultSet.getInt("sms_subscription")
 		    				, resultSet.getString("identity_authentication")
 		    				, resultSet.getString("bank_name")
 		    				, resultSet.getString("account_holder")
@@ -213,6 +216,7 @@ public class AccountInformationDao implements AccountInformationIDao {
 		    				, resultSet.getString("telephone_num")
 		    				, resultSet.getString("fax_num")
 		    				, resultSet.getInt("subscription")
+		    				, resultSet.getInt("sms_subscription")
 		    				, resultSet.getString("identity_authentication")
 		    				, resultSet.getString("bank_name")
 		    				, resultSet.getString("account_holder")
@@ -741,7 +745,7 @@ public class AccountInformationDao implements AccountInformationIDao {
 	
 	public String updateConnect(String cell_phone_number_code, String cell_phone_number_middle, 
 			String cell_phone_number_end,String phone_number_code, 
-			String phone_number_entered, String fax_number, int pk)
+			String phone_number_entered, String fax_number, int pk, String sms_subscription)
 	{
 		if(cell_phone_number_code == null)
 		{
@@ -851,10 +855,24 @@ public class AccountInformationDao implements AccountInformationIDao {
 			return "올바른 팩스 번호가 아닙니다.";
 		}
 		
+		int subscription = 1;
+		
+		if(sms_subscription.equals("true"))
+		{
+			logger.info("구독");
+			subscription = 1;
+		}
+		else
+		{
+			logger.info("미구독");
+			subscription = 0;
+		}
+		
+		
 		jdbcTemplate.update("update account_information set cellphone_num=?, "
-				+"telephone_num=?, fax_num=? where pk=?", 
+				+"telephone_num=?, fax_num=?, sms_subscription=? where pk=?", 
 				new Object[] { cell_phone_number_code+"-"+cell_phone_number_middle+"-"+cell_phone_number_end
-						, telephone_num, fax_number, pk });
+						, telephone_num, fax_number, subscription, pk });
 		
 		return "성공";
 	}

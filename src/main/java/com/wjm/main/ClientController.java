@@ -29,6 +29,7 @@ import com.wjm.dao.NotificationDao;
 import com.wjm.dao.ProjectDao;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
+import com.wjm.models.AccountInformationInfo;
 import com.wjm.models.AdditionInfo;
 import com.wjm.models.ApplicantInfo;
 import com.wjm.models.ContractInfo;
@@ -398,13 +399,26 @@ public class ClientController {
 		
 		ProjectInfo project = projectDao.select_project(project_pk);
 		//notification update
+		//client
 		notificationDao.create(account.getPk(), contract.getPartners_id()+" 파트너스를 평가하셨습니다. 프로젝트가 완료되었습니다.");
+		
+		AccountInformationInfo accountinfo = accountInformationDao.select(account.getPk());
+        
+        if(accountinfo.getSubscription() == 1)
+        {
 		String result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", contract.getPartners_id()+" 파트너스를 평가하셨습니다. 프로젝트가 완료되었습니다.", "외주몬 알림 메일입니다");
 		logger.info("이메일 전송 결과 = "+result);
+        }
+        
+		//partners
 		notificationDao.create(partners_pk, contract.getClient_id()+" 님이 "+project.getName()+" 프로젝트의 평가를 완료하셨습니다.");
-		result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", contract.getClient_id()+" 님이 "+project.getName()+" 프로젝트의 평가를 완료하셨습니다.", "외주몬 알림 메일입니다");
+		accountinfo = accountInformationDao.select(partners_pk);
+        
+        if(accountinfo.getSubscription() == 1)
+        {
+		String result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", contract.getClient_id()+" 님이 "+project.getName()+" 프로젝트의 평가를 완료하셨습니다.", "외주몬 알림 메일입니다");
 		logger.info("이메일 전송 결과 = "+result);
-				
+        }
 		mv.setViewName("redirect:/client/manage/past/completed-contract");
 		
 		return mv;
