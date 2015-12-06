@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileUploadException;
+import org.apache.http.client.ClientProtocolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,7 @@ import com.wjm.dao.NoticeDao;
 import com.wjm.dao.NotificationDao;
 import com.wjm.dao.ProjectDao;
 import com.wjm.main.function.Fileupload;
+import com.wjm.main.function.SMS;
 import com.wjm.main.function.Time;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
@@ -200,12 +203,15 @@ public class AdminController {
 	
 	/**
 	 * 프로젝트 검수 성공
+	 * @throws IOException 
+	 * @throws URISyntaxException 
+	 * @throws ClientProtocolException 
 	 */
 	@RequestMapping(value = "/admin/project/{name}/{pk}/exam/success", method = RequestMethod.GET)
 	public ModelAndView AdminController_exam_success(HttpServletRequest request,
 			@PathVariable("pk") int pk, 
 			@PathVariable("name") String name, 
-			ModelAndView mv) {
+			ModelAndView mv) throws ClientProtocolException, URISyntaxException, IOException {
 		logger.info("/admin/project/{name}/{pk}/exam/success Page");
 
 		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
@@ -231,6 +237,19 @@ public class AdminController {
 			result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", project.getName()+" 프로젝트가 검수가 완료되어 지원자 모집중입니다.", "외주몬 알림 메일입니다");
 		logger.info("이메일 전송 결과 = "+result);
 	        }
+	        if(accountinfo.getSms_subscription() == 1)
+	        {
+	        	String phone = "";
+	        	
+	        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+	        		phone = accountinfo.getCellphone_num().replace("-", "");
+	        	
+	        	if(Validator.hasValue(phone))
+	        	{
+	        		SMS.sendSMS(phone, phone,project.getName()+" 프로젝트가 검수가 완료되어 지원자 모집중입니다.", "");
+		    		logger.info("SMS 전송");
+	        	}
+	        }
 		
 		projectDao.updateStatus(pk,"지원자모집중");
 		
@@ -242,12 +261,15 @@ public class AdminController {
 
 	/**
 	 * 프로젝트 검수 실패
+	 * @throws IOException 
+	 * @throws URISyntaxException 
+	 * @throws ClientProtocolException 
 	 */
 	@RequestMapping(value = "/admin/project/{name}/{pk}/exam/fail", method = RequestMethod.GET)
 	public ModelAndView AdminController_exam_fail(HttpServletRequest request,
 			@PathVariable("pk") int pk, 
 			@PathVariable("name") String name, 
-			ModelAndView mv) {
+			ModelAndView mv) throws ClientProtocolException, URISyntaxException, IOException {
 		logger.info("/admin/project/{name}/{pk}/exam/fail Page");
 
 		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
@@ -272,6 +294,19 @@ public class AdminController {
 
 	        	result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", project.getName()+" 프로젝트가 검수에 실패하였습니다. 관리자에게 문의해주세요.", "외주몬 알림 메일입니다");
 		logger.info("이메일 전송 결과 = "+result);
+	        }
+	        if(accountinfo.getSms_subscription() == 1)
+	        {
+	        	String phone = "";
+	        	
+	        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+	        		phone = accountinfo.getCellphone_num().replace("-", "");
+	        	
+	        	if(Validator.hasValue(phone))
+	        	{
+	        		SMS.sendSMS(phone, phone, project.getName()+" 프로젝트가 검수에 실패하였습니다. 관리자에게 문의해주세요.", "");
+		    		logger.info("SMS 전송");
+	        	}
 	        }
 		
 		projectDao.updateStatus(pk,"등록실패");
@@ -910,13 +945,16 @@ public class AdminController {
 	}
 	/**
 	 * 미팅 후 계약 실패
+	 * @throws IOException 
+	 * @throws URISyntaxException 
+	 * @throws ClientProtocolException 
 	 */
 	@RequestMapping(value = "/admin/contract/fail/{project_pk}/{partners_pk}/{contract_pk}", method = RequestMethod.GET)
 	public ModelAndView AdminController_contract_fail(HttpServletRequest request,
 			@PathVariable("project_pk") int project_pk, 
 			@PathVariable("partners_pk") int partners_pk, 
 			@PathVariable("contract_pk") int contract_pk, 
-			ModelAndView mv) {
+			ModelAndView mv) throws ClientProtocolException, URISyntaxException, IOException {
 		logger.info("/admin/contract/fail/{project_pk}/{partners_pk}/{contract_pk}");
 
 		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
@@ -972,7 +1010,21 @@ public class AdminController {
 				+project.getName()+" 프로젝트 계약이 성사되지 못했습니다. 미팅 신청은 총 2 번 가능합니다.", "외주몬 알림 메일입니다.");
 		logger.info("클라이언트 메일 : "+result);
 	        }
-	       
+
+	        if(accountinfo.getSms_subscription() == 1)
+	        {
+	        	String phone = "";
+	        	
+	        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+	        		phone = accountinfo.getCellphone_num().replace("-", "");
+	        	
+	        	if(Validator.hasValue(phone))
+	        	{
+	        		SMS.sendSMS(phone, phone, contract.getPartners_id()+"님과의"
+	        				+project.getName()+" 프로젝트 계약이 성사되지 못했습니다. 미팅 신청은 총 2 번 가능합니다.", "");
+		    		logger.info("SMS 전송");
+	        	}
+	        }
 	        accountinfo = accountInformationDao.select(contract.getPartners_pk());
 	        if(accountinfo.getSubscription() == 1)
 	        {
@@ -981,7 +1033,21 @@ public class AdminController {
 				+project.getName()+" 계약이 성사되지 못했습니다. 다른 프로젝트에 지원해주세요.", "외주몬 알림 메일입니다.");
 		logger.info("파트너스 메일 : "+result);
 	        }
-		
+
+	        if(accountinfo.getSms_subscription() == 1)
+	        {
+	        	String phone = "";
+	        	
+	        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+	        		phone = accountinfo.getCellphone_num().replace("-", "");
+	        	
+	        	if(Validator.hasValue(phone))
+	        	{
+	        		SMS.sendSMS(phone, phone, contract.getClient_id()+"님의 "
+	        				+project.getName()+" 계약이 성사되지 못했습니다. 다른 프로젝트에 지원해주세요.", "");
+		    		logger.info("SMS 전송");
+	        	}
+	        }
 		mv.setViewName("/admin/contract/faillist");
 		
 		return mv;
@@ -1057,6 +1123,9 @@ public class AdminController {
 	
 	/**
 	 * 미팅 후 계약 성공 처리
+	 * @throws IOException 
+	 * @throws URISyntaxException 
+	 * @throws ClientProtocolException 
 	 */
 	@RequestMapping(value = "/admin/contract/success/{project_pk}/{client_pk}/{partners_pk}", method = RequestMethod.POST)
 	public ModelAndView AdminController_contract_success_post(HttpServletRequest request,
@@ -1065,7 +1134,7 @@ public class AdminController {
 			@PathVariable("partners_pk") int partners_pk, 
 			ModelAndView mv,
 			 @RequestParam("budget") int budget,
-			 @RequestParam("term") int term) {
+			 @RequestParam("term") int term) throws ClientProtocolException, URISyntaxException, IOException {
 		logger.info("/admin/contract/success/{project_pk}/{client_pk}/{partners_pk} post page");
 
 		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
@@ -1123,6 +1192,20 @@ public class AdminController {
 				+project.getName()+" 프로젝트가 진행됩니다.", "외주몬 알림 메일입니다.");
 		logger.info("클라이언트 메일 : "+result);
 	        }
+	        if(accountinfo.getSms_subscription() == 1)
+	        {
+	        	String phone = "";
+	        	
+	        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+	        		phone = accountinfo.getCellphone_num().replace("-", "");
+	        	
+	        	if(Validator.hasValue(phone))
+	        	{
+	        		SMS.sendSMS(phone, phone, contract.getPartners_id()+"와의 계약이 성사되었습니다. 결제 대기중인 프로젝트의 결제를 완료하면 "
+	        				+project.getName()+" 프로젝트가 진행됩니다.", "");
+		    		logger.info("SMS 전송");
+	        	}
+	        }
 	        
 		//파트너스
 	        accountinfo = accountInformationDao.select(contract.getPartners_pk());
@@ -1133,19 +1216,36 @@ public class AdminController {
 				+project.getName()+" 프로젝트가 진행됩니다.", "외주몬 알림 메일입니다.");
 		logger.info("파트너스 메일 : "+result);
 	        }
+	        if(accountinfo.getSms_subscription() == 1)
+	        {
+	        	String phone = "";
+	        	
+	        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+	        		phone = accountinfo.getCellphone_num().replace("-", "");
+	        	
+	        	if(Validator.hasValue(phone))
+	        	{
+	        		SMS.sendSMS(phone, phone, contract.getClient_id()+"와의 계약이 성사되었습니다. 클라이언트가 결제를 완료하면 "
+	        				+project.getName()+" 프로젝트가 진행됩니다.", "");
+		    		logger.info("SMS 전송");
+	        	}
+	        }
 		mv.setViewName("redirect:/admin/home");
 		return mv;
 	}
 
 	/**
 	 * 승인 후 프로젝트 완료 처리
+	 * @throws IOException 
+	 * @throws URISyntaxException 
+	 * @throws ClientProtocolException 
 	 */
 	@RequestMapping(value = "/admin/project/complete/success/{project_pk}/{client_pk}/{partners_pk}", method = RequestMethod.GET)
 	public ModelAndView AdminController_project__complete_success_post(HttpServletRequest request,
 			@PathVariable("project_pk") int project_pk, 
 			@PathVariable("client_pk") int client_pk, 
 			@PathVariable("partners_pk") int partners_pk, 
-			ModelAndView mv) {
+			ModelAndView mv) throws ClientProtocolException, URISyntaxException, IOException {
 		
 		logger.info("/admin/project/complete/success/{project_pk}/{client_pk}/{partners_pk} post page");
 
@@ -1188,6 +1288,19 @@ public class AdminController {
 		String mail_result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", project.getName()+" 프로젝트의 대금이 지급되었습니다. 클라이언트를 평가해야 프로젝트가 완료됩니다.", "외주몬 알림 메일입니다");
 		logger.info("이메일 전송 결과1 = "+mail_result);
         }
+        if(accountinfo.getSms_subscription() == 1)
+        {
+        	String phone = "";
+        	
+        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+        		phone = accountinfo.getCellphone_num().replace("-", "");
+        	
+        	if(Validator.hasValue(phone))
+        	{
+        		SMS.sendSMS(phone, phone, project.getName()+" 프로젝트의 대금이 지급되었습니다. 클라이언트를 평가해야 프로젝트가 완료됩니다.", "");
+	    		logger.info("SMS 전송");
+        	}
+        }
 
 		//클라이언트
         accountinfo = accountInformationDao.select(client_pk);
@@ -1197,6 +1310,21 @@ public class AdminController {
         	String mail_result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", project.getName()+" 프로젝트의 대금이 지급되었습니다. 파트너스를 평가해야 프로젝트가 완료됩니다.", "외주몬 알림 메일입니다");
 		logger.info("이메일 전송 결과2 = "+mail_result);
         }
+        if(accountinfo.getSms_subscription() == 1)
+        {
+        	String phone = "";
+        	
+        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+        		phone = accountinfo.getCellphone_num().replace("-", "");
+        	
+        	if(Validator.hasValue(phone))
+        	{
+        		SMS.sendSMS(phone, phone, 
+        				project.getName()+" 프로젝트의 대금이 지급되었습니다. 파트너스를 평가해야 프로젝트가 완료됩니다.", "");
+	    		logger.info("SMS 전송");
+        	}
+        }
+
 		mv.setViewName("redirect:/admin/home");
 		return mv;
 	}
@@ -1474,11 +1602,14 @@ public class AdminController {
 
 	/**
 	 * 추가요청 승인
+	 * @throws IOException 
+	 * @throws URISyntaxException 
+	 * @throws ClientProtocolException 
 	 */
 	@RequestMapping(value = "/admin/addition/submit/{addition_pk}", method = RequestMethod.POST, produces = "text/json; charset=utf8")
 	@ResponseBody
 	public String Admincontroller_addition_submit(HttpServletRequest request, HttpServletResponse response,
-			@PathVariable("addition_pk") int addition_pk) {
+			@PathVariable("addition_pk") int addition_pk) throws ClientProtocolException, URISyntaxException, IOException {
 
 		logger.info("/admin/addition/submit/{addition_pk} Post Page");
 		logger.info("addition_pk = " + addition_pk);
@@ -1528,6 +1659,22 @@ public class AdminController {
 				, "외주몬 알림 메일입니다.");
 		logger.info("클라이언트 메일 : "+result);
         }
+
+        if(accountinfo.getSms_subscription() == 1)
+        {
+        	String phone = "";
+        	
+        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+        		phone = accountinfo.getCellphone_num().replace("-", "");
+        	
+        	if(Validator.hasValue(phone))
+        	{
+        		SMS.sendSMS(phone, phone, 
+        				addition.getTitle()+" 추가요청이 결제대기중입니다. 결제를 완료하면 진행중으로 상태가 변경됩니다."
+        				, "");
+	    		logger.info("SMS 전송");
+        	}
+        }
 		
 		jObject.put("messages", "success");
 		jObject.put("path", "/wjm/admin/contract/addition/list");
@@ -1539,11 +1686,14 @@ public class AdminController {
 
 	/**
 	 * 추가요청 취소
+	 * @throws IOException 
+	 * @throws URISyntaxException 
+	 * @throws ClientProtocolException 
 	 */
 	@RequestMapping(value = "/admin/addition/cancel/{addition_pk}", method = RequestMethod.POST, produces = "text/json; charset=utf8")
 	@ResponseBody
 	public String Admincontroller_addition_cancel(HttpServletRequest request, HttpServletResponse response,
-			@PathVariable("addition_pk") int addition_pk) {
+			@PathVariable("addition_pk") int addition_pk) throws ClientProtocolException, URISyntaxException, IOException {
 
 		logger.info("/admin/addition/cancel/{addition_pk} Post Page");
 		logger.info("addition_pk = " + addition_pk);
@@ -1592,6 +1742,22 @@ public class AdminController {
 		String result = sendMail("admin@wjm.com","gksthf1611@gmail.com",addition.getTitle()+" 추가요청이 취소되었습니다. "
 				, "외주몬 알림 메일입니다.");
 		logger.info("클라이언트 메일 : "+result);
+        }
+
+        if(accountinfo.getSms_subscription() == 1)
+        {
+        	String phone = "";
+        	
+        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+        		phone = accountinfo.getCellphone_num().replace("-", "");
+        	
+        	if(Validator.hasValue(phone))
+        	{
+        		SMS.sendSMS(phone, phone, 
+        				addition.getTitle()+" 추가요청이 취소되었습니다. "
+        				,"");
+	    		logger.info("SMS 전송");
+        	}
         }
         
 		jObject.put("messages", "success");

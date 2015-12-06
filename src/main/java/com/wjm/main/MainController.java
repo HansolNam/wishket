@@ -1,9 +1,12 @@
 package com.wjm.main;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.http.client.ClientProtocolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.wjm.dao.AccountDao;
 import com.wjm.dao.ProjectDao;
+import com.wjm.main.function.SMS;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
 import com.wjm.models.ProjectInfo;
@@ -32,12 +36,14 @@ public class MainController {
 
 	@Autowired
 	private ProjectDao projectDao;
-	
+
 	/**
 	 * index
+	 * @throws URISyntaxException 
+	 * @throws ClientProtocolException 
 	 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
-	public ModelAndView MainController_index(HttpServletRequest request, ModelAndView mv) {
+	public ModelAndView MainController_index(HttpServletRequest request, ModelAndView mv) throws ClientProtocolException, URISyntaxException, IOException {
 		logger.info("index Page");
 		
 		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
@@ -75,6 +81,7 @@ public class MainController {
 		mv.addObject("projectbudget", projectbudget);
 		mv.addObject("partnersnum" , partnersnum);
 		mv.addObject("projectlist", projectlist);
+		
 		
 		return mv;
 	}

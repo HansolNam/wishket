@@ -2,6 +2,7 @@ package com.wjm.main;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Random;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileUploadException;
+import org.apache.http.client.ClientProtocolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,7 @@ import com.wjm.dao.AccountInformationDao;
 import com.wjm.dao.AuthenticationDao;
 import com.wjm.dao.BankDao;
 import com.wjm.dao.NotificationDao;
+import com.wjm.main.function.SMS;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
 import com.wjm.models.AccountInformationInfo;
@@ -138,12 +141,15 @@ public class AccountController {
 	}
 	/**
 	 * 비밀번호 찾기 처리 페이지
+	 * @throws IOException 
+	 * @throws URISyntaxException 
+	 * @throws ClientProtocolException 
 	 */
 	@RequestMapping(value = "/accounts/password/reset", method = RequestMethod.POST)
 	public ModelAndView MainController_notifications_post(HttpServletRequest request,
  			HttpServletResponse response,
  			ModelAndView mv,
-			 @RequestParam("email") String email) {
+			 @RequestParam("email") String email) throws ClientProtocolException, URISyntaxException, IOException {
 		logger.info("reset POST Page");
 		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
 
@@ -172,6 +178,20 @@ public class AccountController {
 					+newPassword+" 입니다.", "외주몬 임시 비밀번호 발송 메일입니다.");
 			logger.info("메일 : "+result);
 	        }
+	        if(accountinfo.getSms_subscription() == 1)
+	        {
+	        	String phone = "";
+	        	
+	        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+	        		phone = accountinfo.getCellphone_num().replace("-", "");
+	        	
+	        	if(Validator.hasValue(phone))
+	        	{
+	        		SMS.sendSMS(phone, phone,"임시비밀번호는 "
+	    					+newPassword+" 입니다.", "");
+		    		logger.info("SMS 전송");
+	        	}
+	        }
 			
 			if(result.equals("성공"))
 				mv.addObject("messages","임시 비밀번호를 발송하였습니다.");
@@ -185,11 +205,14 @@ public class AccountController {
 	}
 	/**
 	 * 회원가입 인증 페이지
+	 * @throws IOException 
+	 * @throws URISyntaxException 
+	 * @throws ClientProtocolException 
 	 */
 	@RequestMapping(value = "/accounts/reverify", method = RequestMethod.POST, produces = "text/json; charset=utf8")
 	@ResponseBody
 	public String MainController_reverify(HttpServletRequest request,
- 			HttpServletResponse response) {
+ 			HttpServletResponse response) throws ClientProtocolException, URISyntaxException, IOException {
 		logger.info("reverify get Page");
 		
 		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
@@ -216,6 +239,20 @@ public class AccountController {
         	result = sendMail("admin@wjm.com","gksthf1611@gmail.com","인증코드는 "
     				+key+" 입니다.", "외주몬 회원가입 인증 메일입니다.");
     		logger.info("메일 : "+result);
+        }
+        if(accountinfo.getSms_subscription() == 1)
+        {
+        	String phone = "";
+        	
+        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+        		phone = accountinfo.getCellphone_num().replace("-", "");
+        	
+        	if(Validator.hasValue(phone))
+        	{
+        		SMS.sendSMS(phone, phone,"인증코드는 "
+        				+key+" 입니다.", "");
+	    		logger.info("SMS 전송");
+        	}
         }
 		
 		if(result.equals("성공"))
@@ -456,6 +493,9 @@ public class AccountController {
 	
 	/**
 	 * 회원가입 처리
+	 * @throws IOException 
+	 * @throws URISyntaxException 
+	 * @throws ClientProtocolException 
 	 */
 	
 	@RequestMapping(value = "/accounts/signup", method = RequestMethod.POST)
@@ -469,7 +509,7 @@ public class AccountController {
                      defaultValue = "") String account_type,
 			 @RequestParam(value = "tos", required = false, 
                      defaultValue = "") String tos
-			) {
+			) throws ClientProtocolException, URISyntaxException, IOException {
 		logger.info("signup Post Page");
 				
 		logger.info("id = "+id);
@@ -589,7 +629,22 @@ public class AccountController {
 					+key+" 입니다.", "외주몬 회원가입 인증 메일입니다.");
 			logger.info("메일 : "+result);
 	        }
-			
+
+	        if(accountinfo.getSms_subscription() == 1)
+	        {
+	        	String phone = "";
+	        	
+	        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+	        		phone = accountinfo.getCellphone_num().replace("-", "");
+	        	
+	        	if(Validator.hasValue(phone))
+	        	{
+	        		SMS.sendSMS(phone, phone,"인증코드는 "
+	    					+key+" 입니다.", "");
+		    		logger.info("SMS 전송");
+	        	}
+	        }
+	        
 			if(result.equals("성공"))
 			{
 				request.getSession().setAttribute("account", account);
@@ -1341,6 +1396,19 @@ public class AccountController {
 				String result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", account.getId()+" 님이 신원 인증을 요청했습니다.", "외주몬 알림 메일입니다");
 				logger.info("이메일 전송 결과 = "+result);
 				
+				//관리자 번호
+				/*
+				String phone = "";
+			        	
+	        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+	        		phone = accountinfo.getCellphone_num().replace("-", "");
+	        	
+	        	if(Validator.hasValue(phone))
+	        	{
+	        		SMS.sendSMS(phone, phone,account.getId()+" 님이 신원 인증을 요청했습니다.", "");
+		    		logger.info("SMS 전송");
+	        	}*/
+			        
 				jObject.put("messages", "success");
 				jObject.put("path", "/wjm/accounts/settings/verify_identity/");
 				logger.info("jobject = " + jObject.toString());

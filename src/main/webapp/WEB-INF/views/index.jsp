@@ -163,7 +163,7 @@
 		<div class="landing-inner">
 			<div class="text-center">
 				프로젝트를 찾고 있는 프리랜서이신가요? <a class="btn btn-md btn-wishket"
-					href="/accounts/signup/">회원가입하기</a>
+					href="/wjm/accounts/signup/">회원가입하기</a>
 			</div>
 		</div>
 		</section>
@@ -206,7 +206,7 @@
 		<div class="landing-inner">
 			<div class="text-center">
 				지금 당신의 프로젝트를 등록해보세요. <a class="btn btn-md btn-client"
-					href="/project/add/">프로젝트 등록하기</a>
+					href="/wjm/project/add/">프로젝트 등록하기</a>
 			</div>
 		</div>
 		</section>

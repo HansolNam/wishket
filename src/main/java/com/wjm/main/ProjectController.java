@@ -1,5 +1,8 @@
 package com.wjm.main;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +11,14 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +45,7 @@ import com.wjm.dao.Partners_infoDao;
 import com.wjm.dao.PortfolioDao;
 import com.wjm.dao.ProjectDao;
 import com.wjm.dao.TechniqueDao;
+import com.wjm.main.function.SMS;
 import com.wjm.main.function.Time;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
@@ -119,6 +131,7 @@ public class ProjectController {
 		
 		return "성공";
 	}
+	
 	/**
 	 * 프로젝트 추가
 	 */
@@ -362,6 +375,9 @@ public class ProjectController {
 	 * 프로젝트 수정 처리 페이지
 	 * @throws ParseException 
 	 * @throws NumberFormatException 
+	 * @throws IOException 
+	 * @throws URISyntaxException 
+	 * @throws ClientProtocolException 
 	 */
 	@RequestMapping(value = "/project/add/edit/{project_pk}", method = RequestMethod.POST, produces = "text/json; charset=utf8")
 	@ResponseBody
@@ -386,7 +402,7 @@ public class ProjectController {
 			 @RequestParam(value = "prefer_partner", required = false, defaultValue = "") String prefer_partner,
 			 @RequestParam(value = "submit_purpose", required = false, defaultValue = "") String submit_purpose,
 			 @RequestParam(value = "status", required = false, defaultValue = "") String status
-			 ) throws NumberFormatException, ParseException {
+			 ) throws NumberFormatException, ParseException, ClientProtocolException, URISyntaxException, IOException {
 		logger.info("/project/add/edit/{project_pk} post page");
 		JSONObject jObject = new JSONObject();
 
@@ -703,6 +719,21 @@ public class ProjectController {
 			result = sendMail("admin@wjm.com","gksthf1611@gmail.com",title+" 프로젝트가 검수중입니다. 검수는 최대 24시간이 소요됩니다."
 					, "외주몬 알림 메일입니다.");
 			logger.info("클라이언트 메일 : "+result);
+	        } 
+	        if(accountinfo.getSms_subscription() == 1)
+	        {
+	        	String phone = "";
+	        	
+	        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+	        		phone = accountinfo.getCellphone_num().replace("-", "");
+	        	
+	        	if(Validator.hasValue(phone))
+	        	{
+	        		SMS.sendSMS(phone, phone, 
+	        				title+" 프로젝트가 검수중입니다. 검수는 최대 24시간이 소요됩니다."
+	        				,"");
+		    		logger.info("SMS 전송");
+	        	}
 	        }
 			//파트너스
 			//result = sendMail("admin@wjm.com","gksthf1611@gmail.com",contract.getClient_id()+"님의 "
@@ -736,6 +767,9 @@ public class ProjectController {
 	 * 프로젝트 추가 페이지
 	 * @throws ParseException 
 	 * @throws NumberFormatException 
+	 * @throws IOException 
+	 * @throws URISyntaxException 
+	 * @throws ClientProtocolException 
 	 */
 	@RequestMapping(value = "/project/add/detail", method = RequestMethod.POST, produces = "text/json; charset=utf8")
 	@ResponseBody
@@ -759,7 +793,7 @@ public class ProjectController {
 			 @RequestParam(value = "prefer_partner", required = false, defaultValue = "") String prefer_partner,
 			 @RequestParam(value = "submit_purpose", required = false, defaultValue = "") String submit_purpose,
 			 @RequestParam(value = "status", required = false, defaultValue = "") String status
-			 ) throws NumberFormatException, ParseException {
+			 ) throws NumberFormatException, ParseException, ClientProtocolException, URISyntaxException, IOException {
 		logger.info("프로젝트 추가 처리");
 		JSONObject jObject = new JSONObject();
 
@@ -1072,6 +1106,22 @@ public class ProjectController {
 	        {
 			result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", title+" 프로젝트가 등록되어 검수중입니다. 검수에는 최대 24시간이 소요됩니다.", "외주몬 알림 메일입니다");
 			logger.info("이메일 전송 결과 = "+result);
+	        }
+	        
+	        if(accountinfo.getSms_subscription() == 1)
+	        {
+	        	String phone = "";
+	        	
+	        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+	        		phone = accountinfo.getCellphone_num().replace("-", "");
+	        	
+	        	if(Validator.hasValue(phone))
+	        	{
+	        		SMS.sendSMS(phone, phone, 
+	        				title+" 프로젝트가 등록되어 검수중입니다. 검수에는 최대 24시간이 소요됩니다."
+	        				,"");
+		    		logger.info("SMS 전송");
+	        	}
 	        }
 	        
 			jObject.put("messages", "success");
@@ -1455,6 +1505,9 @@ public class ProjectController {
 
 	/**
 	 * 프로젝트 지원하기 처리
+	 * @throws IOException 
+	 * @throws URISyntaxException 
+	 * @throws ClientProtocolException 
 	 */
 	@RequestMapping(value = "/project/{name}/{pk}/proposal/apply", method = RequestMethod.POST, produces = "text/json; charset=utf8")
 	@ResponseBody
@@ -1467,7 +1520,7 @@ public class ProjectController {
 			@RequestParam("has_related_portfolio") String has_related_portfolio,
 			@RequestParam(value = "related_portfolio", required = false) String[] related_portfolio,
 			@RequestParam(value = "related_description", required = false, defaultValue = "") String related_description
-			) {
+			) throws ClientProtocolException, URISyntaxException, IOException {
 
 		logger.info("/project/{name}/{pk}/proposal/apply Post Page");
 		
@@ -1521,6 +1574,21 @@ public class ProjectController {
 	        {
 			String mail_result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", name+" 프로젝트에 지원하셨습니다.", "외주몬 알림 메일입니다");
 			logger.info("이메일 전송 결과1 = "+mail_result);
+	        } 
+	        if(accountinfo.getSms_subscription() == 1)
+	        {
+	        	String phone = "";
+	        	
+	        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+	        		phone = accountinfo.getCellphone_num().replace("-", "");
+	        	
+	        	if(Validator.hasValue(phone))
+	        	{
+	        		SMS.sendSMS(phone, phone, 
+	        				name+" 프로젝트에 지원하셨습니다."
+	        				,"");
+		    		logger.info("SMS 전송");
+	        	}
 	        }
 	        
 			//클라이언트
@@ -1530,6 +1598,21 @@ public class ProjectController {
 	        {
 	        String mail_result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", name+" 프로젝트에 "+account.getId()+" 님이 지원하셨습니다.", "외주몬 알림 메일입니다");
 			logger.info("이메일 전송 결과2 = "+mail_result);
+	        }
+	        if(accountinfo.getSms_subscription() == 1)
+	        {
+	        	String phone = "";
+	        	
+	        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+	        		phone = accountinfo.getCellphone_num().replace("-", "");
+	        	
+	        	if(Validator.hasValue(phone))
+	        	{
+	        		SMS.sendSMS(phone, phone, 
+	        				name+" 프로젝트에 "+account.getId()+" 님이 지원하셨습니다."
+	        				,"");
+		    		logger.info("SMS 전송");
+	        	}
 	        }
 			
 			jObject.put("messages", "success");
@@ -1791,6 +1874,9 @@ public class ProjectController {
 
 	/**
 	 * 추가 요청 등록 처리
+	 * @throws IOException 
+	 * @throws URISyntaxException 
+	 * @throws ClientProtocolException 
 	 */
 
 	@RequestMapping(value = "/project/addition/add/{contract_pk}", method = RequestMethod.POST, produces="application/json;charset=UTF-8")
@@ -1800,7 +1886,7 @@ public class ProjectController {
 			@RequestParam("title") String title,
 			@RequestParam("term") int term,
 			@RequestParam("budget") int budget,
-			ModelAndView mv) {
+			ModelAndView mv) throws ClientProtocolException, URISyntaxException, IOException {
 		logger.info("project addition add post Page");
 
 		JSONObject jObject = new JSONObject();
@@ -1910,6 +1996,21 @@ public class ProjectController {
 					, "외주몬 알림 메일입니다.");
 			logger.info("클라이언트 메일 : "+result);
         }
+        if(accountinfo.getSms_subscription() == 1)
+        {
+        	String phone = "";
+        	
+        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+        		phone = accountinfo.getCellphone_num().replace("-", "");
+        	
+        	if(Validator.hasValue(phone))
+        	{
+        		SMS.sendSMS(phone, phone, 
+        				title+" 추가요청이 검수중입니다. "
+        				,"");
+	    		logger.info("SMS 전송");
+        	}
+        }
         
 		//관리자
         String result = sendMail("admin@wjm.com","gksthf1611@gmail.com",title+" 추가요청이 검수중입니다. 파트너스와 클라이언트에게 연락하여 검수를 완료해주세요."
@@ -1929,11 +2030,14 @@ public class ProjectController {
 
 	/**
 	 * 추가요청 결제
+	 * @throws IOException 
+	 * @throws URISyntaxException 
+	 * @throws ClientProtocolException 
 	 */
 	@RequestMapping(value = "/project/addition/pay/{addition_pk}", method = RequestMethod.POST, produces = "text/json; charset=utf8")
 	@ResponseBody
 	public String Admincontroller_addition_cancel(HttpServletRequest request, HttpServletResponse response,
-			@PathVariable("addition_pk") int addition_pk) {
+			@PathVariable("addition_pk") int addition_pk) throws ClientProtocolException, URISyntaxException, IOException {
 
 		logger.info("/project/addition/pay/{addition_pk} Post Page");
 		logger.info("addition_pk = " + addition_pk);
@@ -2001,6 +2105,22 @@ public class ProjectController {
 				, "외주몬 알림 메일입니다.");
 		logger.info("클라이언트 메일 : "+result);
         }
+        if(accountinfo.getSms_subscription() == 1)
+        {
+        	String phone = "";
+        	
+        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+        		phone = accountinfo.getCellphone_num().replace("-", "");
+        	
+        	if(Validator.hasValue(phone))
+        	{
+        		SMS.sendSMS(phone, phone, 
+        				addition.getTitle()+" 추가요청이 결제완료되어 진행중입니다. "
+        				,"");
+	    		logger.info("SMS 전송");
+        	}
+        }
+        
         
 		//파트너스
 		notificationDao.create(contract.getPartners_pk(), addition.getTitle()+" 추가요청이 결제완료되어 진행중입니다. ");
@@ -2012,6 +2132,22 @@ public class ProjectController {
         	String result = sendMail("admin@wjm.com","gksthf1611@gmail.com", addition.getTitle()+" 추가요청이 결제완료되어 진행중입니다. "
 				, "외주몬 알림 메일입니다.");
 		logger.info("파트너스 메일 : "+result);
+        }
+
+        if(accountinfo.getSms_subscription() == 1)
+        {
+        	String phone = "";
+        	
+        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+        		phone = accountinfo.getCellphone_num().replace("-", "");
+        	
+        	if(Validator.hasValue(phone))
+        	{
+        		SMS.sendSMS(phone, phone, 
+        				addition.getTitle()+" 추가요청이 결제완료되어 진행중입니다. "
+        				,"");
+	    		logger.info("SMS 전송");
+        	}
         }
         
 		jObject.put("messages", "success");

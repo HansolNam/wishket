@@ -1,5 +1,7 @@
 package com.wjm.main;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,6 +15,7 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.http.client.ClientProtocolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +43,7 @@ import com.wjm.dao.Partners_infoDao;
 import com.wjm.dao.PortfolioDao;
 import com.wjm.dao.ProjectDao;
 import com.wjm.dao.TechniqueDao;
+import com.wjm.main.function.SMS;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
 import com.wjm.models.AccountInformationInfo;
@@ -2943,6 +2947,9 @@ public class PartnersController {
 
 	/**
 	 * 평가 하기 처리 페이지
+	 * @throws IOException 
+	 * @throws URISyntaxException 
+	 * @throws ClientProtocolException 
 	 */
 	@RequestMapping(value = "/partners/manage/review/{project_pk}/{client_pk}/{partners_pk}", method = RequestMethod.POST)
 	public ModelAndView ClientController_review_form_post(HttpServletRequest request, ModelAndView mv,
@@ -2954,7 +2961,7 @@ public class PartnersController {
 			@RequestParam("schedule_observance") String schedule_observance,
 			@RequestParam("activeness") String activeness,
 			@RequestParam("communication") String communication,
-			@RequestParam("recommendation") String recommendation) {
+			@RequestParam("recommendation") String recommendation) throws ClientProtocolException, URISyntaxException, IOException {
 		logger.info("평가 하기 처리 페이지");
 
 		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
@@ -3097,12 +3104,56 @@ public class PartnersController {
 		ProjectInfo project = projectDao.select_project(project_pk);
 		//notification update
 		notificationDao.create(account.getPk(), contract.getClient_id()+" 클라이언트를 평가하셨습니다. 프로젝트가 완료되었습니다.");
+		
+		AccountInformationInfo accountinfo = accountInformationDao.select(account.getPk());
+
+
+        if(accountinfo.getSubscription() == 1)
+        {
 		String result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", contract.getClient_id()+" 클라이언트를 평가하셨습니다. 프로젝트가 완료되었습니다.", "외주몬 알림 메일입니다");
 		logger.info("이메일 전송 결과 = "+result);
+        }
+        if(accountinfo.getSms_subscription() == 1)
+        {
+        	String phone = "";
+        	
+        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+        		phone = accountinfo.getCellphone_num().replace("-", "");
+        	
+        	if(Validator.hasValue(phone))
+        	{
+        		SMS.sendSMS(phone, phone, 
+        				contract.getClient_id()+" 클라이언트를 평가하셨습니다. 프로젝트가 완료되었습니다."
+        				,"");
+	    		logger.info("SMS 전송");
+        	}
+        }
+        
+        //클라이언트
 		notificationDao.create(client_pk, contract.getPartners_id()+" 님이 "+project.getName()+" 프로젝트의 평가를 완료하셨습니다.");
-		result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", contract.getPartners_id()+" 님이 "+project.getName()+" 프로젝트의 평가를 완료하셨습니다.", "외주몬 알림 메일입니다");
+		
+		accountinfo = accountInformationDao.select(client_pk);
+		
+		if(accountinfo.getSubscription() == 1)
+        {
+		String result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", contract.getPartners_id()+" 님이 "+project.getName()+" 프로젝트의 평가를 완료하셨습니다.", "외주몬 알림 메일입니다");
 		logger.info("이메일 전송 결과 = "+result);
-				
+        }
+        if(accountinfo.getSms_subscription() == 1)
+        {
+        	String phone = "";
+        	
+        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+        		phone = accountinfo.getCellphone_num().replace("-", "");
+        	
+        	if(Validator.hasValue(phone))
+        	{
+        		SMS.sendSMS(phone, phone, 
+        				contract.getPartners_id()+" 님이 "+project.getName()+" 프로젝트의 평가를 완료하셨습니다."
+        				,"");
+	    		logger.info("SMS 전송");
+        	}
+        }
 		
 		mv.setViewName("redirect:/partners/manage/past/completed-contract");
 		

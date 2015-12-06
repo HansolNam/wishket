@@ -1,11 +1,14 @@
 package com.wjm.main;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.http.client.ClientProtocolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,7 @@ import com.wjm.dao.AssessmentDao;
 import com.wjm.dao.ContractDao;
 import com.wjm.dao.NotificationDao;
 import com.wjm.dao.ProjectDao;
+import com.wjm.main.function.SMS;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
 import com.wjm.models.AccountInformationInfo;
@@ -247,6 +251,9 @@ public class ClientController {
 
 	/**
 	 * 평가 하기 처리 페이지
+	 * @throws IOException 
+	 * @throws URISyntaxException 
+	 * @throws ClientProtocolException 
 	 */
 	@RequestMapping(value = "/client/manage/review/{project_pk}/{client_pk}/{partners_pk}", method = RequestMethod.POST)
 	public ModelAndView ClientController_review_form_post(HttpServletRequest request, ModelAndView mv,
@@ -258,7 +265,7 @@ public class ClientController {
 			@RequestParam("schedule_observance") String schedule_observance,
 			@RequestParam("activeness") String activeness,
 			@RequestParam("communication") String communication,
-			@RequestParam("recommendation") String recommendation) {
+			@RequestParam("recommendation") String recommendation) throws ClientProtocolException, URISyntaxException, IOException {
 		logger.info("평가 하기 처리 페이지");
 
 		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
@@ -410,6 +417,22 @@ public class ClientController {
 		String result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", contract.getPartners_id()+" 파트너스를 평가하셨습니다. 프로젝트가 완료되었습니다.", "외주몬 알림 메일입니다");
 		logger.info("이메일 전송 결과 = "+result);
         }
+        if(accountinfo.getSms_subscription() == 1)
+        {
+        	String phone = "";
+        	
+        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+        		phone = accountinfo.getCellphone_num().replace("-", "");
+        	
+        	if(Validator.hasValue(phone))
+        	{
+        		SMS.sendSMS(phone, phone, 
+        				contract.getPartners_id()+" 파트너스를 평가하셨습니다. 프로젝트가 완료되었습니다."
+        				,"");
+	    		logger.info("SMS 전송");
+        	}
+        }
+        
         
 		//partners
 		notificationDao.create(partners_pk, contract.getClient_id()+" 님이 "+project.getName()+" 프로젝트의 평가를 완료하셨습니다.");
@@ -419,6 +442,22 @@ public class ClientController {
         {
 		String result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", contract.getClient_id()+" 님이 "+project.getName()+" 프로젝트의 평가를 완료하셨습니다.", "외주몬 알림 메일입니다");
 		logger.info("이메일 전송 결과 = "+result);
+        }
+
+        if(accountinfo.getSms_subscription() == 1)
+        {
+        	String phone = "";
+        	
+        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+        		phone = accountinfo.getCellphone_num().replace("-", "");
+        	
+        	if(Validator.hasValue(phone))
+        	{
+        		SMS.sendSMS(phone, phone, 
+        				contract.getClient_id()+" 님이 "+project.getName()+" 프로젝트의 평가를 완료하셨습니다."
+        				,"");
+	    		logger.info("SMS 전송");
+        	}
         }
 		mv.setViewName("redirect:/client/manage/past/completed-contract");
 		
@@ -750,6 +789,24 @@ public class ClientController {
 		String result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", account.getId()+" 클라이언트가 "+
 				applicant_account.getId()+ " 파트너스와 미팅을 요청하였습니다.", "외주몬 알림 메일입니다");
 		logger.info("이메일 전송 결과 = "+result);
+
+		/*
+        if(accountinfo.getSms_subscription() == 1)
+        {
+        	String phone = "";
+        	
+        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+        		phone = accountinfo.getCellphone_num().replace("-", "");
+        	
+        	if(Validator.hasValue(phone))
+        	{
+        		SMS.sendSMS(phone, phone, 
+        				contract.getClient_id()+" 님이 "+project.getName()+" 프로젝트의 평가를 완료하셨습니다."
+        				,"");
+	    		logger.info("SMS 전송");
+        	}
+        }
+        */
 		
 		jObject.put("messages", "success");
 		logger.info(jObject.toString());
