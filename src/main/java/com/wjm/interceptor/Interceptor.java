@@ -25,16 +25,17 @@ public class Interceptor extends HandlerInterceptorAdapter{
     	
     	try {
     		//계정이 존재 하지 않는 경우
-            if(account == null ){
+            if(account == null || account.getAuthorized() == 0 ){
                     response.sendRedirect("/wjm/accounts/login"); 
                     return false;
             }
+            /*
             else if(account.getAuthorized() == 0)
             {
                 response.sendRedirect("/wjm/accounts/signup_verify"); 
                 return false;
             }
-            
+            */
         } catch (Exception e) {
             e.printStackTrace();
         }

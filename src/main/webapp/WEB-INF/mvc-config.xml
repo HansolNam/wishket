@@ -133,14 +133,14 @@
 	<interceptors>
         <interceptor> 
         	<!-- 로그인체크 인터셉터 클래스 -->
-           <mapping path="/accounts/password/*"/>
-           <mapping path="/accounts/settings/*"/>
+           <mapping path="/accounts/password/**"/>
+           <mapping path="/accounts/settings/**"/>
            <mapping path="/accounts/notification"/>
            <mapping path="/accounts/signup_verify"/>
-           <mapping path="/client/manage/*"/>
-           <mapping path="/client/manage/past/*"/>
-           <mapping path="/client/manage/project/*"/>
-           <mapping path="/mywjm/*"/>
+           <mapping path="/client/manage/**"/>
+           <mapping path="/client/manage/past/**"/>
+           <mapping path="/client/manage/project/**"/>
+           <mapping path="/mywjm/**"/>
            <mapping path="/partners/manage/**"/>
            <mapping path="/partners/p/**"/>
            <mapping path="/partners/p"/>

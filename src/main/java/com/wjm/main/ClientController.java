@@ -66,6 +66,7 @@ public class ClientController {
 
 	@Autowired
 	private JavaMailSender mailSender;
+	
 	//메일 전송
 	public String sendMail(String from, String to, String content, String subject) {
 		

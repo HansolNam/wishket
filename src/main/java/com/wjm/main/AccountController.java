@@ -236,7 +236,7 @@ public class AccountController {
 		logger.info("signup_verify get Page");
 		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
 
-		if(account == null) { return "redirect:/accounts/login";}
+		if(account == null) { return "/accounts/login";}
 		
 		if(account.getAuthorized() == 0)
 		{
@@ -280,7 +280,7 @@ public class AccountController {
 		logger.info("verification = "+verification);
 		
 		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
-		if(account == null){mv.setViewName("redirect:/accounts/login");return mv;}
+		if(account == null){mv.setViewName("/accounts/login");return mv;}
 		
 		String return_val = "";
 		if(account.getAuthorization_key().equals(verification.trim()))
