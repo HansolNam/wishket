@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -236,8 +237,9 @@ public class AccountController {
         
         if(accountinfo.getSubscription() == 1)
         {
-        	result = sendMail("admin@wjm.com","gksthf1611@gmail.com","인증코드는 "
-    				+key+" 입니다.", "외주몬 회원가입 인증 메일입니다.");
+        	result = sendMail("admin@wjm.com","gksthf1611@gmail.com",
+        			"<a href='http://localhost:8080/wjm/accounts/"+account.getId()+"/"+account.getAuthorization_key()
+        			+"/signup_verify'>인증버튼</a>", "외주몬 재인증 메일입니다.");
     		logger.info("메일 : "+result);
         }
         if(accountinfo.getSms_subscription() == 1)
@@ -249,8 +251,7 @@ public class AccountController {
         	
         	if(Validator.hasValue(phone))
         	{
-        		SMS.sendSMS(phone, phone,"인증코드는 "
-        				+key+" 입니다.", "");
+        		SMS.sendSMS(phone, phone,"재인증 메일을 전송하였습니다. 이메일을 확인해주세요.", "");
 	    		logger.info("SMS 전송");
         	}
         }
@@ -307,50 +308,35 @@ public class AccountController {
 	/**
 	 * 회원가입 인증 페이지
 	 */
-	@RequestMapping(value = "/accounts/signup_verify", method = RequestMethod.POST)
-	public ModelAndView MainController_signup_verify_post(HttpServletRequest request,
+	@RequestMapping(value = "/accounts/{id}/{verification}/signup_verify", method = RequestMethod.GET)
+	public ModelAndView MainController_signup_verify_mail(HttpServletRequest request,
  			HttpServletResponse response,
  			ModelAndView mv,
-			 @RequestParam("verification") String verification) {
-		logger.info("signup_verify Post Page");
+ 			@PathVariable("verification") String verification,
+ 			@PathVariable("id") String id) {
+		
+		logger.info("signup_verify mail Page");
 		
 		logger.info("verification = "+verification);
 		
-		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
-		if(account == null){mv.setViewName("/accounts/login");return mv;}
+		AccountInfo account = accountDao.select(id);
+		if(account == null){mv.setViewName("/error/error");return mv;}
 		
 		String return_val = "";
 		if(account.getAuthorization_key().equals(verification.trim()))
 		{
 			accountDao.updateAuthorized(account.getPk(), 1);
-			account.setAuthorized(1);
-			mv.addObject("messages","이메일 인증에 성공하셨습니다.");
 			
-			//클라이언트의 경우
-			if(account.getAccount_type().equals("client"))
-			{
-				return_val = "redirect:/mywjm/client";
-			}
-			//파트너스의 경우
-			else if(account.getAccount_type().equals("partners"))
-			{
-				return_val = "redirect:/mywjm/partners";
-			}
-			else if(account.getAccount_type().equals("admin"))
-			{
-				logger.info("관리자");
-				return_val = "redirect:/admin/home";
-			}
-			//둘다 아닌 경우, 오류..
-			else
-			{
-				return_val = "redirect:/index";
-			}
-			mv.setViewName(return_val);
+			//세션에 계정 정보 저장
+			request.getSession().invalidate();
+			request.getSession().setAttribute("account", account);
+			
+			mv.setViewName("redirect:/accounts/login");
 		}
 		else
 		{
 			mv.addObject("messages","이메일 인증에 실패했습니다.");
+			mv.setViewName("/error/error");
 		}
 		
 		return mv;
@@ -625,8 +611,9 @@ public class AccountController {
 
 	        if(accountinfo.getSubscription() == 1)
 	        {
-	        	result = sendMail("admin@wjm.com","gksthf1611@gmail.com","인증코드는 "
-					+key+" 입니다.", "외주몬 회원가입 인증 메일입니다.");
+	        	result = sendMail("admin@wjm.com","gksthf1611@gmail.com",
+	        			"<a href='http://localhost:8080/wjm/accounts/"+account.getId()+"/"+account.getAuthorization_key()
+	        			+"/signup_verify'>인증버튼</a>", "외주몬 회원가입 인증 메일입니다.");
 			logger.info("메일 : "+result);
 	        }
 
@@ -661,10 +648,18 @@ public class AccountController {
 	 * 비밀번호 변경 페이지
 	 */
 	@RequestMapping(value = "/accounts/password/change", method = RequestMethod.GET)
-	public String AccountController_password_change_get(HttpServletRequest request) {
+	public ModelAndView AccountController_password_change_get(HttpServletRequest request,
+ 			ModelAndView mv) {
 		logger.info("/accounts/password/change Get Page");
 		
-		return "/accounts/password/change";
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null){mv.setViewName("/accounts/login");return mv;}
+
+		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
+		
+		mv.setViewName("/accounts/password/change");
+		
+		return mv;
 	}
 	/**
 	 * 비밀번호 변경 처리 페이지
@@ -1213,9 +1208,7 @@ public class AccountController {
 		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
 		if(account == null){mv.setViewName("redirect:/accounts/login");return mv;}
 
-		AccountInformationInfo accountinfo = accountInformationDao.select(account.getPk());
-		
-		mv.addObject("name",accountinfo.getName());
+		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
 		
 		return mv;
 	}

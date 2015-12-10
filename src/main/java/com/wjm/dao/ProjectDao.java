@@ -600,7 +600,7 @@ public class ProjectDao implements ProjectIDao {
 		String sort_sql = "";
 		if(sort.isEmpty() || sort.equals("0"))
 		{
-			sort_sql += "";
+			sort_sql += " order by reg_date desc";
 		}
 		else if(sort.equals("1"))
 		{

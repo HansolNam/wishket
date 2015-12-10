@@ -154,8 +154,6 @@ div.ui-tooltip {
 							%>
 							<span class="p5-portfolio-no-img3"><div>
 									<div>
-										<img
-											src="${pageContext.request.contextPath}/resources/static/img/profile_portfolio.png" />
 										<div class="p5-no-partners-info-text">
 											<span class="p5-bold">'대표 포트폴리오'</span>가 없습니다.
 										</div>
@@ -239,8 +237,6 @@ div.ui-tooltip {
 							%>
 							<span class="p5-portfolio-no-img3"><div>
 									<div>
-										<img
-											src="${pageContext.request.contextPath}/resources/static/img/profile_portfolio.png" />
 										<div class="p5-no-partners-info-text">
 											등록된 <span class="p5-bold">'포트폴리오'</span>가 없습니다.
 										</div>

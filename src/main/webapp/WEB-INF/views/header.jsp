@@ -39,7 +39,44 @@
 	}
 	else
 	{
-		if(account.getAccount_type().equals("client"))
+		if(account.getAuthorized() == 0)
+		{
+%>
+<header class="header">
+	<section class="nav-main nav-main-mini navbar" role="navigation"
+		style="background-color: #2d3a45">
+		<div class="container" style="background-color: #2d3a45">
+			<div class="nav-inner" style="background-color: #2d3a45">
+				<div class="navbar-header navbar-not-login"
+					style="background-color: #2d3a45">
+					<a class="navbar-brand" href="/wjm/">WJM</a>
+				</div>
+				<nav>
+					<ul class="nav navbar-nav nav-primary">
+						<li class=""><a href="/wjm/project/">프로젝트 찾기</a></li>
+						<li class=""><a href="/wjm/partners/">파트너스 목록</a></li>
+						<li><a href="/wjm/service-intro/">이용방법</a></li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right nav-secondary">
+						<li class="dropdown"><a
+							class="dropdown-toggle how_to_use_button"
+							data-toggle="dropdown" href="#"><%= account.getId() %>님 <b
+								class="fa fa-caret-down"></b></a>
+						<ul class="dropdown-menu">
+								<li class="dropdown_li"><a class="dropdown_li"
+									href="/wjm/accounts/logout/" tabindex="-1">로그아웃</a></li>
+							</ul></li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</section>
+</header>
+
+<% 
+			
+		}
+		else if(account.getAccount_type().equals("client"))
 		{
 %>
 <header class="header">

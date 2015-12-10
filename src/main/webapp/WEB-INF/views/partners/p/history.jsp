@@ -21,6 +21,7 @@
 
 	//계약 리스트
 	List<ContractInfo> contractlist = (List<ContractInfo>)request.getAttribute("contractlist");
+	
 	//계약 개수
 	Integer contractnum = (Integer)request.getAttribute("contractnum");
 	if(contractnum == null) contractnum = 0;
@@ -422,7 +423,7 @@ div.ui-tooltip {
             ];
 
             $('.doughnut-legend').html('');
-            <%if (categorylist.isEmpty()) {%>
+            <%if (categorylist == null || categorylist.isEmpty()) {%>
             $('.doughnut-legend').append('<li><span style="background-color: #dedede;"></span>진행한 프로젝트 없음</li>');
             <%
             }

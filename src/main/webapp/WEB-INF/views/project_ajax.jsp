@@ -17,7 +17,7 @@
 
 <input id="project_total_number" type="hidden"
 	value=<%=totalnum%> />
-<input id="page_size" type="hidden" value=<%=((totalnum-1)%10)+1 %> />
+<input id="page_size" type="hidden" value=<%=((totalnum-1)/10)+1 %> />
 <%
 	if(projectlist != null)
 	{

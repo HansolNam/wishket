@@ -292,9 +292,9 @@
 					<div class="user-name-tag">
 						<h3 class="user-name-tag-heading">파트너스</h3>
 						<div class="user-name-tag-body">
-							<img alt="gksthf16112 사진" class="img-circle user-img"
+							<img alt="<%=account.getId() %> 사진" class="img-circle user-img"
 								src="${pageContext.request.contextPath}/resources/upload/profile_img/${profile}" />
-							<h4 class="username">gksthf16112</h4>
+							<h4 class="username"><%=account.getId() %></h4>
 							<a class="profile-setting" href="/wjm/accounts/settings/profile/">기본
 								정보 수정</a>
 						</div>

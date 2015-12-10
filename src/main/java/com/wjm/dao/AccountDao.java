@@ -86,7 +86,7 @@ public class AccountDao implements AccountIDao {
 		//직종 & 검색어
 		if(Validator.hasValue(job) && Validator.hasValue(q))
 		{
-			sql = "select count(*) from account, partners_info, technique where account.account_type = 'partners'";
+			sql = "select count(*) from account, partners_info, technique where account.account_type = 'partners' and account.authorized = 1";
 			if(job.equals("개발자"))
 				{
 				job_sql = "(account.pk = partners_info.account_pk and partners_info.job = '개발자')";
@@ -107,7 +107,7 @@ public class AccountDao implements AccountIDao {
 		}
 		else if(Validator.hasValue(q))
 		{
-			sql = "select count(*) from account, technique where account.account_type = 'partners'";
+			sql = "select count(*) from account, technique where account.account_type = 'partners' and account.authorized = 1";
 			q_sql = "((account.pk = technique.account_pk and technique.name LIKE ?) or account.id LIKE ?)";
 			
 			logger.info("명령어 : "+sql+" and "+q_sql);
@@ -117,7 +117,7 @@ public class AccountDao implements AccountIDao {
 		}
 		else if(Validator.hasValue(job))
 		{
-			sql = "select count(*) from account, partners_info where account.account_type = 'partners'";
+			sql = "select count(*) from account, partners_info where account.account_type = 'partners' and account.authorized = 1";
 			if(job.equals("개발자"))
 				{
 				job_sql = "(account.pk = partners_info.account_pk and partners_info.job = '개발자')";
@@ -134,7 +134,7 @@ public class AccountDao implements AccountIDao {
 		}
 		else
 		{
-			sql = "select count(*) from account where account.account_type = 'partners'";
+			sql = "select count(*) from account where account.account_type = 'partners' and account.authorized = 1";
 			
 			logger.info("명령어 : "+sql);
 
@@ -170,7 +170,7 @@ public class AccountDao implements AccountIDao {
 		//직종 & 검색어
 		if(Validator.hasValue(job) && Validator.hasValue(q))
 		{
-			sql = "select account.* from account, partners_info, technique where account.account_type = 'partners'";
+			sql = "select account.* from account, partners_info, technique where account.account_type = 'partners' and account.authorized = 1";
 			if(job.equals("개발자"))
 				{
 				job_sql = "(account.pk = partners_info.account_pk and partners_info.job = '개발자')";
@@ -184,9 +184,9 @@ public class AccountDao implements AccountIDao {
 			
 			q_sql = "((account.pk = technique.account_pk and technique.name LIKE ?) or account.id LIKE ?)";
 			
-			logger.info("명령어 : "+sql+" and "+q_sql);
+			logger.info("명령어 : "+sql+" and "+q_sql + " order by reg_date desc " + page_sql);
 			
-			accountlist = jdbcTemplate.query(sql + " and " + q_sql + page_sql
+			accountlist = jdbcTemplate.query(sql + " and " + q_sql + " order by reg_date desc " + page_sql
 					, new Object[] { "%"+q+"%", "%"+q+"%" }
 					,new RowMapper<AccountInfo>() {
 			    	public AccountInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
@@ -215,12 +215,12 @@ public class AccountDao implements AccountIDao {
 		}
 		else if(Validator.hasValue(q))
 		{
-			sql = "select account.* from account, technique where account.account_type = 'partners'";
+			sql = "select account.* from account, technique where account.account_type = 'partners' and account.authorized = 1";
 			q_sql = "((account.pk = technique.account_pk and technique.name LIKE ?) or account.id LIKE ?)";
 			
-			logger.info("명령어 : "+sql+" and "+q_sql);
+			logger.info("명령어 : "+sql+" and "+q_sql + " order by reg_date desc " + page_sql);
 			
-			accountlist = jdbcTemplate.query(sql + " and " + q_sql + page_sql
+			accountlist = jdbcTemplate.query(sql + " and " + q_sql + " order by reg_date desc " + page_sql
 					, new Object[] { "%"+q+"%", "%"+q+"%" }
 					,new RowMapper<AccountInfo>() {
 			    	public AccountInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
@@ -249,7 +249,7 @@ public class AccountDao implements AccountIDao {
 		}
 		else if(Validator.hasValue(job))
 		{
-			sql = "select account.* from account, partners_info where account.account_type = 'partners'";
+			sql = "select account.* from account, partners_info where account.account_type = 'partners' and account.authorized = 1";
 			if(job.equals("개발자"))
 				{
 				job_sql = "(account.pk = partners_info.account_pk and partners_info.job = '개발자')";
@@ -260,9 +260,9 @@ public class AccountDao implements AccountIDao {
 				job_sql = "(account.pk = partners_info.account_pk and partners_info.job = '디자이너')";
 				sql += " and " + job_sql;
 			}
-			logger.info("명령어 : "+sql);
+			logger.info("명령어 : "+sql + " order by reg_date desc " + page_sql);
 
-			accountlist = jdbcTemplate.query(sql + page_sql
+			accountlist = jdbcTemplate.query(sql + " order by reg_date desc " + page_sql
 					,new RowMapper<AccountInfo>() {
 			    	public AccountInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 			    	{
@@ -290,11 +290,11 @@ public class AccountDao implements AccountIDao {
 		}
 		else
 		{
-			sql = "select account.* from account where account.account_type = 'partners'";
+			sql = "select account.* from account where account.account_type = 'partners' and account.authorized = 1";
 			
-			logger.info("명령어 : "+sql);
+			logger.info("명령어 : "+sql + " order by reg_date desc " + page_sql);
 
-			accountlist = jdbcTemplate.query(sql + page_sql
+			accountlist = jdbcTemplate.query(sql + " order by reg_date desc " + page_sql
 					,new RowMapper<AccountInfo>() {
 			    	public AccountInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 			    	{

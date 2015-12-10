@@ -84,8 +84,7 @@
 								href="/wjm/partners/manage/past/completed-contract/"><span
 									class="badge badge-info pull-right">
 										<%
-											if (completedCnt != 0)
-												out.print(completedCnt);
+											out.print(completedCnt);
 										%>
 								</span>완료한 프로젝트</a></li>
 						</ul>

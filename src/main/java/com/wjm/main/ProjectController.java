@@ -1705,7 +1705,7 @@ public class ProjectController {
 		List<CommentInfo> comment = commentDao.select(project_pk);
 		mv.addObject("comment",comment);
 		
-		mv.setViewName("/project/about");
+		mv.setViewName("redirect:/project/"+name+"/"+project_pk);
 		return mv;
 		
 	}

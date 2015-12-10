@@ -1,13 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	<%@ page import="com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo"%>
+	<%@ page import="com.wjm.main.function.Validator,com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo"%>
 <%
 	AccountInfo account = (AccountInfo)session.getAttribute("account");
 	String introduction = (String)request.getAttribute("introduction");
-	if(introduction != null && !introduction.isEmpty())
-		introduction = introduction.replaceAll("\r\n","<br/>");
-	else
-		introduction = "";
+	if(introduction == null) introduction = "";
+	
+	introduction = introduction.replaceAll("\r\n","<br/>");
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -109,7 +108,7 @@ div.ui-tooltip {
 						<p id="p5-partners-self-introduction"></p>
 						
 								<% 
-									if(introduction!= null)
+								  if(Validator.hasValue(introduction))
 									{
 										
 								%>

@@ -367,12 +367,15 @@
 							contract_per = 100.0*(double)contract_num/(double)register_num;
 						}
 						
+						if(assessmentnum != 0)
+						{
 						total_avg = (double) total / (double) (assessmentnum * 5);
 						professionalism /= assessmentnum;
 						satisfaction /= assessmentnum;
 						communication /= assessmentnum;
 						schedule_observance /= assessmentnum;
 						activeness /= assessmentnum;
+						}
 					%>
 					<div class="client-info-box">
 						<h3 class="client-name-tag-heading">클라이언트</h3>
@@ -461,6 +464,23 @@
 
 	<jsp:include page="../footer.jsp" flush="false" />
 	<script>
+	
+	$('#id_submit').click(function(){
+
+		if($('#id_body').val() == '')
+		{
+			alert("값을 입력해주세요");
+			return false;
+		}
+		if($('#id_body').val().length > 249)
+		{
+			alert("댓글은 최대 250자입니다.");
+			return false;
+		}
+		
+		return true;
+	});
+	
 		function expand_rating(obj) {
 			var $obj = $(obj);
 			if ($obj.attr('class') == 'client-expanded-evaluation-body') {
@@ -506,71 +526,6 @@
 					})
 		}
 	</script>
-	<script type="text/javascript">
-		$(function() {
-			wishket.init();
-
-			svgeezy.init(false, 'png');
-		});
-	</script>
-	<script>
-		$(document).ready(
-				function($) {
-					var p5TotalSubNavigationFlag = 0;
-
-					if ($(window).width() >= 1200) {
-						$('.p5-side-nav-deactive').css('display', 'none');
-					} else {
-						$('.p5-side-nav-active').css('display', 'none');
-						$('.p5-side-nav-deactive').css('display', 'block');
-					}
-
-					$('.content-inner')
-							.on(
-									'click',
-									'.p5-side-nav-active-btn',
-									function() {
-										$('.p5-side-nav-active').css('display',
-												'none');
-										$('.p5-side-nav-deactive').css(
-												'display', 'block');
-									});
-
-					$('.content-inner').on(
-							'click',
-							'.p5-side-nav-deactive-btn',
-							function() {
-								$('.p5-side-nav-active')
-										.css('display', 'block');
-								$('.p5-side-nav-deactive').css('display',
-										'none');
-							});
-
-					$(window).scroll(
-							function() {
-								if ($(window).scrollTop() > 87
-										&& p5TotalSubNavigationFlag === 0) {
-									setTimeout(function() {
-										$('#p5-total-sub-navigation-wrapper')
-												.removeClass('hide fadeOut');
-										$('#p5-total-sub-navigation-wrapper')
-												.addClass('fadeInDown');
-									}, 200);
-									flag = 1;
-
-								} else if ($(window).scrollTop() <= 87) {
-									p5TotalSubNavigationFlag = 0;
-									$('#p5-total-sub-navigation-wrapper')
-											.removeClass('fadeInDown');
-									$('#p5-total-sub-navigation-wrapper')
-											.addClass('fadeOut');
-									setTimeout(function() {
-										$('#p5-total-sub-navigation-wrapper')
-												.addClass('hide');
-									}, 200);
-								}
-							});
-				});
-	</script>
+	
 </body>
 </html>

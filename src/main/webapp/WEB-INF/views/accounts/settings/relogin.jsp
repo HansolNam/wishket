@@ -3,10 +3,8 @@
 <%@ page import="com.wjm.main.function.Validator,com.wjm.models.AccountInfo, com.wjm.models.AccountInformationInfo"%>
 <%
 	AccountInfo account = (AccountInfo) session.getAttribute("account");
-	String name = "";
 	String id = "";
 	
-	name = (String)request.getAttribute("name");
 	id = account.getId();
 	String profile = (String)request.getAttribute("profile");
 	
@@ -64,7 +62,7 @@
 						<div class="user-name-tag-body">
 							<img alt="<%=id %> 사진" class="img-circle user-img"
 								src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=profile %>" />
-							<h4 class="username"><%=name %></h4>
+							<h4 class="username"><%=id %></h4>
 							<a class="profile-setting" href="/wjm/accounts/settings/profile/">기본
 								정보 수정</a>
 						</div>

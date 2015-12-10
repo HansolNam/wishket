@@ -47,46 +47,10 @@
 			<div class="content">
 				<div class="content-header">
 					<h3 class="header-text">
-						이메일 인증 <small class="small-text">등록하신 이메일로 인증 코드를 발송하였습니다. 인증 코드를 입력해야만 가입이 완료됩니다.</small>
+						이메일 인증 <small class="small-text">등록하신 이메일로 인증 메일을 발송하였습니다. 인증 버튼을 클릭해야만 가입이 완료됩니다.</small>
 					</h3>
 				</div>
-				<div class="content-inner">
-					<section class="login-body">
-					<form action="/wjm/accounts/signup_verify/" class="form-horizontal"
-						id="login-form" method="post">
-						<input name="csrfmiddlewaretoken" type="hidden"
-							value="6uNyCofkYxLTSsxGWtCuwuZEL7X1bTPR" />
-						<div class="form-group " id="verification_div">
-							<label class="control-label required" for="verification"><span>*</span>
-								인증코드</label>
-							<div class="control-wrapper">
-								<input autocomplete="off" class="required form-control"
-									id="verification" maxlength="75" name="verification"
-									type="text" />
-							</div>
-						</div>
-						<div class="form-group ">
-							<div class="checkbox-wrapper">
-								<div class="checkbox"
-									style="padding-top: 0px; min-height: 20px;">
-									<label class="" for="reverify_btn">
-									<input class="btn btn-default" id="reverify_btn"
-								style="float: right" type="button" value="인증번호 다시 받기"></input>
-						
-										</label>
-								</div>
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="btn-block-wrapper">
-								<!-- <input name="next" type="hidden" value="/project/add/" /> -->
-								<button class="btn btn-wishket btn-lg btn-block"  type="submit">회원가입 인증</button>
-								
-							</div>
-						</div>
-					</form>
-					</section>
-				</div>
+				
 			</div>
 		</div>
 		<div id="push"></div>
@@ -106,38 +70,6 @@
 	    });
 		
 	});
-	
-	function reverify()
-	{
-		var options = "";
-		
-		$.ajax({
-		    type: "POST",
-		    url: "/wjm/accounts/reverify", // 폼데이터 직렬화
-		    data: options, // 폼데이터 직렬화
-		    dataType: "json",   // 데이터타입을 JSON형식으로 지정
-		    contentType: "application/x-www-form-urlencoded; charset=utf-8",
-		    success: function(data) { // data: 백엔드에서 requestBody 형식으로 보낸 데이터를 받는다.
-		        var messages = data.messages;
-		    
-		    	if(messages == "success")
-		    		{
-		    		alert('인증코드를 재 발송했습니다.');
-					$("#messages").html("<div class='alert alert-success fade in'>인증 코드를 재전송했습니다.</div>");
-		    		}
-		    	else
-		    		{
-		    		alert('인증코드를 재 발송에 실패했습니다.');
-					$("#messages").html("<div class='alert alert-warning fade in'>인증 코드를 재전송에 실패했습니다.</div>");
-		    		}
-
-		    },
-		    error: function(jqXHR, textStatus, errorThrown) {
-		        //에러코드
-		        alert('에러가 발생했습니다.');
-		    }
-		});
-	}
 	</script>
 	
 

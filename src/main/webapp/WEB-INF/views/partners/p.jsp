@@ -245,10 +245,10 @@ div.ui-tooltip {
 								class="label label-md label-partners-availability possible ">
 								<%
 									if (info == null)
-										out.print("황동 가능성 미입력");
+										out.print("활동 가능성 미입력");
 									else
 										if(!Validator.hasValue(info.getAvailability()))
-											out.print("황동 가능성 미입력");
+											out.print("활동 가능성 미입력");
 										else
 										out.print(info.getAvailability());
 								%>

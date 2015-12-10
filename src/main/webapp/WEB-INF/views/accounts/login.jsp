@@ -9,7 +9,7 @@
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
 
-<title>위시켓(Wishket) · 로그인</title>
+<title>외주몬(WJM) · 로그인</title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
 <link href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
 	type="text/css" />
@@ -73,16 +73,6 @@
 									id="password" maxlength="32" name="password" type="password" />
 							</div>
 						</div>
-						<div class="form-group ">
-							<div class="checkbox-wrapper">
-								<div class="checkbox"
-									style="padding-top: 0px; min-height: 20px;">
-									<label class="" for="id_remember_me"><input
-										id="id_remember_me" name="remember_me" type="checkbox" /><span>로그인
-											상태 유지</span></label>
-								</div>
-							</div>
-						</div>
 						<div class="form-group">
 							<div class="btn-block-wrapper">
 								<!-- <input name="next" type="hidden" value="/project/add/" /> -->
@@ -130,43 +120,5 @@
 	});
 	</script>
 	
-	<script type="text/javascript">
-    $(function() {
-      var wishketLanguage = {
-    errorTitle : 'Form submission failed!',
-    requiredFields : '필수 입력 항목입니다.',
-    badTime : 'You have not given a correct time',
-    badEmail : 'You have not given a correct e-mail address',
-    badTelephone : 'You have not given a correct phone number',
-    badSecurityAnswer : 'You have not given a correct answer to the security question',
-    badDate : 'You have not given a correct date',
-    tooLongStart : 'You have given an answer longer than ',
-    tooLongEnd : ' characters',
-    tooShortStart : 'You have given an answer shorter than ',
-    tooShortEnd : ' characters',
-    badLength : 'You have to give an answer between ',
-    notConfirmed : 'Values could not be confirmed',
-    badDomain : 'Incorrect domain value',
-    badUrl : 'The answer you gave was not a correct URL',
-    badCustomVal : 'You gave an incorrect answer',
-    badInt : 'The answer you gave was not a correct number',
-    badSecurityNumber : 'Your social security number was incorrect',
-    badUKVatAnswer : 'Incorrect UK VAT Number',
-    badStrength : 'The password isn\'t strong enough',
-    badNumberOfSelectedOptionsStart : 'You have to choose at least ',
-    badNumberOfSelectedOptionsEnd : ' answers',
-    badAlphaNumeric : 'The answer you gave must contain only alphanumeric characters ',
-    badAlphaNumericExtra: ' and ',
-    wrongFileSize : 'The file you are trying to upload is too large',
-    wrongFileType : 'The file you are trying to upload is of wrong type'
-};
-
-      $.validate({
-        language: wishketLanguage,
-        form: '#login-form'
-      });
-    });
-  </script>
-
 </body>
 </html>
