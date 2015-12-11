@@ -75,7 +75,7 @@
 							%>
 							<li>
 								<%if(Time.remainDate(Time.getCurrentTimestamp(), noticelist.get(i).getReg_date())/(60*24) < 7) out.print("<span class='label label-notice'>새소식</span>");%>
-								<a href="/wjm/admin/notice/preview/<%=noticelist.get(i).getPk() %>" target="_blank"><%=noticelist.get(i).getName() %></a> 
+								<a href="/wjm/admin/notice/preview/<%=noticelist.get(i).getPk() %>" target="_blank"><%=noticelist.get(i).getName() %><%if(noticelist.get(i).getFlag() == 1) out.print(" (비공개)"); %></a> 
 								<a class='btn btn-sm btn-client' href='/wjm/admin/notice/edit/<%=noticelist.get(i).getPk()%>'>수정</a>
 								<span class="notice-date"><%=Time.toString3(noticelist.get(i).getReg_date()) %></span>
 							</li>

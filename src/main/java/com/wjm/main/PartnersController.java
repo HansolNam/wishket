@@ -3106,11 +3106,11 @@ public class PartnersController {
 		notificationDao.create(account.getPk(), contract.getClient_id()+" 클라이언트를 평가하셨습니다. 프로젝트가 완료되었습니다.");
 		
 		AccountInformationInfo accountinfo = accountInformationDao.select(account.getPk());
-
+		
 
         if(accountinfo.getSubscription() == 1)
         {
-		String result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", contract.getClient_id()+" 클라이언트를 평가하셨습니다. 프로젝트가 완료되었습니다.", "외주몬 알림 메일입니다");
+		String result = sendMail("admin@wjm.com", account.getEmail(), contract.getClient_id()+" 클라이언트를 평가하셨습니다. 프로젝트가 완료되었습니다.", "외주몬 알림 메일입니다");
 		logger.info("이메일 전송 결과 = "+result);
         }
         if(accountinfo.getSms_subscription() == 1)
@@ -3136,7 +3136,8 @@ public class PartnersController {
 		
 		if(accountinfo.getSubscription() == 1)
         {
-		String result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", contract.getPartners_id()+" 님이 "+project.getName()+" 프로젝트의 평가를 완료하셨습니다.", "외주몬 알림 메일입니다");
+			AccountInfo client_account = accountDao.select(client_pk);
+		String result = sendMail("admin@wjm.com", client_account.getEmail(), contract.getPartners_id()+" 님이 "+project.getName()+" 프로젝트의 평가를 완료하셨습니다.", "외주몬 알림 메일입니다");
 		logger.info("이메일 전송 결과 = "+result);
         }
         if(accountinfo.getSms_subscription() == 1)

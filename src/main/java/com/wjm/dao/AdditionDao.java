@@ -18,6 +18,15 @@ import com.wjm.idao.AdditionIDao;
 import com.wjm.models.AdditionInfo;
 import com.wjm.models.ContractInfo;
 
+/**
+ * <pre>
+ * 1. 패키지명 : com.wjm.dao
+ * 2. 타입명 : AdditionDao.java
+ * 3. 작성일 : 2015. 12. 11. 오후 3:57:43
+ * 4. 작성자 : Hansol
+ * 5. 설명 : 추가요청인 addition 테이블에 접근하는 DAO
+ * </pre>
+ */
 @Repository
 public class AdditionDao implements AdditionIDao {
 
@@ -36,6 +45,19 @@ public class AdditionDao implements AdditionIDao {
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
 	}
 
+	/**
+	 * <pre>
+	 * 1. 메소드명 : create
+	 * 2. 작성일 : 2015. 12. 11. 오후 3:58:50
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 추가요청 생성 함수
+	 * </pre>
+	 * @param contract_pk 계약 고유값
+	 * @param title 추가요청 명
+	 * @param budget 예산
+	 * @param term 기간
+	 * @param status 상태
+	 */
 	public void create(int contract_pk, String title, int budget, int term, String status)
 	{
 		jdbcTemplate.update("insert into addition "
@@ -43,6 +65,15 @@ public class AdditionDao implements AdditionIDao {
 				, new Object[] { contract_pk, title, budget, term, status});
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : selectAll
+	 * 2. 작성일 : 2015. 12. 11. 오후 4:29:25
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 :  모든 추가요청 리스트
+	 * </pre>
+	 * @return 추가요청 리스트
+	 */
 	public List<AdditionInfo> selectAll()
 	{
 		return jdbcTemplate.query("select * from addition",new RowMapper<AdditionInfo>() {
@@ -60,6 +91,16 @@ public class AdditionDao implements AdditionIDao {
 		    });
 	}
 
+	/**
+	 * <pre>
+	 * 1. 메소드명 : select
+	 * 2. 작성일 : 2015. 12. 11. 오후 4:29:38
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 추가요청 고유값에 해당하는 추가요청
+	 * </pre>
+	 * @param pk 고유값
+	 * @return 1개의 추가요청
+	 */
 	public AdditionInfo select(int pk)
 	{
 		List<AdditionInfo> list = jdbcTemplate.query("select * from addition where pk = ?",
@@ -84,9 +125,15 @@ public class AdditionDao implements AdditionIDao {
 			return list.get(0);
 	}	
 	
-
-	/*
-	 * 특정 계약의 추가 리스트
+	/**
+	 * <pre>
+	 * 1. 메소드명 : select_contract
+	 * 2. 작성일 : 2015. 12. 11. 오후 4:29:58
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 계약의 추가 요청 리스트
+	 * </pre>
+	 * @param contract_pk 계약 고유값
+	 * @return 추가요청 리스트
 	 */
 	public List<AdditionInfo> select_contract(int contract_pk)
 	{
@@ -107,8 +154,16 @@ public class AdditionDao implements AdditionIDao {
 		
 	}	
 
-	/*
-	 * 특정 상태의 추가 리스트
+	/**
+	 * <pre>
+	 * 1. 메소드명 : selectStatusClient
+	 * 2. 작성일 : 2015. 12. 11. 오후 4:30:20
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 상태와 특정 클라이언트의 추가 요청 리스트
+	 * </pre>
+	 * @param client_pk 클라이언트 고유값
+	 * @param status 추가요청 상태
+	 * @return 추가요청 리스트
 	 */
 	public List<AdditionInfo> selectStatusClient(int client_pk, String status)
 	{
@@ -133,8 +188,15 @@ public class AdditionDao implements AdditionIDao {
 		    });
 	}
 
-	/*
-	 * 특정 상태의 추가 리스트
+	/**
+	 * <pre>
+	 * 1. 메소드명 : selectStatusAdmin
+	 * 2. 작성일 : 2015. 12. 11. 오후 4:31:39
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 상태의 추가 요청 리스트
+	 * </pre>
+	 * @param status 추가요청 상태
+	 * @return 추가요청 리스트
 	 */
 	public List<AdditionInfo> selectStatusAdmin(String status)
 	{
@@ -160,9 +222,15 @@ public class AdditionDao implements AdditionIDao {
 		
 	}	
 	
-
-	/*
-	 * 추가요청 상태 업데이트
+	/**
+	 * <pre>
+	 * 1. 메소드명 : updateStatusAdmin
+	 * 2. 작성일 : 2015. 12. 11. 오후 4:32:07
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 추가요청 상태 갱신
+	 * </pre>
+	 * @param pk 고유값
+	 * @param status 상태
 	 */
 	public void updateStatusAdmin(int pk, String status)
 	{
@@ -170,10 +238,27 @@ public class AdditionDao implements AdditionIDao {
 		    	new Object[] { status, pk });
 	}	
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : deleteAll
+	 * 2. 작성일 : 2015. 12. 11. 오후 4:32:46
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 모든 추가요청 리스트 삭제
+	 * </pre>
+	 */
 	public void deleteAll()
 	{
 		jdbcTemplate.update("delete from addition");
 	}
+	/**
+	 * <pre>
+	 * 1. 메소드명 : delete
+	 * 2. 작성일 : 2015. 12. 11. 오후 4:32:55
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 추가요청 삭제
+	 * </pre>
+	 * @param pk 고유값
+	 */
 	public void delete(int pk)
 	{
 		jdbcTemplate.update("delete from addition where pk = ?", new Object[] { pk });

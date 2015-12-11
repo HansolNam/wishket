@@ -21,6 +21,15 @@ import com.wjm.models.ApplicantInfo;
 import com.wjm.models.ContractInfo;
 import com.wjm.models.ProjectInfo;
 
+/**
+ * <pre>
+ * 1. 패키지명 : com.wjm.dao
+ * 2. 타입명 : ProjectDao.java
+ * 3. 작성일 : 2015. 12. 11. 오후 7:08:59
+ * 4. 작성자 : Hansol
+ * 5. 설명 : project 테이블 DAO
+ * </pre>
+ */
 @Repository
 public class ProjectDao implements ProjectIDao {
 
@@ -48,6 +57,33 @@ public class ProjectDao implements ProjectIDao {
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
 	}
 
+	/**
+	 * <pre>
+	 * 1. 메소드명 : create
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:09:27
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 프로젝트 생성
+	 * </pre>
+	 * @param account_pk 계정 고유값
+	 * @param categoryL 카테고리
+	 * @param categoryM 세부 카테고리
+	 * @param another 다른 것도 필요한지 여부
+	 * @param name 이름
+	 * @param period 기간
+	 * @param budget 예산
+	 * @param plan_status 계획 상태
+	 * @param description 설명
+	 * @param technique 기술
+	 * @param deadline 마감기한
+	 * @param meeting_type 미팅 타입
+	 * @param meeting_area 지역
+	 * @param meeting_area_detail 세부 지역
+	 * @param start_date 시작일
+	 * @param managing 매니징 여부
+	 * @param partner_type 원하는 파트너 타입
+	 * @param purpose 목적
+	 * @param status 상태
+	 */
 	public void create(int account_pk, String categoryL, String categoryM, int another , String name, int period, int budget,
 			String plan_status, String description, String technique, Timestamp deadline, String meeting_type,
 			String meeting_area, String meeting_area_detail, Timestamp start_date, int managing, String partner_type,
@@ -64,6 +100,15 @@ public class ProjectDao implements ProjectIDao {
 	}
 	
 
+	/**
+	 * <pre>
+	 * 1. 메소드명 : countAll
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:11:19
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 모든 프로젝트 개수
+	 * </pre>
+	 * @return 프로젝트 개수
+	 */
 	public int countAll()
 	{
 		int num = jdbcTemplate.queryForInt("select count(*) from project where status = '결제대기중' or status = '진행중' or status = '평가대기중' or status = '완료한프로젝트' or status = '지원자모집중'");
@@ -71,6 +116,15 @@ public class ProjectDao implements ProjectIDao {
 		return num;
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : getAllBudget
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:11:36
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 모든 예산
+	 * </pre>
+	 * @return 예산 반환
+	 */
 	public int getAllBudget()
 	{
 		int num = jdbcTemplate.queryForInt("select sum(budget) from project where status = '결제대기중' or status = '진행중' or status = '평가대기중' or status = '완료한프로젝트' or status = '지원자모집중'");
@@ -78,6 +132,16 @@ public class ProjectDao implements ProjectIDao {
 		return num;
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : selectRecentProject
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:11:51
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 최근 특정 개수의 프로젝트 리스트
+	 * </pre>
+	 * @param num 특정 개수
+	 * @return 프로젝트 리스트
+	 */
 	public List<ProjectInfo> selectRecentProject(int num)
 	{
 		List<ProjectInfo> list =  jdbcTemplate.query("select * from project where status = '결제대기중' or status = '진행중' or status = '평가대기중' or status = '완료한프로젝트' or status = '지원자모집중' order by reg_date desc limit ?",
@@ -123,6 +187,15 @@ public class ProjectDao implements ProjectIDao {
 			return null;
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : selectAll
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:12:31
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 모든 프로젝트 리스트
+	 * </pre>
+	 * @return 프로젝트 리스트
+	 */
 	public List<ProjectInfo> selectAll()
 	{
 		return jdbcTemplate.query("select * from project",new RowMapper<ProjectInfo>() {
@@ -154,6 +227,17 @@ public class ProjectDao implements ProjectIDao {
 	    	}
 	    });
 	}
+	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : select
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:12:44
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 계정의 프로젝트 리스트
+	 * </pre>
+	 * @param account_pk 특정 계정 고유값
+	 * @return 프로젝트 리스트
+	 */
 	public List<ProjectInfo> select(int account_pk)
 	{
 		return jdbcTemplate.query("select * from project where account_pk = ? order by reg_date desc",
@@ -186,6 +270,16 @@ public class ProjectDao implements ProjectIDao {
 	    	}
 	    });
 	}
+	/**
+	 * <pre>
+	 * 1. 메소드명 : select_project
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:13:31
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 프로젝트
+	 * </pre>
+	 * @param pk 프로젝트 고유값
+	 * @return 1개의 프로젝트 
+	 */
 	public ProjectInfo select_project(int pk)
 	{
 		List<ProjectInfo> list =  jdbcTemplate.query("select * from project where pk = ?",
@@ -231,7 +325,17 @@ public class ProjectDao implements ProjectIDao {
 			return null;
 	}
 	
-
+	/**
+	 * <pre>
+	 * 1. 메소드명 : selectStatusAdminLimit
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:13:58
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 상태의 프로젝트를 특정 개수만 반환
+	 * </pre>
+	 * @param status 상태
+	 * @param num 특정 개수
+	 * @return 프로젝트 리스트
+	 */
 	public List<ProjectInfo> selectStatusAdminLimit(String status, int num)
 	{
 		List<ProjectInfo> projectlist = jdbcTemplate.query("select * from project where status = ? order by reg_date desc limit ?",
@@ -277,6 +381,16 @@ public class ProjectDao implements ProjectIDao {
 		
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : selectStatusAdmin
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:14:38
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 상태의 프로젝트 리스트
+	 * </pre>
+	 * @param status 상태
+	 * @return 프로젝트 리스트
+	 */
 	public List<ProjectInfo> selectStatusAdmin(String status)
 	{
 		List<ProjectInfo> projectlist = jdbcTemplate.query("select * from project where status = ? order by reg_date desc",
@@ -322,6 +436,17 @@ public class ProjectDao implements ProjectIDao {
 		
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : selectStatus
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:15:03
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 계정의 특정 상태 프로젝트 리스트
+	 * </pre>
+	 * @param account_pk 특정 계정 고유값
+	 * @param status 상태
+	 * @return 프로젝트 리스트
+	 */
 	public List<ProjectInfo> selectStatus(int account_pk,String status)
 	{
 		return jdbcTemplate.query("select * from project where account_pk = ? and status = ? order by reg_date desc",
@@ -356,6 +481,16 @@ public class ProjectDao implements ProjectIDao {
 		
 	}
 
+	/**
+	 * <pre>
+	 * 1. 메소드명 : updateStatus
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:15:38
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 프로젝트를 특정 상태로 갱신
+	 * </pre>
+	 * @param project_pk 프로젝트 고유값
+	 * @param status 상태
+	 */
 	public void updateStatus(int project_pk, String status)
 	{
 
@@ -364,6 +499,17 @@ public class ProjectDao implements ProjectIDao {
 		
 	}
 
+	/**
+	 * <pre>
+	 * 1. 메소드명 : select
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:16:02
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 프로젝트 고유값과 이름의 프로젝트 반환
+	 * </pre>
+	 * @param pk 특정 프로젝트 고유값
+	 * @param name 특정 프로젝트 이름
+	 * @return 1개의 프로젝트 정보
+	 */
 	public ProjectInfo select(int pk,String name)
 	{
 		List<ProjectInfo> projectlist = jdbcTemplate.query("select * from project where pk=?",
@@ -411,6 +557,21 @@ public class ProjectDao implements ProjectIDao {
 		return null;
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : selectCondition
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:16:55
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 상태의 프로젝트 리스트
+	 * </pre>
+	 * @param page 페이지
+	 * @param q 검색어
+	 * @param dev 개발 카테고리
+	 * @param design 디자인 카테고리
+	 * @param addr 지역
+	 * @param sort 정렬
+	 * @return 프로젝트 리스트
+	 */
 	public List<ProjectInfo> selectCondition(String page, String q, String dev, String design, String addr,String sort)
 	{
 		///////////////////////////////////////////////////////
@@ -670,7 +831,19 @@ public class ProjectDao implements ProjectIDao {
 		return projectlist1;
 	}
 	
-	//프로젝트 찾기 프로젝트 개수
+	/**
+	 * <pre>
+	 * 1. 메소드명 : selectConditionCount
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:18:30
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 프로젝트 찾기 프로젝트 개수
+	 * </pre>
+	 * @param q 검색어
+	 * @param dev 개발 카테고리
+	 * @param design 디자인 카테고리
+	 * @param addr 지역
+	 * @return 프로젝트 개수
+	 */
 	public int selectConditionCount(String q, String dev, String design, String addr)
 	{
 		///////////////////////////////////////////////////////
@@ -859,6 +1032,33 @@ public class ProjectDao implements ProjectIDao {
 		return result;
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : Save
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:19:12
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 프로젝트 등록 함수
+	 * </pre>
+	 * @param account_pk 계정 고유값
+	 * @param categoryL 카테고리
+	 * @param categoryM 세부 카테고리
+	 * @param is_turnkey 다른 분야 필요 여부
+	 * @param name 이름
+	 * @param period 기간
+	 * @param budget 예산
+	 * @param plan_status 계획 상태
+	 * @param description 설명
+	 * @param technique 기술
+	 * @param deadline 마감기한
+	 * @param meeting_type 미팅 타입
+	 * @param meeting_area 미팅 지역
+	 * @param meeting_area_detail 미팅 세부 지역
+	 * @param start_date 시작일
+	 * @param managing 매니징 여부
+	 * @param partner_type 파트너스 타입
+	 * @param purpose 목적
+	 * @param status 상태
+	 */
 	public void Save(int account_pk, String categoryL,String categoryM,String is_turnkey, String name,
 			int period, int budget, String plan_status, String description, String technique,
 			Timestamp deadline, String meeting_type, String meeting_area, String meeting_area_detail,
@@ -883,6 +1083,34 @@ public class ProjectDao implements ProjectIDao {
 
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : Update
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:22:27
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 프로젝트 갱신 함수
+	 * </pre>
+	 * @param project_pk 프로젝트 고유값
+	 * @param account_pk 계정 고유값
+	 * @param categoryL 카테고리
+	 * @param categoryM 세부 카테고리
+	 * @param is_turnkey 다른 분야 필요 여부
+	 * @param name 이름
+	 * @param period 기간
+	 * @param budget 예산
+	 * @param plan_status 계획 상태
+	 * @param description 설명
+	 * @param technique 기술
+	 * @param deadline 마감기한
+	 * @param meeting_type 미팅 타입
+	 * @param meeting_area 미팅 지역
+	 * @param meeting_area_detail 미팅 세부 지역
+	 * @param start_date 시작일
+	 * @param managing 매니징 여부
+	 * @param partner_type 파트너스 타입
+	 * @param purpose 목적
+	 * @param status 상태
+	 */
 	public void Update(int project_pk, int account_pk, String categoryL,String categoryM,String is_turnkey, String name,
 			int period, int budget, String plan_status, String description, String technique,
 			Timestamp deadline, String meeting_type, String meeting_area, String meeting_area_detail,
@@ -912,6 +1140,21 @@ public class ProjectDao implements ProjectIDao {
 		
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : getSQL
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:23:24
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : sql 문 리턴
+	 * </pre>
+	 * @param dev_sql 개발 sql
+	 * @param design_sql 디자인 sql
+	 * @param addr_sql 지역 sql
+	 * @param status_sql 상태 sql
+	 * @param sort_sql 정렬 sql
+	 * @param q_sql 검색어 sql
+	 * @return sql 문 리턴
+	 */
 	public String getSQL(String dev_sql, String design_sql, String addr_sql, String status_sql, String sort_sql, String q_sql)
 	{
 		String sql = "select * from project";
@@ -958,6 +1201,22 @@ public class ProjectDao implements ProjectIDao {
 	}
 	
 
+	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : getCountSQL
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:24:53
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : count 리턴하는 sql 문 반환
+	 * </pre>
+	 * @param dev_sql 개발 sql
+	 * @param design_sql 디자인 sql
+	 * @param addr_sql 지역 sql
+	 * @param status_sql 상태 sql
+	 * @param sort_sql 정렬 sql
+	 * @param q_sql 검색 sql
+	 * @return sql 문
+	 */
 	public String getCountSQL(String dev_sql, String design_sql, String addr_sql, String status_sql, String sort_sql, String q_sql)
 	{
 		String sql = "select count(*) from project";
@@ -1004,6 +1263,16 @@ public class ProjectDao implements ProjectIDao {
 	}
 	
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : getApplicantNum
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:25:46
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 프로젝트의 지원자 수 리턴
+	 * </pre>
+	 * @param project_pk 프로젝트 고유값
+	 * @return 지원자 수
+	 */
 	public int getApplicantNum(int project_pk)
 	{
 		List<ApplicantInfo> applicantlist =  applicantDao.select_project(project_pk);
@@ -1011,11 +1280,29 @@ public class ProjectDao implements ProjectIDao {
 		return applicantlist.size();
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : deleteAll
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:26:11
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 모두 삭제
+	 * </pre>
+	 */
 	public void deleteAll()
 	{
 		jdbcTemplate.update("delete from project");
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : delete_project
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:26:24
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 프로젝트 삭제
+	 * </pre>
+	 * @param pk 프로젝트 고유값
+	 * @return 결과값
+	 */
 	public String delete_project(int pk)
 	{
 		ProjectInfo project = select_project(pk);
@@ -1043,6 +1330,14 @@ public class ProjectDao implements ProjectIDao {
 	}
 	
 
+	/**
+	 * <pre>
+	 * 1. 메소드명 : updateStatusByScheduler
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:26:51
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 스케쥴러에 의해 프로젝트 상태 변경
+	 * </pre>
+	 */
 	public void updateStatusByScheduler()
 	{
 
@@ -1095,6 +1390,15 @@ public class ProjectDao implements ProjectIDao {
 	    });
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : delete
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:27:05
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 프로젝트 삭제
+	 * </pre>
+	 * @param pk 프로젝트 고유값
+	 */
 	public void delete(int pk)
 	{
 		jdbcTemplate.update("delete from project where pk = ?", new Object[] { pk });

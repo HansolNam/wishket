@@ -19,6 +19,15 @@ import com.wjm.models.ApplicantInfo;
 import com.wjm.models.ContractInfo;
 import com.wjm.models.ProjectInfo;
 
+/**
+ * <pre>
+ * 1. 패키지명 : com.wjm.dao
+ * 2. 타입명 : ApplicantDao.java
+ * 3. 작성일 : 2015. 12. 11. 오후 4:33:14
+ * 4. 작성자 : Hansol
+ * 5. 설명 : 지원자 applicant 테이블에 접근하는 DAO
+ * </pre>
+ */
 @Repository
 public class ApplicantDao implements ApplicantIDao {
 
@@ -42,6 +51,26 @@ public class ApplicantDao implements ApplicantIDao {
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : create
+	 * 2. 작성일 : 2015. 12. 11. 오후 4:33:33
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 지원자 applicant 생성
+	 * </pre>
+	 * @param project_pk 프로젝트 고유값
+	 * @param account_pk 지원자 고유값
+	 * @param application_cost 지원 금액
+	 * @param application_period 지원 기간
+	 * @param application_content 지원 내용
+	 * @param has_portfolio 포트폴리오 소유 여부
+	 * @param portfolio_pk1 포트폴리오 1 고유값
+	 * @param portfolio_pk2 포트폴리오 2 고유값
+	 * @param portfolio_pk3 포트폴리오 3 고유값
+	 * @param portfolio_description 포트폴리오 설명
+	 * @param status 상태
+	 * @param name 이름
+	 */
 	public void create(int project_pk, int account_pk,int application_cost,
 			int application_period,String application_content,
 			int has_portfolio, int portfolio_pk1, int portfolio_pk2,
@@ -56,6 +85,25 @@ public class ApplicantDao implements ApplicantIDao {
 						portfolio_description, status,name });
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : update
+	 * 2. 작성일 : 2015. 12. 11. 오후 4:34:35
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 지원자 applicant 갱신
+	 * </pre>
+	 * @param pk 고유값
+	 * @param application_cost 지원금액
+	 * @param application_period 지원기간
+	 * @param application_content 지원내용
+	 * @param has_portfolio 포트폴리오 소유 여부
+	 * @param portfolio_pk1 포트폴리오 1 고유값
+	 * @param portfolio_pk2 포트폴리오 2 고유값
+	 * @param portfolio_pk3 포트폴리오 3 고유값
+	 * @param portfolio_description 포트폴리오 설명
+	 * @param status 상태
+	 * @param name 이름
+	 */
 	public void update(int pk,int application_cost,
 			int application_period,String application_content,
 			int has_portfolio, int portfolio_pk1, int portfolio_pk2,
@@ -70,6 +118,15 @@ public class ApplicantDao implements ApplicantIDao {
 						pk });
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : selectAll
+	 * 2. 작성일 : 2015. 12. 11. 오후 4:35:26
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 모든 지원자 리스트 반환
+	 * </pre>
+	 * @return 지원자 리스트
+	 */
 	public List<ApplicantInfo> selectAll()
 	{
 		return jdbcTemplate.query("select * from applicant",new RowMapper<ApplicantInfo>() {
@@ -94,6 +151,16 @@ public class ApplicantDao implements ApplicantIDao {
 	    });
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : select
+	 * 2. 작성일 : 2015. 12. 11. 오후 4:36:06
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 지원자 고유값의 지원자 반환
+	 * </pre>
+	 * @param pk 지원자 고유값
+	 * @return 1개의 지원자
+	 */
 	public ApplicantInfo select(int pk)
 	{
 		List<ApplicantInfo> list =  jdbcTemplate.query("select * from applicant where pk = ?",
@@ -130,6 +197,16 @@ public class ApplicantDao implements ApplicantIDao {
 		}
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : select_project
+	 * 2. 작성일 : 2015. 12. 11. 오후 4:36:35
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 프로젝트 고유값에 따른 지원자 리스트 반환
+	 * </pre>
+	 * @param project_pk 프로젝트 고유값
+	 * @return 지원자 리스트
+	 */
 	public List<ApplicantInfo> select_project(int project_pk)
 	{
 		List<ApplicantInfo> list =  jdbcTemplate.query("select * from applicant where project_pk = ?",
@@ -190,6 +267,17 @@ public class ApplicantDao implements ApplicantIDao {
 		else
 			return list;
 	}
+	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : select_applicant
+	 * 2. 작성일 : 2015. 12. 11. 오후 4:37:14
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 account 고유값
+	 * </pre>
+	 * @param account_pk 계정 고유값
+	 * @return 지원자 리스트
+	 */
 	public List<ApplicantInfo> select_applicant(int account_pk)
 	{
 		return jdbcTemplate.query("select * from applicant where account_pk = ? order by reg_date desc",
@@ -215,12 +303,33 @@ public class ApplicantDao implements ApplicantIDao {
 	    });
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : select_applicant_num
+	 * 2. 작성일 : 2015. 12. 11. 오후 4:38:10
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 계정의 지원자 수
+	 * </pre>
+	 * @param account_pk 특정 계정의 고유값
+	 * @return 지원자 수
+	 */
 	public int select_applicant_num(int account_pk)
 	{
 		return jdbcTemplate.queryForInt("select count(*) from applicant where account_pk = ?",
 		    	new Object[] { account_pk });
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : select
+	 * 2. 작성일 : 2015. 12. 11. 오후 4:38:38
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 계정과 특정 프로젝트의 지원자
+	 * </pre>
+	 * @param account_pk 계정 고유값
+	 * @param project_pk 프로젝트 고유값
+	 * @return 1개의 지원자
+	 */
 	public ApplicantInfo select(int account_pk, int project_pk)
 	{
 		List<ApplicantInfo> list = jdbcTemplate.query("select * from applicant where account_pk = ? and project_pk = ?",
@@ -258,6 +367,24 @@ public class ApplicantDao implements ApplicantIDao {
 			return null;
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : createApplicant
+	 * 2. 작성일 : 2015. 12. 11. 오후 4:39:31
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 지원자 생성 함수
+	 * </pre>
+	 * @param account_pk 계정 고유값
+	 * @param project_pk 프로젝트 고유값
+	 * @param name 이름
+	 * @param estimated_budget 예상 예산
+	 * @param estimated_term 예상 기간
+	 * @param body 지원내용
+	 * @param has_related_portfolio 포트폴리오 소유 여부
+	 * @param related_portfolio 포트폴리오 리스트
+	 * @param related_description 포트폴리오 설명
+	 * @return 결과값
+	 */
 	public String createApplicant(int account_pk,int project_pk,String name,String estimated_budget,
 			String estimated_term,String body,String has_related_portfolio,String[] related_portfolio,String related_description)
 	{
@@ -412,6 +539,16 @@ public class ApplicantDao implements ApplicantIDao {
 		return "성공";
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : getInterestProject
+	 * 2. 작성일 : 2015. 12. 11. 오후 4:42:00
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 계정의 관심 프로젝트 리스트
+	 * </pre>
+	 * @param account_pk 특정 계정
+	 * @return 프로젝트 리스트
+	 */
 	public List<ProjectInfo> getInterestProject(int account_pk)
 	{
 		List<ProjectInfo> list = jdbcTemplate.query("select * from project where pk = (select project_pk from applicant where account_pk = ? and status = ?) order by reg_date desc",
@@ -450,6 +587,20 @@ public class ApplicantDao implements ApplicantIDao {
 			return list;
 		
 	}
+	
+	
+	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : select_applicant
+	 * 2. 작성일 : 2015. 12. 11. 오후 4:42:51
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 계정의 상태값에 따른 지원자 리스트
+	 * </pre>
+	 * @param account_pk 특정 계정 고유값
+	 * @param status 상태
+	 * @return 지원자 리스트
+	 */
 	public List<ApplicantInfo> select_applicant(int account_pk, String status)
 	{
 		return jdbcTemplate.query("select * from applicant where account_pk = ? and status = ? order by reg_date desc",
@@ -498,6 +649,17 @@ public class ApplicantDao implements ApplicantIDao {
 	    });
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : toggleInterest
+	 * 2. 작성일 : 2015. 12. 11. 오후 4:43:14
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 관심 프로젝트 등록
+	 * </pre>
+	 * @param account_pk 특정 계정 고유값
+	 * @param project_pk 특정 프로젝트 고유값
+	 * @return 결과값
+	 */
 	public String toggleInterest(int account_pk,int project_pk)
 	{
 		ApplicantInfo applicant = select(account_pk, project_pk);
@@ -516,21 +678,60 @@ public class ApplicantDao implements ApplicantIDao {
 	}
 	
 
+	/**
+	 * <pre>
+	 * 1. 메소드명 : updateStatus
+	 * 2. 작성일 : 2015. 12. 11. 오후 4:43:37
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 지원자 상태 갱신
+	 * </pre>
+	 * @param project_pk 특정 프로젝트 고유값
+	 * @param account_pk 특정 계정 고유값
+	 * @param status 상태
+	 */
 	public void updateStatus(int project_pk, int account_pk, String status)
 	{
 		jdbcTemplate.update("update applicant set status=? where project_pk = ? and account_pk=?"
 				, new Object[] { status, project_pk, account_pk });
 	}
 
+	/**
+	 * <pre>
+	 * 1. 메소드명 : updateRemianApplicantFail
+	 * 2. 작성일 : 2015. 12. 11. 오후 4:43:59
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 프로젝트의 나머지 지원자 지원 종료시키는 함수
+	 * </pre>
+	 * @param project_pk 특정 프로젝트 고유값
+	 */
 	public void updateRemianApplicantFail(int project_pk)
 	{
 		jdbcTemplate.update("update applicant set status='지원종료' where project_pk=? and (status = '지원중' or status = '관심프로젝트')"
 				, new Object[] { project_pk });
 	}
+	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : deleteAll
+	 * 2. 작성일 : 2015. 12. 11. 오후 4:44:37
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 모든 지원자 삭제
+	 * </pre>
+	 */
 	public void deleteAll()
 	{
 		jdbcTemplate.update("delete from applicant");
 	}
+	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : delete
+	 * 2. 작성일 : 2015. 12. 11. 오후 4:44:52
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 지원자 삭제
+	 * </pre>
+	 * @param pk 고유값
+	 */
 	public void delete(int pk)
 	{
 		jdbcTemplate.update("delete from applicant where pk = ?", new Object[] { pk });

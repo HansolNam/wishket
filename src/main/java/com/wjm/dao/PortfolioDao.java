@@ -25,6 +25,15 @@ import com.wjm.models.AccountInfo;
 import com.wjm.models.PortfolioInfo;
 import com.wjm.models.TechniqueInfo;
 
+/**
+ * <pre>
+ * 1. 패키지명 : com.wjm.dao
+ * 2. 타입명 : PortfolioDao.java
+ * 3. 작성일 : 2015. 12. 11. 오후 6:54:45
+ * 4. 작성자 : Hansol
+ * 5. 설명 : 포트폴리오 portfolio 테이블 dAO
+ * </pre>
+ */
 @Repository
 public class PortfolioDao implements PortfolioIDao {
 
@@ -40,11 +49,44 @@ public class PortfolioDao implements PortfolioIDao {
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
 	}
 
+	/**
+	 * <pre>
+	 * 1. 메소드명 : create
+	 * 2. 작성일 : 2015. 12. 11. 오후 6:54:56
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 포트폴리오 생성 함수
+	 * </pre>
+	 * @param account_pk 계정 고유값
+	 * @param representative 대표 포트폴리오 여부
+	 * @param name 이름
+	 * @param categoryL 대분류 카테고리
+	 * @param categoryM 중분류 카테고리
+	 * @param description 설명
+	 * @param start_date 시작일
+	 * @param end_date 종료일
+	 * @param participation_rate 참여율
+	 * @param img0 이미지0
+	 * @param explanation0 설명0
+	 * @param img1 이미지1
+	 * @param explanation1 설명1
+	 * @param img2 이미지2
+	 * @param explanation2 설명2
+	 * @param tag 태그
+	 */
 	public void create(int account_pk,int representative,String name,String categoryL,String categoryM,String description,String start_date, String end_date, int participation_rate,String img0,String explanation0,String img1,String explanation1,String img2,String explanation2,String tag)
 	{
 		jdbcTemplate.update("insert into portfolio (account_pk,representative,name,categoryL,categoryM,description,start_date,end_date,participation_rate, img0,explanation0,img1,explanation1,img2,explanation2,tag) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?)"
 				, new Object[] { account_pk,representative,name,categoryL,categoryM,description,start_date,end_date,participation_rate, img0,explanation0,img1,explanation1,img2,explanation2,tag});
 	}
+	/**
+	 * <pre>
+	 * 1. 메소드명 : selectAll
+	 * 2. 작성일 : 2015. 12. 11. 오후 6:56:10
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 모든 포트폴리오 리스트 반환
+	 * </pre>
+	 * @return 포트폴리오 리스트
+	 */
 	public List<PortfolioInfo> selectAll()
 	{
 		return jdbcTemplate.query("select * from portfolio",new RowMapper<PortfolioInfo>() {
@@ -73,6 +115,16 @@ public class PortfolioDao implements PortfolioIDao {
 		    });
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : getPortfolioNum
+	 * 2. 작성일 : 2015. 12. 11. 오후 6:56:25
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 계정의 포트폴리오 개수
+	 * </pre>
+	 * @param account_pk 특정계정 고유값
+	 * @return 포트폴리오 개수
+	 */
 	public int getPortfolioNum(int account_pk)
 	{
 		int num = jdbcTemplate.queryForInt("select count(*) from portfolio where account_pk = ?",
@@ -80,6 +132,16 @@ public class PortfolioDao implements PortfolioIDao {
 		
 		return num;
 	}
+	/**
+	 * <pre>
+	 * 1. 메소드명 : select
+	 * 2. 작성일 : 2015. 12. 11. 오후 6:56:40
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 계정의 포트폴리오 리스트
+	 * </pre>
+	 * @param account_pk 특정 계정 고유값
+	 * @return 포트폴리오 리스트
+	 */
 	public List<PortfolioInfo> select(int account_pk)
 	{
 		List<PortfolioInfo> list = jdbcTemplate.query("select * from portfolio where account_pk = ? order by reg_date desc",
@@ -157,6 +219,37 @@ public class PortfolioDao implements PortfolioIDao {
 		}
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : createPortfolio
+	 * 2. 작성일 : 2015. 12. 11. 오후 6:57:00
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 포트폴리오 생성
+	 * </pre>
+	 * @param account_pk 계정 고유값
+	 * @param id 아이디
+	 * @param title 제목
+	 * @param categoryId 카테고리
+	 * @param subcategoryId 세부카테고리
+	 * @param description 설명
+	 * @param participationBeginYear 참여년
+	 * @param participationBeginMonth 참여월
+	 * @param participationEndYear 종료년
+	 * @param participationEndMonth 종료월
+	 * @param participationRate 참여율
+	 * @param image1 이미지1
+	 * @param caption1 캡션1
+	 * @param image2 이미지2
+	 * @param caption2 캡션2
+	 * @param image3 이미지3
+	 * @param caption3 캡션3
+	 * @param tagList 태그리스트
+	 * @param real_path 실주소
+	 * @return 결과값
+	 * @throws IOException
+	 * @throws FileUploadException
+	 * @throws ParseException
+	 */
 	public String createPortfolio(int account_pk, String id, String title, String categoryId, String subcategoryId,
 			String description, String participationBeginYear, String participationBeginMonth, String participationEndYear,
 			String participationEndMonth, String participationRate, MultipartFile image1, String caption1,
@@ -346,6 +439,41 @@ public class PortfolioDao implements PortfolioIDao {
 		return "성공";
 	}
 
+	/**
+	 * <pre>
+	 * 1. 메소드명 : updatePortfolio
+	 * 2. 작성일 : 2015. 12. 11. 오후 6:59:25
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 포트폴리오 수정
+	 * </pre>
+	 * 
+	 * @param pk 고유값
+	 * @param id 아이디
+	 * @param title 제목
+	 * @param categoryId 카테고리
+	 * @param subcategoryId 세부카테고리
+	 * @param description 설명
+	 * @param participationBeginYear 참여년
+	 * @param participationBeginMonth 참여월
+	 * @param participationEndYear 종료년
+	 * @param participationEndMonth 종료월
+	 * @param participationRate 참여율
+	 * @param image1 이미지1
+	 * @param caption1 캡션1
+	 * @param image2 이미지2
+	 * @param caption2 캡션2
+	 * @param image3 이미지3
+	 * @param caption3 캡션3
+	 * @param tagList 태그리스트
+	 * @param real_path 실주소
+	 * @param isImage1Changed 이미지 변화여부
+	 * @param isImage2Changed 이미지 변화여부
+	 * @param isImage3Changed 이미지 변화여부
+	 * @return 결과값
+	 * @throws IOException
+	 * @throws FileUploadException
+	 * @throws ParseException
+	 */
 	public String updatePortfolio(int pk, String id, String title, String categoryId, String subcategoryId,
 			String description, String participationBeginYear, String participationBeginMonth, String participationEndYear,
 			String participationEndMonth, String participationRate, MultipartFile image1, String caption1,
@@ -622,6 +750,18 @@ public class PortfolioDao implements PortfolioIDao {
 						caption1,img1,caption2,img2,caption3,tagList,pk});
 		return "성공";
 	}
+	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : updateRepresentative
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:01:06
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 대표 포트폴리오 갱신
+	 * </pre>
+	 * @param account_pk 계정 고유값
+	 * @param pk_list 포트폴리오 리스트
+	 * @return 결과값
+	 */
 	public String updateRepresentative(int account_pk, String[] pk_list)
 	{
 		//해당 계정의 보유기술 리스트
@@ -669,10 +809,29 @@ public class PortfolioDao implements PortfolioIDao {
 		}
 		
 	}
+	/**
+	 * <pre>
+	 * 1. 메소드명 : deleteAll
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:01:39
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 모든 포트폴리오 삭제
+	 * </pre>
+	 */
 	public void deleteAll()
 	{
 		jdbcTemplate.update("delete from portfolio");
 	}
+	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : delete
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:01:54
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 포트폴리오 삭제
+	 * </pre>
+	 * @param pk 고유값
+	 * @return 결과값
+	 */
 	public String delete(int pk)
 	{
 		jdbcTemplate.update("delete from portfolio where pk = ?", new Object[] { pk });
@@ -680,6 +839,16 @@ public class PortfolioDao implements PortfolioIDao {
 
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : hasPortfolio
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:02:11
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 포트폴리오 소유 여부 반환
+	 * </pre>
+	 * @param account_pk 계정 고유값
+	 * @return 소유 여부 반환
+	 */
 	public boolean hasPortfolio(int account_pk)
 	{
 		List<PortfolioInfo> portfoliolist =  select(account_pk);

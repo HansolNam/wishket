@@ -51,7 +51,7 @@
 			<div class="content">
 				<div class="content-header">
 					<h3 class="header-text">
-						관리자 페이지 
+						결제 대기중인 프로젝트 페이지 
 					</h3>
 				</div>
 				<div class="content-inner">

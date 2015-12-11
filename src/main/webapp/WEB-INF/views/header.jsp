@@ -110,7 +110,6 @@
 							data-toggle="dropdown" href="#"><%= account.getId() %>님 <b
 								class="fa fa-caret-down"></b></a>
 						<ul class="dropdown-menu">
-								<li><a href="/wjm/client/info/" tabindex="-1">클라이언트 정보 관리</a></li>
 								<li><a href="/wjm/accounts/settings/profile/" tabindex="-1">계정
 										설정</a></li>
 								<li class="divider"></li>

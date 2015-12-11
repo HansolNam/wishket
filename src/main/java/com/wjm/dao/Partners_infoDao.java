@@ -1,13 +1,8 @@
 package com.wjm.dao;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.text.ParseException;
 import java.util.List;
-import java.util.Random;
 
 import javax.sql.DataSource;
 
@@ -18,11 +13,18 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.wjm.idao.Partners_infoIDao;
-import com.wjm.main.function.Time;
 import com.wjm.main.function.Validator;
-import com.wjm.models.AccountInfo;
 import com.wjm.models.Partners_infoInfo;
 
+/**
+ * <pre>
+ * 1. 패키지명 : com.wjm.dao
+ * 2. 타입명 : Partners_infoDao.java
+ * 3. 작성일 : 2015. 12. 11. 오후 6:52:34
+ * 4. 작성자 : Hansol
+ * 5. 설명 : 파트너스 정보 partners_info 테이블 DAO
+ * </pre>
+ */
 @Repository
 public class Partners_infoDao implements Partners_infoIDao {
 
@@ -38,10 +40,30 @@ public class Partners_infoDao implements Partners_infoIDao {
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
 	}
 
+	/**
+	 * <pre>
+	 * 1. 메소드명 : create
+	 * 2. 작성일 : 2015. 12. 11. 오후 6:52:47
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 파트너스 정보 생성
+	 * </pre>
+	 * @param account_pk 특정 계정 고유값
+	 */
 	public void create(int account_pk)
 	{
 		jdbcTemplate.update("insert into partners_info (account_pk) values (?)", new Object[] { account_pk });
 	}
+	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : select
+	 * 2. 작성일 : 2015. 12. 11. 오후 6:53:02
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 계정의 파트너스 정보 반환
+	 * </pre>
+	 * @param account_pk 계정 고유값
+	 * @return 파트너스 정보
+	 */
 	public Partners_infoInfo select(int account_pk)
 	{
 		List<Partners_infoInfo> list = jdbcTemplate.query("select * from partners_info where account_pk = ?", new Object[] { account_pk }
@@ -76,6 +98,16 @@ public class Partners_infoDao implements Partners_infoIDao {
 		}
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : hasPartnersInfo
+	 * 2. 작성일 : 2015. 12. 11. 오후 6:53:28
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 해당 계정이 파트너스 정보 소유하고 잇는지 여부 반환
+	 * </pre>
+	 * @param account_pk 특정 계정 고유값
+	 * @return true, false
+	 */
 	public boolean hasPartnersInfo(int account_pk)
 	{
 		Partners_infoInfo partnersinfo = select(account_pk);
@@ -90,6 +122,20 @@ public class Partners_infoDao implements Partners_infoIDao {
 		}
 	}
 
+	/**
+	 * <pre>
+	 * 1. 메소드명 : update
+	 * 2. 작성일 : 2015. 12. 11. 오후 6:53:52
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 파트너스 정보 갱신
+	 * </pre>
+	 * @param account_pk 특정 계정 고유값
+	 * @param job 직종
+	 * @param job_subcategory_develop 개발 세부카테고리
+	 * @param job_subcategory_design 디자인 세부카테고리
+	 * @param availability 활동가능성
+	 * @return 결과값
+	 */
 	public String update(int account_pk, String job, String[] job_subcategory_develop, String[] job_subcategory_design,
 			String availability)
 	{
@@ -177,10 +223,28 @@ public class Partners_infoDao implements Partners_infoIDao {
 		
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : deleteAll
+	 * 2. 작성일 : 2015. 12. 11. 오후 6:54:21
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 모든 파트너스 정보 삭제
+	 * </pre>
+	 */
 	public void deleteAll()
 	{
 		jdbcTemplate.update("delete from partners_info");
 	}
+	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : delete
+	 * 2. 작성일 : 2015. 12. 11. 오후 6:54:29
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 계정의 파트너스 정보 삭제
+	 * </pre>
+	 * @param account_pk 계정 고유값
+	 */
 	public void delete(int account_pk)
 	{
 		jdbcTemplate.update("delete from partners_info where account_pk = ?", new Object[] { account_pk });

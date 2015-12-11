@@ -703,10 +703,26 @@ public class ProjectController {
 		}
 		else if(status.equals("검수중")){
 			//notification update
+			
+			AccountInfo admin_account = accountDao.select("admin1");
+			
 			//관리자
-			String result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", 
+			String result = sendMail("admin@wjm.com", admin_account.getEmail(), 
 					title+" 프로젝트가 검수를 요청하였습니다.", "외주몬 알림 메일입니다");
 			logger.info("이메일 전송 결과 = "+result);
+
+			AccountInformationInfo admin_accountinfo = accountInformationDao.select(admin_account.getPk());
+	    	String phone = "";
+	    	
+	    	if(Validator.hasValue(admin_accountinfo.getCellphone_num()))
+	    		phone = admin_accountinfo.getCellphone_num().replace("-", "");
+	    	
+	    	if(Validator.hasValue(phone))
+	    	{
+	    		SMS.sendSMS(phone, phone, title+" 프로젝트가 검수를 요청하였습니다.","");
+	    		logger.info("SMS 전송");
+	    	}
+			
 			
 			//클라이언트
 			notificationDao.create(account.getPk(), title+" 프로젝트가 검수중입니다. 검수는 최대 24시간이 소요됩니다.");
@@ -716,13 +732,13 @@ public class ProjectController {
 	        
 	        if(accountinfo.getSubscription() == 1)
 	        {
-			result = sendMail("admin@wjm.com","gksthf1611@gmail.com",title+" 프로젝트가 검수중입니다. 검수는 최대 24시간이 소요됩니다."
+			result = sendMail("admin@wjm.com", account.getEmail() ,title+" 프로젝트가 검수중입니다. 검수는 최대 24시간이 소요됩니다."
 					, "외주몬 알림 메일입니다.");
 			logger.info("클라이언트 메일 : "+result);
 	        } 
 	        if(accountinfo.getSms_subscription() == 1)
 	        {
-	        	String phone = "";
+	        	phone = "";
 	        	
 	        	if(Validator.hasValue(accountinfo.getCellphone_num()))
 	        		phone = accountinfo.getCellphone_num().replace("-", "");
@@ -735,10 +751,6 @@ public class ProjectController {
 		    		logger.info("SMS 전송");
 	        	}
 	        }
-			//파트너스
-			//result = sendMail("admin@wjm.com","gksthf1611@gmail.com",contract.getClient_id()+"님의 "
-			//		+project.getName()+" 계약이 성사되지 못했습니다. 다른 프로젝트에 지원해주세요.", "외주몬 알림 메일입니다.");
-			//logger.info("파트너스 메일 : "+result);
 			
 			logger.info("검수중");
 			
@@ -1093,9 +1105,24 @@ public class ProjectController {
 			//notification update
 
 			//관리자
-			String result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", 
+			AccountInfo admin_account = accountDao.select("admin1");
+			AccountInformationInfo admin_accountinfo = accountInformationDao.select(admin_account.getPk());
+
+			
+			String result = sendMail("admin@wjm.com", admin_account.getEmail(), 
 					title+" 프로젝트가 검수를 요청하였습니다.", "외주몬 알림 메일입니다");
 			logger.info("이메일 전송 결과 = "+result);
+			
+			String phone = "";
+	    	
+	    	if(Validator.hasValue(admin_accountinfo.getCellphone_num()))
+	    		phone = admin_accountinfo.getCellphone_num().replace("-", "");
+	    	
+	    	if(Validator.hasValue(phone))
+	    	{
+	    		SMS.sendSMS(phone, phone, title+" 프로젝트가 검수를 요청하였습니다.","");
+	    		logger.info("SMS 전송");
+	    	}
 			
 			//클라이언트
 			notificationDao.create(account.getPk(), title+" 프로젝트가 등록되어 검수중입니다. 검수에는 최대 24시간이 소요됩니다.");
@@ -1104,13 +1131,13 @@ public class ProjectController {
 	        
 	        if(accountinfo.getSubscription() == 1)
 	        {
-			result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", title+" 프로젝트가 등록되어 검수중입니다. 검수에는 최대 24시간이 소요됩니다.", "외주몬 알림 메일입니다");
+			result = sendMail("admin@wjm.com", account.getEmail(), title+" 프로젝트가 등록되어 검수중입니다. 검수에는 최대 24시간이 소요됩니다.", "외주몬 알림 메일입니다");
 			logger.info("이메일 전송 결과 = "+result);
 	        }
 	        
 	        if(accountinfo.getSms_subscription() == 1)
 	        {
-	        	String phone = "";
+	        	phone = "";
 	        	
 	        	if(Validator.hasValue(accountinfo.getCellphone_num()))
 	        		phone = accountinfo.getCellphone_num().replace("-", "");
@@ -1140,17 +1167,7 @@ public class ProjectController {
 		
 		return "/project/add/thank-you";
 	}
-	/**
-	 * 프로젝트 질문답변
-	 */
-	@RequestMapping(value = "/project/faq", method = RequestMethod.GET)
-	public String ProjectController_faq(HttpServletRequest request) {
-		logger.info("add faq Page");
-		
-		
-		
-		return "/project/faq";
-	}
+
 	/**
 	 * 프로젝트 미리보기
 	 */
@@ -1572,7 +1589,7 @@ public class ProjectController {
 	        
 	        if(accountinfo.getSubscription() == 1)
 	        {
-			String mail_result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", name+" 프로젝트에 지원하셨습니다.", "외주몬 알림 메일입니다");
+			String mail_result = sendMail("admin@wjm.com", account.getEmail(), name+" 프로젝트에 지원하셨습니다.", "외주몬 알림 메일입니다");
 			logger.info("이메일 전송 결과1 = "+mail_result);
 	        } 
 	        if(accountinfo.getSms_subscription() == 1)
@@ -1592,11 +1609,12 @@ public class ProjectController {
 	        }
 	        
 			//클라이언트
+	        AccountInfo clientaccount = accountDao.select(project.getAccount_pk());
 			accountinfo = accountInformationDao.select(project.getAccount_pk());
 	        
 	        if(accountinfo.getSubscription() == 1)
 	        {
-	        String mail_result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", name+" 프로젝트에 "+account.getId()+" 님이 지원하셨습니다.", "외주몬 알림 메일입니다");
+	        String mail_result = sendMail("admin@wjm.com", clientaccount.getEmail(), name+" 프로젝트에 "+account.getId()+" 님이 지원하셨습니다.", "외주몬 알림 메일입니다");
 			logger.info("이메일 전송 결과2 = "+mail_result);
 	        }
 	        if(accountinfo.getSms_subscription() == 1)
@@ -1992,7 +2010,7 @@ public class ProjectController {
         
         if(accountinfo.getSubscription() == 1)
         {
-			String result = sendMail("admin@wjm.com","gksthf1611@gmail.com",title+" 추가요청이 검수중입니다. "
+			String result = sendMail("admin@wjm.com",account.getEmail(),title+" 추가요청이 검수중입니다. "
 					, "외주몬 알림 메일입니다.");
 			logger.info("클라이언트 메일 : "+result);
         }
@@ -2013,9 +2031,22 @@ public class ProjectController {
         }
         
 		//관리자
-        String result = sendMail("admin@wjm.com","gksthf1611@gmail.com",title+" 추가요청이 검수중입니다. 파트너스와 클라이언트에게 연락하여 검수를 완료해주세요."
+        AccountInfo admin_account = accountDao.select("admin1");
+        String result = sendMail("admin@wjm.com",admin_account.getEmail(),title+" 추가요청이 검수중입니다. 파트너스와 클라이언트에게 연락하여 검수를 완료해주세요."
 				, "외주몬 알림 메일입니다.");
-		logger.info("클라이언트 메일 : "+result);
+		logger.info("관리자 메일 : "+result);
+		
+		AccountInformationInfo admin_accountinfo = accountInformationDao.select(admin_account.getPk());
+    	String phone = "";
+    	
+    	if(Validator.hasValue(admin_accountinfo.getCellphone_num()))
+    		phone = admin_accountinfo.getCellphone_num().replace("-", "");
+    	
+    	if(Validator.hasValue(phone))
+    	{
+    		SMS.sendSMS(phone, phone, title+" 추가요청이 검수중입니다. 파트너스와 클라이언트에게 연락하여 검수를 완료해주세요.","");
+    		logger.info("SMS 전송");
+    	}
 		
 		additionDao.create(contract_pk, title, budget, term, "검수중");
 		
@@ -2100,8 +2131,8 @@ public class ProjectController {
         
         if(accountinfo.getSubscription() == 1)
         {
-		
-		String result = sendMail("admin@wjm.com","gksthf1611@gmail.com", addition.getTitle()+" 추가요청이 결제완료되어 진행중입니다. "
+		AccountInfo clientaccount = accountDao.select(contract.getClient_pk());
+		String result = sendMail("admin@wjm.com",clientaccount.getEmail(), addition.getTitle()+" 추가요청이 결제완료되어 진행중입니다. "
 				, "외주몬 알림 메일입니다.");
 		logger.info("클라이언트 메일 : "+result);
         }
@@ -2129,7 +2160,9 @@ public class ProjectController {
 
         if(accountinfo.getSubscription() == 1)
         {
-        	String result = sendMail("admin@wjm.com","gksthf1611@gmail.com", addition.getTitle()+" 추가요청이 결제완료되어 진행중입니다. "
+    		AccountInfo partnersaccount = accountDao.select(contract.getPartners_pk());
+
+    		String result = sendMail("admin@wjm.com", partnersaccount.getEmail(), addition.getTitle()+" 추가요청이 결제완료되어 진행중입니다. "
 				, "외주몬 알림 메일입니다.");
 		logger.info("파트너스 메일 : "+result);
         }

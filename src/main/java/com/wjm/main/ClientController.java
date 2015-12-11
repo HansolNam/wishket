@@ -414,7 +414,7 @@ public class ClientController {
         
         if(accountinfo.getSubscription() == 1)
         {
-		String result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", contract.getPartners_id()+" 파트너스를 평가하셨습니다. 프로젝트가 완료되었습니다.", "외주몬 알림 메일입니다");
+		String result = sendMail("admin@wjm.com", account.getEmail(), contract.getPartners_id()+" 파트너스를 평가하셨습니다. 프로젝트가 완료되었습니다.", "외주몬 알림 메일입니다");
 		logger.info("이메일 전송 결과 = "+result);
         }
         if(accountinfo.getSms_subscription() == 1)
@@ -440,7 +440,8 @@ public class ClientController {
         
         if(accountinfo.getSubscription() == 1)
         {
-		String result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", contract.getClient_id()+" 님이 "+project.getName()+" 프로젝트의 평가를 완료하셨습니다.", "외주몬 알림 메일입니다");
+        	AccountInfo partnersaccount = accountDao.select(partners_pk);
+		String result = sendMail("admin@wjm.com", partnersaccount.getEmail(), contract.getClient_id()+" 님이 "+project.getName()+" 프로젝트의 평가를 완료하셨습니다.", "외주몬 알림 메일입니다");
 		logger.info("이메일 전송 결과 = "+result);
         }
 
@@ -724,7 +725,7 @@ public class ClientController {
 	@ResponseBody
 	public String ProjectController_getCategoryM(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam("applicant_pk") int applicant_pk,
-			@RequestParam("project_pk") int project_pk) {
+			@RequestParam("project_pk") int project_pk) throws ClientProtocolException, URISyntaxException, IOException {
 		logger.info("/wjm/client/manage/project/meeting AJAX");
 
 		
@@ -786,27 +787,23 @@ public class ClientController {
 				, account.getId(), applicant_account.getId(),"계약진행중");
 		
 		//알림(관리자)
-		String result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", account.getId()+" 클라이언트가 "+
+		AccountInfo admin_account = accountDao.select("admin1");
+		String result = sendMail("admin@wjm.com", admin_account.getEmail(), account.getId()+" 클라이언트가 "+
 				applicant_account.getId()+ " 파트너스와 미팅을 요청하였습니다.", "외주몬 알림 메일입니다");
 		logger.info("이메일 전송 결과 = "+result);
 
-		/*
-        if(accountinfo.getSms_subscription() == 1)
-        {
-        	String phone = "";
-        	
-        	if(Validator.hasValue(accountinfo.getCellphone_num()))
-        		phone = accountinfo.getCellphone_num().replace("-", "");
-        	
-        	if(Validator.hasValue(phone))
-        	{
-        		SMS.sendSMS(phone, phone, 
-        				contract.getClient_id()+" 님이 "+project.getName()+" 프로젝트의 평가를 완료하셨습니다."
-        				,"");
-	    		logger.info("SMS 전송");
-        	}
-        }
-        */
+		AccountInformationInfo admin_accountinfo = accountInformationDao.select(admin_account.getPk());
+    	String phone = "";
+    	
+    	if(Validator.hasValue(admin_accountinfo.getCellphone_num()))
+    		phone = admin_accountinfo.getCellphone_num().replace("-", "");
+    	
+    	if(Validator.hasValue(phone))
+    	{
+    		SMS.sendSMS(phone, phone, account.getId()+" 클라이언트가 "+ applicant_account.getId()+ " 파트너스와 미팅을 요청하였습니다.","");
+    		logger.info("SMS 전송");
+    	}
+    
 		
 		jObject.put("messages", "success");
 		logger.info(jObject.toString());

@@ -16,6 +16,15 @@ import org.springframework.stereotype.Repository;
 import com.wjm.idao.AssessmentIDao;
 import com.wjm.models.AssessmentInfo;
 
+/**
+ * <pre>
+ * 1. 패키지명 : com.wjm.dao
+ * 2. 타입명 : AssessmentDao.java
+ * 3. 작성일 : 2015. 12. 11. 오후 4:52:05
+ * 4. 작성자 : Hansol
+ * 5. 설명 : 평가 assessment 테이블 DAO
+ * </pre>
+ */
 @Repository
 public class AssessmentDao implements AssessmentIDao {
 
@@ -42,12 +51,38 @@ public class AssessmentDao implements AssessmentIDao {
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
 	}
 
+	/**
+	 * <pre>
+	 * 1. 메소드명 : create
+	 * 2. 작성일 : 2015. 12. 11. 오후 4:51:43
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 평가 생성
+	 * </pre>
+	 * @param project_pk 프로젝트 고유값
+	 * @param assessing_pk 평가하는 계정 고유값
+	 * @param assessed_pk 평가받는 계정 고유값
+	 * @param professionalism 전문성
+	 * @param satisfaction 만족도
+	 * @param schedule_observance 기한엄수
+	 * @param activeness 적극성
+	 * @param communication 의사소통능력
+	 * @param recommendation 추천한마디
+	 */
 	public void create(int project_pk,int assessing_pk,int assessed_pk,int professionalism,int satisfaction,int schedule_observance, int activeness, int communication, String recommendation)
 	{
 		jdbcTemplate.update("insert into assessment (project_pk, assessing_pk, assessed_pk,professionalism, satisfaction, schedule_observance, activeness, communication, recommendation) values (?,?, ?, ?,?,?, ?, ?,?)"
 				, new Object[] { project_pk, assessing_pk, assessed_pk, professionalism, satisfaction, schedule_observance, activeness, communication, recommendation });
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : selectAll
+	 * 2. 작성일 : 2015. 12. 11. 오후 4:53:32
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 모든 평가 리스트 반환
+	 * </pre>
+	 * @return 평가 리스트
+	 */
 	public List<AssessmentInfo> selectAll()
 	{
 		return jdbcTemplate.query("select * from assessment",new RowMapper<AssessmentInfo>() {
@@ -67,6 +102,18 @@ public class AssessmentDao implements AssessmentIDao {
 	    	}
 	    });
 	}
+	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : select_assessing
+	 * 2. 작성일 : 2015. 12. 11. 오후 4:57:22
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 프로젝트와 특정 평가자의 평가 반환
+	 * </pre>
+	 * @param project_pk 프로젝트 고유값
+	 * @param assessing_pk 평가자 고유값
+	 * @return 1개의 평가
+	 */
 	public AssessmentInfo select_assessing(int project_pk, int assessing_pk)
 	{
 		List<AssessmentInfo> list = jdbcTemplate.query("select * from assessment where project_pk = ? and assessing_pk = ?",
@@ -110,6 +157,17 @@ public class AssessmentDao implements AssessmentIDao {
 	}
 	
 
+	/**
+	 * <pre>
+	 * 1. 메소드명 : select_assessed
+	 * 2. 작성일 : 2015. 12. 11. 오후 4:59:26
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 프로젝트와 특정 평가받는 사람의 평가
+	 * </pre>
+	 * @param project_pk 프로젝트 고유값
+	 * @param assessed_pk 평가받는 계정 고유값
+	 * @return 1개의 평가
+	 */
 	public AssessmentInfo select_assessed(int project_pk, int assessed_pk)
 	{
 		List<AssessmentInfo> list = jdbcTemplate.query("select * from assessment where project_pk = ? and assessed_pk = ? order by reg_date desc",
@@ -152,6 +210,16 @@ public class AssessmentDao implements AssessmentIDao {
 			return null;
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : select_assessed
+	 * 2. 작성일 : 2015. 12. 11. 오후 5:00:49
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 평가 받는 계정의 평가 리스트
+	 * </pre>
+	 * @param assessed_pk 평가 받는 계정 고유값
+	 * @return 평가 리스트
+	 */
 	public List<AssessmentInfo> select_assessed(int assessed_pk)
 	{
 		List<AssessmentInfo> list = jdbcTemplate.query("select * from assessment where assessed_pk = ? order by reg_date desc",
@@ -194,6 +262,16 @@ public class AssessmentDao implements AssessmentIDao {
 	}
 	
 
+	/**
+	 * <pre>
+	 * 1. 메소드명 : get_assessed_num
+	 * 2. 작성일 : 2015. 12. 11. 오후 5:02:14
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 평가받는 계정의 평가 개수
+	 * </pre>
+	 * @param assessed_pk 평가받는 계정 고유값
+	 * @return 평가 개수
+	 */
 	public int get_assessed_num(int assessed_pk)
 	{
 		int num = jdbcTemplate.queryForInt("select count(*) from assessment where assessed_pk = ?",
@@ -203,6 +281,16 @@ public class AssessmentDao implements AssessmentIDao {
 	}
 	
 
+	/**
+	 * <pre>
+	 * 1. 메소드명 : get_avg_assessed
+	 * 2. 작성일 : 2015. 12. 11. 오후 5:02:54
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 평가받는 계정의 평균 점수 반환하는 함수
+	 * </pre>
+	 * @param assessed_pk 평가받는 계정의 고유값
+	 * @return 평균 점수
+	 */
 	public double get_avg_assessed(int assessed_pk)
 	{
 		List<AssessmentInfo> list = jdbcTemplate.query("select * from assessment where assessed_pk = ?",
@@ -250,10 +338,27 @@ public class AssessmentDao implements AssessmentIDao {
 			return 0;
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : deleteAll
+	 * 2. 작성일 : 2015. 12. 11. 오후 5:03:43
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 모든 평가 삭제
+	 * </pre>
+	 */
 	public void deleteAll()
 	{
 		jdbcTemplate.update("delete from assessment");
 	}
+	/**
+	 * <pre>
+	 * 1. 메소드명 : delete
+	 * 2. 작성일 : 2015. 12. 11. 오후 5:03:49
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 평가 삭제
+	 * </pre>
+	 * @param pk 평가 고유값
+	 */
 	public void delete(int pk)
 	{
 		jdbcTemplate.update("delete from assessment where pk = ?", new Object[] { pk });

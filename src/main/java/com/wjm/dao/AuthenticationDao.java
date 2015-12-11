@@ -21,6 +21,15 @@ import com.wjm.main.function.Fileupload;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AuthenticationInfo;
 
+/**
+ * <pre>
+ * 1. 패키지명 : com.wjm.dao
+ * 2. 타입명 : AuthenticationDao.java
+ * 3. 작성일 : 2015. 12. 11. 오후 5:04:05
+ * 4. 작성자 : Hansol
+ * 5. 설명 : 인증정보 authentication 테이블 DAO
+ * </pre>
+ */
 @Repository
 public class AuthenticationDao implements AuthenticationIDao {
 
@@ -36,10 +45,29 @@ public class AuthenticationDao implements AuthenticationIDao {
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
 	}
 
+	/**
+	 * <pre>
+	 * 1. 메소드명 : create
+	 * 2. 작성일 : 2015. 12. 11. 오후 5:04:33
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 계정의 인증 테이블 생성
+	 * </pre>
+	 * @param account_pk 특정 계정 고유값
+	 */
 	public void create(int account_pk)
 	{
 		jdbcTemplate.update("insert into authentication (account_pk) values (?)", new Object[] { account_pk });
 	}
+	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : selectAll
+	 * 2. 작성일 : 2015. 12. 11. 오후 5:04:51
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 모든 인증 리스트 반환
+	 * </pre>
+	 * @return 인증 리스트
+	 */
 	public List<AuthenticationInfo> selectAll()
 	{
 		return jdbcTemplate.query("select * from authentication",new RowMapper<AuthenticationInfo>() {
@@ -60,6 +88,16 @@ public class AuthenticationDao implements AuthenticationIDao {
 		    });
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : select
+	 * 2. 작성일 : 2015. 12. 11. 오후 5:05:04
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 계정의 인증 정보 반환
+	 * </pre>
+	 * @param account_pk 특정 계정 고유값
+	 * @return 인증 정보 반환
+	 */
 	public AuthenticationInfo select(int account_pk)
 	{
 		List<AuthenticationInfo> authenticationlist = jdbcTemplate.query("select * from authentication where account_pk = ?",
@@ -100,15 +138,54 @@ public class AuthenticationDao implements AuthenticationIDao {
 		}
 	}	
 
+	/**
+	 * <pre>
+	 * 1. 메소드명 : deleteAll
+	 * 2. 작성일 : 2015. 12. 11. 오후 5:05:29
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 모든 인증정보 삭제
+	 * </pre>
+	 */
 	public void deleteAll()
 	{
 		jdbcTemplate.update("delete from authentication");
 	}
+	/**
+	 * <pre>
+	 * 1. 메소드명 : delete
+	 * 2. 작성일 : 2015. 12. 11. 오후 5:05:40
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 계정의 인증정보 삭제
+	 * </pre>
+	 * @param account_pk 특정 계정 고유값
+	 */
 	public void delete(int account_pk)
 	{
 		jdbcTemplate.update("delete from authentication where account_pk = ?", new Object[] { account_pk });
 	}
 
+	/**
+	 * <pre>
+	 * 1. 메소드명 : updateIdentity_authentication
+	 * 2. 작성일 : 2015. 12. 11. 오후 5:05:56
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 인증 정보 갱신
+	 * </pre>
+	 * @param form 형태
+	 * @param user_type 사업자 형태
+	 * @param image 이미지명
+	 * @param real_path 실제 경로
+	 * @param id id
+	 * @param representer_name 대표자명
+	 * @param address_detail 상세 지역
+	 * @param email_for_tax 이메일 주소
+	 * @param identify_number 사업자 등록번호
+	 * @param company_name 회사명
+	 * @param account_pk 특정 계정 고유값
+	 * @return 결과값
+	 * @throws IOException
+	 * @throws FileUploadException
+	 */
 	public String updateIdentity_authentication(String form,String user_type,MultipartFile image,String real_path,
 			String id,String representer_name,String address_detail,String email_for_tax,String identify_number,String company_name,int account_pk) throws IOException, FileUploadException
 	{		

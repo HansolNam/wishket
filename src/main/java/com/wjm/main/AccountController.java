@@ -49,6 +49,9 @@ public class AccountController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
 	   
+	private static final String _url = "wejumon.com/wjm/";
+	
+	
 	@Autowired
 	private AccountDao accountDao;
 	
@@ -175,7 +178,7 @@ public class AccountController {
 	        
 	        if(accountinfo.getSubscription() == 1)
 	        {
-			  result = sendMail("admin@wjm.com","gksthf1611@gmail.com","임시비밀번호는 "
+			  result = sendMail("admin@wjm.com",account.getEmail(),"임시비밀번호는 "
 					+newPassword+" 입니다.", "외주몬 임시 비밀번호 발송 메일입니다.");
 			logger.info("메일 : "+result);
 	        }
@@ -237,8 +240,8 @@ public class AccountController {
         
         if(accountinfo.getSubscription() == 1)
         {
-        	result = sendMail("admin@wjm.com","gksthf1611@gmail.com",
-        			"<a href='http://localhost:8080/wjm/accounts/"+account.getId()+"/"+account.getAuthorization_key()
+        	result = sendMail("admin@wjm.com",account.getEmail(),
+        			"<a href='wejumon.com/wjm/accounts/"+account.getId()+"/"+account.getAuthorization_key()
         			+"/signup_verify'>인증버튼</a>", "외주몬 재인증 메일입니다.");
     		logger.info("메일 : "+result);
         }
@@ -326,6 +329,7 @@ public class AccountController {
 		if(account.getAuthorization_key().equals(verification.trim()))
 		{
 			accountDao.updateAuthorized(account.getPk(), 1);
+			account.setAuthorized(1);
 			
 			//세션에 계정 정보 저장
 			request.getSession().invalidate();
@@ -611,8 +615,8 @@ public class AccountController {
 
 	        if(accountinfo.getSubscription() == 1)
 	        {
-	        	result = sendMail("admin@wjm.com","gksthf1611@gmail.com",
-	        			"<a href='http://localhost:8080/wjm/accounts/"+account.getId()+"/"+account.getAuthorization_key()
+	        	result = sendMail("admin@wjm.com",account.getEmail(),
+	        			"<a href='wejumon.com/wjm/accounts/"+account.getId()+"/"+account.getAuthorization_key()
 	        			+"/signup_verify'>인증버튼</a>", "외주몬 회원가입 인증 메일입니다.");
 			logger.info("메일 : "+result);
 	        }
@@ -1384,23 +1388,25 @@ public class AccountController {
 			{
 
 				accountInformationDao.updateIdentity_authentication(account.getPk(),"검수중");
+				
+				AccountInfo admin_account = accountDao.select("admin1");
+				AccountInformationInfo admin_accountinfo = accountInformationDao.select(admin_account.getPk());
 
 				//관리자 알림 메일
-				String result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", account.getId()+" 님이 신원 인증을 요청했습니다.", "외주몬 알림 메일입니다");
+				String result = sendMail("admin@wjm.com", admin_account.getEmail(), account.getId()+" 님이 신원 인증을 요청했습니다.", "외주몬 알림 메일입니다");
 				logger.info("이메일 전송 결과 = "+result);
 				
 				//관리자 번호
-				/*
 				String phone = "";
 			        	
-	        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+	        	if(Validator.hasValue(admin_accountinfo.getCellphone_num()))
 	        		phone = accountinfo.getCellphone_num().replace("-", "");
 	        	
 	        	if(Validator.hasValue(phone))
 	        	{
 	        		SMS.sendSMS(phone, phone,account.getId()+" 님이 신원 인증을 요청했습니다.", "");
 		    		logger.info("SMS 전송");
-	        	}*/
+	        	}
 			        
 				jObject.put("messages", "success");
 				jObject.put("path", "/wjm/accounts/settings/verify_identity/");

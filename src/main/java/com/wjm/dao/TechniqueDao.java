@@ -17,6 +17,15 @@ import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
 import com.wjm.models.TechniqueInfo;
 
+/**
+ * <pre>
+ * 1. 패키지명 : com.wjm.dao
+ * 2. 타입명 : TechniqueDao.java
+ * 3. 작성일 : 2015. 12. 11. 오후 7:02:56
+ * 4. 작성자 : Hansol
+ * 5. 설명 : 기술 technique 테이블 dao
+ * </pre>
+ */
 @Repository
 public class TechniqueDao implements TechniqueIDao {
 
@@ -32,10 +41,31 @@ public class TechniqueDao implements TechniqueIDao {
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
 	}
 
+	/**
+	 * <pre>
+	 * 1. 메소드명 : create
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:03:14
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 기술 생성
+	 * </pre>
+	 * @param account_pk 계정 고유값
+	 * @param name 기술이름
+	 * @param experience 경험
+	 * @param skill 숙련도
+	 */
 	public void create(int account_pk, String name, String experience, String skill)
 	{
 		jdbcTemplate.update("insert into technique (account_pk, name, experience, skill) values (?, ?, ?,?)", new Object[] { account_pk, name, experience, skill });
 	}
+	/**
+	 * <pre>
+	 * 1. 메소드명 : selectAll
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:04:12
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 모든 기술 리스트
+	 * </pre>
+	 * @return 기술 리스트
+	 */
 	public List<TechniqueInfo> selectAll()
 	{
 		return jdbcTemplate.query("select * from technique",new RowMapper<TechniqueInfo>() {
@@ -52,6 +82,16 @@ public class TechniqueDao implements TechniqueIDao {
 		    });
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : select
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:04:32
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 계정의 기술 리스트
+	 * </pre>
+	 * @param account_pk 특정 계정 고유값
+	 * @return 기술 리스트
+	 */
 	public List<TechniqueInfo> select(int account_pk)
 	{
 		List<TechniqueInfo> list = jdbcTemplate.query("select * from technique where account_pk = ?",
@@ -73,6 +113,16 @@ public class TechniqueDao implements TechniqueIDao {
 			return list;
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : select_skill
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:05:08
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 기술 반환
+	 * </pre>
+	 * @param pk 기술 고유값
+	 * @return 특정 기술 반환
+	 */
 	public TechniqueInfo select_skill(int pk)
 	{
 		List<TechniqueInfo> list = jdbcTemplate.query("select * from technique where pk = ?",
@@ -100,6 +150,19 @@ public class TechniqueDao implements TechniqueIDao {
 	}
 	
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : createSkill
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:06:00
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 기술 생성
+	 * </pre>
+	 * @param account_pk 특정 계정 고유값
+	 * @param name 기술 이름
+	 * @param experience 경험
+	 * @param skill 숙련도
+	 * @return 결과값
+	 */
 	public String createSkill(int account_pk, String name, String experience, String skill)
 	{
 		if(!Validator.hasValue(name))
@@ -137,6 +200,19 @@ public class TechniqueDao implements TechniqueIDao {
 		return "성공";
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : updateSkill
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:06:36
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 기술 갱신
+	 * </pre>
+	 * @param pk 기술 고유값
+	 * @param name 기술 이름
+	 * @param experience 경험
+	 * @param skill 숙련도
+	 * @return 결과값
+	 */
 	public String updateSkill(int pk, String name, String experience, String skill)
 	{
 		if(!Validator.hasValue(name))
@@ -174,6 +250,17 @@ public class TechniqueDao implements TechniqueIDao {
 				, new Object[] {name,experience,skill,pk });
 		return "성공";
 	}
+	/**
+	 * <pre>
+	 * 1. 메소드명 : updateRepresentative
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:07:15
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 대표 기술 갱신
+	 * </pre>
+	 * @param account_pk 계정 계정 고유값
+	 * @param pk_list 기술 고유값 리스트
+	 * @return 결과값
+	 */
 	public String updateRepresentative(int account_pk, String[] pk_list)
 	{
 		//해당 계정의 보유기술 리스트
@@ -222,10 +309,28 @@ public class TechniqueDao implements TechniqueIDao {
 		
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : deleteAll
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:07:58
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 모든 기술 삭제
+	 * </pre>
+	 */
 	public void deleteAll()
 	{
 		jdbcTemplate.update("delete from technique");
 	}
+	/**
+	 * <pre>
+	 * 1. 메소드명 : delete
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:08:04
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 기술 삭제
+	 * </pre>
+	 * @param pk 특정 기술 고유값
+	 * @return 결과값
+	 */
 	public String delete(int pk)
 	{
 		
@@ -233,6 +338,16 @@ public class TechniqueDao implements TechniqueIDao {
 		return "성공";
 	}
 	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : hasSkill
+	 * 2. 작성일 : 2015. 12. 11. 오후 7:08:18
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 계정의 기술 소유 여부
+	 * </pre>
+	 * @param account_pk 계정 고유값
+	 * @return true, false
+	 */
 	public boolean hasSkill(int account_pk)
 	{
 		List<TechniqueInfo> list = select(account_pk);

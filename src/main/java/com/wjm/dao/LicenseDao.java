@@ -21,6 +21,15 @@ import com.wjm.models.AccountInfo;
 import com.wjm.models.EducationInfo;
 import com.wjm.models.LicenseInfo;
 
+/**
+ * <pre>
+ * 1. 패키지명 : com.wjm.dao
+ * 2. 타입명 : LicenseDao.java
+ * 3. 작성일 : 2015. 12. 11. 오후 6:45:11
+ * 4. 작성자 : Hansol
+ * 5. 설명 : 자격증 license 테이블 DAO
+ * </pre>
+ */
 @Repository
 public class LicenseDao implements LicenseIDao {
 
@@ -36,10 +45,34 @@ public class LicenseDao implements LicenseIDao {
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
 	}
 
+	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : create
+	 * 2. 작성일 : 2015. 12. 11. 오후 6:45:24
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 자격증 생성 함수
+	 * </pre>
+	 * @param account_pk 계정 고유값
+	 * @param name 이름
+	 * @param publishing_office 발행기관
+	 * @param serial_num 고유번호
+	 * @param publication_date 발행일자
+ 	 */
 	public void create(int account_pk, String name, String publishing_office, String serial_num, String publication_date)
 	{
 		jdbcTemplate.update("insert into license (account_pk, name, publishing_office, serial_num, publication_date) values (?, ?, ?, ?, ?)", new Object[] {account_pk, name, publishing_office, serial_num, publication_date });
 	}
+	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : selectAll
+	 * 2. 작성일 : 2015. 12. 11. 오후 6:45:52
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 모든 자격증 리스트 반환
+	 * </pre>
+	 * @return 자격증 리스트
+	 */
 	public List<LicenseInfo> selectAll()
 	{
 		return jdbcTemplate.query("select * from license",new RowMapper<LicenseInfo>() {
@@ -55,6 +88,16 @@ public class LicenseDao implements LicenseIDao {
 	    	}
 	    });
 	}
+	/**
+	 * <pre>
+	 * 1. 메소드명 : select
+	 * 2. 작성일 : 2015. 12. 11. 오후 6:46:25
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 계정의 자격증 리스트
+	 * </pre>
+	 * @param account_pk 특정 계정 고유값
+	 * @return 자격증 리스트
+	 */
 	public List<LicenseInfo> select(int account_pk)
 	{
 		return jdbcTemplate.query("select * from license where account_pk = ? order by publication_date desc",
@@ -72,6 +115,16 @@ public class LicenseDao implements LicenseIDao {
 	    });
 	}
 
+	/**
+	 * <pre>
+	 * 1. 메소드명 : select_license
+	 * 2. 작성일 : 2015. 12. 11. 오후 6:46:42
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 자격증 반환
+	 * </pre>
+	 * @param pk 자격증 고유 값
+	 * @return 자격증 정보
+	 */
 	public LicenseInfo select_license(int pk)
 	{
 		List<LicenseInfo> license = jdbcTemplate.query("select * from license where pk = ?",
@@ -104,6 +157,23 @@ public class LicenseDao implements LicenseIDao {
 		
 	}
 
+	/**
+	 * <pre>
+	 * 1. 메소드명 : createLicense
+	 * 2. 작성일 : 2015. 12. 11. 오후 6:46:57
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 자격증 생성 함수
+	 * </pre>
+	 * @param account_pk 계정 고유값
+	 * @param title 이름
+	 * @param institution 기관
+	 * @param certification_number 자격번호
+	 * @param date_issued_year 발행 년
+	 * @param date_issued_month 발행 월
+	 * @param date_issued_day 발행 일
+	 * @return 결과값
+	 * @throws ParseException
+	 */
 	public String createLicense(int account_pk, String title, String institution, String certification_number, 
 			String date_issued_year, String date_issued_month, String date_issued_day) throws ParseException
 	{
@@ -182,6 +252,23 @@ public class LicenseDao implements LicenseIDao {
 	}
 
 
+	/**
+	 * <pre>
+	 * 1. 메소드명 : updateLicense
+	 * 2. 작성일 : 2015. 12. 11. 오후 6:47:58
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 자격증 정보 갱신
+	 * </pre>
+	 * @param pk 고유값
+	 * @param title 이름
+	 * @param institution 기관
+	 * @param certification_number 인증번호
+	 * @param date_issued_year 발행 년
+	 * @param date_issued_month 발행 월
+	 * @param date_issued_day 발행 일
+	 * @return 결과값
+	 * @throws ParseException
+	 */
 	public String updateLicense(int pk, String title, String institution, String certification_number, 
 			String date_issued_year, String date_issued_month, String date_issued_day) throws ParseException
 	{
@@ -260,10 +347,28 @@ public class LicenseDao implements LicenseIDao {
 		
 	}
 
+	/**
+	 * <pre>
+	 * 1. 메소드명 : deleteAll
+	 * 2. 작성일 : 2015. 12. 11. 오후 6:48:27
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 모든 자격 정보 삭제
+	 * </pre>
+	 */
 	public void deleteAll()
 	{
 		jdbcTemplate.update("delete from license");
 	}
+	/**
+	 * <pre>
+	 * 1. 메소드명 : delete
+	 * 2. 작성일 : 2015. 12. 11. 오후 6:48:34
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 자격 정보 삭제
+	 * </pre>
+	 * @param pk 자격 고유값
+	 * @return 결과값
+	 */
 	public String delete(int pk)
 	{
 		jdbcTemplate.update("delete from license where pk = ?", new Object[] { pk });

@@ -16,6 +16,15 @@ import com.wjm.idao.CommentIDao;
 import com.wjm.main.function.Validator;
 import com.wjm.models.CommentInfo;
 
+/**
+ * <pre>
+ * 1. 패키지명 : com.wjm.dao
+ * 2. 타입명 : CommentDao.java
+ * 3. 작성일 : 2015. 12. 11. 오후 5:17:44
+ * 4. 작성자 : Hansol
+ * 5. 설명 : 댓글 comment 테이블 DAO
+ * </pre>
+ */
 @Repository
 public class CommentDao implements CommentIDao {
 
@@ -31,10 +40,31 @@ public class CommentDao implements CommentIDao {
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
 	}
 
+	/**
+	 * <pre>
+	 * 1. 메소드명 : create
+	 * 2. 작성일 : 2015. 12. 11. 오후 5:17:56
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 댓글 생성 함수
+	 * </pre>
+	 * @param account_pk 계정 고유값
+	 * @param project_pk 프로젝트 고유값
+	 * @param content 댓글 내용
+	 */
 	public void create(int account_pk, int project_pk,String content)
 	{
 		jdbcTemplate.update("insert into comment (account_pk, project_pk, content) values (?, ?, ?)", new Object[] { account_pk,project_pk,content });
 	}
+	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : selectAll
+	 * 2. 작성일 : 2015. 12. 11. 오후 5:18:17
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 모든 댓글 리스트 반환
+	 * </pre>
+	 * @return 댓글 리스트
+	 */
 	public List<CommentInfo> selectAll()
 	{
 		return jdbcTemplate.query("select * from comment",new RowMapper<CommentInfo>() {
@@ -49,8 +79,17 @@ public class CommentDao implements CommentIDao {
 		    	}
 		    });
 	}
-	//select a.id, a.name, b.car from tbl1 a inner join tbl2 b on a.id = b.id
 
+	/**
+	 * <pre>
+	 * 1. 메소드명 : select
+	 * 2. 작성일 : 2015. 12. 11. 오후 5:19:12
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 프로젝트 고유값의 댓글 리스트
+	 * </pre>
+	 * @param project_pk 프로젝트 고유값
+	 * @return 댓글 리스트
+	 */
 	public List<CommentInfo> select(int project_pk)
 	{
 		List<CommentInfo> list = jdbcTemplate.query("select comment.*, account.id, account_information.profile_img "
@@ -81,10 +120,27 @@ public class CommentDao implements CommentIDao {
 		else
 			return list;
 	}	
+	/**
+	 * <pre>
+	 * 1. 메소드명 : deleteAll
+	 * 2. 작성일 : 2015. 12. 11. 오후 5:19:29
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 모든 댓글 삭제
+	 * </pre>
+	 */
 	public void deleteAll()
 	{
 		jdbcTemplate.update("delete from comment");
 	}
+	/**
+	 * <pre>
+	 * 1. 메소드명 : delete
+	 * 2. 작성일 : 2015. 12. 11. 오후 5:19:34
+	 * 3. 작성자 : Hansol
+	 * 4. 설명 : 특정 고유값의 댓글 삭제
+	 * </pre>
+	 * @param pk 고유값
+	 */
 	public void delete(int pk)
 	{
 		jdbcTemplate.update("delete from comment where pk = ?", new Object[] { pk });

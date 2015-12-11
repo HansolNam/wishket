@@ -142,7 +142,7 @@ public class AdminController {
 		List<ContractInfo> waitlist = contractDao.selectReadyProjectAdminLimit(5);
 		mv.addObject("waitlist",waitlist);
 		
-		List<NoticeInfo> noticelist = noticeDao.select_limit(3);
+		List<NoticeInfo> noticelist = noticeDao.select_limit_admin(3);
 		mv.addObject("noticelist",noticelist);
 
 		mv.setViewName("/admin/home");
@@ -233,9 +233,9 @@ public class AdminController {
 	        
 	        if(accountinfo.getSubscription() == 1)
 	        {
-
-			result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", project.getName()+" 프로젝트가 검수가 완료되어 지원자 모집중입니다.", "외주몬 알림 메일입니다");
-		logger.info("이메일 전송 결과 = "+result);
+	        	AccountInfo client_account = accountDao.select(project.getAccount_pk());
+	        	result = sendMail("admin@wjm.com", client_account.getEmail(), project.getName()+" 프로젝트가 검수가 완료되어 지원자 모집중입니다.", "외주몬 알림 메일입니다");
+	        	logger.info("이메일 전송 결과 = "+result);
 	        }
 	        if(accountinfo.getSms_subscription() == 1)
 	        {
@@ -291,9 +291,9 @@ public class AdminController {
 	        
 	        if(accountinfo.getSubscription() == 1)
 	        {
-
-	        	result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", project.getName()+" 프로젝트가 검수에 실패하였습니다. 관리자에게 문의해주세요.", "외주몬 알림 메일입니다");
-		logger.info("이메일 전송 결과 = "+result);
+	        	AccountInfo cleintaccount = accountDao.select(project.getAccount_pk());
+	        	result = sendMail("admin@wjm.com", cleintaccount.getEmail(), project.getName()+" 프로젝트가 검수에 실패하였습니다. 관리자에게 문의해주세요.", "외주몬 알림 메일입니다");
+	        	logger.info("이메일 전송 결과 = "+result);
 	        }
 	        if(accountinfo.getSms_subscription() == 1)
 	        {
@@ -1005,8 +1005,8 @@ public class AdminController {
 	        
 	        if(accountinfo.getSubscription() == 1)
 	        {
-
-		result = sendMail("admin@wjm.com","gksthf1611@gmail.com",contract.getPartners_id()+"님과의"
+	        	AccountInfo client_account = accountDao.select(contract.getClient_pk());
+	        	result = sendMail("admin@wjm.com",client_account.getEmail(),contract.getPartners_id()+"님과의"
 				+project.getName()+" 프로젝트 계약이 성사되지 못했습니다. 미팅 신청은 총 2 번 가능합니다.", "외주몬 알림 메일입니다.");
 		logger.info("클라이언트 메일 : "+result);
 	        }
@@ -1028,10 +1028,12 @@ public class AdminController {
 	        accountinfo = accountInformationDao.select(contract.getPartners_pk());
 	        if(accountinfo.getSubscription() == 1)
 	        {
-		//파트너스
-		result = sendMail("admin@wjm.com","gksthf1611@gmail.com",contract.getClient_id()+"님의 "
+	        	//파트너스
+	        	AccountInfo partners_account = accountDao.select(contract.getPartners_pk());
+
+	        	result = sendMail("admin@wjm.com",partners_account.getEmail(),contract.getClient_id()+"님의 "
 				+project.getName()+" 계약이 성사되지 못했습니다. 다른 프로젝트에 지원해주세요.", "외주몬 알림 메일입니다.");
-		logger.info("파트너스 메일 : "+result);
+	        	logger.info("파트너스 메일 : "+result);
 	        }
 
 	        if(accountinfo.getSms_subscription() == 1)
@@ -1188,9 +1190,10 @@ public class AdminController {
 	        
 	        if(accountinfo.getSubscription() == 1)
 	        {
-		result = sendMail("admin@wjm.com","gksthf1611@gmail.com",contract.getPartners_id()+"와의 계약이 성사되었습니다. 결제 대기중인 프로젝트의 결제를 완료하면 "
+	        	AccountInfo clientaccount = accountDao.select(contract.getClient_pk());
+	        	result = sendMail("admin@wjm.com",clientaccount.getEmail(),contract.getPartners_id()+"와의 계약이 성사되었습니다. 결제 대기중인 프로젝트의 결제를 완료하면 "
 				+project.getName()+" 프로젝트가 진행됩니다.", "외주몬 알림 메일입니다.");
-		logger.info("클라이언트 메일 : "+result);
+	        	logger.info("클라이언트 메일 : "+result);
 	        }
 	        if(accountinfo.getSms_subscription() == 1)
 	        {
@@ -1207,14 +1210,16 @@ public class AdminController {
 	        	}
 	        }
 	        
-		//파트너스
+	        //파트너스
 	        accountinfo = accountInformationDao.select(contract.getPartners_pk());
 
 	        if(accountinfo.getSubscription() == 1)
 	        {
-		result = sendMail("admin@wjm.com","gksthf1611@gmail.com",contract.getClient_id()+"와의 계약이 성사되었습니다. 클라이언트가 결제를 완료하면 "
+	        	AccountInfo partnersaccount = accountDao.select(contract.getPartners_pk());
+
+	        	result = sendMail("admin@wjm.com",partnersaccount.getEmail(),contract.getClient_id()+"와의 계약이 성사되었습니다. 클라이언트가 결제를 완료하면 "
 				+project.getName()+" 프로젝트가 진행됩니다.", "외주몬 알림 메일입니다.");
-		logger.info("파트너스 메일 : "+result);
+	        	logger.info("파트너스 메일 : "+result);
 	        }
 	        if(accountinfo.getSms_subscription() == 1)
 	        {
@@ -1285,8 +1290,9 @@ public class AdminController {
         
         if(accountinfo.getSubscription() == 1)
         {
-		String mail_result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", project.getName()+" 프로젝트의 대금이 지급되었습니다. 클라이언트를 평가해야 프로젝트가 완료됩니다.", "외주몬 알림 메일입니다");
-		logger.info("이메일 전송 결과1 = "+mail_result);
+        	AccountInfo partnersaccount = accountDao.select(partners_pk);
+        	String mail_result = sendMail("admin@wjm.com", partnersaccount.getEmail(), project.getName()+" 프로젝트의 대금이 지급되었습니다. 클라이언트를 평가해야 프로젝트가 완료됩니다.", "외주몬 알림 메일입니다");
+        	logger.info("이메일 전송 결과1 = "+mail_result);
         }
         if(accountinfo.getSms_subscription() == 1)
         {
@@ -1307,8 +1313,10 @@ public class AdminController {
 
         if(accountinfo.getSubscription() == 1)
         {
-        	String mail_result = sendMail("admin@wjm.com", "gksthf1611@gmail.com", project.getName()+" 프로젝트의 대금이 지급되었습니다. 파트너스를 평가해야 프로젝트가 완료됩니다.", "외주몬 알림 메일입니다");
-		logger.info("이메일 전송 결과2 = "+mail_result);
+        	AccountInfo clientaccount = accountDao.select(client_pk);
+
+        	String mail_result = sendMail("admin@wjm.com", clientaccount.getEmail(), project.getName()+" 프로젝트의 대금이 지급되었습니다. 파트너스를 평가해야 프로젝트가 완료됩니다.", "외주몬 알림 메일입니다");
+        	logger.info("이메일 전송 결과2 = "+mail_result);
         }
         if(accountinfo.getSms_subscription() == 1)
         {
@@ -1654,10 +1662,10 @@ public class AdminController {
         
         if(accountinfo.getSubscription() == 1)
         {
-		
-		String result = sendMail("admin@wjm.com","gksthf1611@gmail.com",addition.getTitle()+" 추가요청이 결제대기중입니다. 결제를 완료하면 진행중으로 상태가 변경됩니다."
+        	AccountInfo clientaccount = accountDao.select(contract.getClient_pk());
+        	String result = sendMail("admin@wjm.com",clientaccount.getEmail(),addition.getTitle()+" 추가요청이 결제대기중입니다. 결제를 완료하면 진행중으로 상태가 변경됩니다."
 				, "외주몬 알림 메일입니다.");
-		logger.info("클라이언트 메일 : "+result);
+        	logger.info("클라이언트 메일 : "+result);
         }
 
         if(accountinfo.getSms_subscription() == 1)
@@ -1738,10 +1746,11 @@ public class AdminController {
         
         if(accountinfo.getSubscription() == 1)
         {
-		
-		String result = sendMail("admin@wjm.com","gksthf1611@gmail.com",addition.getTitle()+" 추가요청이 취소되었습니다. "
+        	AccountInfo clientaccount = accountDao.select(contract.getClient_pk());
+
+        	String result = sendMail("admin@wjm.com",clientaccount.getEmail(),addition.getTitle()+" 추가요청이 취소되었습니다. "
 				, "외주몬 알림 메일입니다.");
-		logger.info("클라이언트 메일 : "+result);
+        	logger.info("클라이언트 메일 : "+result);
         }
 
         if(accountinfo.getSms_subscription() == 1)
