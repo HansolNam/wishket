@@ -1,8 +1,9 @@
 package com.wjm.main;
 
 import java.io.IOException;
-import java.net.URI;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +12,7 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1644,16 +1638,20 @@ public class ProjectController {
 	
 	/**
 	 * 댓글 달기 처리 페이지
+	 * @throws UnsupportedEncodingException 
 	 */
-	@RequestMapping(value = "/project/{name}/{pk}", method = RequestMethod.POST)
+	@RequestMapping(value = "/project/{name}/{pk}", method = RequestMethod.POST, produces="application/html;charset=UTF-8")
 	public ModelAndView ProjectController_comment_post(HttpServletRequest request,
  			HttpServletResponse response,
  			ModelAndView mv,
  			@PathVariable("name") String name,
  			@PathVariable("pk") int project_pk,
- 			@RequestParam("body") String body) {
+ 			@RequestParam("body") String body) throws UnsupportedEncodingException {
 		logger.info("comment POST Page");
 		
+		logger.info("name : "+name);
+		logger.info("pk : "+project_pk);
+
 		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
 		
 		if(account == null)
@@ -1723,7 +1721,7 @@ public class ProjectController {
 		List<CommentInfo> comment = commentDao.select(project_pk);
 		mv.addObject("comment",comment);
 		
-		mv.setViewName("redirect:/project/"+name+"/"+project_pk);
+		mv.setViewName("redirect:/project/"+URLEncoder.encode(name, "UTF-8")+"/"+project_pk);
 		return mv;
 		
 	}
