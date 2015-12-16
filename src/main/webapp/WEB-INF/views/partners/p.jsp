@@ -459,13 +459,15 @@ div.ui-tooltip {
 								if (portfolio == null) {
 							%>
 
-							<span class="p5-portfolio-no-img3"><div>
+							<span class="p5-portfolio-no-img3">
+								<div>
 									<div>
 										<div class="p5-no-partners-info-text">
 											등록된 <span class="p5-bold">'포트폴리오'</span>가 없습니다.
 										</div>
 									</div>
-								</div></span>
+								</div>
+							</span>
 							<%
 								} else {
 							%>

@@ -34,7 +34,7 @@
 		<beans:property name="driverClassName" value="com.mysql.jdbc.Driver"/>
 		<beans:property name="url" value="jdbc:mysql://localhost:3306/wjm?useUnicode=true&amp;characterEncoding=utf-8"/>
 		<beans:property name="username" value="root"/>
-		<beans:property name="password" value="wlapsxlr"/>
+		<beans:property name="password" value="Wjsdlfwn8520!"/>
 	</beans:bean>
 	
     <beans:bean id="mailSender" class ="org.springframework.mail.javamail.JavaMailSenderImpl" >

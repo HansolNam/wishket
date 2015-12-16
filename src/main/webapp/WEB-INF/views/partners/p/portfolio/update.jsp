@@ -167,7 +167,7 @@ div.ui-tooltip {
 							<span category-id="<%=portfolio.get(i).getCategoryL()%>"
 								subcategory-id="<%=portfolio.get(i).getCategoryM()%>"
 								style="margin-right: 34px; margin-bottom: 20px;"><img
-								src="https://wishket.blob.core.windows.net/thumbnail/gksthf16112_7ef9ce629b0de7c34026.png"><a
+								src="${pageContext.request.contextPath}/resources/upload/portfolio/<%=portfolio.get(i).getImg0()%>"><a
 								href="/wjm/partners/p/<%=this_account.getId()%>/portfolio/<%=portfolio.get(i).getPk()%>/"><span
 									class="p5-img-info"><div class="p5-img-brief-info">
 											<div class="p5-img-title text-right"><%=portfolio.get(i).getName()%></div>
@@ -453,69 +453,6 @@ function allignComponent(wrapperId) {
 	}
 
 }
-</script>
-<script type="text/javascript">
-	$(function() {
-		wishket.init();
-
-		svgeezy.init(false, 'png');
-	});
-</script>
-<script>
-	$(document).ready(
-	function($) {
-		var p5TotalSubNavigationFlag = 0;
-
-		if ($(window).width() >= 1200) {
-			$('.p5-side-nav-deactive').css('display', 'none');
-		} else {
-			$('.p5-side-nav-active').css('display', 'none');
-			$('.p5-side-nav-deactive').css('display', 'block');
-		}
-
-		$('.content-inner').on('click','.p5-side-nav-active-btn',
-						function() {
-							$('.p5-side-nav-active').css('display',
-									'none');
-							$('.p5-side-nav-deactive').css(
-									'display', 'block');
-						});
-
-		$('.content-inner').on(
-				'click',
-				'.p5-side-nav-deactive-btn',
-				function() {
-					$('.p5-side-nav-active')
-							.css('display', 'block');
-					$('.p5-side-nav-deactive').css('display',
-							'none');
-				});
-
-		$(window).scroll(
-				function() {
-					if ($(window).scrollTop() > 87
-							&& p5TotalSubNavigationFlag === 0) {
-						setTimeout(function() {
-							$('#p5-total-sub-navigation-wrapper')
-									.removeClass('hide fadeOut');
-							$('#p5-total-sub-navigation-wrapper')
-									.addClass('fadeInDown');
-						}, 200);
-						flag = 1;
-
-					} else if ($(window).scrollTop() <= 87) {
-						p5TotalSubNavigationFlag = 0;
-						$('#p5-total-sub-navigation-wrapper')
-								.removeClass('fadeInDown');
-						$('#p5-total-sub-navigation-wrapper')
-								.addClass('fadeOut');
-						setTimeout(function() {
-							$('#p5-total-sub-navigation-wrapper')
-									.addClass('hide');
-						}, 200);
-					}
-				});
-	});
 </script>
 </body>
 </html>

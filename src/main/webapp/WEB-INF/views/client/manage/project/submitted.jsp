@@ -183,7 +183,8 @@
 						<div class="form-group">
 							<div class="btn-wrapper-right">
 								<input class="btn btn-warning btn-submit" type="button" id="project-delete-btn"
-									value="예" /><a aria-hidden="true" class="btn btn-cancel"
+									value="예" />
+									<a aria-hidden="true" class="btn btn-cancel"
 									data-dismiss="modal">아니오</a>
 							</div>
 						</div>
@@ -192,13 +193,6 @@
 			</div>
 		</div>
 	</div>
-	<script type="text/javascript">
-  $(function() {
-    wishket.init();
-    
-    svgeezy.init(false, 'png');
-  });
-</script>
 	<script>
 
 $( document ).ready(function($) {
@@ -246,43 +240,6 @@ $( document ).ready(function($) {
 		    }
 		});
     });
-
-	if ( $( window ).width() >= 1200 ) {
-		$( '.p5-side-nav-deactive' ).css( 'display', 'none' );
-	} else  {
-		$( '.p5-side-nav-active' ).css( 'display', 'none' );
-		$( '.p5-side-nav-deactive' ).css( 'display', 'block');
-	}
-
-	$('.content-inner').on('click', '.p5-side-nav-active-btn', function () {
-		$('.p5-side-nav-active').css( 'display', 'none' );
-		$('.p5-side-nav-deactive').css('display','block');
-	});
-
-	$('.content-inner').on('click', '.p5-side-nav-deactive-btn', function () {
-		$('.p5-side-nav-active').css( 'display', 'block' );
-		$('.p5-side-nav-deactive').css('display','none');
-	});
-
-
-    $( window ).scroll ( function () {
-		if ( $(window).scrollTop() > 87 && p5TotalSubNavigationFlag === 0) {
-			setTimeout(function() {
-				$('#p5-total-sub-navigation-wrapper').removeClass('hide fadeOut');
-				$('#p5-total-sub-navigation-wrapper').addClass('fadeInDown');
-			}, 200 );
-			flag = 1;
-
-
-		} else if ( $(window).scrollTop() <= 87 ){
-			p5TotalSubNavigationFlag = 0;
-			$('#p5-total-sub-navigation-wrapper').removeClass('fadeInDown');
-			$('#p5-total-sub-navigation-wrapper').addClass('fadeOut');
-			setTimeout(function() {
-				$('#p5-total-sub-navigation-wrapper').addClass('hide');
-			}, 200 );
-		}
-	});
 });
 
 </script>

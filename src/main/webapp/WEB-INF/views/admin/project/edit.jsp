@@ -176,7 +176,7 @@
 								<div class="control-wrapper">
 									<textarea autocomplete="off" class="form-control" cols="40"
 										id="description" name="description"
-										required="" rows="30">${description_val}</textarea>
+										required="" rows="30"><%=project.getDescription() %></textarea>
 									<span class="help-block"><p class="text-danger">
 											<span class="label label-danger">주의</span> 이메일, 전화번호 등을 게시하는
 											경우 서비스 이용에 제재를 받을 수 있습니다.
@@ -408,6 +408,9 @@
 	$(document).ready(function(){
 
 		$( "#post_a_job_id" ).click(function() {
+
+			if(confirm("프로젝트를 수정하시겠습니까?") == false)
+				return;
 			
 			$("#status").val("프로젝트 수정");
 			$.ajax({

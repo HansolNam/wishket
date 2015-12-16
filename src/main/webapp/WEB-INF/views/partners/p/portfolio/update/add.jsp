@@ -223,7 +223,9 @@ div.ui-tooltip {
 									<div class="p5-portfoilo-img-control-wrapper">
 										<div>
 											<span class="p5-img-name" id="p5-image-name-1">이미지를
-												등록해주세요.</span> <span class="p5-custom-file-type-input-wrapper"><button
+												등록해주세요.</span> 
+												<span class="p5-custom-file-type-input-wrapper">
+												<button
 													class="btn btn-primary p5-custom-file-type-front"
 													type="button">
 													<i class="fa fa-plus"></i> 이미지 변경
@@ -351,6 +353,7 @@ div.ui-tooltip {
         var slug = split[5];
         var portfolioTitle='';
         var tagCnt=0;
+
 
 
         //일정 구하는 부분
@@ -563,8 +566,54 @@ div.ui-tooltip {
 
             var particiPationValid = $('#p5-form-participation-rate').val();
             var img1DescriptionValid = $('#p5-img1-description').val().length;
-            var img2DescriptionValid = $('#p5-img1-description').val().length;
-            var img3DescriptionValid = $('#p5-img1-description').val().length;
+            var img2DescriptionValid = $('#p5-img2-description').val().length;
+            var img3DescriptionValid = $('#p5-img3-description').val().length;
+            
+            var file1 = $("#p5-file-btn-1")[0].files[0];
+            var file2 = $("#p5-file-btn-2")[0].files[0];
+            var file3 = $("#p5-file-btn-3")[0].files[0];
+			
+            if(file1 != null)
+           	{
+	            if(file1.fileSize > 8*1024*1024)
+	           	{
+	        		$('#p5-file-btn-1').parent().parent().parent().parent().addClass('has-error');
+	                $('#p5-file-btn-1').parent().parent().parent().parent().append('<span class="help-block form-error"><i class="fa fa-exclamation-circle"></i>이미지의 용량은 최대 8MB입니다.</span>');
+	           	}
+	            
+	            if(file1.name.length > 30)
+            	{
+	            	$('#p5-file-btn-1').parent().parent().parent().parent().addClass('has-error');
+	                $('#p5-file-btn-1').parent().parent().parent().parent().append('<span class="help-block form-error"><i class="fa fa-exclamation-circle"></i>이미지의명은 최대 30자입니다.</span>');
+            	}
+           	}
+            if(file2 != null)
+           	{
+	           if(file2.fileSize > 8*1024*1024)
+	          	{
+	       		$('#p5-file-btn-2').parent().parent().parent().parent().addClass('has-error');
+	               $('#p5-file-btn-2').parent().parent().parent().parent().append('<span class="help-block form-error"><i class="fa fa-exclamation-circle"></i>이미지의 용량은 최대 8MB입니다.</span>');
+	          	}
+	            
+	            if(file2.name.length > 30)
+           		{
+	            	$('#p5-file-btn-2').parent().parent().parent().parent().addClass('has-error');
+	                $('#p5-file-btn-2').parent().parent().parent().parent().append('<span class="help-block form-error"><i class="fa fa-exclamation-circle"></i>이미지의명은 최대 30자입니다.</span>');
+           		}
+           	}
+            if(file3 != null)
+           	{
+	            if(file3.fileSize > 8*1024*1024)
+	           	{
+	        		$('#p5-file-btn-3').parent().parent().parent().parent().addClass('has-error');
+	                $('#p5-file-btn-3').parent().parent().parent().parent().append('<span class="help-block form-error"><i class="fa fa-exclamation-circle"></i>이미지의 용량은 최대 8MB입니다.</span>');
+	           	}
+	            if(file3.name.length > 30)
+           		{
+	            	$('#p5-file-btn-3').parent().parent().parent().parent().addClass('has-error');
+	                $('#p5-file-btn-3').parent().parent().parent().parent().append('<span class="help-block form-error"><i class="fa fa-exclamation-circle"></i>이미지의명은 최대 30자입니다.</span>');
+           		}
+           	}
             var validation = true;
 
             //var fd = new FormData();
@@ -604,6 +653,10 @@ div.ui-tooltip {
                     $('#p5-form-begin-month').parent().addClass('has-error');
                     $('#p5-form-end-year').parent().addClass('has-error');
                     $('#p5-form-end-month').parent().addClass('has-error');
+                    
+                    $('#p5-form-end-month').parent().append('<span class="help-block form-error"><i class="fa fa-exclamation-circle"></i>시작일자와 종료일자를 올바르게 선택해주세요.</span>');
+
+                    
                     validation = false;
                 }
             }
@@ -615,6 +668,10 @@ div.ui-tooltip {
                 $('#p5-form-begin-month').parent().addClass('has-error');
                 $('#p5-form-end-year').parent().addClass('has-error');
                 $('#p5-form-end-month').parent().addClass('has-error');
+                
+                $('#p5-form-end-month').parent().append('<span class="help-block form-error"><i class="fa fa-exclamation-circle"></i>시작일자와 종료일자를 올바르게 선택해주세요.</span>');
+
+                
                 validation = false;
             }
 
@@ -746,57 +803,6 @@ div.ui-tooltip {
         return true;
     }
 </script>
-	<script type="text/javascript">
-  $(function() {
-    wishket.init();
-    
-    svgeezy.init(false, 'png');
-  });
-</script>
-	<script>
 
-$( document ).ready(function($) {
-    var p5TotalSubNavigationFlag = 0;
-
-
-	if ( $( window ).width() >= 1200 ) {
-		$( '.p5-side-nav-deactive' ).css( 'display', 'none' );
-	} else  {
-		$( '.p5-side-nav-active' ).css( 'display', 'none' );
-		$( '.p5-side-nav-deactive' ).css( 'display', 'block');
-	}
-
-	$('.content-inner').on('click', '.p5-side-nav-active-btn', function () {
-		$('.p5-side-nav-active').css( 'display', 'none' );
-		$('.p5-side-nav-deactive').css('display','block');
-	});
-
-	$('.content-inner').on('click', '.p5-side-nav-deactive-btn', function () {
-		$('.p5-side-nav-active').css( 'display', 'block' );
-		$('.p5-side-nav-deactive').css('display','none');
-	});
-
-
-    $( window ).scroll ( function () {
-		if ( $(window).scrollTop() > 87 && p5TotalSubNavigationFlag === 0) {
-			setTimeout(function() {
-				$('#p5-total-sub-navigation-wrapper').removeClass('hide fadeOut');
-				$('#p5-total-sub-navigation-wrapper').addClass('fadeInDown');
-			}, 200 );
-			flag = 1;
-
-
-		} else if ( $(window).scrollTop() <= 87 ){
-			p5TotalSubNavigationFlag = 0;
-			$('#p5-total-sub-navigation-wrapper').removeClass('fadeInDown');
-			$('#p5-total-sub-navigation-wrapper').addClass('fadeOut');
-			setTimeout(function() {
-				$('#p5-total-sub-navigation-wrapper').addClass('hide');
-			}, 200 );
-		}
-	});
-});
-
-</script>
 </body>
 </html>

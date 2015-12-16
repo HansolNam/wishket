@@ -61,7 +61,7 @@
 					<div class="user-name-tag">
 						<h3 class="user-name-tag-heading">클라이언트</h3>
 						<div class="user-name-tag-body">
-							<img alt="gksthf16111 사진" class="img-circle user-img"
+							<img alt="<%=account.getId() %> 사진" class="img-circle user-img"
 								src="${pageContext.request.contextPath}/resources/upload/profile_img/${profile}" />
 							<h4 class="username"><%=account.getId() %></h4>
 							<a class="profile-setting" href="/wjm/accounts/settings/profile/">기본
@@ -110,7 +110,7 @@
 						<section class="project-unit">
 						<section class="project-unit-heading">
 						<h4 class="project-title">
-							<a ><%=projectlist.get(i).getName() %></a>
+							<%=projectlist.get(i).getName() %>
 						</h4>
 						</section>
 						<section class="project-unit-body">
@@ -153,57 +153,6 @@
 		<div id="push"></div>
 	</div>
 	<jsp:include page="../../../footer.jsp" flush="false" />
-	<script type="text/javascript">
-  $(function() {
-    wishket.init();
-    
-    svgeezy.init(false, 'png');
-  });
-</script>
-	<script>
 
-$( document ).ready(function($) {
-    var p5TotalSubNavigationFlag = 0;
-
-
-	if ( $( window ).width() >= 1200 ) {
-		$( '.p5-side-nav-deactive' ).css( 'display', 'none' );
-	} else  {
-		$( '.p5-side-nav-active' ).css( 'display', 'none' );
-		$( '.p5-side-nav-deactive' ).css( 'display', 'block');
-	}
-
-	$('.content-inner').on('click', '.p5-side-nav-active-btn', function () {
-		$('.p5-side-nav-active').css( 'display', 'none' );
-		$('.p5-side-nav-deactive').css('display','block');
-	});
-
-	$('.content-inner').on('click', '.p5-side-nav-deactive-btn', function () {
-		$('.p5-side-nav-active').css( 'display', 'block' );
-		$('.p5-side-nav-deactive').css('display','none');
-	});
-
-
-    $( window ).scroll ( function () {
-		if ( $(window).scrollTop() > 87 && p5TotalSubNavigationFlag === 0) {
-			setTimeout(function() {
-				$('#p5-total-sub-navigation-wrapper').removeClass('hide fadeOut');
-				$('#p5-total-sub-navigation-wrapper').addClass('fadeInDown');
-			}, 200 );
-			flag = 1;
-
-
-		} else if ( $(window).scrollTop() <= 87 ){
-			p5TotalSubNavigationFlag = 0;
-			$('#p5-total-sub-navigation-wrapper').removeClass('fadeInDown');
-			$('#p5-total-sub-navigation-wrapper').addClass('fadeOut');
-			setTimeout(function() {
-				$('#p5-total-sub-navigation-wrapper').addClass('hide');
-			}, 200 );
-		}
-	});
-});
-
-</script>
 </body>
 </html>

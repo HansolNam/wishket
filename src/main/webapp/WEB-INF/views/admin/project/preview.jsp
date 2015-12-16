@@ -162,11 +162,11 @@
 				<div class="inner">
 					<div class="project-action-btn-group">
 						<a
-							class="btn btn-large btn-partners btn-project-application btn-block"
+							class="btn btn-large btn-partners btn-project-application btn-block" id="id_success"
 							href="/wjm/admin/project/<%=project.getName()%>/<%=project.getPk()%>/exam/success/">프로젝트 검수 완료하기</a>
 						<hr>
 						<a
-							class="btn btn-large btn-project-application btn-default btn-block"
+							class="btn btn-large btn-project-application btn-default btn-block"  id="id_fail"
 							href="/wjm/admin/project/<%=project.getName()%>/<%=project.getPk()%>/exam/fail/" style="margin-bottom: 0;"><span
 							id="interest_action_text">프로젝트 등록 거부하기</span></a>
 						<hr>
@@ -182,5 +182,28 @@
 	</div>
 	<jsp:include page="../../footer.jsp" flush="false" />
 
+	<script type="text/javascript">
+
+	$(document).ready(function(){
+
+		$( "#id_success" ).click(function() {
+
+			if(confirm("프로젝트를 검수완료하시겠습니까?") == false)
+				return false;
+			
+			return true;
+		
+			});
+
+		$( "#id_fail" ).click(function() {
+
+			if(confirm("프로젝트를 등록 거부하시겠습니까?") == false)
+				return false;
+			
+			return true;
+		
+			});
+		});
+	</script>
 </body>
 </html>

@@ -481,6 +481,9 @@ div.backLayer {
 
 		$( "#post_a_job_id" ).click(function() {
 			
+			if(confirm("프로젝트를 등록하시겠습니까?") == false)
+				return;
+			
 			$("#status").val("프로젝트 등록");
 			$.ajax({
 				url : "/wjm/project/add/detail/",
@@ -525,6 +528,10 @@ div.backLayer {
 		
 		$( "#save_for_later_id" ).click(function() {
 			$("#status").val("임시저장");
+
+			
+			if(confirm("프로젝트를 임시저장하시겠습니까?") == false)
+				return;
 
 			$.ajax({
 				url : "/wjm/project/add/detail",
@@ -857,6 +864,7 @@ div.backLayer {
     	getCategoryM();
         var check = document.getElementById('turnkey-box');
         check.className = "turnkey-checker turnkey-none";
+		$('#sub_category').next().children().first().html("세부 카테고리");
     });
 
     $(function () {
@@ -967,6 +975,8 @@ div.backLayer {
     
 $('#address_sido').on('change', function() {
 	 getAddress();
+		$('#sigungu').next().children().first().html("시, 군, 구");
+
 });
 
     $(function() {

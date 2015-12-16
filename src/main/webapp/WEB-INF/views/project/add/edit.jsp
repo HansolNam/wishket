@@ -188,7 +188,7 @@ div.backLayer {
 								<div class="control-wrapper">
 									<textarea autocomplete="off" class="form-control" cols="40"
 										id="description" name="description"
-										required="" rows="30">${description_val}</textarea>
+										required="" rows="30"><%=project.getDescription() %></textarea>
 									<span class="help-block"><p class="text-danger">
 											<span class="label label-danger">주의</span> 이메일, 전화번호 등을 게시하는
 											경우 서비스 이용에 제재를 받을 수 있습니다.
@@ -471,6 +471,10 @@ div.backLayer {
 		$('#viewLoading').hide();
 
 		$( "#post_a_job_id" ).click(function() {
+
+			if(confirm("프로젝트를 등록하시겠습니까?") == false)
+				return;
+			
 			// 페이지가 로딩될 때 'Loading 이미지'를 숨긴다.
 			$('#viewLoading').hide();
 			
@@ -520,6 +524,9 @@ div.backLayer {
 		$( "#save_for_later_id" ).click(function() {
 			$("#status").val("임시저장");
 
+			if(confirm("프로젝트를 임시저장하시겠습니까?") == false)
+				return;
+			
 			$.ajax({
 				url : "/wjm/project/add/edit/<%=project.getPk()%>",
 				type : "POST",
@@ -931,6 +938,8 @@ div.backLayer {
 		$('#address_sido').on('change', function() {
 			sigungu_val = "";
 			 getAddress();
+			$('#sigungu').next().children().first().html("시, 군, 구");
+
 		});
 		
 	    function getAddress()
