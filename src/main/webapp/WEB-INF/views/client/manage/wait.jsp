@@ -110,7 +110,7 @@ div.backLayer {
 									<td><%=waitlist.get(i).getBudget() %> 원</td>
 									<td><%=waitlist.get(i).getTerm() %> 일</td>
 									<td><%out.print(Time.toString3(waitlist.get(i).getReg_date()));%></td>
-									<td><a class='btn btn-sm btn-client' href="/wjm/client/payment/<%=waitlist.get(i).getPk() %>/">결제</a></td>
+									<td><a id="pay-btn" class='btn btn-sm btn-client ' href="/wjm/client/payment/<%=waitlist.get(i).getPk() %>/">결제</a></td>
 									
 								</tr>
 								<%
@@ -159,7 +159,7 @@ div.backLayer {
 									<td><%=additionlist.get(i).getTerm() %> 일</td>
 									<td><%out.print(Time.toString3(additionlist.get(i).getReg_date()));%></td>
 									<td>											
-									<button id="pay-btn" class='btn btn-sm btn-client' addition-pk = "<%=additionlist.get(i).getPk()%>">결제</button>				
+									<button id="addition-pay-btn" class='btn btn-sm btn-client' addition-pk = "<%=additionlist.get(i).getPk()%>">결제</button>				
 									</td>
 								</tr>
 								<%
@@ -229,7 +229,17 @@ div.backLayer {
 		    		'top':top
 		    	});
 			}
+			
 			$( "#pay-btn" ).click(function() {
+				if(confirm("정말 결제하시겠습니까?") == false)
+					return false;
+				
+				return true;
+				
+			});
+
+			
+			$( "#addition-pay-btn" ).click(function() {
 				
 				if(confirm("정말 결제하시겠습니까?") == true)
 					{

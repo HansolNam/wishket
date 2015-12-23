@@ -450,10 +450,15 @@ public class ApplicantDao implements ApplicantIDao {
 			logger.info("지원내용 : "+body);
 		}
 		
-		int hasPortfolio = 0;
+		int hasPortfolio;
 		
 		if(has_related_portfolio.equals("True"))
 			hasPortfolio = 1;
+		else if(has_related_portfolio.equals("False"))
+			hasPortfolio = 0;
+		else
+			return "관련 포트폴리오 여부를 선택해주세요.";
+
 		
 		int[] portfolio = new int[related_portfolio.length];
 		
@@ -483,7 +488,7 @@ public class ApplicantDao implements ApplicantIDao {
 			}
 			else if(!Validator.isValidLength(related_description, 1, 5000))
 			{
-				return "포트폴리오 설명은 최대 5000자리까지 가능합니다.";
+				return "포트폴리오 설명은 최대 5000자까지 가능합니다.";
 			}
 			else
 			{

@@ -172,7 +172,7 @@ div.backLayer {
 									<span class="help-block">희망 금액을 원 단위로 입력해 주세요. (예
 										100,000,000)<br />
 									<p class="text-danger">
-											<span class="label label-danger">주의</span> 위시켓 수수료 10%를 포함한
+											<span class="label label-danger">주의</span> 외주몬 수수료 10%를 포함한
 											가격입니다.
 										</p>
 									</span>
@@ -515,7 +515,12 @@ div.backLayer {
         
         $('.content-inner').on('click', "#apply", function(event){
         	 event.preventDefault();
-             
+        	 
+        	 if(confirm("프로젝트에 지원하시겠습니까?") == false)
+ 				return false;
+        	 
+        	 
+        	 
              $.ajax({
      		    type: "POST",
      		    url: "/wjm/project/<%=project.getName() %>/<%=project.getPk() %>/proposal/apply",

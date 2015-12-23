@@ -853,4 +853,115 @@ public class ClientController {
 		return mv;
 	}
 	
+	/**
+	 * 클라이언트 정보
+	 */
+	@RequestMapping(value = "/client/info", method = RequestMethod.GET)
+	public ModelAndView ClientController_info(HttpServletRequest request, ModelAndView mv) {
+		logger.info("클라이언트 정보 페이지");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null)
+		{
+			mv.setViewName("redirect:/accounts/login");
+			return mv;
+		}
+		if(!AccountCheck(account))
+		{
+			mv.setViewName("redirect:/error/404error");
+			return mv;
+		}
+		
+		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
+
+		AccountInformationInfo accountinfo = accountInformationDao.select(account.getPk());
+		mv.addObject("accountinfo", accountinfo);
+
+		return mv;
+	}
+	
+
+	/**
+	 * 클라이언트 정보 수정 페이지
+	 */
+	@RequestMapping(value = "/client/info/update", method = RequestMethod.GET)
+	public ModelAndView ClientController_info_update(HttpServletRequest request, ModelAndView mv) {
+		logger.info("클라이언트 정보 수정 페이지");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null)
+		{
+			mv.setViewName("redirect:/accounts/login");
+			return mv;
+		}
+		if(!AccountCheck(account))
+		{
+			mv.setViewName("redirect:/error/404error");
+			return mv;
+		}
+		
+		mv.addObject("profile",accountInformationDao.getProfileImg(account.getPk()));
+
+		AccountInformationInfo accountinfo = accountInformationDao.select(account.getPk());
+		mv.addObject("accountinfo", accountinfo);
+
+		return mv;
+	}
+	
+
+	/**
+	 * 클라이언트 정보 수정 처리 페이지
+	 * 
+	 */		
+	@RequestMapping(value = "/client/info/update", method = RequestMethod.POST, produces="application/json;charset=UTF-8")
+		@ResponseBody
+		public String ClientController_info_update_post(HttpServletRequest request, 
+				HttpServletResponse response,
+				@RequestParam("company_description") String company_description) 
+		 {
+			logger.info("/client/info/update AJAX");
+
+			
+			logger.info("company_description = "+company_description);
+			
+			JSONObject jObject = new JSONObject();
+			
+			AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+			if(account == null)
+			{
+				jObject.put("messages", "error");
+				jObject.put("path", "/wjm/accounts/login");
+				logger.info(jObject.toString());
+				return jObject.toString();
+			}
+			if(!AccountCheck(account))
+			{
+				jObject.put("messages", "error");
+				jObject.put("path", "/wjm/accounts/login");
+
+				logger.info(jObject.toString());
+				return jObject.toString();
+			}
+			
+			if(!Validator.hasValue(company_description))
+			{
+				jObject.put("messages", "소개를 입력해주세요");
+				logger.info(jObject.toString());
+				return jObject.toString();
+			}
+			else if(!Validator.isValidLength(company_description,1,150))
+			{
+				jObject.put("messages", "소개는 최대 150자입니다.");
+				logger.info(jObject.toString());
+				return jObject.toString();
+			}
+			
+			accountInformationDao.updateIntroduction(account.getPk(), company_description);
+			
+			jObject.put("path","/wjm/client/info");
+			jObject.put("messages", "success");
+			logger.info(jObject.toString());
+
+			return jObject.toString();
+		}
 }

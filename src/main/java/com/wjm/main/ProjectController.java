@@ -1528,7 +1528,7 @@ public class ProjectController {
 			@RequestParam("estimated_budget") String estimated_budget,
 			@RequestParam("estimated_term") String estimated_term, 
 			@RequestParam("body") String body,
-			@RequestParam("has_related_portfolio") String has_related_portfolio,
+			@RequestParam(value = "has_related_portfolio", required = false, defaultValue = "") String has_related_portfolio,
 			@RequestParam(value = "related_portfolio", required = false) String[] related_portfolio,
 			@RequestParam(value = "related_description", required = false, defaultValue = "") String related_description
 			) throws ClientProtocolException, URISyntaxException, IOException {

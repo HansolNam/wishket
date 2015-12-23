@@ -325,7 +325,7 @@
 					%>
 					<div class="project-action-btn-group">
 						<a
-							class="btn btn-large btn-partners btn-project-application btn-block"
+							class="btn btn-large btn-partners btn-project-application btn-block"  id="id_apply"
 							href="/wjm/project/<%=project.getName()%>/<%=project.getPk()%>/proposal/apply/">프로젝트
 							지원하기</a>
 						<hr>
@@ -527,5 +527,19 @@
 		}
 	</script>
 	
+	<script type="text/javascript">
+
+	$(document).ready(function(){
+
+		$( "#id_apply" ).click(function() {
+
+			if(confirm("프로젝트에 지원하시겠습니까?") == false)
+				return false;
+			
+			return true;
+		
+			});
+		});
+	</script>
 </body>
 </html>

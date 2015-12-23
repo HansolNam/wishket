@@ -103,8 +103,8 @@
 										out.print(progresslist.get(i).getTerm() - remain*(-1)+"일 초과");
 									
 									%>/<%=progresslist.get(i).getTerm() %>일</td>
-									<td><a class='btn btn-sm btn-client' href='/wjm/admin/project/complete/success/<%=progresslist.get(i).getProject_pk()%>/<%=progresslist.get(i).getClient_pk()%>/<%=progresslist.get(i).getPartners_pk()%>'>완료</a></td>
-									<td><a class='btn btn-sm btn-client' href='/wjm/admin/project/complete/fail/<%=progresslist.get(i).getProject_pk()%>/<%=progresslist.get(i).getClient_pk()%>/<%=progresslist.get(i).getPartners_pk()%>'>취소</a></td>
+									<td><a id = "success-btn" class='btn btn-sm btn-client' href='/wjm/admin/project/complete/success/<%=progresslist.get(i).getProject_pk()%>/<%=progresslist.get(i).getClient_pk()%>/<%=progresslist.get(i).getPartners_pk()%>'>완료</a></td>
+									<td><a id = "fail-btn" class='btn btn-sm btn-client' href='/wjm/admin/project/complete/fail/<%=progresslist.get(i).getProject_pk()%>/<%=progresslist.get(i).getClient_pk()%>/<%=progresslist.get(i).getPartners_pk()%>'>취소</a></td>
 									
 								</tr>
 								<%
@@ -123,5 +123,23 @@
 		<div id="push"></div>
 	</div>
 	<jsp:include page="../footer.jsp" flush="false" />
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$( "#success-btn" ).click(function() {
+				if(confirm("정말 완료하시겠습니까?") == false)
+					return false;
+				
+				return true;
+				
+			});
+			$( "#fail-btn" ).click(function() {
+				if(confirm("정말 취소하시겠습니까?") == false)
+					return false;
+				
+				return true;
+				
+			});
+		});
+	</script>
 </body>
 </html>

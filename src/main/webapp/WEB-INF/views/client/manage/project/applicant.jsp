@@ -117,7 +117,7 @@ div.backLayer {
 								if(applicant.get(i).getContract() == null)
 								{
 							%>
-							<button class="btn btn-sm btn-client pull-right meeting-btn" project-pk="<%=applicant.get(i).getProject_pk() %>"
+							<button class="btn btn-sm btn-client pull-right meeting-btn" id="id_meeting" project-pk="<%=applicant.get(i).getProject_pk() %>"
 							applicant-pk="<%=applicant.get(i).getAccount_pk() %>" value="1">미팅 신청하기</button>
 							<%
 								}
@@ -289,6 +289,9 @@ $( document ).ready(function($) {
         
         $('[name="applicant_pk"]').val(applicantPk);
         $('[name="project_pk"]').val(projectPk);
+        
+        if(confirm("미팅 신청 하시겠습니까?") == false)
+			return false;
         
         $.ajax({
 		    type: "POST",

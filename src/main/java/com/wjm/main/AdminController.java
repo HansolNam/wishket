@@ -1337,6 +1337,102 @@ public class AdminController {
 		return mv;
 	}
 	
+	/**
+	 * 승인 후 프로젝트 실패 처리
+	 * @throws IOException 
+	 * @throws URISyntaxException 
+	 * @throws ClientProtocolException 
+	 */
+	@RequestMapping(value = "/admin/project/complete/fail/{project_pk}/{client_pk}/{partners_pk}", method = RequestMethod.GET)
+	public ModelAndView AdminController_project__complete_fail_post(HttpServletRequest request,
+			@PathVariable("project_pk") int project_pk, 
+			@PathVariable("client_pk") int client_pk, 
+			@PathVariable("partners_pk") int partners_pk, 
+			ModelAndView mv) throws ClientProtocolException, URISyntaxException, IOException {
+		
+		logger.info("/admin/project/complete/fail/{project_pk}/{client_pk}/{partners_pk} post page");
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+		if(account == null) { mv.setViewName("redirect:/accounts/login"); return mv;}
+		else if(!account.getAccount_type().equals("admin"))  { mv.setViewName("redirect:/index"); return mv;}
+		
+		logger.info("project_pk = "+project_pk);
+		logger.info("client_pk = "+client_pk);
+		logger.info("partners_pk = "+partners_pk);
+		
+		ContractInfo contract = contractDao.select_project_client_partners(project_pk, client_pk, partners_pk);
+		
+		if(contract == null)
+		{
+			logger.info("계약이 존재하지 않음! 에러");
+			mv.setViewName("redirect:/admin/home");
+			return mv;
+		}
+		logger.info("계약 존재");
+				
+		//프로젝트의 상태 "취소한프로젝트"로 변경
+		projectDao.updateStatus(project_pk,"취소한프로젝트");
+		
+		ProjectInfo project = projectDao.select_project(project_pk);
+		
+		//notification update
+		//파트너스
+		notificationDao.create(partners_pk, project.getName()+" 프로젝트가 진행이 취소되었습니다.");
+		//클라이언트
+		notificationDao.create(client_pk, project.getName()+" 프로젝트가 진행이 취소되었습니다.");
+		
+		//파트너스
+		AccountInformationInfo accountinfo = accountInformationDao.select(partners_pk);
+        
+        if(accountinfo.getSubscription() == 1)
+        {
+        	AccountInfo partnersaccount = accountDao.select(partners_pk);
+        	String mail_result = sendMail("admin@wjm.com", partnersaccount.getEmail(), project.getName()+" 프로젝트가 진행이 취소되었습니다.", "외주몬 알림 메일입니다");
+        	logger.info("이메일 전송 결과1 = "+mail_result);
+        }
+        if(accountinfo.getSms_subscription() == 1)
+        {
+        	String phone = "";
+        	
+        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+        		phone = accountinfo.getCellphone_num().replace("-", "");
+        	
+        	if(Validator.hasValue(phone))
+        	{
+        		SMS.sendSMS(phone, phone, project.getName()+" 프로젝트가 진행이 취소되었습니다.", "");
+	    		logger.info("SMS 전송");
+        	}
+        }
+
+		//클라이언트
+        accountinfo = accountInformationDao.select(client_pk);
+
+        if(accountinfo.getSubscription() == 1)
+        {
+        	AccountInfo clientaccount = accountDao.select(client_pk);
+
+        	String mail_result = sendMail("admin@wjm.com", clientaccount.getEmail(), project.getName()+" 프로젝트가 진행이 취소되었습니다.", "외주몬 알림 메일입니다");
+        	logger.info("이메일 전송 결과2 = "+mail_result);
+        }
+        if(accountinfo.getSms_subscription() == 1)
+        {
+        	String phone = "";
+        	
+        	if(Validator.hasValue(accountinfo.getCellphone_num()))
+        		phone = accountinfo.getCellphone_num().replace("-", "");
+        	
+        	if(Validator.hasValue(phone))
+        	{
+        		SMS.sendSMS(phone, phone, 
+        				project.getName()+" 프로젝트가 진행이 취소되었습니다.", "");
+	    		logger.info("SMS 전송");
+        	}
+        }
+
+		mv.setViewName("redirect:/admin/home");
+		return mv;
+	}
+	
 	//////////////////////////////////////////공지사항///////////////////////////////////////////
 	/**
 	 * 관리자 공지사항 페이지

@@ -97,7 +97,7 @@
 				{
 					for(int i=0;i<projectlist.size();i++)
 					{
-						String description = projectlist.get(0).getDescription();
+						String description = projectlist.get(i).getDescription();
 						if(description==null) description = "프로젝트 설명이 없습니다.";
 						else if(description.length() > 80) description = description.substring(0, 78) + "..";
 						

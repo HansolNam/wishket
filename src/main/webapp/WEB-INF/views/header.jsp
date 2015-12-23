@@ -112,6 +112,8 @@
 						<ul class="dropdown-menu">
 								<li><a href="/wjm/accounts/settings/profile/" tabindex="-1">계정
 										설정</a></li>
+								<li><a href="/wjm/client/info/" tabindex="-1">클라이언트 정보
+										</a></li>
 								<li class="divider"></li>
 								<li class="dropdown_li"><a class="dropdown_li"
 									href="/wjm/accounts/logout/" tabindex="-1">로그아웃</a></li>

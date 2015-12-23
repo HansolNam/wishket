@@ -90,8 +90,8 @@
 									<td><a href="/wjm/project/<%=contractlist.get(i).getProject().getName() %>/<%=contractlist.get(i).getProject_pk() %>"><%=contractlist.get(i).getProject().getName() %></a></td>
 									<td><a href="/wjm/admin/accounts/profile/<%=contractlist.get(i).getClient_pk() %>"><%=contractlist.get(i).getClient_id() %></a></td>
 									<td><a href="/wjm/admin/accounts/profile/<%=contractlist.get(i).getPartners_pk() %>"><%=contractlist.get(i).getPartners_id() %></a></td>
-									<td><a class='btn btn-sm btn-client' href='/wjm/admin/contract/success/<%=contractlist.get(i).getProject_pk()%>/<%=contractlist.get(i).getClient_pk()%>/<%=contractlist.get(i).getPartners_pk()%>'>계약 성사</a></td>
-									<td><a class='btn btn-sm btn-client' href='/wjm/admin/contract/fail/<%=contractlist.get(i).getProject_pk()%>/<%=contractlist.get(i).getPartners_pk()%>/<%=contractlist.get(i).getPk()%>'>계약 실패</a></td>
+									<td><a class='btn btn-sm btn-client' id="id_success_btn" href='/wjm/admin/contract/success/<%=contractlist.get(i).getProject_pk()%>/<%=contractlist.get(i).getClient_pk()%>/<%=contractlist.get(i).getPartners_pk()%>'>계약 성사</a></td>
+									<td><a class='btn btn-sm btn-client' id="id_fail_btn" href='/wjm/admin/contract/fail/<%=contractlist.get(i).getProject_pk()%>/<%=contractlist.get(i).getPartners_pk()%>/<%=contractlist.get(i).getPk()%>'>계약 실패</a></td>
 									<td><%=Time.toString3(contractlist.get(i).getReg_date()) %></td>
 								</tr>
 								<%
@@ -116,4 +116,27 @@
 	</div>
 	<jsp:include page="../footer.jsp" flush="false" />
 </body>
+	<script type="text/javascript">
+
+	$(document).ready(function(){
+
+		$( "#id_success_btn" ).click(function() {
+
+			if(confirm("계약을 성사시키겠습니까?") == false)
+				return false;
+			
+			return true;
+		
+			});
+		
+		$( "#id_fail_btn" ).click(function() {
+
+			if(confirm("계약이 실패되었습니까?") == false)
+				return false;
+			
+			return true;
+		
+			});
+		});
+	</script>
 </html>

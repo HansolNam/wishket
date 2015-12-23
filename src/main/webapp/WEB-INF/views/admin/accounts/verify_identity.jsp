@@ -145,7 +145,10 @@
 					<div class="content-inner">
 						<h4>
 							사용자 신원 인증 정보
-							
+							<%
+								if(accountinfo != null && Validator.hasValue(accountinfo.getIdentity_authentication()) && accountinfo.getIdentity_authentication().equals("검수중") )
+								{
+							%>
 							<a
 							class="btn btn-large btn-partners btn-project-application btn-block pull-right"
 							href="/wjm/admin/verify_identity/success/<%=this_account.getPk() %>" style="width:150px">검수 완료하기</a>
@@ -154,6 +157,9 @@
 							class="btn btn-large btn-project-application btn-default btn-block pull-right"
 							href="/wjm/admin/verify_identity/fail/<%=this_account.getPk() %>" style="width:150px"><span
 							id="interest_action_text">인증 거부하기</span></a>
+							<%
+								}
+							%>
 						</h4>
 						<form action=""
 							class="form-horizontal has-validation-callback"
