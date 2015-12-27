@@ -582,7 +582,8 @@ public class ApplicantDao implements ApplicantIDao {
 	    				, resultSet.getString("partner_type")
 	    				, resultSet.getString("purpose")
 	    				, resultSet.getString("status")
-	    				, resultSet.getTimestamp("reg_date"));
+	    				, resultSet.getTimestamp("reg_date")
+	    				, resultSet.getString("filename"));
 	    	}
 	    });
 		

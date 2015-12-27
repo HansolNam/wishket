@@ -73,6 +73,68 @@ public class Fileupload {
 		}
 
 	}
+
+	static public String delete_file(String realPath, String filename)
+	{
+		realPath += "resources\\upload\\file\\";
+		String savePath = realPath.replace('\\','/');
+		
+		File file = new File(savePath+filename);
+		
+		if(file.delete())
+		{
+			logger.info("성공적으로 삭제");
+			return "성공";
+		}
+		else
+		{
+			logger.info("삭제 실패");
+			return "error";
+		}
+
+	}
+	static public String upload_file(String realPath, MultipartFile file, String id)
+			 throws IOException, FileUploadException{
+		
+		// \wjm\ + 
+		realPath += "resources\\upload\\file\\";
+		String savePath = realPath.replace('\\','/');
+		
+		File targetDir = new File(savePath);
+		if (!targetDir.exists()) {
+	         targetDir.mkdirs();
+	      }
+		
+		String fileName =  file.getOriginalFilename();
+		//if(!Validator.isValidLength(fileName, 1, 50))
+
+		String rootPath, FinalFileName;
+		try{
+			byte[] bytes = file.getBytes();
+			
+			String random = RandomSring(10);
+			FinalFileName = random+"_"+id+"_"+fileName;
+			
+			rootPath = savePath+FinalFileName;
+			logger.info("rootPath = "+rootPath);
+			
+			File serverFile = new File(rootPath);
+			BufferedOutputStream stream = new BufferedOutputStream(
+					new FileOutputStream(serverFile));
+			stream.write(bytes);
+			stream.close();
+
+			logger.info("file path = "+random+"_"+id+"_"+fileName);
+			return FinalFileName;
+		}
+		catch(Exception e){
+			logger.info("Exception = "+e.toString());
+			return "error";
+		}
+		
+	}
+	
+	
 	static public String upload_portfolio(String realPath, MultipartFile image, String id)
 			 throws IOException, FileUploadException{
 		
@@ -212,6 +274,26 @@ public class Fileupload {
 		
 		return true;
 	}
+	
+	static public boolean isFile(MultipartFile file)
+	{
+		String FileName = file.getOriginalFilename();
+		int point = FileName.lastIndexOf(".");
+		String pre_fileType = FileName.substring(point+1, FileName.length());
+		String fileType = pre_fileType.toLowerCase();
+		
+		//gif, png, jpg, jpeg, bmp, pdf, gul, xls, xlsx, doc, docx, ppt, pptx, hwp, zip 허용
+		if(!fileType.equals("jpg") &&!fileType.equals("jpeg") &&!fileType.equals("png") &&
+				!fileType.equals("bmp") &&!fileType.equals("gif") 
+				&& !fileType.equals("pdf") &&!fileType.equals("gul") &&!fileType.equals("xls") &&
+				!fileType.equals("xlsx") &&!fileType.equals("doc") 
+				&& !fileType.equals("docx") &&!fileType.equals("ppt") &&!fileType.equals("pptx") &&
+				!fileType.equals("hwp") &&!fileType.equals("zip") )
+			return false;
+		
+		return true;
+	}
+	
 
 	static public String upload_notice(String realPath, MultipartFile image, String replaceName)
 			 throws IOException, FileUploadException{

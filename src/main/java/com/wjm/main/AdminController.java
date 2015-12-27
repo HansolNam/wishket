@@ -348,6 +348,8 @@ public class AdminController {
 	 * 프로젝트 수정 처리 페이지
 	 * @throws ParseException 
 	 * @throws NumberFormatException 
+	 * @throws FileUploadException 
+	 * @throws IOException 
 	 */
 	@RequestMapping(value = "/admin/project/edit/{project_pk}", method = RequestMethod.POST, produces = "text/json; charset=utf8")
 	@ResponseBody
@@ -371,8 +373,10 @@ public class AdminController {
 			 @RequestParam(value = "has_manage_experience", required = false, defaultValue = "") String has_manage_experience,
 			 @RequestParam(value = "prefer_partner", required = false, defaultValue = "") String prefer_partner,
 			 @RequestParam(value = "submit_purpose", required = false, defaultValue = "") String submit_purpose,
-			 @RequestParam(value = "status", required = false, defaultValue = "") String status
-			 ) throws NumberFormatException, ParseException {
+			 @RequestParam(value = "status", required = false, defaultValue = "") String status,
+			@RequestParam(value = "isFileChanged", required = false, defaultValue = "") String isFileChanged,
+			@RequestParam("file1") MultipartFile file1
+			 ) throws NumberFormatException, ParseException, IOException, FileUploadException {
 		logger.info("/admin/project/edit/{project_pk} post page");
 		
 		JSONObject jObject = new JSONObject();
@@ -380,11 +384,18 @@ public class AdminController {
 		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
 		if(account == null) {
 			jObject.put("messages", "error");
-			jObject.put("path", "redirect:/accounts/login");
+			jObject.put("path", "/wjm/accounts/login");
 			return jObject.toString(); }
 		else if(!account.getAccount_type().equals("admin"))  { 
 			jObject.put("messages", "error");
-			jObject.put("path", "redirect:/index");
+			jObject.put("path", "/wjm/index");
+			return jObject.toString(); }
+		
+		ProjectInfo project = projectDao.select_project(project_pk);
+		if(project == null)
+		{
+			jObject.put("messages", "error");
+			jObject.put("path", "/wjm/error/error");
 			return jObject.toString(); }
 		
 		//title 체크
@@ -646,6 +657,51 @@ public class AdminController {
 				logger.info("submit_purpose_val = "+submit_purpose);
 			}
 		}
+
+
+		// file upload(필수 x)
+		String filename = project.getFilename();
+		
+		if(Validator.hasValue(isFileChanged) && isFileChanged.equals("1"))
+		{
+			Fileupload.delete_file(request.getRealPath("") + "\\", filename);
+			
+			if(file1 == null)
+			{
+				filename = "";
+			}
+			else if(file1.isEmpty())
+			{
+				filename = "";
+			}
+			// gif, png, jpg, jpeg, bmp, pdf, gul, xls, xlsx, doc, docx, ppt, pptx,
+			// hwp, zip 허용
+			else if (!Fileupload.isFile(file1)) {
+				logger.info("파일은 gif, png, jpg, jpeg, bmp, pdf, gul, xls, xlsx, doc, docx, ppt, pptx, hwp, zip만 허용됩니다.");
+	
+				jObject.put("messages",
+						"파일은 gif, png, jpg, jpeg, bmp, pdf, gul, xls, xlsx, doc, docx, ppt, pptx, hwp, zip만 허용됩니다.");
+				return jObject.toString();
+			}
+			// 10MB 허용
+			else if (!Fileupload.isValidFileSize(file1, 10)) {
+				logger.info("파일은 최대 10MB까지 업로드 가능합니다.");
+	
+				jObject.put("messages", "파일은 최대 10MB까지 업로드 가능합니다.");
+				return jObject.toString();
+			}
+			// 파일명
+			else if (!Validator.isValidLength(file1.getOriginalFilename(), 1, 30)) {
+				logger.info("파일명은 최대 30자까지 가능합니다.");
+				jObject.put("messages", "파일명은 최대 30자까지 가능합니다.");
+				return jObject.toString();
+			} else {
+				logger.info("파일등록가능");
+				
+				AccountInfo this_account = accountDao.select(project.getAccount_pk());
+				filename = Fileupload.upload_file(request.getRealPath("") + "\\", file1, this_account.getId());
+			}
+		}
 		
 		if(status.equals("프로젝트 수정"))
 		{	
@@ -659,14 +715,13 @@ public class AdminController {
 		}
 		
 		
+		
 		logger.info("수정 가능");
-		
-		ProjectInfo project = projectDao.select_project(project_pk);
-		
+				
 		projectDao.Update(project_pk,project.getAccount_pk(),category,sub_category,is_turnkey,title,Integer.parseInt(project_term),
 				Integer.parseInt(budget_maximum),planning_status,description,skill_required,Time.dateToTimestamp(deadline),
 				method_pre_interview, address_sido, sigungu, Time.dateToTimestamp(date_expected_kick_off), has_manage_experience,
-				prefer_partner, submit_purpose, status);
+				prefer_partner, submit_purpose, status, filename);
 		
 		if(status.equals("검수중")){
 			

@@ -83,20 +83,21 @@ public class ProjectDao implements ProjectIDao {
 	 * @param partner_type 원하는 파트너 타입
 	 * @param purpose 목적
 	 * @param status 상태
+	 * @param filename 파일며
 	 */
 	public void create(int account_pk, String categoryL, String categoryM, int another , String name, int period, int budget,
 			String plan_status, String description, String technique, Timestamp deadline, String meeting_type,
 			String meeting_area, String meeting_area_detail, Timestamp start_date, int managing, String partner_type,
-			String purpose, String status)
+			String purpose, String status, String filename)
 	{		
 		jdbcTemplate.update("insert into project (account_pk, categoryL, categoryM, "
 				+"another, name, period, budget, plan_status, description, technique, deadline, "
-				+"meeting_type, meeting_area, meeting_area_detail, start_date, managing, partner_type, purpose, status) "
-				+"values (?, ?, ?, ?,?,?, ?, ?,?,?, ?, ?,?,?, ?, ?,?,?,?)", 
+				+"meeting_type, meeting_area, meeting_area_detail, start_date, managing, partner_type, purpose, status, filename) "
+				+"values (?, ?, ?, ?,?,?, ?, ?,?,?, ?, ?,?,?, ?, ?,?,?,?,?)", 
 				new Object[] { account_pk, categoryL, categoryM, another, name, period, budget,
 				plan_status, description, technique, deadline, meeting_type,
 				meeting_area, meeting_area_detail, start_date, managing, partner_type,
-				purpose, status });
+				purpose, status,filename });
 	}
 	
 
@@ -171,7 +172,8 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getString("partner_type")
 	    				, resultSet.getString("purpose")
 	    				, resultSet.getString("status")
-	    				, resultSet.getTimestamp("reg_date"));
+	    				, resultSet.getTimestamp("reg_date")
+	    				, resultSet.getString("filename"));
 	    	}
 	    });
 		
@@ -223,7 +225,8 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getString("partner_type")
 	    				, resultSet.getString("purpose")
 	    				, resultSet.getString("status")
-	    				, resultSet.getTimestamp("reg_date"));
+	    				, resultSet.getTimestamp("reg_date")
+	    				, resultSet.getString("filename"));
 	    	}
 	    });
 	}
@@ -266,7 +269,8 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getString("partner_type")
 	    				, resultSet.getString("purpose")
 	    				, resultSet.getString("status")
-	    				, resultSet.getTimestamp("reg_date"));
+	    				, resultSet.getTimestamp("reg_date")
+	    				, resultSet.getString("filename"));
 	    	}
 	    });
 	}
@@ -308,7 +312,8 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getString("partner_type")
 	    				, resultSet.getString("purpose")
 	    				, resultSet.getString("status")
-	    				, resultSet.getTimestamp("reg_date"));
+	    				, resultSet.getTimestamp("reg_date")
+	    				, resultSet.getString("filename"));
 	    	}
 	    });
 		
@@ -364,7 +369,8 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getString("partner_type")
 	    				, resultSet.getString("purpose")
 	    				, resultSet.getString("status")
-	    				, resultSet.getTimestamp("reg_date"));
+	    				, resultSet.getTimestamp("reg_date")
+	    				, resultSet.getString("filename"));
 	    		
 	    		project.setAccount(accountDao.select(project.getAccount_pk()) );
 	    		
@@ -419,7 +425,8 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getString("partner_type")
 	    				, resultSet.getString("purpose")
 	    				, resultSet.getString("status")
-	    				, resultSet.getTimestamp("reg_date"));
+	    				, resultSet.getTimestamp("reg_date")
+	    				, resultSet.getString("filename"));
 	    		
 	    		project.setAccount(accountDao.select(project.getAccount_pk()) );
 	    		
@@ -475,7 +482,8 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getString("partner_type")
 	    				, resultSet.getString("purpose")
 	    				, resultSet.getString("status")
-	    				, resultSet.getTimestamp("reg_date"));
+	    				, resultSet.getTimestamp("reg_date")
+	    				, resultSet.getString("filename"));
 	    	}
 	    });
 		
@@ -538,7 +546,8 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getString("partner_type")
 	    				, resultSet.getString("purpose")
 	    				, resultSet.getString("status")
-	    				, resultSet.getTimestamp("reg_date"));
+	    				, resultSet.getTimestamp("reg_date")
+	    				, resultSet.getString("filename"));
 	    	}
 	    });
 		
@@ -823,7 +832,8 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getString("partner_type")
 	    				, resultSet.getString("purpose")
 	    				, resultSet.getString("status")
-	    				, resultSet.getTimestamp("reg_date"));
+	    				, resultSet.getTimestamp("reg_date")
+	    				, resultSet.getString("filename"));
 	    		logger.info(rowNum+" : project name "+ project.getName());
 	    		return project;
 	    	}
@@ -1062,7 +1072,7 @@ public class ProjectDao implements ProjectIDao {
 	public void Save(int account_pk, String categoryL,String categoryM,String is_turnkey, String name,
 			int period, int budget, String plan_status, String description, String technique,
 			Timestamp deadline, String meeting_type, String meeting_area, String meeting_area_detail,
-			Timestamp start_date, String managing,String partner_type, String purpose, String status)
+			Timestamp start_date, String managing,String partner_type, String purpose, String status, String filename)
 	{
 		int managing_int = 0;
 		if(managing.equals("true"))
@@ -1079,7 +1089,7 @@ public class ProjectDao implements ProjectIDao {
 		create(account_pk, categoryL, categoryM, another, name, period, budget,
 				plan_status, description, technique, deadline, meeting_type,
 				meeting_area, meeting_area_detail, start_date, managing_int, partner_type,
-				purpose, status);
+				purpose, status, filename);
 
 	}
 	
@@ -1110,11 +1120,13 @@ public class ProjectDao implements ProjectIDao {
 	 * @param partner_type 파트너스 타입
 	 * @param purpose 목적
 	 * @param status 상태
+	 * @param filename 파일명
 	 */
 	public void Update(int project_pk, int account_pk, String categoryL,String categoryM,String is_turnkey, String name,
 			int period, int budget, String plan_status, String description, String technique,
 			Timestamp deadline, String meeting_type, String meeting_area, String meeting_area_detail,
-			Timestamp start_date, String managing,String partner_type, String purpose, String status)
+			Timestamp start_date, String managing,String partner_type, String purpose, String status,
+			String filename)
 	{
 		int managing_int = 0;
 		if(managing.equals("true"))
@@ -1131,11 +1143,11 @@ public class ProjectDao implements ProjectIDao {
 		jdbcTemplate.update("update project set account_pk=?, categoryL=?, categoryM=?,"
 				+ " another=?, name=?, period=?, budget=?, plan_status=?, description=?,"
 				+ " technique=?, deadline=?, meeting_type=?, meeting_area=?, meeting_area_detail=?,"
-				+ " start_date=?, managing=?, partner_type=?, purpose=?, status=? where pk=?"
+				+ " start_date=?, managing=?, partner_type=?, purpose=?, status=?, filename=? where pk=?"
 				, new Object[] {account_pk, categoryL, categoryM, another, name, period, budget,
 						plan_status, description, technique, deadline, meeting_type,
 						meeting_area, meeting_area_detail, start_date, managing_int, partner_type,
-						purpose, status, project_pk });
+						purpose, status, filename, project_pk });
 		
 		
 	}
@@ -1370,7 +1382,8 @@ public class ProjectDao implements ProjectIDao {
 	    				, resultSet.getString("partner_type")
 	    				, resultSet.getString("purpose")
 	    				, resultSet.getString("status")
-	    				, resultSet.getTimestamp("reg_date"));
+	    				, resultSet.getTimestamp("reg_date")
+	    				, resultSet.getString("filename"));
 	    		
 	    		List<ContractInfo> contractlist = contractDao.select_project(project.getPk());
 	    		

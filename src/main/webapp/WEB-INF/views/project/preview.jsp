@@ -1,16 +1,91 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	<%@ page import="com.wjm.models.AccountInformationInfo,com.wjm.models.AccountInfo,com.wjm.models.ProjectInfo, com.wjm.main.function.Time, java.sql.Timestamp"%>
+	<%@ page import="com.wjm.models.AssessmentInfo, java.util.List, com.wjm.main.function.Validator, com.wjm.models.AccountInformationInfo,com.wjm.models.AccountInfo,com.wjm.models.ProjectInfo, com.wjm.main.function.Time, java.sql.Timestamp"%>
 <%
 	ProjectInfo project = (ProjectInfo)request.getAttribute("project");
 	AccountInformationInfo this_accountinfo = (AccountInformationInfo)request.getAttribute("this_accountinfo");
 	AccountInfo this_account = (AccountInfo)request.getAttribute("this_account");
 
+	String profile = (String)request.getAttribute("profile");
 	String description = "";
 	description = project.getDescription().replaceAll("\r\n","<br/>");
 
+	String introduction = "";
+	if(this_accountinfo != null)
+	{
+		if(Validator.hasValue(this_accountinfo.getIntroduction()))
+			introduction = this_accountinfo.getIntroduction().replaceAll("\r\n","<br/>");
+	}
 	long now_time = System.currentTimeMillis();
 	Timestamp now = new Timestamp(now_time);
+	
+	List<ProjectInfo> projectlist = (List<ProjectInfo>)request.getAttribute("projectlist");
+	int check_cnt = 0;
+	int recruit_cnt = 0;
+	int ing_cnt = 0;
+	int finish_cnt = 0;
+	
+	if(projectlist != null)
+	{
+		for(int i=0;i<projectlist.size();i++)
+		{
+			if(projectlist.get(i).getStatus().equals("검수중"))
+			{
+				check_cnt++;
+			}
+			else if(projectlist.get(i).getStatus().equals("지원자모집중"))
+			{
+				recruit_cnt++;
+			}
+			else if(projectlist.get(i).getStatus().equals("진행중"))
+			{
+				ing_cnt++;
+			}
+			else if(projectlist.get(i).getStatus().equals("완료한프로젝트"))
+			{
+				finish_cnt++;
+			}
+		}
+	}
+	
+	//총 누적금액
+	Integer total_budget = (Integer)request.getAttribute("total");
+	if(total_budget == null) total_budget = 0;
+
+	//평가받은 리스트
+	List<AssessmentInfo> assessmentlist = (List<AssessmentInfo>)request.getAttribute("assessmentlist");
+	int assessmentnum;
+	int total = 0, professionalism = 0, satisfaction = 0, communication = 0, schedule_observance = 0,activeness = 0;
+	double total_avg = 0.0;
+	if(assessmentlist == null) assessmentnum = 0;
+	else
+	{
+		assessmentnum = assessmentlist.size();
+		
+		for (int i = 0; i < assessmentnum; i++) {
+			int avg = (assessmentlist.get(i).getProfessionalism() + assessmentlist.get(i).getSatisfaction()
+					+ assessmentlist.get(i).getCommunication() + assessmentlist.get(i).getSchedule_observance()
+					+ assessmentlist.get(i).getActiveness()) / 5;
+			
+			professionalism += assessmentlist.get(i).getProfessionalism();
+			satisfaction += assessmentlist.get(i).getSatisfaction();
+			communication += assessmentlist.get(i).getCommunication();
+			schedule_observance += assessmentlist.get(i).getSchedule_observance();
+			activeness += assessmentlist.get(i).getActiveness();
+		}
+			
+		if (assessmentnum != 0) {
+				total = professionalism + satisfaction + communication + schedule_observance + activeness;
+				total_avg = (double) total / (double) (assessmentnum * 5);
+				professionalism /= assessmentnum;
+				satisfaction /= assessmentnum;
+				communication /= assessmentnum;
+				schedule_observance /= assessmentnum;
+				activeness /= assessmentnum;
+			}
+	}
+	
+	String filename = project.getFilename();
 %>
 
 <!DOCTYPE html>
@@ -18,7 +93,7 @@
 <meta charset="utf-8" />
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
-<title>외주몬(WJM) · 프로젝트 - ㅁㅁㅁ</title>
+<title>외주몬(WJM) · 프로젝트 - <%=project.getName() %></title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
 <link href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css" rel="stylesheet"
 	type="text/css" />
@@ -172,6 +247,24 @@
 							<div class="project-desc-title">프로젝트 내용</div>
 								<%=description %>
 						</div>
+						<div class="project-desc">
+							<div class="project-desc-title">프로젝트 첨부파일</div>
+							<%
+								if(!Validator.hasValue(filename))
+								{
+							%>
+							파일이 존재하지 않습니다.
+							<%
+								}
+								else
+								{
+							%>
+							
+							<a href="/wjm/Filedownload?filename=<%=java.net.URLEncoder.encode(project.getFilename())%>"><%=project.getFilename()%></a>
+							<%
+								}
+							%>
+						</div>
 						<div class="project-skill-required">
 							<div class="skill-required-title">관련 기술</div>
 							<%
@@ -187,21 +280,38 @@
 			</div>
 			<div class="sidebar">
 				<div class="inner">
-					<span
-						class="btn btn-large btn-warning btn-block btn-disabled btn-project-application"
-						disabled="">프로젝트 검수 중</span>
+					<%
+						int register_num = check_cnt+recruit_cnt+ing_cnt+finish_cnt;
+						int contract_num = ing_cnt+finish_cnt;
+						
+						double contract_per = 0;
+						if(register_num != 0)
+						{
+							contract_per = 100.0*(double)contract_num/(double)register_num;
+						}
+						
+						if(assessmentnum != 0)
+						{
+						total_avg = (double) total / (double) (assessmentnum * 5);
+						professionalism /= assessmentnum;
+						satisfaction /= assessmentnum;
+						communication /= assessmentnum;
+						schedule_observance /= assessmentnum;
+						activeness /= assessmentnum;
+						}
+					%>
 					<div class="client-info-box">
 						<h3 class="client-name-tag-heading">클라이언트</h3>
 						<div class="client-name-tag-body">
-							<img alt="gksthf1611 사진" class="client-img-lg"
-								src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=this_accountinfo.getProfile_img() %>" />
-							<div class="client-company-info"><%=this_accountinfo.getIntroduction() %></div>
+							<img alt="<%=this_account.getId() %> 사진" class="client-img-lg"
+								src="${pageContext.request.contextPath}/resources/upload/profile_img/<%=profile%>" />
+							<div class="client-company-info"><%=introduction %></div>
 							<div class="client-evaluation-body"
 								onclick="expand_rating(this);">
 								<div class="rating star-md star-md-0"></div>
 								<div class="rating-body">
-									<span class="averageScore">0.0</span> <span
-										class="averageScore-body">/ 평가 0개</span>
+									<span class="averageScore"><%=Math.round(total_avg * 10) / 10.0%></span> <span
+										class="averageScore-body">/ 평가 <%=assessmentnum %>개</span>
 									<div class="rating-expand-arrow">
 										<span class="fa fa-sort-asc" id="rating-arrow"></span>
 									</div>
@@ -212,51 +322,51 @@
 								<div class="rating-row">
 									<span class="expanded-rating-title">전문성</span>
 									<div class="rating star-sm star-sm-0"></div>
-									<span class="expanded-rating-score">0.0</span>
+									<span class="expanded-rating-score"><%=professionalism %></span>
 								</div>
 								<div class="rating-row">
 									<span class="expanded-rating-title">일정 준수</span>
 									<div class="rating star-sm star-sm-0"></div>
-									<span class="expanded-rating-score">0.0</span>
+									<span class="expanded-rating-score"><%=schedule_observance %></span>
 								</div>
 								<div class="rating-row">
 									<span class="expanded-rating-title">사전 준비</span>
 									<div class="rating star-sm star-sm-0"></div>
-									<span class="expanded-rating-score">0.0</span>
+									<span class="expanded-rating-score"><%=satisfaction %></span>
 								</div>
 								<div class="rating-row">
 									<span class="expanded-rating-title">적극성</span>
 									<div class="rating star-sm star-sm-0"></div>
-									<span class="expanded-rating-score">0.0</span>
+									<span class="expanded-rating-score"><%=activeness %></span>
 								</div>
 								<div class="rating-row">
 									<span class="expanded-rating-title">의사소통</span>
 									<div class="rating star-sm star-sm-0"></div>
-									<span class="expanded-rating-score">0.0</span>
+									<span class="expanded-rating-score"><%=communication %></span>
 								</div>
 							</div>
 							<div class="client-history-body">
 								<div class="project">
 									<div class="history-body-title">프로젝트 등록</div>
-									<div class="pull-right history-body-data">1 건</div>
+									<div class="pull-right history-body-data"><%=register_num %> 건</div>
 								</div>
 								<div class="contract">
 									<div class="contract-title">
 										<div class="history-body-title">계약한 프로젝트</div>
-										<div class="pull-right history-body-data">0 건</div>
+										<div class="pull-right history-body-data"><%=contract_num %> 건</div>
 									</div>
 									<div class="contract-data">
 										<div class="contract-data-box">
 											<div class="history-body-title">계약률</div>
-											<div class="pull-right history-body-data">0%</div>
+											<div class="pull-right history-body-data"><%=Math.round(contract_per*10.0)/10.0%>%</div>
 										</div>
 										<div class="contract-data-box">
 											<div class="history-body-title">진행중인 프로젝트</div>
-											<div class="pull-right history-body-data">0 건</div>
+											<div class="pull-right history-body-data"><%=ing_cnt %> 건</div>
 										</div>
 										<div class="contract-data-box">
 											<div class="history-body-title">완료한 프로젝트</div>
-											<div class="pull-right history-body-data">0 건</div>
+											<div class="pull-right history-body-data"><%=finish_cnt %> 건</div>
 										</div>
 									</div>
 								</div>
@@ -264,7 +374,7 @@
 							<div class="client-history-budget-body">
 								<div class="budget-body-title">누적 완료 금액</div>
 								<div class="pull-right budget-body-data">
-									0 <span class="budget-body-clo">원</span>
+									<%=total_budget %> <span class="budget-body-clo">원</span>
 								</div>
 							</div>
 						</div>
@@ -275,57 +385,19 @@
 		<div id="push"></div>
 	</div>
 	<jsp:include page="../footer.jsp" flush="false" />
-	<script type="text/javascript">
-  $(function() {
-    wishket.init();
-    
-    svgeezy.init(false, 'png');
-  });
-</script>
-	<script>
-
-$( document ).ready(function($) {
-    var p5TotalSubNavigationFlag = 0;
-
-
-	if ( $( window ).width() >= 1200 ) {
-		$( '.p5-side-nav-deactive' ).css( 'display', 'none' );
-	} else  {
-		$( '.p5-side-nav-active' ).css( 'display', 'none' );
-		$( '.p5-side-nav-deactive' ).css( 'display', 'block');
-	}
-
-	$('.content-inner').on('click', '.p5-side-nav-active-btn', function () {
-		$('.p5-side-nav-active').css( 'display', 'none' );
-		$('.p5-side-nav-deactive').css('display','block');
-	});
-
-	$('.content-inner').on('click', '.p5-side-nav-deactive-btn', function () {
-		$('.p5-side-nav-active').css( 'display', 'block' );
-		$('.p5-side-nav-deactive').css('display','none');
-	});
-
-
-    $( window ).scroll ( function () {
-		if ( $(window).scrollTop() > 87 && p5TotalSubNavigationFlag === 0) {
-			setTimeout(function() {
-				$('#p5-total-sub-navigation-wrapper').removeClass('hide fadeOut');
-				$('#p5-total-sub-navigation-wrapper').addClass('fadeInDown');
-			}, 200 );
-			flag = 1;
-
-
-		} else if ( $(window).scrollTop() <= 87 ){
-			p5TotalSubNavigationFlag = 0;
-			$('#p5-total-sub-navigation-wrapper').removeClass('fadeInDown');
-			$('#p5-total-sub-navigation-wrapper').addClass('fadeOut');
-			setTimeout(function() {
-				$('#p5-total-sub-navigation-wrapper').addClass('hide');
-			}, 200 );
+<script>
+		function expand_rating(obj) {
+			var $obj = $(obj);
+			if ($obj.attr('class') == 'client-expanded-evaluation-body') {
+				$('#expanded-rating').css('display', 'none');
+				$obj.attr('class', 'client-evaluation-body');
+				$('#rating-arrow').prop('class', 'fa fa-sort-asc');
+			} else {
+				$('#expanded-rating').css('display', 'block');
+				$obj.attr('class', 'client-expanded-evaluation-body');
+				$('#rating-arrow').prop('class', 'fa fa-sort-desc');
+			}
 		}
-	});
-});
-
-</script>
+		</script>
 </body>
 </html>

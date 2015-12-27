@@ -87,13 +87,16 @@
 				activeness /= assessmentnum;
 			}
 	}
+	
+	String filename = project.getFilename();
+
 %>
 <!DOCTYPE html>
 <html class="no-js modern" lang="ko">
 <meta charset="utf-8" />
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
-<title>외주몬(WJM) · 프로젝트 - ${project}</title>
+<title>외주몬(WJM) · 프로젝트 - <%=project.getName() %></title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
 <link
 	href="${pageContext.request.contextPath}/resources/static/CACHE/css/7911bc0a5c62.css"
@@ -230,6 +233,24 @@
 							<div class="project-desc-title">프로젝트 내용</div>
 							<%=project.getDescription().replaceAll("\r\n", "<br/>")%>
 							
+						</div>
+						<div class="project-desc">
+							<div class="project-desc-title">프로젝트 첨부파일</div>
+							<%
+								if(!Validator.hasValue(filename))
+								{
+							%>
+							파일이 존재하지 않습니다.
+							<%
+								}
+								else
+								{
+							%>
+							
+							<a href="/wjm/Filedownload?filename=<%=java.net.URLEncoder.encode(project.getFilename())%>"><%=project.getFilename()%></a>
+							<%
+								}
+							%>
 						</div>
 						<div class="project-skill-required">
 							<div class="skill-required-title">관련 기술</div>

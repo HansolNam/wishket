@@ -25,7 +25,14 @@ public class ProjectInfo {
 	private String purpose;
 	private String status;
 	private Timestamp reg_date;
+	private String filename;
 	
+	public String getFilename() {
+		return filename;
+	}
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
 	public AccountInfo getAccount() {
 		return account;
 	}
@@ -38,11 +45,12 @@ public class ProjectInfo {
 	{
 		super();
 	}
+	
 	public ProjectInfo(int pk, int account_pk, String categoryL, String categoryM, int another, int applicantnum,
 			String name, int period, int budget, String plan_status, String description, String technique,
 			Timestamp deadline, String meeting_type, String meeting_area, String meeting_area_detail,
-			Timestamp start_date, int managing, String partner_type, String purpose, String status,
-			Timestamp reg_date) {
+			Timestamp start_date, int managing, String partner_type, String purpose, String status, Timestamp reg_date,
+			String filename) {
 		super();
 		this.pk = pk;
 		this.account_pk = account_pk;
@@ -66,6 +74,7 @@ public class ProjectInfo {
 		this.purpose = purpose;
 		this.status = status;
 		this.reg_date = reg_date;
+		this.filename = filename;
 	}
 	public int getPk() {
 		return pk;

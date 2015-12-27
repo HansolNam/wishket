@@ -1,11 +1,16 @@
 package com.wjm.main;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.mail.internet.MimeMessage;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.http.client.ClientProtocolException;
 import org.slf4j.Logger;
@@ -21,7 +26,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.wjm.dao.AccountDao;
 import com.wjm.dao.ProjectDao;
-import com.wjm.main.function.SMS;
 import com.wjm.main.function.Validator;
 import com.wjm.models.AccountInfo;
 import com.wjm.models.ProjectInfo;
@@ -113,7 +117,79 @@ public class MainController {
 		
 		return mv;
 	}
-	
+	/**
+	 * download
+	 * @throws IOException 
+	 */
+	@RequestMapping(value = "/Filedownload", method = RequestMethod.GET)
+	public ModelAndView MainController_download(HttpServletRequest request, 
+			ModelAndView mv,
+			@RequestParam("filename") String filename,
+			HttpServletResponse response
+			) throws IOException  {
+		logger.info("download Page");
+		
+		logger.info("filename = "+filename);
+
+		AccountInfo account = (AccountInfo)request.getSession().getAttribute("account");
+
+		if(account == null) {
+			mv.setViewName("redirect:/accounts/login");
+			return mv;
+		}
+		
+		if(!Validator.hasValue(filename)){
+			mv.setViewName("redirect:/error/error");
+			return mv;
+		}
+		
+		String saveDir = request.getRealPath("");
+		saveDir += "\\resources\\upload\\file\\";
+
+		File file = new File(saveDir + filename);
+		logger.info("saveDir = "+saveDir);
+		
+		//MIMTYPE 설정
+		response.setContentType("application/octet-stream");
+		
+		//다운로드 파일명 설정
+		String downName = null;
+		if(request.getHeader("user-agent").indexOf("MSIE") == -1)
+		{
+			downName = new String(filename.getBytes("UTF-8"), "8859_1");
+		}
+		else
+		{
+			downName = new String(filename.getBytes("EUC-KR"), "8859_1");
+		}
+		
+		//무조건 다운로드 하도록 설정
+		response.setHeader("Content-Disposition","attachment;filename=\"" + downName + "\";");
+		
+		// ⑥ 요청된 파일을 읽어서 클라이언트쪽으로 저장한다.
+		try{
+		FileInputStream fileInputStream = new FileInputStream(file);
+		ServletOutputStream servletOutputStream = response.getOutputStream();
+		
+		byte b [] = new byte[1024];
+		int data = 0;
+		
+		while((data=(fileInputStream.read(b, 0, b.length))) != -1)
+		{
+			servletOutputStream.write(b, 0, data);
+		}
+		
+		servletOutputStream.flush();
+		servletOutputStream.close();
+		fileInputStream.close();
+		
+		}
+		catch(Exception e)
+		{
+			logger.info("에러");
+		}
+		return null;
+	}
 	/**
 	 * footer ȭ��
 	 */

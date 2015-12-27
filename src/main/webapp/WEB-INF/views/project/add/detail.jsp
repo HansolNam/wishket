@@ -297,6 +297,24 @@ div.backLayer {
 										</select>
 								</div>
 							</div>
+								<div class="form-group p5-portfolio-form-group">
+									<label class="control-label required"
+										for="">파일 업로드</label>
+									<div class="p5-portfoilo-img-control-wrapper">
+										<div>
+											<span class="p5-img-name" id="file-name">파일을
+												등록해주세요.</span> 
+												<span class="p5-custom-file-type-input-wrapper">
+												<button
+													class="btn btn-primary p5-custom-file-type-front"
+													type="button"> 파일 변경
+												</button>
+												<input class="p5-custom-file-type-input"
+												id="file1" name="file1" type="file" />
+											<button class="btn btn-cancel p5-img-del-btn" type="button">삭제</button></span>
+										</div>
+									</div>
+								</div>
 							<div class="form-group description-form-group">
 								<label class="control-label"></label>
 								<div class="control-wrapper">
@@ -485,11 +503,17 @@ div.backLayer {
 				return;
 			
 			$("#status").val("프로젝트 등록");
+			
+    		 var formData = new FormData($('#project-add-form')[0]);
+			
 			$.ajax({
 				url : "/wjm/project/add/detail/",
 				type : "POST",
-				data : $('#project-add-form').serialize(),
+				data : formData,
     		    async: true,
+    		    cache: false,
+    		    contentType: false,
+    		    processData: false,
 				dataType : "JSON",
 				success : function(data) {
 					var messages = data.messages;
@@ -533,11 +557,16 @@ div.backLayer {
 			if(confirm("프로젝트를 임시저장하시겠습니까?") == false)
 				return;
 
+   		 var formData = new FormData($('#project-add-form')[0]);
+		 
 			$.ajax({
 				url : "/wjm/project/add/detail",
 				type : "POST",
-				data : $('#project-add-form').serialize(),
+				data : formData,
 				dataType : "JSON",
+    		    cache: false,
+    		    contentType: false,
+    		    processData: false,
 				success : function(data) {
 					var messages = data.messages;
 
@@ -1011,6 +1040,30 @@ $('#address_sido').on('change', function() {
         $('select').selecter({
             "cover": true
         });
+    });
+
+    //img delete btn
+    $('.content-inner').on('click','.p5-img-del-btn',function() {
+
+        if($(this).siblings('input').attr('name')=='file1') {
+            var imgAssignTag = '<button type="button" class="btn btn-primary p5-custom-file-type-front">파일 변경</button>'+
+                    '<input id="file1" name="file1" type="file" class="p5-custom-file-type-input">'+
+                    '<button  id="p5-file-btn-1" type="button" class="btn btn-cancel p5-img-del-btn">삭제</button>';
+            $('#file-name').html('파일을 등록해주세요.');
+            $('#file1').parent().html(imgAssignTag);
+        } 
+
+        $(this).siblings('input').val("");
+    });
+
+
+    $('.content-inner').on('change','#file1', function() {
+        if($('#file1').val()==='') {
+            //donothing
+        } else {
+            $('#file-name').html($(this).val().split(/(\\|\/)/g).pop());
+
+        }
     });
 </script>
 </body>

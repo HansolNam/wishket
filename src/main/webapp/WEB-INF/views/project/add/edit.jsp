@@ -1,10 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="com.wjm.models.AccountInfo, com.wjm.models.ProjectInfo, java.util.*, com.wjm.main.function.Time"%>
+<%@ page import="com.wjm.main.function.Validator, com.wjm.models.AccountInfo, com.wjm.models.ProjectInfo, java.util.*, com.wjm.main.function.Time"%>
 <%
 	AccountInfo account = (AccountInfo)session.getAttribute("account");
 	ProjectInfo project = (ProjectInfo)request.getAttribute("project");
+
+	String filename = project.getFilename();
 	
+	if(!Validator.hasValue(filename))
+		filename = "파일을 등록해주세요.";
 	%>
 <!DOCTYPE html>
 <html class="no-js modern" lang="ko">
@@ -195,6 +199,23 @@ div.backLayer {
 										</p></span>
 								</div>
 							</div>
+							<div class="form-group p5-portfolio-form-group">
+									<label class="control-label required"
+										for="">파일 업로드</label>
+									<div class="p5-portfoilo-img-control-wrapper">
+										<div>
+											<span class="p5-img-name" id="file-name"><%=filename %></span> 
+												<span class="p5-custom-file-type-input-wrapper">
+												<button
+													class="btn btn-primary p5-custom-file-type-front"
+													type="button"> 파일 변경
+												</button>
+												<input class="p5-custom-file-type-input"
+												id="file1" name="file1" type="file" />
+											<button id="p5-file-btn-1" class="btn btn-cancel p5-img-del-btn" type="button">삭제</button></span>
+										</div>
+									</div>
+								</div>
 							<div class="form-group " id="skill_required_div">
 								<label class="control-label required" for="skill_required">관련
 									기술</label>
@@ -470,6 +491,35 @@ div.backLayer {
 		// 페이지가 로딩될 때 'Loading 이미지'를 숨긴다.
 		$('#viewLoading').hide();
 
+
+		var file = 0;
+		
+	    //img delete btn
+	    $('.content-inner').on('click','.p5-img-del-btn',function() {
+
+	        if($(this).siblings('input').attr('name')=='file1') {
+	        	file = 1;
+	            var imgAssignTag = '<button type="button" class="btn btn-primary p5-custom-file-type-front">파일 변경</button>'+
+	                    '<input id="file1" name="file1" type="file" class="p5-custom-file-type-input">'+
+	                    '<button  id="p5-file-btn-1" type="button" class="btn btn-cancel p5-img-del-btn">삭제</button>';
+	            $('#file-name').html('파일을 등록해주세요.');
+	            $('#file1').parent().html(imgAssignTag);
+	        } 
+
+	        $(this).siblings('input').val("");
+	    });
+
+	    //이미지 선택 버튼들
+	    $('.content-inner').on('change','#file1', function() {
+	        if($('#file1').val()==='') {
+	            //donothing
+	        } else {
+	            $('#file-name').html($(this).val().split(/(\\|\/)/g).pop());
+
+	            file = 1;
+	        }
+	    });
+	    
 		$( "#post_a_job_id" ).click(function() {
 
 			if(confirm("프로젝트를 등록하시겠습니까?") == false)
@@ -479,11 +529,18 @@ div.backLayer {
 			$('#viewLoading').hide();
 			
 			$("#status").val("프로젝트 등록");
+			
+	        $('input[name="isFileChanged"]').val(file);
+	   		 var formData = new FormData($('#project-edit-form')[0]);
+
 			$.ajax({
 				url : "/wjm/project/add/edit/<%=project.getPk()%>",
 				type : "POST",
-				data : $('#project-edit-form').serialize(),
+				data : formData,
     		    async: true,
+    		    cache: false,
+    		    contentType: false,
+    		    processData: false,
 				dataType : "JSON",
 				success : function(data) {
 					var messages = data.messages;
@@ -527,11 +584,18 @@ div.backLayer {
 			if(confirm("프로젝트를 임시저장하시겠습니까?") == false)
 				return;
 			
+	        $('input[name="isFileChanged"]').val(file);
+	   		 var formData = new FormData($('#project-edit-form')[0]);
+
+	        
 			$.ajax({
 				url : "/wjm/project/add/edit/<%=project.getPk()%>",
 				type : "POST",
-				data : $('#project-edit-form').serialize(),
+				data :formData,
 				dataType : "JSON",
+    		    cache: false,
+    		    contentType: false,
+    		    processData: false,
 				success : function(data) {
 					var messages = data.messages;
 
