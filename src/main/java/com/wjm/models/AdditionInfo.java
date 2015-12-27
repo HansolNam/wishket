@@ -10,6 +10,9 @@ public class AdditionInfo {
 	private int term;
 	private String status;
 	private Timestamp reg_date;
+	private String descrition;
+	private String filename;
+	
 	private ContractInfo contract;
 	
 	public ContractInfo getContract() {
@@ -18,8 +21,10 @@ public class AdditionInfo {
 	public void setContract(ContractInfo contract) {
 		this.contract = contract;
 	}
-	public AdditionInfo(int pk, int contract_pk, String title, int budget, int term, String status,
-			Timestamp reg_date) {
+	
+	
+	public AdditionInfo(int pk, int contract_pk, String title, int budget, int term, String status, Timestamp reg_date,
+			String descrition, String filename) {
 		super();
 		this.pk = pk;
 		this.contract_pk = contract_pk;
@@ -28,10 +33,28 @@ public class AdditionInfo {
 		this.term = term;
 		this.status = status;
 		this.reg_date = reg_date;
+		this.descrition = descrition;
+		this.filename = filename;
+	}
+	
+	
+	
+	public String getDescrition() {
+		return descrition;
+	}
+	public void setDescrition(String descrition) {
+		this.descrition = descrition;
+	}
+	public String getFilename() {
+		return filename;
+	}
+	public void setFilename(String filename) {
+		this.filename = filename;
 	}
 	public int getPk() {
 		return pk;
 	}
+
 	public void setPk(int pk) {
 		this.pk = pk;
 	}

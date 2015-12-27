@@ -8,7 +8,7 @@ import com.wjm.models.AdditionInfo;
 
 public interface AdditionIDao {
 	void setDataSource(DataSource ds);
-	void create(int contract_pk, String title, int budget, int term, String status);
+	void create(int contract_pk, String title, int budget, int term, String status, String description, String filename);
 	List<AdditionInfo> selectAll();
 	List<AdditionInfo> select_contract(int contract_pk);
 	AdditionInfo select(int pk);

@@ -1886,7 +1886,7 @@ public class ProjectController {
 			logger.info("SMS 전송");
 		}
 
-		additionDao.create(contract_pk, title, budget, term, "검수중");
+		additionDao.create(contract_pk, title, budget, term, "검수중", "", "");
 
 		jObject.put("messages", "success");
 		jObject.put("path", "/wjm/project/addition/list/" + contract_pk);

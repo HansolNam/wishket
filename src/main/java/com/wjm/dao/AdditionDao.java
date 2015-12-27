@@ -57,12 +57,14 @@ public class AdditionDao implements AdditionIDao {
 	 * @param budget 예산
 	 * @param term 기간
 	 * @param status 상태
+	 * @param description 내용
+	 * @param filename 파일명
 	 */
-	public void create(int contract_pk, String title, int budget, int term, String status)
+	public void create(int contract_pk, String title, int budget, int term, String status, String description, String filename)
 	{
 		jdbcTemplate.update("insert into addition "
-				+ "(contract_pk, title, budget, term, status) values (?, ?, ?, ?, ?)"
-				, new Object[] { contract_pk, title, budget, term, status});
+				+ "(contract_pk, title, budget, term, status, description, filename) values (?, ?, ?, ?, ?, ?, ?)"
+				, new Object[] { contract_pk, title, budget, term, status, description, filename});
 	}
 	
 	/**
@@ -86,7 +88,9 @@ public class AdditionDao implements AdditionIDao {
 		    				, resultSet.getInt("budget")
 		    				, resultSet.getInt("term")
 		    				, resultSet.getString("status")
-		    				, resultSet.getTimestamp("reg_date"));
+		    				, resultSet.getTimestamp("reg_date")
+		    				, resultSet.getString("description")
+		    				, resultSet.getString("filename"));
 		    	}
 		    });
 	}
@@ -114,7 +118,9 @@ public class AdditionDao implements AdditionIDao {
 		    				, resultSet.getInt("budget")
 		    				, resultSet.getInt("term")
 		    				, resultSet.getString("status")
-		    				, resultSet.getTimestamp("reg_date"));
+		    				, resultSet.getTimestamp("reg_date")
+		    				, resultSet.getString("description")
+		    				, resultSet.getString("filename"));
 		    	}
 		    });
 		if(list == null)
@@ -148,7 +154,9 @@ public class AdditionDao implements AdditionIDao {
 		    				, resultSet.getInt("budget")
 		    				, resultSet.getInt("term")
 		    				, resultSet.getString("status")
-		    				, resultSet.getTimestamp("reg_date"));
+		    				, resultSet.getTimestamp("reg_date")
+		    				, resultSet.getString("description")
+		    				, resultSet.getString("filename"));
 		    	}
 		    });
 		
@@ -178,7 +186,9 @@ public class AdditionDao implements AdditionIDao {
 		    				, resultSet.getInt("budget")
 		    				, resultSet.getInt("term")
 		    				, resultSet.getString("status")
-		    				, resultSet.getTimestamp("reg_date"));
+		    				, resultSet.getTimestamp("reg_date")
+		    				, resultSet.getString("description")
+		    				, resultSet.getString("filename"));
 		    		
 		    		ContractInfo contract = contractDao.select(addition.getContract_pk());
 		    		addition.setContract(contract);
@@ -211,7 +221,9 @@ public class AdditionDao implements AdditionIDao {
 		    				, resultSet.getInt("budget")
 		    				, resultSet.getInt("term")
 		    				, resultSet.getString("status")
-		    				, resultSet.getTimestamp("reg_date"));
+		    				, resultSet.getTimestamp("reg_date")
+		    				, resultSet.getString("description")
+		    				, resultSet.getString("filename"));
 		    		
 		    		ContractInfo contract = contractDao.select(addition.getContract_pk());
 		    		addition.setContract(contract);
