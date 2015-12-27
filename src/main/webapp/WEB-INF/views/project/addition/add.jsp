@@ -106,7 +106,7 @@ div.backLayer {
 						<h3 class="header-text" style="margin-bottom: 30px">추가요청 정보 등록</h3>
 						</section>
 						<section>
-						<form id="addition_form" method="POST"
+						<form id="addition_form" method="POST" enctype="multipart/form-data" 
 							class="has-validation-callback">
 							<div class="form-group p5-form-group">
 								<label class="control-label required p5-box-control-label"
@@ -137,7 +137,7 @@ div.backLayer {
 							</div>
 							<div class="form-group p5-form-group">
 								<label class="control-label required p5-box-control-label"
-									for=""><span>*</span>추가요청 내용</label>
+									for=""><span>*</span>추가요청명</label>
 								<div class="control-wrapper">
 									<input class="form-control"
 										data-validation="required" id="title-input"
@@ -162,13 +162,53 @@ div.backLayer {
 										name="term" required="required" type="text">
 								</div>
 							</div>
-							<span class="pull-right"><a
+							<div class="form-group p5-form-group">
+								<label class="control-label required p5-box-control-label"
+									for=""><span>*</span>추가요청 내용</label>
+								<div class="control-wrapper">
+									<textarea class="form-control"
+										data-validation="required" id="description-input"
+										name="description" required="required"></textarea>
+								</div>
+							</div>
+							
+							<div class="form-group p5-form-group">
+								<label class="control-label required p5-box-control-label"
+									for="">파일 업로드</label>
+								<div class="control-wrapper">
+									
+								<div class="p5-portfoilo-img-control-wrapper">
+									<div>
+										<span class="p5-img-name" id="file-name">파일을
+											등록해주세요.</span> 
+											<span class="p5-custom-file-type-input-wrapper">
+											<button
+												class="btn btn-primary p5-custom-file-type-front "
+												type="button"> 파일 변경
+											</button>
+											<input class="p5-custom-file-type-input"
+											id="file1" name="file1" type="file" />
+										<button class="btn btn-cancel p5-img-del-btn" type="button">삭제</button></span>
+									</div>
+								</div>
+								</div>
+							</div>
+							
+							<div class="form-group p5-form-group">
+								<div class="control-wrapper">
+								<br>
+								<br>
+								<br>
+								
+								<a
 								class="btn btn-cancel p5-btn-left"
 								href="/wjm/project/addition/list/<%=contract.getPk() %>" type="button">취소</a>
-							<input autocomplete="off"
-									class="btn btn-lg btn-client js-disable-on-click btn-submit"
+							
+							<input class="btn btn-client js-disable-on-click btn-submit"
 									data-loading-text="제출 중" name="submit_btn" id = "submit_btn_id" type="button"
-									value="등록" /></span>
+									value="등록" />
+									</div>
+									</div>
 						</form>
 						</section>
 						
@@ -186,11 +226,38 @@ div.backLayer {
 	</div>
 	<jsp:include page="../../footer.jsp" flush="false" />
 		<script type="text/javascript">
+
+	    //img delete btn
+	    $('.content-inner').on('click','.p5-img-del-btn',function() {
+
+	        if($(this).siblings('input').attr('name')=='file1') {
+	            var imgAssignTag = '<button type="button" class="btn btn-primary p5-custom-file-type-front">파일 변경</button>'+
+	                    '<input id="file1" name="file1" type="file" class="p5-custom-file-type-input">'+
+	                    '<button  id="p5-file-btn-1" type="button" class="btn btn-cancel p5-img-del-btn">삭제</button>';
+	            $('#file-name').html('파일을 등록해주세요.');
+	            $('#file1').parent().html(imgAssignTag);
+	        } 
+
+	        $(this).siblings('input').val("");
+	    });
+
+
+	    $('.content-inner').on('change','#file1', function() {
+	        if($('#file1').val()==='') {
+	            //donothing
+	        } else {
+	            $('#file-name').html($(this).val().split(/(\\|\/)/g).pop());
+
+	        }
+	    });
+	    
 		$(document).ready(function(){
 
 
 			// 페이지가 로딩될 때 'Loading 이미지'를 숨긴다.
 			$('#viewLoading').hide();
+			
+			
 			function LoadingScreenFunc()
 			{
 				var width = $(window).width();
@@ -234,7 +301,7 @@ div.backLayer {
 			{
 				if($( "#title-input" ).val() == "")
 					{
-						alert("내용을 입력하세요.");
+						alert("제목을 입력하세요.");
 						return false;
 					}
 				
@@ -251,19 +318,32 @@ div.backLayer {
 						alert("기간을 입력하세요.");
 						return false;
 					}
-				
+
+
+				if($( "#description-input" ).val() == "")
+					{
+						alert("내용을 입력하세요.");
+						return false;
+					}
 				return true;
 			}
 			$( "#submit_btn_id" ).click(function() {
+
+				if(confirm("추가요청을 등록하시겠습니까?") == false)
+					return;
 				
 				if(form_check())
 					{
-				
+		    		 var formData = new FormData($('#addition_form')[0]);
+
 						$.ajax({
 							url : "/wjm/project/addition/add/<%=contract.getPk()%>",
 							type : "POST",
-							data : $('#addition_form').serialize(),
+							data : formData,
 			    		    async: true,
+			    		    cache: false,
+			    		    contentType: false,
+			    		    processData: false,
 							dataType : "JSON",
 							success : function(data) {
 								var messages = data.messages;

@@ -7,7 +7,6 @@
 
 	List<AdditionInfo> additionlist = (List<AdditionInfo>)request.getAttribute("additionlist");
 	int additionCnt = 0;
-	
 	if(additionlist != null)
 		additionCnt = additionlist.size();
 	
@@ -160,6 +159,31 @@
 											</h5>
 											<span><%=additionlist.get(i).getBudget() %> 원</span></li>
 									</ul>
+									<ul class="project-info list-item-narrow">
+									<li>
+											<%
+												String description = additionlist.get(i).getDescrition();
+												if(description == null) description = "";
+											%>
+									<h5 class="label-item">
+												<i class="fa fa-calendar-o"></i> 내용
+											</h5>
+											<span><%=description.replaceAll("\r\n","<br/>") %></span></li>
+									</ul>
+									<ul class="project-info list-item-narrow">
+									<li>
+									<h5 class="label-item">
+												<i class="fa fa-calendar-o"></i> 첨부파일
+											</h5>
+											<span>
+											<% String filename = additionlist.get(i).getFilename();
+											if(!Validator.hasValue(filename))
+											out.print("첨부파일이 없습니다.");
+											else
+											out.print("<a href='/wjm/Filedownload?filename="+java.net.URLEncoder.encode(filename)+"'>"+filename+"</a>");%>
+											</span></li>
+									</ul>
+									
 								</section>
 							</section>
 							<%	

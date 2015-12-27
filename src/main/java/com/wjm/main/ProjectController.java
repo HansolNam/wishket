@@ -1765,14 +1765,20 @@ public class ProjectController {
 	 * @throws IOException
 	 * @throws URISyntaxException
 	 * @throws ClientProtocolException
+	 * @throws FileUploadException 
 	 */
 
 	@RequestMapping(value = "/project/addition/add/{contract_pk}", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	@ResponseBody
 	public String ProjectController_addition_add_post(HttpServletRequest request, HttpServletResponse response,
-			@PathVariable("contract_pk") int contract_pk, @RequestParam("title") String title,
-			@RequestParam("term") int term, @RequestParam("budget") int budget, ModelAndView mv)
-					throws ClientProtocolException, URISyntaxException, IOException {
+			@PathVariable("contract_pk") int contract_pk,
+			@RequestParam("title") String title,
+			@RequestParam("term") int term, 
+			@RequestParam("budget") int budget, 
+			@RequestParam("description") String description,
+			@RequestParam("file1") MultipartFile file1,
+			ModelAndView mv)
+					throws ClientProtocolException, URISyntaxException, IOException, FileUploadException {
 		logger.info("project addition add post Page");
 
 		JSONObject jObject = new JSONObject();
@@ -1780,6 +1786,7 @@ public class ProjectController {
 		logger.info("title = " + title);
 		logger.info("term = " + term);
 		logger.info("budget = " + budget);
+		logger.info("description = " + description);
 
 		AccountInfo account = (AccountInfo) request.getSession().getAttribute("account");
 		if (account == null) {
@@ -1848,7 +1855,61 @@ public class ProjectController {
 		} else {
 			logger.info("budget = " + budget);
 		}
+		
 
+		// description 체크
+		if (!Validator.hasValue(description)) {
+			logger.info("description!!!!");
+			jObject.put("messages", "내용은 필수입니다.");
+			return jObject.toString();
+		} else if (!Validator.isValidLength(description, 1, 2500)) {
+			logger.info("description!!!!");
+			jObject.put("messages", "추가요청 내용은 최대 2500자입니다.");
+			return jObject.toString();
+		} else {
+			logger.info("description = " + description);
+		}
+
+
+		// file upload(필수 x)
+		String filename = "";
+	
+		if(file1 == null)
+		{
+			filename = "";
+		}
+		else if(file1.isEmpty())
+		{
+			filename = "";
+		}
+		// gif, png, jpg, jpeg, bmp, pdf, gul, xls, xlsx, doc, docx, ppt, pptx,
+		// hwp, zip 허용
+		else if (!Fileupload.isFile(file1)) {
+			logger.info("파일은 gif, png, jpg, jpeg, bmp, pdf, gul, xls, xlsx, doc, docx, ppt, pptx, hwp, zip만 허용됩니다.");
+
+			jObject.put("messages",
+					"파일은 gif, png, jpg, jpeg, bmp, pdf, gul, xls, xlsx, doc, docx, ppt, pptx, hwp, zip만 허용됩니다.");
+			return jObject.toString();
+		}
+		// 10MB 허용
+		else if (!Fileupload.isValidFileSize(file1, 10)) {
+			logger.info("파일은 최대 10MB까지 업로드 가능합니다.");
+
+			jObject.put("messages", "파일은 최대 10MB까지 업로드 가능합니다.");
+			return jObject.toString();
+		}
+		// 파일명
+		else if (!Validator.isValidLength(file1.getOriginalFilename(), 1, 30)) {
+			logger.info("파일명은 최대 30자까지 가능합니다.");
+			jObject.put("messages", "파일명은 최대 30자까지 가능합니다.");
+			return jObject.toString();
+		} else {
+			logger.info("파일등록가능");
+			
+			filename = Fileupload.upload_file(request.getRealPath("") + "\\", file1, account.getId());
+			logger.info("filename = "+filename);
+		}
+	
 		// 클라이언트
 		notificationDao.create(account.getPk(), title + " 추가요청이 검수중입니다. ");
 		AccountInformationInfo accountinfo = accountInformationDao.select(account.getPk());
@@ -1886,7 +1947,7 @@ public class ProjectController {
 			logger.info("SMS 전송");
 		}
 
-		additionDao.create(contract_pk, title, budget, term, "검수중", "", "");
+		additionDao.create(contract_pk, title, budget, term, "검수중", description, filename);
 
 		jObject.put("messages", "success");
 		jObject.put("path", "/wjm/project/addition/list/" + contract_pk);

@@ -130,6 +130,30 @@ div.backLayer {
 											</h5>
 											<span><%=additionlist.get(i).getBudget() %> 원</span></li>
 									</ul>
+									<ul class="project-info list-item-narrow">
+									<li>
+									<h5 class="label-item">
+												<i class="fa fa-calendar-o"></i> 내용
+											</h5>
+											<%
+												String description = additionlist.get(i).getDescrition();
+											if(description == null) description = "";
+											%>
+											<span><%=description.replaceAll("\r\n","<br/>") %></span></li>
+									</ul>
+									<ul class="project-info list-item-narrow">
+									<li>
+									<h5 class="label-item">
+												<i class="fa fa-calendar-o"></i> 첨부파일
+											</h5>
+											<span>
+											<% String filename = additionlist.get(i).getFilename();
+											if(!Validator.hasValue(filename))
+											out.print("첨부파일이 없습니다.");
+											else
+											out.print("<a href='/wjm/Filedownload?filename="+java.net.URLEncoder.encode(filename)+"'>"+filename+"</a>");%>
+											</span></li>
+									</ul>
 									
 									<ul class="project-info list-item-narrow">
 										<li><h5 class="label-item"
@@ -152,8 +176,8 @@ div.backLayer {
 											</h5>
 											<span>
 																			
-											<button id="submit-btn" class='btn btn-sm btn-client' addition-pk = "<%=additionlist.get(i).getPk()%>">승인</button>				
-											<button id="cancel-btn" class="btn btn-cancel btn-sm " addition-pk = "<%=additionlist.get(i).getPk()%>">취소</button>
+											<button id="submit-btn" class='btn btn-sm btn-client btn-submit' addition-pk = "<%=additionlist.get(i).getPk()%>" addition-name="<%=additionlist.get(i).getTitle()%>">승인</button>				
+											<button id="cancel-btn" class="btn btn-cancel btn-sm " addition-pk = "<%=additionlist.get(i).getPk()%>" addition-name="<%=additionlist.get(i).getTitle()%>">취소</button>
 											</span></li>
 									</ul>
 								</section>
@@ -230,11 +254,14 @@ div.backLayer {
 		    		'top':top
 		    	});
 			}
-			$( "#submit-btn" ).click(function() {
-				
-				if(confirm("정말 승인하시겠습니까?") == true)
-					{
+			$( ".btn-submit" ).click(function() {
+				var additionName = $(this).attr('addition-name');
+
+				if(confirm(additionName+" 을 정말 승인하시겠습니까?") == true)
+					{						
+
 						var additionPk = $(this).attr('addition-pk');
+
 						$.ajax({
 							url : "/wjm/admin/addition/submit/"+additionPk,
 							type : "POST",
@@ -278,9 +305,10 @@ div.backLayer {
 			});
 			
 
-			$( "#cancel-btn" ).click(function() {
-				
-				if(confirm("정말 취소하시겠습니까?") == true)
+			$( ".btn-cancel" ).click(function() {
+				var additionName = $(this).attr('addition-name');
+
+				if(confirm(additionName+ " 을 정말 취소하시겠습니까?") == true)
 					{
 						var additionPk = $(this).attr('addition-pk');
 						$.ajax({

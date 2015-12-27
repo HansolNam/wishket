@@ -305,7 +305,7 @@
 							<div class="form-group ">
 								<div class="checkbox-wrapper">
 									<div class="checkbox">
-										<label class="" for="email_subscription"><input
+										<label class="" for="email_subscription"><input disabled="" 
 											<%if(subscription == 1){ %>checked="checked"<%} %> id="email_subscription"
 											name="email_subscription" value="true" type="checkbox" />외주몬의 프로젝트 소식을
 											구독합니다.</label>

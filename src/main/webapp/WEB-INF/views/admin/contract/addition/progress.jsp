@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="java.sql.Timestamp,com.wjm.models.AdditionInfo, com.wjm.models.ContractInfo, com.wjm.models.AccountInfo, com.wjm.models.ProjectInfo, java.util.*, com.wjm.main.function.Time"%>
+<%@ page import="com.wjm.main.function.Validator, java.sql.Timestamp,com.wjm.models.AdditionInfo, com.wjm.models.ContractInfo, com.wjm.models.AccountInfo, com.wjm.models.ProjectInfo, java.util.*, com.wjm.main.function.Time"%>
 <%@ page import="com.wjm.models.NoticeInfo"%>
 
 <%
@@ -9,7 +9,6 @@
 	List<AdditionInfo> additionlist = (List<AdditionInfo>)request.getAttribute("additionlist");
 	int additionCnt = 0;
 	int progressCnt = 0;
-
 
 	if(progresslist != null)
 		progressCnt = progresslist.size();
@@ -49,7 +48,7 @@
 <script src="${pageContext.request.contextPath}/resources/static/CACHE/js/cb793deb7347.js" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/resources/static/CACHE/js/c3617c8217d0.js" type="text/javascript"></script>
 </head>
-<body class="logged-in client mywishket">
+<body class="logged-in client mywishket  client-management contract-management">
 	<div id="wrap">
 	<jsp:include page="../../../header.jsp" flush="false" />
 		<div class="container">
@@ -79,39 +78,34 @@
 							<h5 class="proposal-project-heading">
 								<a href="#">진행중인 추가요청</a>
 							</h5>
-							<table class="table table-hover">
-								<thead>
-									<tr>
-										<th>프로젝트 제목</th>
-										<th>추가요청 제목</th>
-										<th>클라이언트</th>
-										<th>파트너스</th>
-										<th>남은기간</th>
-										<th>도구1</th>
-										<th>도구2</th>
-									</tr>
-								</thead>
-								<tbody>
-								<%
-									if(progresslist == null)
-									{
-								%>
-								<tr>
-								<td class='text-muted' colspan='6'>진행중인 추가요청 리스트가 없습니다.</td>
-								</tr>
-								<%
-									}
-									else
-									{
-										for(int i=0;i<progresslist.size();i++)
-										{
-								%>
-								<tr>
-									<td><a href="/wjm/project/<%=progresslist.get(i).getContract().getName() %>/<%=progresslist.get(i).getContract().getProject_pk() %>"><%=progresslist.get(i).getContract().getName() %></a></td>
-									<td><%=progresslist.get(i).getTitle()%></td>
-									<td><a href="/wjm/admin/accounts/profile/<%=progresslist.get(i).getContract().getClient_pk() %>"><%=progresslist.get(i).getContract().getClient_id() %></a></td>
-									<td><a href="/wjm/admin/accounts/profile/<%=progresslist.get(i).getContract().getPartners_pk() %>"><%=progresslist.get(i).getContract().getPartners_id() %></a></td>
-									<td><%
+							<section>
+						<%
+						
+						if(progressCnt != 0)
+							{
+								for(int i=0;i<progressCnt;i++)
+								{
+								
+						%>
+							<section class="project-unit">
+								<section class="project-unit-heading">
+									<h4 class="project-title">
+									<%=progresslist.get(i).getTitle() %>
+									</h4>
+								</section>
+								<section class="project-unit-body">
+									<ul class="project-info list-item-narrow">
+										<li><h5 class="label-item"
+												style="min-width: 80px !important;">
+												<i class="fa fa-won"></i> 프로젝트명
+											</h5>
+											<span>									
+<a href="/wjm/project/<%=progresslist.get(i).getContract().getName() %>/<%=progresslist.get(i).getContract().getProject_pk() %>"><%=progresslist.get(i).getContract().getName() %></a>											</span></li>
+										<li><h5 class="label-item"
+												style="min-width: 80px !important;">
+												<i class="fa fa-clock-o"></i> 남은기간
+											</h5>
+											<span><%
 									Timestamp now = Time.getCurrentTimestamp();
 									now = Time.dateToTimestamp(Time.TimestampToString(now));
 									Timestamp reg_date = progresslist.get(i).getReg_date();
@@ -124,24 +118,81 @@
 									else
 										out.print(progresslist.get(i).getTerm() - remain*(-1)+"일 초과");
 									
-									%>/<%=progresslist.get(i).getTerm() %>일</td>
-									<td>
-										<button id="complete-btn" class='btn btn-sm btn-client' addition-pk = "<%=progresslist.get(i).getPk()%>">완료</button>				
-									</td>
-									<td>
-										<button id="cancel-btn" class="btn btn-cancel btn-sm " addition-pk = "<%=progresslist.get(i).getPk()%>">취소</button>
-									</td>
+									%>/<%=progresslist.get(i).getTerm() %>일</span></li>
+										<li><h5 class="label-item"
+												style="min-width: 80px !important;">
+												<i class="fa fa-calendar-o"></i> 비용
+											</h5>
+											<span><%=progresslist.get(i).getBudget() %> 원</span></li>
+									</ul>
+									<ul class="project-info list-item-narrow">
+									<li>
+									<h5 class="label-item">
+												<i class="fa fa-calendar-o"></i> 내용
+											</h5>
+											<%
+												String description = progresslist.get(i).getDescrition();
+												if(description == null) description = "";
+											%>
+											<span><%=description.replaceAll("\r\n","<br/>") %></span></li>
+									</ul>
+									<ul class="project-info list-item-narrow">
+									<li>
+									<h5 class="label-item">
+												<i class="fa fa-calendar-o"></i> 첨부파일
+											</h5>
+											<span>
+											<% String filename = progresslist.get(i).getFilename();
+											if(!Validator.hasValue(filename))
+											out.print("첨부파일이 없습니다.");
+											else
+											out.print("<a href='/wjm/Filedownload?filename="+java.net.URLEncoder.encode(filename)+"'>"+filename+"</a>");%>
+											</span></li>
+									</ul>
+									<ul class="project-info list-item-narrow">
+									<li>
+									<h5 class="label-item">
+												<i class="fa fa-calendar-o"></i> 클라이언트
+											</h5>
+											<span>
+											<a href="/wjm/admin/accounts/profile/<%=progresslist.get(i).getContract().getClient_pk() %>"><%=progresslist.get(i).getContract().getClient_id() %></a></span></li>
+									<li>
+									<h5 class="label-item">
+												<i class="fa fa-calendar-o"></i> 파트너스
+											</h5>
+											<span>
+<a href="/wjm/admin/accounts/profile/<%=progresslist.get(i).getContract().getPartners_pk() %>"><%=progresslist.get(i).getContract().getPartners_id() %></a>
+											</span></li>
+											
+									<li>
+									<h5 class="label-item">
+												<i class="fa fa-calendar-o"></i> 도구
+											</h5>
+											<span>
+										<button id="complete-btn" class='btn btn-sm btn-client btn-complete' addition-name = "<%=progresslist.get(i).getTitle()%>" addition-pk = "<%=progresslist.get(i).getPk()%>">완료</button>				
+											</span>
+											<span>
+										<button id="cancel-btn" class="btn btn-cancel btn-sm "addition-name = "<%=progresslist.get(i).getTitle()%>"  addition-pk = "<%=progresslist.get(i).getPk()%>">취소</button>
+											</span>
+											</li>
+									</ul>
 									
-								</tr>
-								<%
-										}
-									}
-								%>
-								</tbody>
-								
-							</table>
+								</section>
+							</section>
+							<%	
+								}
+							}
+							else
+							{
+							%>
+						<section>
+						<p class="text-muted">추가요청 목록이 없습니다.</p>
+						</section>
+							<%
+							}
+							%>
+						</section>
 							
-						</div>
 						
 					</div>
 				</div>
@@ -154,9 +205,10 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 
-			$( "#complete-btn" ).click(function() {
-				
-				if(confirm("정말 완료하시겠습니까?") == true)
+			$( ".btn-complete" ).click(function() {
+				var additionName = $(this).attr('addition-name');
+
+				if(confirm(additionName+" 을 정말 완료하시겠습니까?") == true)
 					{
 						var additionPk = $(this).attr('addition-pk');
 						$.ajax({
@@ -192,9 +244,10 @@
 			});
 			
 
-			$( "#cancel-btn" ).click(function() {
-				
-				if(confirm("정말 취소하시겠습니까?") == true)
+			$( ".btn-cancel" ).click(function() {
+				var additionName = $(this).attr('addition-name');
+
+				if(confirm(additionName+" 을 정말 취소하시겠습니까?") == true)
 					{
 						var additionPk = $(this).attr('addition-pk');
 						$.ajax({
